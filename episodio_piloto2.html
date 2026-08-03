@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>MUSIC BOX — Episódio Piloto 2 (Nomes Ocultos + Histórico)</title>
+<style>
+  :root {
+    --dark:#0a0a0c; --panel:#15181d; --grey:#1c2028; --border:#2a2f38;
+    --white:#e8e6df; --gold:#e0a83f; --blue:#3a7dc9; --green:#5aa06a; --red:#c0453f;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--dark); color:var(--white); font-family:Arial, sans-serif; }
+  .topo { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; border-bottom:1px solid var(--border); }
+  .topo h1 { font-size:14px; letter-spacing:3px; margin:0; color:#8a8a86; font-weight:400; }
+  .badge { background:#241d12; color:var(--gold); padding:4px 12px; border-radius:4px; font-size:12px; font-weight:700; letter-spacing:1px; }
+  .progresso-faixas { display:flex; gap:4px; padding:8px 24px 0; justify-content:center; }
+  .playlist-nome { text-align:center; font-size:13px; color:var(--gold); padding:6px 24px 0; letter-spacing:0.5px; }
+  .playlist-nome .codigo { color:#8a8a86; font-size:11px; margin-left:8px; }
+  .progresso-faixas span { width:22px; height:6px; border-radius:3px; background:var(--grey); }
+  .progresso-faixas span.feito { background:var(--gold); }
+  .progresso-faixas span.actual { background:var(--blue); }
+
+  .palco { display:flex; flex-direction:column; align-items:center; gap:6px; padding:16px 20px 4px; }
+  .titulo-musica { font-size:19px; font-weight:700; }
+  .artista-musica { font-size:12px; color:#9a9a96; }
+  .chave-resposta { margin-top:14px; font-size:11px; color:#6a6a66; letter-spacing:0.5px; border-top:1px dashed var(--border); padding-top:8px; }
+  .retrato-mosaico { display:grid; grid-template-columns:repeat(4,54px); grid-template-rows:repeat(4,54px); gap:3px; margin:0 auto 14px; }
+  .retrato-tile { background:var(--grey); border-radius:3px; transition:opacity 0.4s ease, transform 0.4s ease; opacity:1; transform:scale(1); }
+  .retrato-tile.revelado { background-image:var(--img-revelado); }
+  .retrato-tile.a-entrar { opacity:0; transform:scale(0.6) rotate(-8deg); }
+  .reconhecimento-voz { margin-top:12px; padding:10px 14px; border-radius:8px; background:#12151a; border:1px solid var(--border); max-width:420px; margin-left:auto; margin-right:auto; }
+  .rv-status { font-size:11px; color:var(--gold); margin-bottom:5px; letter-spacing:0.5px; }
+  .rv-transcricao { font-size:16px; font-weight:700; color:var(--white); min-height:20px; }
+  .rv-transcricao.rv-match { color:#8fc95a; }
+  .btn-mic { background:#152233; color:#7ab8e0; }
+  .trecho-label { font-size:11px; letter-spacing:3px; color:var(--gold); margin-top:4px; }
+  .timer { font-size:36px; font-weight:900; font-variant-numeric:tabular-nums; margin:4px 0; }
+  .timer.critico { color:var(--red); }
+  .barra { width:260px; height:5px; background:var(--grey); border-radius:3px; overflow:hidden; margin-bottom:4px; }
+  .barra-fill { height:100%; background:var(--gold); transition:width 0.2s linear; }
+
+  .bonus-painel { max-width:600px; margin:8px auto; background:#241d12; border:2px solid var(--gold); border-radius:8px; padding:12px 20px; text-align:center; display:none; }
+  .bonus-painel.activo { display:block; }
+  .bonus-painel h2 { margin:0 0 6px; color:var(--gold); font-size:12px; letter-spacing:2px; }
+  .bonus-painel p { margin:0 0 10px; font-size:12px; color:#c9bda0; }
+  .bonus-acoes { display:flex; gap:10px; justify-content:center; }
+  .bonus-acoes button { padding:8px 16px; border-radius:6px; border:none; font-weight:700; cursor:pointer; font-size:12px; }
+  .btn-bonus-sim { background:var(--gold); color:#1a1508; }
+  .btn-bonus-nao { background:var(--grey); color:#8a8a86; }
+
+  .mosaico-painel { display:none; flex-direction:column; align-items:center; padding:12px 20px 4px; gap:8px; }
+  .mosaico-painel.activo { display:flex; }
+  .mosaico-titulo { font-size:16px; font-weight:900; letter-spacing:2px; color:var(--gold); }
+  .mosaico-categoria { font-size:15px; font-weight:700; color:var(--white); background:#241d12; border:1px solid var(--gold); border-radius:6px; padding:6px 16px; }
+  .mosaico-grelha { display:grid; grid-template-columns:repeat(4,64px); grid-template-rows:repeat(4,64px); gap:4px; }
+  .mosaico-quadrado { background:var(--grey); border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:11px; color:#4a4e58; transition:opacity 0.6s ease, transform 0.6s ease; opacity:1; transform:scale(1); }
+  .mosaico-quadrado.revelado { background-image:var(--img-revelado, linear-gradient(135deg, #7d5fb0, #3a7dc9 40%, #e0a83f 75%, #5aa06a)); background-size:216px 216px; }
+  .mosaico-quadrado.revelado span { display:none; }
+  .mosaico-quadrado.a-entrar { opacity:0; transform:scale(0.6) rotate(-8deg); }
+  .mosaico-timer-ms { font-size:26px; font-weight:900; color:var(--red); display:none; }
+  .mosaico-timer-ms.activo { display:block; }
+  .mosaico-status { font-size:12px; color:#9a9a96; min-height:16px; text-align:center; max-width:520px; }
+  .mosaico-acoes button { background:var(--grey); color:var(--white); border:1px solid var(--border); border-radius:6px; padding:7px 12px; font-size:12px; cursor:pointer; }
+
+  .collection-painel { display:none; flex-direction:column; align-items:center; padding:24px 20px; gap:14px; }
+  .collection-painel.activo { display:flex; }
+  .collection-titulo { font-size:16px; font-weight:900; letter-spacing:1px; color:var(--gold); text-align:center; }
+  .collection-sub { font-size:12px; color:#9a9a96; text-align:center; max-width:500px; }
+  .collection-lista { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:640px; }
+  .collection-btn { background:var(--panel); border:2px solid var(--border); border-radius:8px; padding:14px 10px; color:var(--white); cursor:pointer; font-size:13px; font-weight:700; text-align:center; }
+  .collection-btn:hover { border-color:var(--gold); }
+  .collection-btn:disabled { opacity:0.25; cursor:not-allowed; }
+  .collection-resultado { font-size:14px; color:var(--green); text-align:center; min-height:20px; }
+
+  .eliminacao-painel { display:none; flex-direction:column; align-items:center; padding:30px 20px; gap:16px; }
+  .eliminacao-painel.activo { display:flex; }
+  .eliminacao-titulo { font-size:20px; font-weight:900; color:var(--red); letter-spacing:1px; }
+  .eliminacao-lista { display:flex; flex-direction:column; gap:8px; width:100%; max-width:420px; }
+  .eliminacao-linha { display:flex; justify-content:space-between; background:var(--panel); padding:10px 16px; border-radius:6px; border:2px solid var(--border); }
+  .eliminacao-linha.eliminado { border-color:var(--red); opacity:0.6; text-decoration:line-through; }
+  .eliminacao-linha.lider { border-color:var(--gold); }
+
+  .fim-painel { display:none; flex-direction:column; align-items:center; padding:40px 20px; gap:16px; }
+  .fim-painel.activo { display:flex; }
+  .fim-titulo { font-size:26px; font-weight:900; color:var(--gold); }
+  .fim-premio { font-size:18px; color:var(--white); }
+
+  .cabines { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:12px 24px; max-width:1000px; margin:0 auto; }
+  .cabine { background:var(--panel); border-radius:8px; padding:10px; border:3px solid var(--blue); transition:all 0.2s; }
+  .cabine.verde { border-color:var(--green); background:#121a14; }
+  .cabine.vermelho { border-color:var(--red); background:#1a1212; opacity:0.55; }
+  .cabine.bloqueado { opacity:0.3; pointer-events:none; }
+  .cabine.eliminado-cab { display:none; }
+  .cabine-nome { font-size:11px; color:#c9c9c4; margin-bottom:5px; border:none; background:transparent; color:inherit; width:100%; font-family:inherit; }
+  .cabine-scores { display:flex; justify-content:space-between; font-size:10px; margin-bottom:6px; }
+  .score-pontos { color:var(--white); font-weight:700; }
+  .score-dinheiro { color:var(--gold); font-weight:700; }
+  .cabine-botoes { display:flex; flex-direction:column; gap:4px; }
+  .btn { border:none; border-radius:6px; padding:7px; font-size:11px; font-weight:700; cursor:pointer; }
+  .btn-correcto { background:#1e3a26; color:#8fc95a; }
+  .btn-erro { background:#3a1e1e; color:#e08a87; }
+  .btn-m8 { background:#241d12; color:var(--gold); }
+  .btn:disabled { opacity:0.25; cursor:not-allowed; }
+  .estado-tag { font-size:8px; letter-spacing:1px; text-align:center; padding:2px; border-radius:3px; margin-top:4px; }
+  .estado-azul-tag { background:#12203a; color:#6fa8dc; }
+  .estado-verde-tag { background:#1e3a26; color:#8fc95a; }
+  .cabine-historico { margin-top:8px; padding-top:6px; border-top:1px solid var(--border); max-height:170px; overflow-y:auto; display:flex; flex-direction:column-reverse; gap:5px; }
+  .historico-linha { font-size:13px; font-weight:600; line-height:1.4; padding:4px 6px; border-radius:4px; }
+  .historico-acerto { color:#8fc95a; background:#131f14; }
+  .historico-erro { color:#e08a87; background:#231414; font-weight:700; }
+  .historico-escada { color:var(--gold); background:#241d12; font-weight:700; }
+  .historico-neutro { color:#6a6a66; background:#1a1a18; }
+  .estado-vermelho-tag { background:#3a1e1e; color:#e08a87; }
+
+  .rodape { display:flex; justify-content:center; gap:10px; padding:14px; flex-wrap:wrap; }
+  .rodape button { background:var(--grey); color:var(--white); border:1px solid var(--border); border-radius:6px; padding:8px 14px; font-size:11px; cursor:pointer; }
+  .log { max-width:700px; margin:6px auto 20px; font-size:11px; color:#6a6a66; text-align:center; min-height:16px; }
+  audio { display:none; }
+
+  #start-overlay { position:fixed; inset:0; background:var(--dark); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:16px; }
+  #start-overlay button { background:var(--gold); color:#1a1508; border:none; border-radius:8px; padding:18px 40px; font-size:18px; font-weight:900; letter-spacing:2px; cursor:pointer; }
+  #start-overlay p { color:#8a8a86; font-size:12px; max-width:320px; text-align:center; }
+  #start-overlay .btn-secundario { background:var(--grey); color:var(--white); font-size:13px; padding:10px 24px; }
+  #teste-lista { display:none; flex-direction:column; gap:8px; max-width:340px; }
+  #teste-lista.activo { display:flex; }
+  #teste-lista button { background:var(--panel); color:var(--white); border:1px solid var(--border); border-radius:6px; padding:10px 16px; font-size:13px; text-align:left; cursor:pointer; }
+  #teste-lista button:hover { background:#1e2229; }
+  #teste-lista .voltar { text-align:center; color:#8a8a86; background:none; border:none; }
+</style>
+</head>
+<body>
+
+<div id="start-overlay">
+  <div style="color:var(--gold); font-size:11px; letter-spacing:2px; font-weight:900;">VARIANTE 2 — NOMES OCULTOS + HISTÓRICO POR CONCORRENTE</div>
+  <div style="color:#5a5a56; font-size:10px; letter-spacing:1px;">BUILD 2026-07-29-FF3</div>
+  <button onclick="arrancar()">▶ INICIAR EPISÓDIO</button>
+  <button class="btn-secundario" onclick="mostrarTesteLista()">🎯 Testar uma Playlist</button>
+  <p>Clica para autorizar o som (obrigatório uma vez, por causa das regras dos browsers).</p>
+  <div id="teste-lista"></div>
+</div>
+
+<div class="topo">
+  <h1>MUSIC BOX · EPISÓDIO PILOTO 2</h1>
+  <div class="badge" id="fase-badge">RONDA 1 · PLAYLIST 1</div>
+</div>
+<div style="text-align:center;font-size:10px;color:#5a5a56;letter-spacing:1px;padding:2px 0 8px;">BUILD 2026-07-29-FF3 — MJ→Billie Jean · Mosaico fim 4x4 António Variações · Bowie p&b</div>
+
+<div class="playlist-nome" id="playlist-nome">—</div>
+
+<div class="progresso-faixas" id="progresso-faixas"></div>
+
+<div class="collection-painel" id="collection-painel">
+  <div class="collection-titulo" id="collection-titulo">ESCOLHA DE PLAYLIST</div>
+  <div class="collection-sub" id="collection-sub">—</div>
+  <div class="collection-lista" id="collection-lista"></div>
+  <div class="collection-resultado" id="collection-resultado"></div>
+</div>
+
+<div class="eliminacao-painel" id="eliminacao-painel">
+  <div class="eliminacao-titulo" id="eliminacao-titulo">FIM DA RONDA</div>
+  <div class="eliminacao-lista" id="eliminacao-lista"></div>
+  <div class="rodape"><button onclick="avancarDepoisEliminacao()">Continuar →</button></div>
+</div>
+
+<div class="fim-painel" id="fim-painel">
+  <div class="fim-titulo" id="fim-titulo">🏆 VENCEDOR DO EPISÓDIO</div>
+  <div class="fim-premio" id="fim-premio">—</div>
+  <div class="rodape"><button onclick="location.reload()">🔁 Novo Episódio</button></div>
+</div>
+
+<div class="palco" id="palco-faixa">
+  <div id="retrato-mosaico" class="retrato-mosaico" style="display:none;"></div>
+  <div class="titulo-musica" id="m-titulo"></div>
+  <div class="artista-musica" id="m-artista">Identidade oculta até acertares</div>
+  <div class="trecho-label" id="trecho-label">TRECHO 1</div>
+  <div class="timer" id="timer">15</div>
+  <div class="barra"><div class="barra-fill" id="barra-fill" style="width:100%"></div></div>
+  <div class="chave-resposta" id="chave-resposta">🔑 Título OU Artista: —</div>
+</div>
+
+<div class="reconhecimento-voz" id="reconhecimento-voz" style="display:none;">
+  <div class="rv-status" id="rv-status">—</div>
+  <div class="rv-transcricao" id="rv-transcricao">—</div>
+</div>
+
+<div class="bonus-painel" id="bonus-painel">
+  <h2>🚨 BONUS_MODE — PERGUNTA BÓNUS</h2>
+  <p style="font-size:10px;color:#8a8a86;margin-top:-4px;">🎙️ Microfone do Apresentador aberto (Modo Catalisador) — música parada.</p>
+  <p id="bonus-quem">—</p>
+  <div class="bonus-acoes">
+    <button class="btn-bonus-sim" onclick="resolverBonus(true)">Acertou (+dinheiro)</button>
+    <button class="btn-bonus-nao" onclick="resolverBonus(false)">Errou (sem dinheiro)</button>
+  </div>
+</div>
+
+<div class="bonus-painel" id="escada-painel">
+  <h2 id="escada-titulo">🪜 ESCADA DE MEMÓRIA</h2>
+  <p id="escada-sub">—</p>
+  <div class="timer" id="escada-timer" style="font-size:28px;margin-bottom:10px;">5</div>
+  <div class="bonus-acoes">
+    <button class="btn-bonus-sim" onclick="resolverEscada(true)">✓ Conseguiu</button>
+    <button class="btn-bonus-nao" onclick="resolverEscada(false)">✗ Não conseguiu</button>
+  </div>
+</div>
+
+<div class="mosaico-painel" id="mosaico-painel">
+  <div class="mosaico-titulo">MOSAICO</div>
+  <div class="mosaico-categoria" id="mosaico-categoria">—</div>
+  <div class="mosaico-grelha" id="mosaico-grelha"></div>
+  <div class="mosaico-timer-ms" id="mosaico-timer-ms">3</div>
+  <div class="mosaico-status" id="mosaico-status">—</div>
+  <div class="mosaico-acoes"><button onclick="avancarRevelacao()">⏭ Revelação terminada → Morte Súbita</button></div>
+</div>
+
+<div class="cabines" id="cabines"></div>
+
+<div class="rodape">
+  <button onclick="alternarPausa()" id="btn-pausa">⏸ Pausar</button>
+</div>
+
+<div class="log" id="log"></div>
+
+<audio id="audioPlayer"></audio>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// COLLECTIONS — reaproveita os catálogos reais já construídos.
+// NOTA: os títulos/artistas de "Música Portuguesa" foram confirmados (22 Jul).
+// Os ficheiros 0X_PT_a/b.mp3 que já existem na pasta foram cortados quando os
+// títulos ainda eram placeholder — corre o corrigir_pt.sh para os regenerar
+// com as músicas certas antes de confiar no conteúdo actual.
+// ─────────────────────────────────────────────────────────────
+// Lista partilhada de Descritivos — reutilizável em qualquer Playlist.
+// Cada Playlist usa um destes (não inventar frases novas por Playlist).
+const DESCRITIVOS_DISPONIVEIS = [
+  'Grandes Êxitos', 'Os Essenciais', 'Clássicos', 'Edição Especial',
+  'Favoritos', 'Vol. 1', 'Vol. 2', 'Vol. 3'
+];
+
+const COLLECTIONS = {
+  // ── UNIVERSO "RETRATO SONORO" ──
+  // Universo-critério novo (23-28 Jul): mosaico 4x4 (16 quadrados, ver
+  // montarMosaicoRetrato/iniciarRevelacaoMosaicoRetrato) que se revela
+  // aleatoriamente ao longo de 20s, 100% revelado sozinho aos 20s, ou de
+  // imediato se alguém acertar. Cada Playlist pode MISTURAR livremente tipos
+  // de imagem diferentes música a música — caras de artistas, fotos de banda,
+  // logótipos, ou até um objecto específico (ex: a guitarra icónica de
+  // alguém). Não precisa de ser um tipo só por Playlist.
+  //
+  // REGRA PROPOSTA (24 Jul, ainda por implementar no motor de selecção):
+  // pelo menos 1 Playlist do Universo "Retrato Sonoro" deve entrar por Ronda.
+  // Só faz sentido activar isto quando houver 2-3 Playlists deste Universo —
+  // com só 1 ("Vozes Lendárias"), forçar 1x por Ronda repetia a mesma
+  // Playlist 3 vezes no mesmo episódio, o que já identificámos como mau.
+  RETRATO_VOZES: {
+    nome: 'Vozes Lendárias', descritivo: 'Retrato Sonoro', playlistCodigo: 'RET-VOZ-001', universo: 'Retrato Sonoro', temBonus: false, dificuldade: 3, temImagem: true,
+    musicas: [
+      { titulo:'My Way', artista:'Frank Sinatra', a:'RET_01.mp3', imagem:'RET_01.jpg' },
+      { titulo:"Can't Help Falling in Love", artista:'Elvis Presley', a:'RET_02.mp3', imagem:'RET_02.jpg' },
+      { titulo:'Love of My Life', artista:'Freddie Mercury', a:'RET_03.mp3', imagem:'RET_03.jpg' },
+      { titulo:'Billie Jean', artista:'Michael Jackson', a:'RET_04.mp3', imagem:'RET_04.jpg' },
+      { titulo:'I Will Always Love You', artista:'Whitney Houston', a:'RET_05.mp3', imagem:'RET_05.jpg' },
+      { titulo:'Rocket Man', artista:'Elton John', a:'RET_06.mp3', imagem:'RET_06.jpg' },
+      { titulo:'Estou Além', artista:'António Variações', a:'RET_07.mp3', imagem:'RET_07.jpg' },
+      { titulo:"Let's Dance", artista:'David Bowie', a:'RET_08.mp3', imagem:'RET_08.jpg' },
+    ],
+    // NOTA: as imagens (RET_0X.jpg) têm de ser fornecidas manualmente — não podem
+    // ser pesquisadas automaticamente (fotos de artistas/celebridades estão fora
+    // do que a pesquisa de imagens pode trazer). Uma imagem nítida por música chega;
+    // o desfoque progressivo é feito em tempo real por CSS, não precisa de várias versões.
+    mosaico: { categoria: 'Artista', pessoa: 'António Variações', titulo: 'Estou Além', artista: 'António Variações', imagem: 'RET_07.jpg', audio: 'MOSAICO_RETRATO.mp3' }
+  },
+  ANOS80: {
+    nome: 'Anos 80', descritivo: 'Grandes Êxitos', playlistCodigo: 'AN80-001', universo: 'Eixo Temporal', temBonus: false, dificuldade: 1,
+    musicas: [
+      { titulo:'Take On Me', artista:'A-ha', a:'01_a.mp3', b:'01_b.mp3' },
+      { titulo:"Sweet Child O' Mine", artista:"Guns N' Roses", a:'02_a.mp3', b:'02_b.mp3' },
+      { titulo:'The Power of Love', artista:'Frankie Goes to Hollywood', a:'03_a.mp3', b:'03_b.mp3' },
+      { titulo:"Don't You Want Me", artista:'Human League', a:'04_a.mp3', b:'04_b.mp3' },
+      { titulo:'The Final Countdown', artista:'Europe', a:'05_a.mp3', b:'05_b.mp3' },
+      { titulo:'Every Breath You Take', artista:'The Police', a:'06_a.mp3', b:'06_b.mp3' },
+      { titulo:'Billie Jean', artista:'Michael Jackson', a:'07_a.mp3', b:'07_b.mp3' },
+    ],
+    // Faixa dedicada do Mosaico — NÃO é uma das 7 acima, é uma imagem+música próprias.
+    // Precisa do ficheiro real 'MOSAICO_ANOS80.mp3' na pasta.
+    mosaico: { categoria: 'Intérprete', pessoa: 'Mark Knopfler', titulo: 'Sultans of Swing', artista: 'Dire Straits', audio: 'MOSAICO_ANOS80.mp3', imagem: 'MOSAICO_ANOS80.jpg' }
+  },
+  PT: {
+    nome: 'Música Portuguesa', descritivo: 'Os Essenciais', playlistCodigo: 'PT-001', universo: 'Geografia', temBonus: false, dificuldade: 3,
+    musicas: [
+      { titulo:'Grândola, Vila Morena', artista:'José Afonso', a:'01_PT_a.mp3', b:'01_PT_b.mp3' },
+      { titulo:'Não Sou O Único', artista:'Xutos & Pontapés', a:'02_PT_a.mp3', b:'02_PT_b.mp3' },
+      { titulo:"Cantiga d'Amor (Mesmo Assim)", artista:'Rádio Macau', a:'03_PT_a.mp3', b:'03_PT_b.mp3' },
+      { titulo:'Pronúncia do Norte', artista:'GNR', a:'04_PT_a.mp3', b:'04_PT_b.mp3' },
+      { titulo:'Amor de Água Fresca', artista:'Dina', a:'05_PT_a.mp3', b:'05_PT_b.mp3' },
+      { titulo:'Canção do Mar', artista:'Dulce Pontes', a:'06_PT_a.mp3', b:'06_PT_b.mp3' },
+      { titulo:'Re-Tratamento', artista:'Da Weasel', a:'07_PT_a.mp3', b:'07_PT_b.mp3' },
+    ],
+    // Por definir — precisa de imagem + música dedicadas (ex: 'MOSAICO_PT.mp3')
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_PT.mp3' }
+  },
+  SOLO: {
+    nome: 'Solo de Guitarra', descritivo: 'Clássicos', playlistCodigo: 'SOLO-001', universo: 'Solistas', temBonus: false, dificuldade: 4,
+    musicas: [
+      { titulo:'Stairway to Heaven', artista:'Led Zeppelin', a:'SOLO_01.mp3', b:'SOLO_01.mp3' },
+      { titulo:'Hotel California', artista:'Eagles', a:'SOLO_02.mp3', b:'SOLO_02.mp3' },
+      { titulo:'Shine On You Crazy Diamond', artista:'Pink Floyd', a:'SOLO_03.mp3', b:'SOLO_03.mp3' },
+      { titulo:'Eruption', artista:'Van Halen', a:'SOLO_04.mp3', b:'SOLO_04.mp3' },
+      { titulo:'Voodoo Child', artista:'Jimi Hendrix', a:'SOLO_05.mp3', b:'SOLO_05.mp3' },
+      { titulo:'Layla', artista:'Derek and the Dominos', a:'SOLO_06.mp3', b:'SOLO_06.mp3' },
+      { titulo:'Surfing with the Alien', artista:'Joe Satriani', a:'SOLO_07.mp3', b:'SOLO_07.mp3' },
+    ],
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_SOLO.mp3' }
+  },
+  CINEMA: {
+    nome: 'Cinema', descritivo: 'Edição Especial', playlistCodigo: 'CIN-001', universo: 'Media & Entretenimento', temBonus: true, dificuldade: 4,
+    musicas: [
+      { titulo:'Blade Runner', artista:'Vangelis', a:'CINEMA_01_a.mp3', b:'CINEMA_01_b.mp3' },
+      { titulo:'Star Wars', artista:'John Williams', a:'CINEMA_02_a.mp3', b:'CINEMA_02_b.mp3' },
+      { titulo:'ET', artista:'John Williams', a:'CINEMA_03_a.mp3', b:'CINEMA_03_b.mp3' },
+      { titulo:'Apocalypse Now', artista:'The Doors', a:'CINEMA_04_a.mp3', b:'CINEMA_04_b.mp3' },
+      { titulo:'Inception (Time)', artista:'Hans Zimmer', a:'CINEMA_05_a.mp3', b:'CINEMA_05_b.mp3' },
+      { titulo:'The Mission', artista:'Ennio Morricone', a:'CINEMA_06_a.mp3', b:'CINEMA_06_b.mp3' },
+      { titulo:'2001: A Space Odyssey', artista:'Strauss', a:'CINEMA_07_a.mp3', b:'CINEMA_07_b.mp3' },
+    ],
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_CINEMA.mp3' }
+  },
+  AMERICANA: {
+    nome: 'Americana', descritivo: 'Favoritos', playlistCodigo: 'AME-001', universo: 'Género Musical', temBonus: false, dificuldade: 2,
+    musicas: [
+      { titulo:'Take Me Home, Country Roads', artista:'John Denver', a:'AME_01_a.mp3', b:'AME_01_b.mp3' },
+      { titulo:'Heart of Gold', artista:'Neil Young', a:'AME_02_a.mp3', b:'AME_02_b.mp3' },
+      { titulo:'Mr. Tambourine Man', artista:'Bob Dylan', a:'AME_03_a.mp3', b:'AME_03_b.mp3' },
+      { titulo:'Have You Ever Seen the Rain', artista:'Creedence Clearwater Revival', a:'AME_04_a.mp3', b:'AME_04_b.mp3' },
+      { titulo:'Take It Easy', artista:'Eagles', a:'AME_05_a.mp3', b:'AME_05_b.mp3' },
+      { titulo:'A Horse With No Name', artista:'America', a:'AME_06_a.mp3', b:'AME_06_b.mp3' },
+      { titulo:"Free Fallin'", artista:'Tom Petty', a:'AME_07_a.mp3', b:'AME_07_b.mp3' },
+    ],
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_AMERICANA.mp3' }
+  },
+  BATERIA: {
+    nome: 'Solo de Bateria', descritivo: 'Vol. 1', playlistCodigo: 'BAT-001', universo: 'Solistas', temBonus: false, dificuldade: 5,
+    musicas: [
+      { titulo:'In the Air Tonight', artista:'Phil Collins', a:'BAT_01_a.mp3', b:'BAT_01_a.mp3' },
+      { titulo:'We Will Rock You', artista:'Queen', a:'BAT_02_a.mp3', b:'BAT_02_a.mp3' },
+      { titulo:'Hot For Teacher', artista:'Van Halen', a:'BAT_03_a.mp3', b:'BAT_03_a.mp3' },
+      { titulo:'Moby Dick', artista:'Led Zeppelin', a:'BAT_04_a.mp3', b:'BAT_04_a.mp3' },
+      { titulo:'YYZ', artista:'Rush', a:'BAT_05_a.mp3', b:'BAT_05_a.mp3' },
+      { titulo:'Rock of Ages', artista:'Def Leppard', a:'BAT_06_a.mp3', b:'BAT_06_a.mp3' },
+      { titulo:'Los Endos', artista:'Genesis', a:'BAT_07_a.mp3', b:'BAT_07_a.mp3' },
+    ],
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_BATERIA.mp3' }
+  },
+  ANOS2010: {
+    nome: 'Anos 2010+', descritivo: 'Grandes Êxitos', playlistCodigo: 'A10-001', universo: 'Eixo Temporal', temBonus: false, dificuldade: 3,
+    musicas: [
+      { titulo:'Work', artista:'Rihanna ft. Drake', a:'A10_01_a.mp3', b:'A10_01_b.mp3' },
+      { titulo:'Shape of You', artista:'Ed Sheeran', a:'A10_02_a.mp3', b:'A10_02_b.mp3' },
+      { titulo:'Uptown Funk', artista:'Mark Ronson ft. Bruno Mars', a:'A10_03_a.mp3', b:'A10_03_b.mp3' },
+      { titulo:'Blinding Lights', artista:'The Weeknd', a:'A10_04_a.mp3', b:'A10_04_b.mp3' },
+      { titulo:'Rolling in the Deep', artista:'Adele', a:'A10_05_a.mp3', b:'A10_05_b.mp3' },
+      { titulo:'Old Town Road', artista:'Lil Nas X', a:'A10_06_a.mp3', b:'A10_06_b.mp3' },
+      { titulo:'Bad Guy', artista:'Billie Eilish', a:'A10_07_a.mp3', b:'A10_07_b.mp3' },
+    ],
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_ANOS2010.mp3' }
+  },
+  PT80: {
+    nome: 'Portugal — Anos 80', descritivo: 'Grandes Êxitos', playlistCodigo: 'PT80-001', universo: 'Geografia + Eixo Temporal (cruzamento)', temBonus: false, dificuldade: 2,
+    musicas: [
+      { titulo:'Porto Sentido', artista:'Rui Veloso', a:'PT80_01_a.mp3', b:'PT80_01_b.mp3' },
+      { titulo:'Playback', artista:'Carlos Paião', a:'PT80_02_a.mp3', b:'PT80_02_b.mp3' },
+      { titulo:'Paixão', artista:'Heróis do Mar', a:'PT80_03_a.mp3', b:'PT80_03_b.mp3' },
+      { titulo:'Estrada da Luz', artista:'Trovante', a:'PT80_04_a.mp3', b:'PT80_04_b.mp3' },
+      { titulo:'A Minha Casinha', artista:'Xutos & Pontapés', a:'PT80_05_a.mp3', b:'PT80_05_b.mp3' },
+      { titulo:'Um Grande, Grande Amor', artista:'Fernando Tordo', a:'PT80_06_a.mp3', b:'PT80_06_b.mp3' },
+      { titulo:'Conto de Réis', artista:'José Cid', a:'PT80_07_a.mp3', b:'PT80_07_b.mp3' },
+    ],
+    mosaico: { categoria: 'POR DEFINIR', pessoa: 'POR DEFINIR', titulo: 'POR DEFINIR', artista: 'POR DEFINIR', imagem: null, audio: 'MOSAICO_PT80.mp3' }
+  },
+};
+const CHAVES_COLLECTIONS = Object.keys(COLLECTIONS);
+
+const JANELA_TRECHO = 15;
+const PONTOS_FAIXA = 100;
+const PONTOS_FAIXA5 = 200; // Faixa 5 vale o dobro (recuperação de atrasados)
+const FAIXAS_COM_BONUS = [3, 6]; // só estas Faixas (1-7) disparam a Pergunta Bónus
+const PONTOS_MOSAICO = 200;
+const MORTE_SUBITA_SEG = 3;
+
+// ── Estado do episódio ──
+let NOMES = ['Concorrente 1', 'Concorrente 2', 'Concorrente 3', 'Concorrente 4'];
+let pontos = [0, 0, 0, 0];
+let dinheiro = [0, 0, 0, 0];
+let eliminado = [false, false, false, false];
+let mutados = [false, false, false, false];
+let mutadoAteFaixa = [0, 0, 0, 0];
+// Histórico de desempenho por concorrente — cada entrada: {faixa, tipo:'acerto'|'erro', musica?}
+// Populado em acertouFaixa/errouFaixa/acertouR4/errouR4. Renderizado em renderCabines/renderCabinesR4.
+let historico = [[], [], [], []];
+// Escada de Memória — bónus dos Universos puramente musicais (sem Pergunta Bónus temática).
+// NOTA (24 Jul): Escada de Memória construída e a funcionar, mas DESLIGADA por
+// agora — decisão de simplificar os testes até termos o episódio de Playlists
+// fechado (Cap. 7.9 da bíblia). Aceita-se só Título OU Artista, sem o desafio
+// extra. Para reactivar, basta mudar esta flag para true — o resto do código
+// não precisa de alterações.
+const ESCADA_MEMORIA_ACTIVA = false;
+// NOTA (24 Jul): validação automática LIGADA só para agilizar os testes a solo.
+// Isto substitui temporariamente a "Verificação Humana de Salvaguarda" (Cap.
+// 10.5 da bíblia) — numa emissão a sério, essa regra deve manter-se (o
+// reconhecimento de voz engana-se, ex: "Frankie Goes to Hollywood" → "time to
+// go"). Para voltar à confirmação manual (Correcto/Erro), muda para false.
+const VALIDACAO_AUTOMATICA = true;
+const JANELA_ESCADA = 5;
+const JANELA_RETRATO = 30; // Universos com imagem (temImagem): 1 trecho contínuo, sem Fast Forward
+const PREMIO_ESCADA2 = 25; // Momento 2: a outra metade (título/artista)
+const PREMIO_ESCADA3 = 50; // Momento 3: outra música do mesmo artista/banda
+let escadaVencedor = null;
+let escadaEtapa = 0;
+let escadaRestante = JANELA_ESCADA;
+let escadaTimerInterval = null;
+
+let rondaAtual = 1;          // 1, 2, 3, 4
+let playlistGlobal = 1;      // 1-15, depois "Ronda 4"
+let playlistNaRonda = 1;     // 1-5 dentro da ronda
+let faixaAtual = 1;           // 1-7 (ou 1-9 na Ronda 4)
+let totalFaixasPlaylist = 7;
+let collectionsUsadas = [];
+let collectionActual = null;
+let musicasActuais = [];
+let quadradosGanhos = [];
+let trechoAtual = 1;
+let faseGeral = 'collection'; // 'collection' | 'faixa' | 'bonus' | 'mosaico_revelando' | 'mosaico_mortesubita' | 'eliminacao' | 'fim'
+let vencedorFaixa = null;
+let vencedorMosaico = null;
+let tempoRestante = JANELA_TRECHO;
+let timerInterval = null;
+let pausado = false;
+let liderEscolheu = null; // qual concorrente está a escolher a Collection
+
+const audio = document.getElementById('audioPlayer');
+
+// AudioContext global — criado uma vez no primeiro gesto (arrancar/testar),
+// reutilizado em todos os sons sintéticos para evitar bloqueio do browser.
+let audioCtx = null;
+function garantirAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// Sirene de aviso da Pergunta Bónus — sintetizada, sem ficheiro externo.
+function tocarSireneBonus() {
+  try {
+    const ctx = garantirAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    const t0 = ctx.currentTime;
+    gain.gain.setValueAtTime(0.001, t0);
+    gain.gain.linearRampToValueAtTime(0.18, t0 + 0.05);
+    osc.frequency.setValueAtTime(440, t0);
+    osc.frequency.linearRampToValueAtTime(880, t0 + 0.25);
+    osc.frequency.linearRampToValueAtTime(440, t0 + 0.5);
+    osc.frequency.linearRampToValueAtTime(880, t0 + 0.75);
+    osc.frequency.linearRampToValueAtTime(440, t0 + 1.0);
+    gain.gain.linearRampToValueAtTime(0.0001, t0 + 1.05);
+    osc.start(t0);
+    osc.stop(t0 + 1.1);
+  } catch (e) {}
+}
+const cabinesEl = document.getElementById('cabines');
+
+function log(msg) { document.getElementById('log').textContent = msg; }
+
+function concorrentesActivos() {
+  return [0,1,2,3].filter(i => !eliminado[i]);
+}
+
+function lider() {
+  const activos = concorrentesActivos();
+  let melhor = activos[0];
+  for (const i of activos) if (pontos[i] > pontos[melhor]) melhor = i;
+  return melhor;
+}
+
+// ── RENDER ──
+function renderCabines() {
+  cabinesEl.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const div = document.createElement('div');
+    if (eliminado[i]) { div.className = 'cabine eliminado-cab'; cabinesEl.appendChild(div); continue; }
+    let estado = 'azul';
+    if (mutados[i]) estado = 'vermelho';
+    if (vencedorFaixa === i || vencedorMosaico === i) estado = 'verde';
+    const bloqueadoBonus = (faseGeral === 'bonus' && vencedorFaixa !== i);
+
+    let botoesHtml = '<button class="btn" disabled>—</button>';
+    if (faseGeral === 'faixa') {
+      botoesHtml = `
+        <button class="btn btn-mic" ${mutados[i] ? 'disabled' : ''} onclick="ouvirConcorrente(${i})">🎤 Ouvir</button>
+        <button class="btn btn-correcto" ${mutados[i] ? 'disabled' : ''} onclick="acertouFaixa(${i})">✓ Correcto</button>
+        <button class="btn btn-erro" ${mutados[i] ? 'disabled' : ''} onclick="errouFaixa(${i})">✗ Erro</button>`;
+    } else if (faseGeral === 'mosaico_revelando' || faseGeral === 'mosaico_mortesubita') {
+      botoesHtml = `
+        <button class="btn btn-mic" ${mutados[i] ? 'disabled' : ''} onclick="ouvirMosaico(${i})">🎤 Ouvir</button>
+        <button class="btn btn-m8" ${mutados[i] ? 'disabled' : ''} onclick="responderMosaico(${i})">🧩 Respondeu!</button>`;
+    }
+
+    div.className = 'cabine ' + (estado !== 'azul' ? estado : '') + (bloqueadoBonus ? ' bloqueado' : '');
+    div.innerHTML = `
+      <input class="cabine-nome" value="${NOMES[i]}" onchange="NOMES[${i}]=this.value">
+      <div class="cabine-scores">
+        <span class="score-pontos">${pontos[i]} pts</span>
+        <span class="score-dinheiro">€${dinheiro[i]}</span>
+      </div>
+      <div class="cabine-botoes">${botoesHtml}</div>
+      <div class="estado-tag estado-${estado}-tag">${estado.toUpperCase()}</div>
+      ${renderHistoricoHtml(i)}
+    `;
+    cabinesEl.appendChild(div);
+  }
+}
+
+// Histórico de desempenho do concorrente: música acertada (nome) ou "Erro" a vermelho, por Faixa.
+function renderHistoricoHtml(i) {
+  if (!historico[i] || historico[i].length === 0) return '';
+  const linhas = historico[i].map(h => {
+    if (h.tipo === 'acerto') {
+      return `<div class="historico-linha historico-acerto">Faixa ${h.faixa} — ✓ ${h.musica}</div>`;
+    }
+    if (h.tipo === 'escada') {
+      if (h.sucesso) return `<div class="historico-linha historico-escada">Faixa ${h.faixa} — 🪜 Momento ${h.etapa} completo!</div>`;
+      return `<div class="historico-linha historico-neutro">Faixa ${h.faixa} — 🪜 Momento ${h.etapa} não conseguido</div>`;
+    }
+    return `<div class="historico-linha historico-erro">Faixa ${h.faixa} — Erro</div>`;
+  }).join('');
+  return `<div class="cabine-historico">${linhas}</div>`;
+}
+
+function renderProgresso() {
+  const el = document.getElementById('progresso-faixas');
+  el.innerHTML = '';
+  for (let i = 1; i <= totalFaixasPlaylist; i++) {
+    const span = document.createElement('span');
+    if (i === faixaAtual && faseGeral === 'faixa') span.classList.add('actual');
+    if (quadradosGanhos[i-1]) span.classList.add('feito');
+    el.appendChild(span);
+  }
+}
+
+function actualizarBadge() {
+  const nomeCollection = collectionActual ? COLLECTIONS[collectionActual].nome : '—';
+  if (rondaAtual <= 3) {
+    document.getElementById('fase-badge').textContent =
+      `RONDA ${rondaAtual} · PLAYLIST ${playlistGlobal}/15 · ${nomeCollection}`;
+  } else {
+    document.getElementById('fase-badge').textContent = `RONDA 4 · SOLO FINAL · ${nomeCollection}`;
+  }
+  if (collectionActual) {
+    const info = COLLECTIONS[collectionActual];
+    document.getElementById('playlist-nome').innerHTML =
+      `${info.nome} — ${info.descritivo} <span class="codigo">${info.playlistCodigo}</span>`;
+  }
+}
+
+function mostrarSoPainel(idVisivel) {
+  ['palco-faixa','bonus-painel','escada-painel','mosaico-painel','collection-painel','eliminacao-painel','fim-painel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (id === idVisivel) {
+      el.style.display = (id === 'palco-faixa') ? 'flex' : '';
+      el.classList.add('activo');
+    } else {
+      el.classList.remove('activo');
+      if (id === 'palco-faixa') el.style.display = 'none';
+    }
+  });
+  if (idVisivel !== 'palco-faixa' && idVisivel !== 'mosaico-painel') {
+    if (reconhecimentoActivo) { try { reconhecimentoActivo.stop(); } catch (e) {} }
+    document.getElementById('reconhecimento-voz').style.display = 'none';
+  }
+  if (idVisivel !== 'palco-faixa') {
+    clearInterval(retratoTimerReveal);
+  }
+}
+
+// ── CURVA DE DIFICULDADE POR PLAYLIST (Bíblia, Cap. 15.2) ──
+// Playlist 1 (abertura) = mais fácil ... Playlist 5 (clímax) = mais difícil.
+function bandaDificuldade(posicaoNaRonda) {
+  switch (posicaoNaRonda) {
+    case 1: return [1, 2];
+    case 2: return [2, 3];
+    case 3: return [3, 3];
+    case 4: return [3, 4];
+    case 5: return [4, 5];
+    default: return [1, 5];
+  }
+}
+
+// Filtra chaves de Collections pela banda de dificuldade da posição actual.
+// Se a banda não tiver nenhuma opção disponível, alarga progressivamente
+// para nunca bloquear o jogo (fallback: banda alargada → pool completa).
+// IMPORTANTE: nas escolhas do líder (posição 2-5), o alargamento nunca desce
+// a dificuldade 1 — isso deixaria "Anos 80" reaparecer como escolha segura
+// do líder, o que quebraria o propósito da curva de dificuldade.
+function filtrarPorDificuldade(chaves, posicaoNaRonda) {
+  const [min, max] = bandaDificuldade(posicaoNaRonda);
+  const pisoAbsoluto = (posicaoNaRonda === 1) ? 1 : 2; // só o sorteio (posição 1) pode ir a dif.1
+  const exacta = chaves.filter(k => {
+    const d = COLLECTIONS[k].dificuldade || 3;
+    return d >= min && d <= max;
+  });
+  if (exacta.length > 0) return exacta;
+  const alargada = chaves.filter(k => {
+    const d = COLLECTIONS[k].dificuldade || 3;
+    return d >= Math.max(pisoAbsoluto, min - 1) && d <= Math.min(5, max + 1);
+  });
+  if (alargada.length > 0) return alargada;
+  const semAbaixoDoPiso = chaves.filter(k => (COLLECTIONS[k].dificuldade || 3) >= pisoAbsoluto);
+  return semAbaixoDoPiso.length > 0 ? semAbaixoDoPiso : chaves; // último recurso: nunca travar o jogo
+}
+
+// ── ESCOLHA DE PLAYLIST ──
+function iniciarEscolhaCollection() {
+  faseGeral = 'collection';
+  mostrarSoPainel('collection-painel');
+  renderCabines();
+  actualizarBadge();
+
+  const disponiveis = CHAVES_COLLECTIONS.filter(k => !collectionsUsadas.includes(k));
+  const naoUsadas = disponiveis.length > 0 ? disponiveis : CHAVES_COLLECTIONS; // reinicia o ciclo se esgotar
+  const pool = filtrarPorDificuldade(naoUsadas, playlistNaRonda);
+  const [bandaMin, bandaMax] = bandaDificuldade(playlistNaRonda);
+
+  const primeiraDaRonda = (playlistNaRonda === 1);
+  const titulo = document.getElementById('collection-titulo');
+  const sub = document.getElementById('collection-sub');
+  const lista = document.getElementById('collection-lista');
+  lista.innerHTML = '';
+  document.getElementById('collection-resultado').textContent = '';
+
+  if (primeiraDaRonda) {
+    titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — SORTEIO ALEATÓRIO';
+    sub.textContent = `Início de Ronda: o Universo é sorteado pelo sistema, sem intervenção do ranking. Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
+    setTimeout(() => {
+      const escolha = pool[Math.floor(Math.random() * pool.length)];
+      confirmarCollection(escolha, true);
+    }, 1200);
+    return;
+  }
+
+  const liderIdx = lider();
+  titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ESCOLHA DE ' + NOMES[liderIdx];
+  sub.textContent = `${NOMES[liderIdx]} lidera o ranking e escolhe o Universo (a Playlist correspondente é a que a Biblioteca do episódio já tem pronta nesse Universo). Opções limitadas à dificuldade ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5 desta posição na Ronda.`;
+
+  pool.forEach(chave => {
+    const btn = document.createElement('button');
+    btn.className = 'collection-btn';
+    const dif = COLLECTIONS[chave].dificuldade || 3;
+    btn.textContent = COLLECTIONS[chave].universo + '\n→ ' + COLLECTIONS[chave].nome + ' · Dif. ' + dif + '/5';
+    btn.onclick = () => confirmarCollection(chave, false);
+    lista.appendChild(btn);
+  });
+}
+
+function confirmarCollection(chave, foiAleatorio) {
+  collectionActual = chave;
+  collectionsUsadas.push(chave);
+  musicasActuais = COLLECTIONS[chave].musicas;
+  document.getElementById('collection-resultado').textContent =
+    (foiAleatorio ? '🎲 Sorteada: ' : '✓ Escolhida: ') + COLLECTIONS[chave].nome;
+  log(`Playlist desta posição: ${COLLECTIONS[chave].nome} (Universo: ${COLLECTIONS[chave].universo})`);
+  setTimeout(() => {
+    if (rondaAtual <= 3) {
+      iniciarPlaylistRegular();
+    } else {
+      iniciarRonda4();
+    }
+  }, 1000);
+}
+
+// ── PLAYLIST REGULAR (7 Faixas + Mosaico) ──
+// ── RECONHECIMENTO DE VOZ (Web Speech API) ──
+// Um botão por concorrente identifica quem está a falar (per Cap. 10.5 —
+// o software sugere, o árbitro humano confirma nos botões Correcto/Erro).
+let reconhecimentoActivo = null;
+let reconhecimentoConcorrente = null;
+
+function suportaReconhecimentoVoz() {
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+
+function normalizarTexto(s) {
+  return (s || '').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .trim();
+}
+
+function correspondeResposta(transcricao, musica) {
+  if (!musica) return false;
+  const t = normalizarTexto(transcricao);
+  const titulo = normalizarTexto(musica.titulo);
+  const artista = normalizarTexto(musica.artista);
+  return (titulo.length > 0 && t.includes(titulo)) || (artista.length > 0 && t.includes(artista));
+}
+
+// Universos cantados em português — todos os outros assumem-se internacionais (inglês).
+const UNIVERSOS_PT = ['PT', 'PT80'];
+function idiomaDoUniverso(chave) {
+  return UNIVERSOS_PT.includes(chave) ? 'pt-PT' : 'en-US';
+}
+
+function ouvirConcorrente(i) {
+  if (!suportaReconhecimentoVoz()) {
+    alert('Este browser não suporta reconhecimento de voz. Usa o Chrome ou o Edge, de preferência servido por http:// (não file://).');
+    return;
+  }
+  if (reconhecimentoActivo) {
+    try { reconhecimentoActivo.stop(); } catch (e) {}
+  }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.lang = idiomaDoUniverso(collectionActual);
+  rec.interimResults = true;
+  rec.continuous = false;
+  reconhecimentoConcorrente = i;
+  reconhecimentoActivo = rec;
+  let jaConfirmado = false;
+
+  const painel = document.getElementById('reconhecimento-voz');
+  const statusEl = document.getElementById('rv-status');
+  const transEl = document.getElementById('rv-transcricao');
+  painel.style.display = 'block';
+  const idiomaLabel = rec.lang === 'pt-PT' ? '🇵🇹 PT' : '🇬🇧 EN';
+  statusEl.textContent = `🎤 A ouvir ${NOMES[i]}… (${idiomaLabel})`;
+  transEl.textContent = '…';
+  transEl.className = 'rv-transcricao';
+
+  rec.onresult = (evento) => {
+    if (jaConfirmado) return;
+    let texto = '';
+    for (let k = 0; k < evento.results.length; k++) texto += evento.results[k][0].transcript;
+    transEl.textContent = `"${texto.trim()}"`;
+    const m = musicasActuais[faixaAtual - 1];
+    if (correspondeResposta(texto, m)) {
+      transEl.className = 'rv-transcricao rv-match';
+      if (VALIDACAO_AUTOMATICA && faseGeral === 'faixa' && !mutados[i]) {
+        jaConfirmado = true;
+        statusEl.textContent = `🎤 ${NOMES[i]} — validado automaticamente! (modo de teste)`;
+        try { rec.stop(); } catch (e) {}
+        acertouFaixa(i);
+      } else {
+        statusEl.textContent = `🎤 ${NOMES[i]} — parece bater certo com a resposta! Confirma no botão Correcto.`;
+      }
+    } else {
+      transEl.className = 'rv-transcricao';
+      statusEl.textContent = `🎤 A ouvir ${NOMES[i]}…`;
+    }
+  };
+  rec.onerror = (evento) => {
+    statusEl.textContent = `🎤 Erro no reconhecimento (${evento.error}). Clica "Ouvir" outra vez para tentar de novo.`;
+  };
+  rec.onend = () => {
+    if (reconhecimentoConcorrente === i) reconhecimentoActivo = null;
+  };
+  rec.start();
+}
+
+function iniciarPlaylistRegular() {
+  faixaAtual = 1;
+  totalFaixasPlaylist = 8;
+  quadradosGanhos = [false,false,false,false,false,false,false,false];
+  iniciarFaixa();
+}
+
+function carregarTrecho() {
+  const m = musicasActuais[faixaAtual - 1];
+  const temImagem = COLLECTIONS[collectionActual].temImagem;
+  document.getElementById('m-titulo').textContent = '';
+  document.getElementById('m-artista').textContent = 'Identidade oculta até acertares';
+  document.getElementById('trecho-label').textContent = temImagem ? 'REVELAÇÃO EM CURSO' : 'TRECHO ' + trechoAtual;
+  document.getElementById('chave-resposta').textContent = `🔑 Título OU Artista: "${m.titulo}" / "${m.artista}"`;
+  if (reconhecimentoActivo) { try { reconhecimentoActivo.stop(); } catch (e) {} }
+  document.getElementById('reconhecimento-voz').style.display = 'none';
+  document.getElementById('rv-transcricao').textContent = '—';
+
+  const grelhaEl = document.getElementById('retrato-mosaico');
+  if (temImagem && m.imagem) {
+    grelhaEl.style.display = 'grid';
+    montarMosaicoRetrato(m.imagem);
+    iniciarRevelacaoMosaicoRetrato();
+  } else {
+    grelhaEl.style.display = 'none';
+  }
+
+  // Universos com imagem: 1 ficheiro contínuo de 30s (campo "a"), sem Trecho B nem Fast Forward.
+  audio.src = temImagem ? m.a : (trechoAtual === 1 ? m.a : m.b);
+  audio.play().catch(() => {});
+}
+
+// ── MOSAICO DA FAIXA (Retrato Sonoro) — grelha 4x4 (16 quadrados) ──
+// Reaproveita a mesma técnica visual do Mosaico de fim de Playlist (ver
+// renderM8Grelha), mas aplicada dentro da própria Faixa, revelação por tempo
+// em vez de por acerto de outras Faixas.
+const RETRATO_TEMPO_REVELACAO = 20; // segundos até ficar 100% revelada sozinha (28 Jul)
+const RETRATO_NUM_QUADRADOS = 16;
+let retratoTimerReveal = null;
+let retratoOrdemRevelacao = [];
+let retratoIndiceRevelado = 0;
+
+function montarMosaicoRetrato(imagemUrl) {
+  const grelha = document.getElementById('retrato-mosaico');
+  grelha.innerHTML = '';
+  const ladoGrelha = 4;
+  const tamanhoQuadrado = 54;
+  const tamanhoTotal = ladoGrelha * tamanhoQuadrado; // 216px, igual ao Mosaico de fim de Playlist
+  for (let q = 0; q < RETRATO_NUM_QUADRADOS; q++) {
+    const div = document.createElement('div');
+    div.className = 'retrato-tile';
+    div.dataset.q = q;
+    div.style.backgroundPosition = `-${(q % ladoGrelha) * tamanhoQuadrado}px -${Math.floor(q / ladoGrelha) * tamanhoQuadrado}px`;
+    div.style.setProperty('--img-revelado', `url('${imagemUrl}')`);
+    div.style.backgroundSize = `${tamanhoTotal}px ${tamanhoTotal}px`;
+    grelha.appendChild(div);
+  }
+}
+
+function iniciarRevelacaoMosaicoRetrato() {
+  retratoOrdemRevelacao = Array.from({ length: RETRATO_NUM_QUADRADOS }, (_, i) => i);
+  for (let i = retratoOrdemRevelacao.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [retratoOrdemRevelacao[i], retratoOrdemRevelacao[j]] = [retratoOrdemRevelacao[j], retratoOrdemRevelacao[i]];
+  }
+  retratoIndiceRevelado = 0;
+  clearInterval(retratoTimerReveal);
+  const intervalo = Math.floor((RETRATO_TEMPO_REVELACAO * 1000) / RETRATO_NUM_QUADRADOS);
+  retratoTimerReveal = setInterval(revelarProximoQuadradoRetrato, intervalo);
+}
+
+function revelarProximoQuadradoRetrato() {
+  if (retratoIndiceRevelado >= retratoOrdemRevelacao.length) { clearInterval(retratoTimerReveal); return; }
+  const q = retratoOrdemRevelacao[retratoIndiceRevelado];
+  const div = document.querySelector(`.retrato-tile[data-q="${q}"]`);
+  if (div) div.classList.add('revelado');
+  retratoIndiceRevelado++;
+}
+
+// Revela todos os quadrados de imediato — chamada quando alguém acerta a Faixa.
+function revelarRetrato() {
+  if (!COLLECTIONS[collectionActual] || !COLLECTIONS[collectionActual].temImagem) return;
+  clearInterval(retratoTimerReveal);
+  document.querySelectorAll('.retrato-tile').forEach(div => div.classList.add('revelado'));
+}
+
+function iniciarFaixa() {
+  faseGeral = 'faixa';
+  trechoAtual = 1;
+  vencedorFaixa = null;
+  mutados = mutadoAteFaixa.map((ateFaixa, i) => !eliminado[i] && faixaAtual <= ateFaixa);
+  const temImagem = COLLECTIONS[collectionActual].temImagem;
+  tempoRestante = temImagem ? JANELA_RETRATO : JANELA_TRECHO;
+  mostrarSoPainel('palco-faixa');
+  carregarTrecho();
+  renderCabines();
+  renderProgresso();
+  actualizarBadge();
+  atualizarTimerUI();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+  log(`Faixa ${faixaAtual}/${totalFaixasPlaylist} — ${musicasActuais[faixaAtual-1].titulo}`);
+}
+
+function tick() {
+  if (pausado) return;
+  tempoRestante--;
+  atualizarTimerUI();
+  if (tempoRestante <= 0) {
+    if (faseGeral === 'faixa' && COLLECTIONS[collectionActual].temImagem) terminarFaixaSemVencedor();
+    else if (faseGeral === 'faixa' && trechoAtual === 1) fastForward();
+    else if (faseGeral === 'faixa' && trechoAtual === 2) terminarFaixaSemVencedor();
+    else if (faseGeral === 'mosaico_mortesubita') terminarPlaylistSemVencedorM8();
+    else if (faseGeral === 'ronda4_faixa') terminarFaixaR4SemVencedor();
+  }
+}
+
+function atualizarTimerUI() {
+  if (faseGeral === 'mosaico_mortesubita') { document.getElementById('mosaico-timer-ms').textContent = tempoRestante; return; }
+  const t = document.getElementById('timer');
+  t.textContent = tempoRestante;
+  t.classList.toggle('critico', tempoRestante <= 5);
+  const janela = COLLECTIONS[collectionActual] && COLLECTIONS[collectionActual].temImagem ? JANELA_RETRATO : JANELA_TRECHO;
+  document.getElementById('barra-fill').style.width = (tempoRestante / janela * 100) + '%';
+}
+
+function tocarSomFF() {
+  try {
+    const ctx = garantirAudioCtx();
+    const t0 = ctx.currentTime;
+    // 3 cliques percussivos rápidos — evocam o avancar de uma cassete
+    [0, 0.12, 0.24].forEach(offset => {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / data.length, 3);
+      const src = ctx.createBufferSource();
+      const gain = ctx.createGain();
+      src.buffer = buf;
+      src.connect(gain);
+      gain.connect(ctx.destination);
+      gain.gain.setValueAtTime(0.45, t0 + offset);
+      gain.gain.linearRampToValueAtTime(0.0001, t0 + offset + 0.05);
+      src.start(t0 + offset);
+    });
+    // flash visual breve no trecho-label
+    const lbl = document.getElementById('trecho-label');
+    lbl.style.color = '#e0a83f';
+    lbl.textContent = '⏩ FF';
+    setTimeout(() => { lbl.style.color = ''; }, 500);
+  } catch (e) {}
+}
+
+function fastForward() {
+  log('⏩ Fast Forward automático');
+  audio.pause();
+  tocarSomFF();
+  trechoAtual = 2;
+  tempoRestante = JANELA_TRECHO;
+  // Pequeno delay para o som do FF acabar antes do Trecho B começar
+  setTimeout(() => {
+    carregarTrecho();
+    atualizarTimerUI();
+  }, 400);
+}
+
+function terminarFaixaSemVencedor() {
+  clearInterval(timerInterval);
+  audio.pause();
+  log(`Faixa ${faixaAtual} terminado sem vencedor.`);
+  avancarParaProximaFaixaOuMosaico();
+}
+
+function acertouFaixa(i) {
+  if (mutados[i] || faseGeral !== 'faixa') return;
+  clearInterval(timerInterval);
+  audio.pause();
+  revelarRetrato();
+  vencedorFaixa = i;
+  const ganhos = (faixaAtual === 5) ? PONTOS_FAIXA5 : PONTOS_FAIXA;
+  pontos[i] += ganhos;
+  quadradosGanhos[faixaAtual - 1] = true;
+  historico[i].push({ faixa: faixaAtual, tipo: 'acerto', musica: musicasActuais[faixaAtual - 1].titulo });
+  renderCabines();
+  renderProgresso();
+
+  const universoTemBonus = COLLECTIONS[collectionActual].temBonus;
+  const temImagem = COLLECTIONS[collectionActual].temImagem;
+  // Se há mosaico a revelar, esperar que fique 100% visível antes de avançar
+  const pausaAposAcerto = temImagem ? 1500 : 0;
+
+  if (universoTemBonus && FAIXAS_COM_BONUS.includes(faixaAtual)) {
+    faseGeral = 'bonus';
+    tocarSireneBonus();
+    setTimeout(() => {
+      mostrarSoPainel('bonus-painel');
+      document.getElementById('bonus-quem').textContent =
+        `${NOMES[i]} ganhou a Faixa ${faixaAtual} (+${ganhos} pontos). Pergunta Bónus temática (${COLLECTIONS[collectionActual].nome}):`;
+    }, pausaAposAcerto);
+    log(`✓ ${NOMES[i]} acertou — quadrado ${faixaAtual} conquistado.`);
+  } else if (!universoTemBonus && ESCADA_MEMORIA_ACTIVA) {
+    log(`✓ ${NOMES[i]} acertou (+${ganhos} pontos) — Universo musical: arranca a Escada de Memória.`);
+    setTimeout(() => iniciarEscada(i), pausaAposAcerto);
+  } else {
+    faseGeral = 'fim';
+    log(`✓ ${NOMES[i]} acertou (+${ganhos} pontos) — mosaico a revelar…`);
+    setTimeout(() => avancarParaProximaFaixaOuMosaico(), pausaAposAcerto);
+  }
+}
+
+function errouFaixa(i) {
+  if (mutados[i] || faseGeral !== 'faixa') return;
+  mutados[i] = true;
+  mutadoAteFaixa[i] = faixaAtual + 1;
+  historico[i].push({ faixa: faixaAtual, tipo: 'erro' });
+  renderCabines();
+  log(`✗ ${NOMES[i]} errou — MUTE neste Faixa e no seguinte.`);
+  if (concorrentesActivos().every(i => mutados[i])) terminarFaixaSemVencedor();
+}
+
+function resolverBonus(acertouBonus) {
+  if (vencedorFaixa === null) return;
+  if (acertouBonus) {
+    dinheiro[vencedorFaixa] += 50;
+    log(`💰 ${NOMES[vencedorFaixa]} acertou a Pergunta Bónus — +€50 (só conta se vencer o episódio).`);
+  } else {
+    log(`${NOMES[vencedorFaixa]} errou a Pergunta Bónus.`);
+  }
+  avancarParaProximaFaixaOuMosaico();
+}
+
+// ── ESCADA DE MEMÓRIA (bónus dos Universos puramente musicais) ──
+function iniciarEscada(vencedorIdx) {
+  escadaVencedor = vencedorIdx;
+  escadaEtapa = 2;
+  faseGeral = 'escada';
+  mostrarSoPainel('escada-painel');
+  document.getElementById('escada-sub').textContent =
+    `${NOMES[vencedorIdx]} — Momento 2: diz também a outra metade (a que não disseste: Título ou Artista). 5 segundos para bónus de +€${PREMIO_ESCADA2}.`;
+  arrancarTimerEscada();
+}
+
+function arrancarTimerEscada() {
+  escadaRestante = JANELA_ESCADA;
+  document.getElementById('escada-timer').textContent = escadaRestante;
+  clearInterval(escadaTimerInterval);
+  escadaTimerInterval = setInterval(tickEscada, 1000);
+}
+
+function tickEscada() {
+  escadaRestante--;
+  document.getElementById('escada-timer').textContent = Math.max(0, escadaRestante);
+  if (escadaRestante <= 0) {
+    clearInterval(escadaTimerInterval);
+    resolverEscada(false);
+  }
+}
+
+function resolverEscada(conseguiu) {
+  clearInterval(escadaTimerInterval);
+  const i = escadaVencedor;
+  if (i === null) return;
+
+  if (escadaEtapa === 2) {
+    if (conseguiu) {
+      dinheiro[i] += PREMIO_ESCADA2;
+      historico[i].push({ faixa: faixaAtual, tipo: 'escada', etapa: 2, sucesso: true });
+      log(`🪜 ${NOMES[i]} completou o Momento 2 da Escada de Memória — +€${PREMIO_ESCADA2}.`);
+    } else {
+      historico[i].push({ faixa: faixaAtual, tipo: 'escada', etapa: 2, sucesso: false });
+      log(`${NOMES[i]} não completou o Momento 2 da Escada de Memória.`);
+    }
+    renderCabines();
+    escadaEtapa = 3;
+    document.getElementById('escada-sub').textContent =
+      `${NOMES[i]} — Momento 3: diz OUTRA música do MESMO artista/banda. 5 segundos para bónus de +€${PREMIO_ESCADA3}.`;
+    arrancarTimerEscada();
+  } else {
+    if (conseguiu) {
+      dinheiro[i] += PREMIO_ESCADA3;
+      historico[i].push({ faixa: faixaAtual, tipo: 'escada', etapa: 3, sucesso: true });
+      log(`🪜 ${NOMES[i]} completou o Momento 3 da Escada de Memória — +€${PREMIO_ESCADA3}.`);
+    } else {
+      historico[i].push({ faixa: faixaAtual, tipo: 'escada', etapa: 3, sucesso: false });
+      log(`${NOMES[i]} não completou o Momento 3 da Escada de Memória.`);
+    }
+    renderCabines();
+    escadaVencedor = null;
+    avancarParaProximaFaixaOuMosaico();
+  }
+}
+
+function avancarParaProximaFaixaOuMosaico() {
+  if (faixaAtual < 8) { faixaAtual++; iniciarFaixa(); }
+  else iniciarMosaico();
+}
+
+// ── MOSAICO ──
+function renderM8Grelha() {
+  const grelha = document.getElementById('mosaico-grelha');
+  grelha.innerHTML = '';
+  const imagem = COLLECTIONS[collectionActual].mosaico.imagem;
+  const cols = 4;
+  const tamanhoQuadrado = 64;
+  const tamanho = cols * tamanhoQuadrado; // 256px
+  for (let q = 0; q < 16; q++) {
+    const div = document.createElement('div');
+    div.className = 'mosaico-quadrado';
+    div.dataset.q = q;
+    div.style.backgroundPosition = `-${(q % cols) * tamanhoQuadrado}px -${Math.floor(q / cols) * tamanhoQuadrado}px`;
+    if (imagem) {
+      div.style.setProperty('--img-revelado', `url('${imagem}')`);
+      div.style.backgroundSize = `${tamanho}px ${tamanho}px`;
+    }
+    div.innerHTML = '<span>?</span>';
+    grelha.appendChild(div);
+  }
+}
+
+function animarRevelacaoGrelha() {
+  const indices = [];
+  for (let q = 0; q < 8; q++) if (quadradosGanhos[q]) indices.push(q);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  indices.forEach((q, ordem) => {
+    setTimeout(() => {
+      const div = document.querySelector(`.mosaico-quadrado[data-q="${q}"]`);
+      if (!div) return;
+      div.classList.add('a-entrar');
+      div.innerHTML = '';
+      div.classList.add('revelado');
+      requestAnimationFrame(() => div.classList.remove('a-entrar'));
+    }, 700 * (ordem + 1));
+  });
+}
+
+function iniciarMosaico() {
+  faseGeral = 'mosaico_revelando';
+  vencedorMosaico = null;
+  mutados = [false,false,false,false].map((v,i) => eliminado[i] ? false : false);
+  mostrarSoPainel('mosaico-painel');
+  document.getElementById('mosaico-timer-ms').classList.remove('activo');
+  renderM8Grelha();
+  renderCabines();
+  renderProgresso();
+  const infoMosaico = COLLECTIONS[collectionActual].mosaico;
+  document.getElementById('mosaico-categoria').textContent = `Quem é o(a) ${infoMosaico.categoria}?`;
+  audio.src = infoMosaico.audio; // faixa dedicada do Mosaico, não uma das 7 de jogo
+  audio.play().catch(() => {});
+  log(`Mosaico — categoria: ${infoMosaico.categoria} · resposta certa: ${infoMosaico.pessoa}`);
+  document.getElementById('mosaico-status').textContent =
+    `Quadrados conquistados: ${quadradosGanhos.filter(Boolean).length} de 8. A revelar...`;
+  animarRevelacaoGrelha();
+}
+
+function responderMosaico(i) {
+  if (mutados[i]) return;
+  if (faseGeral !== 'mosaico_revelando' && faseGeral !== 'mosaico_mortesubita') return;
+  const infoMosaico = COLLECTIONS[collectionActual].mosaico;
+  const acertou = confirm(`${NOMES[i]} respondeu à pergunta "Quem é o(a) ${infoMosaico.categoria}?"\n\n(resposta certa: ${infoMosaico.pessoa})\n\nAcertou?`);
+  if (acertou) { confirmarMosaicoAcerto(i); } else { confirmarMosaicoErro(i); }
+}
+
+function confirmarMosaicoAcerto(i) {
+  const infoMosaico = COLLECTIONS[collectionActual].mosaico;
+  clearInterval(timerInterval);
+  vencedorMosaico = i;
+  pontos[i] += PONTOS_MOSAICO;
+  renderCabines();
+  document.getElementById('mosaico-status').textContent = `🏆 ${NOMES[i]} venceu o Mosaico! +${PONTOS_MOSAICO} pontos.`;
+  log(`🏆 ${NOMES[i]} identificou correctamente: ${infoMosaico.pessoa}.`);
+  setTimeout(avancarDepoisDaPlaylist, 1200);
+}
+
+function confirmarMosaicoErro(i) {
+  const estadoAnterior = faseGeral;
+  clearInterval(timerInterval);
+  mutados[i] = true;
+  renderCabines();
+  document.getElementById('mosaico-status').textContent = `${NOMES[i]} errou — MUTE.`;
+  if (concorrentesActivos().every(i => mutados[i])) { terminarPlaylistSemVencedorM8(); return; }
+  faseGeral = estadoAnterior;
+  if (estadoAnterior === 'mosaico_mortesubita') timerInterval = setInterval(tick, 1000);
+}
+
+// ── Reconhecimento de voz aplicado ao Mosaico ──
+function ouvirMosaico(i) {
+  if (!suportaReconhecimentoVoz()) {
+    alert('Este browser não suporta reconhecimento de voz. Usa o Chrome ou o Edge, de preferência servido por http:// (não file://).');
+    return;
+  }
+  if (mutados[i]) return;
+  if (faseGeral !== 'mosaico_revelando' && faseGeral !== 'mosaico_mortesubita') return;
+  if (reconhecimentoActivo) { try { reconhecimentoActivo.stop(); } catch (e) {} }
+
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.lang = idiomaDoUniverso(collectionActual);
+  rec.interimResults = true;
+  rec.continuous = false;
+  reconhecimentoConcorrente = i;
+  reconhecimentoActivo = rec;
+  let jaConfirmado = false;
+
+  const painel = document.getElementById('reconhecimento-voz');
+  const statusEl = document.getElementById('rv-status');
+  const transEl = document.getElementById('rv-transcricao');
+  painel.style.display = 'block';
+  const idiomaLabel = rec.lang === 'pt-PT' ? '🇵🇹 PT' : '🇬🇧 EN';
+  const infoMosaico = COLLECTIONS[collectionActual].mosaico;
+  statusEl.textContent = `🎤 A ouvir ${NOMES[i]} — Mosaico: "Quem é o(a) ${infoMosaico.categoria}?" (${idiomaLabel})`;
+  transEl.textContent = '…';
+  transEl.className = 'rv-transcricao';
+
+  rec.onresult = (evento) => {
+    if (jaConfirmado) return;
+    let texto = '';
+    for (let k = 0; k < evento.results.length; k++) texto += evento.results[k][0].transcript;
+    transEl.textContent = `"${texto.trim()}"`;
+    const bateCerto = normalizarTexto(texto).includes(normalizarTexto(infoMosaico.pessoa)) && normalizarTexto(infoMosaico.pessoa).length > 0;
+    if (bateCerto) {
+      transEl.className = 'rv-transcricao rv-match';
+      if (VALIDACAO_AUTOMATICA) {
+        jaConfirmado = true;
+        statusEl.textContent = `🎤 ${NOMES[i]} — Mosaico validado automaticamente! (modo de teste)`;
+        try { rec.stop(); } catch (e) {}
+        confirmarMosaicoAcerto(i);
+      } else {
+        statusEl.textContent = `🎤 ${NOMES[i]} — parece bater certo! Confirma no botão "🧩 Respondeu!".`;
+      }
+    } else {
+      transEl.className = 'rv-transcricao';
+    }
+  };
+  rec.onerror = (evento) => {
+    statusEl.textContent = `🎤 Erro no reconhecimento (${evento.error}). Clica "Ouvir" outra vez para tentar de novo.`;
+  };
+  rec.onend = () => {
+    if (reconhecimentoConcorrente === i) reconhecimentoActivo = null;
+  };
+  rec.start();
+}
+
+function avancarRevelacao() {
+  if (faseGeral !== 'mosaico_revelando') return;
+  faseGeral = 'mosaico_mortesubita';
+  tempoRestante = MORTE_SUBITA_SEG;
+  document.getElementById('mosaico-timer-ms').classList.add('activo');
+  document.getElementById('mosaico-status').textContent = '⏱ MORTE SÚBITA — 3 segundos!';
+  renderCabines();
+  atualizarTimerUI();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+}
+
+function terminarPlaylistSemVencedorM8() {
+  clearInterval(timerInterval);
+  audio.pause();
+  document.getElementById('mosaico-status').textContent = 'Morte Súbita esgotada — sem vencedor do Mosaico.';
+  log('Playlist terminada sem vencedor do Mosaico.');
+  setTimeout(avancarDepoisDaPlaylist, 1200);
+}
+
+// ── FLUXO ENTRE PLAYLISTS / RONDAS ──
+function avancarDepoisDaPlaylist() {
+  if (playlistNaRonda < 5) {
+    playlistNaRonda++;
+    playlistGlobal++;
+    iniciarEscolhaCollection();
+  } else {
+    mostrarEliminacao();
+  }
+}
+
+function mostrarEliminacao() {
+  faseGeral = 'eliminacao';
+  mostrarSoPainel('eliminacao-painel');
+  const activos = concorrentesActivos();
+  let piorIdx = activos[0];
+  for (const i of activos) if (pontos[i] < pontos[piorIdx]) piorIdx = i;
+  // desempate: quem nunca errou > quem demorou mais a errar > (simplificado: mantém-se)
+  const liderIdx = lider();
+
+  document.getElementById('eliminacao-titulo').textContent =
+    rondaAtual < 3 ? `FIM DA RONDA ${rondaAtual}` : 'FIM DO DUELO — RONDA 3';
+  const lista = document.getElementById('eliminacao-lista');
+  lista.innerHTML = '';
+  activos.forEach(i => {
+    const div = document.createElement('div');
+    div.className = 'eliminacao-linha' + (i === piorIdx ? ' eliminado' : '') + (i === liderIdx ? ' lider' : '');
+    div.innerHTML = `<span>${NOMES[i]} ${i===liderIdx ? '👑' : ''}</span><span>${pontos[i]} pts · €${dinheiro[i]}</span>`;
+    lista.appendChild(div);
+  });
+  window._proximoEliminado = piorIdx;
+  log(`${NOMES[piorIdx]} está em último — será eliminado ao continuar.`);
+}
+
+function avancarDepoisEliminacao() {
+  const piorIdx = window._proximoEliminado;
+  eliminado[piorIdx] = true;
+  dinheiro[piorIdx] = 0; // só o vencedor final leva dinheiro
+  log(`${NOMES[piorIdx]} eliminado.`);
+
+  if (rondaAtual === 1) { rondaAtual = 2; playlistNaRonda = 1; playlistGlobal = 6; iniciarEscolhaCollection(); }
+  else if (rondaAtual === 2) { rondaAtual = 3; playlistNaRonda = 1; playlistGlobal = 11; iniciarEscolhaCollection(); }
+  else if (rondaAtual === 3) {
+    // o duelo da Ronda 3 termina com 1 eliminado -> resta o vencedor para a Ronda 4
+    rondaAtual = 4;
+    iniciarEscolhaCollection();
+  }
+}
+
+// ── RONDA 4 — SOLO FINAL (9 Faixas, sem MUTE) ──
+let faixaR4Erros = [];
+function iniciarRonda4() {
+  faixaAtual = 1;
+  totalFaixasPlaylist = 9;
+  faixaR4Erros = new Array(9).fill(false);
+  iniciarFaixaR4();
+}
+
+function iniciarFaixaR4() {
+  faseGeral = 'ronda4_faixa';
+  trechoAtual = 1;
+  tempoRestante = JANELA_TRECHO;
+  const finalistaIdx = concorrentesActivos()[0];
+  mostrarSoPainel('palco-faixa');
+  const m = musicasActuais[(faixaAtual - 1) % musicasActuais.length];
+  document.getElementById('m-titulo').textContent = (faixaAtual % 3 === 0 ? '🎤 Actuação ao vivo' : '');
+  document.getElementById('m-artista').textContent = 'Identidade oculta até acertares';
+  document.getElementById('chave-resposta').textContent = `🔑 Título OU Artista: "${m.titulo}" / "${m.artista}"`;
+  document.getElementById('trecho-label').textContent = 'FAIXA ' + faixaAtual + '/9 — SEM MUTE';
+  audio.src = m.a;
+  audio.play().catch(() => {});
+  renderProgresso();
+  actualizarBadge();
+  atualizarTimerUI();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 1000);
+  renderCabinesR4(finalistaIdx);
+  log(`Ronda 4 — Faixa ${faixaAtual}/9 (Solo Final, sem MUTE).`);
+}
+
+function renderCabinesR4(finalistaIdx) {
+  cabinesEl.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const div = document.createElement('div');
+    if (i !== finalistaIdx) { div.className = 'cabine eliminado-cab'; cabinesEl.appendChild(div); continue; }
+    div.className = 'cabine';
+    div.innerHTML = `
+      <input class="cabine-nome" value="${NOMES[i]}" onchange="NOMES[${i}]=this.value">
+      <div class="cabine-scores"><span class="score-pontos">${pontos[i]} pts</span><span class="score-dinheiro">€${dinheiro[i]}</span></div>
+      <div class="cabine-botoes">
+        <button class="btn btn-correcto" onclick="acertouR4(${i})">✓ Correcto (+€, sem MUTE)</button>
+        <button class="btn btn-erro" onclick="errouR4(${i})">✗ Erro (Faixa invalidado p/ dinheiro)</button>
+      </div>
+      <div class="estado-tag estado-azul-tag">AZUL — SEM MUTE</div>
+      ${renderHistoricoHtml(i)}`;
+    cabinesEl.appendChild(div);
+  }
+}
+
+function acertouR4(i) {
+  if (faseGeral !== 'ronda4_faixa') return;
+  clearInterval(timerInterval);
+  audio.pause();
+  pontos[i] += PONTOS_FAIXA;
+  const nomeMusicaR4 = musicasActuais[(faixaAtual - 1) % musicasActuais.length].titulo;
+  if (!faixaR4Erros[faixaAtual - 1]) {
+    const valor = (faixaAtual % 3 === 0) ? 150 : 50; // Faixas 3,6,9 (ao vivo) valem mais
+    dinheiro[i] += valor;
+    historico[i].push({ faixa: faixaAtual, tipo: 'acerto', musica: nomeMusicaR4, ronda4: true });
+    log(`✓ Acertou o Faixa ${faixaAtual} — +${PONTOS_FAIXA} pontos, +€${valor}.`);
+  } else {
+    historico[i].push({ faixa: faixaAtual, tipo: 'acerto', musica: nomeMusicaR4, ronda4: true, semDinheiro: true });
+    log(`✓ Acertou o Faixa ${faixaAtual} (+${PONTOS_FAIXA} pontos), mas já tinha errado — sem dinheiro neste Faixa.`);
+  }
+  avancarFaixaR4();
+}
+
+function errouR4(i) {
+  if (faseGeral !== 'ronda4_faixa') return;
+  faixaR4Erros[faixaAtual - 1] = true;
+  historico[i].push({ faixa: faixaAtual, tipo: 'erro', ronda4: true });
+  renderCabinesR4(concorrentesActivos()[0]);
+  log(`✗ Erro no Faixa ${faixaAtual} — dinheiro deste Faixa fica invalidado, mas pode continuar a tentar.`);
+}
+
+function terminarFaixaR4SemVencedor() {
+  clearInterval(timerInterval);
+  audio.pause();
+  log(`Faixa ${faixaAtual} terminado sem resposta.`);
+  avancarFaixaR4();
+}
+
+function avancarFaixaR4() {
+  if (faixaAtual < 9) { faixaAtual++; iniciarFaixaR4(); }
+  else terminarEpisodio();
+}
+
+function terminarEpisodio() {
+  clearInterval(timerInterval);
+  audio.pause();
+  faseGeral = 'fim';
+  const vencedorIdx = concorrentesActivos()[0];
+  mostrarSoPainel('fim-painel');
+  document.getElementById('fim-titulo').textContent = `🏆 ${NOMES[vencedorIdx]} VENCE O EPISÓDIO!`;
+  document.getElementById('fim-premio').textContent = `Prémio final: €${dinheiro[vencedorIdx]} (${pontos[vencedorIdx]} pontos ao longo do episódio)`;
+  log('Episódio terminado.');
+}
+
+// ── controlos gerais ──
+function alternarPausa() {
+  pausado = !pausado;
+  if (pausado) {
+    audio.pause();
+  } else {
+    audio.play().catch(() => {});
+  }
+  document.getElementById('btn-pausa').textContent = pausado ? '▶ Retomar' : '⏸ Pausar';
+}
+
+function mostrarTesteLista() {
+  const lista = document.getElementById('teste-lista');
+  lista.innerHTML = '';
+  CHAVES_COLLECTIONS.forEach(chave => {
+    const btn = document.createElement('button');
+    const dif = COLLECTIONS[chave].dificuldade || 3;
+    btn.textContent = COLLECTIONS[chave].nome + ' — ' + COLLECTIONS[chave].descritivo + ' | Universo: ' + COLLECTIONS[chave].universo + ' · Dif. ' + dif + '/5';
+    btn.onclick = () => { garantirAudioCtx(); mostrarFaixasPlaylist(chave); };
+    lista.appendChild(btn);
+  });
+  const voltar = document.createElement('button');
+  voltar.className = 'voltar';
+  voltar.textContent = '← voltar';
+  voltar.onclick = () => lista.classList.remove('activo');
+  lista.appendChild(voltar);
+  lista.classList.add('activo');
+}
+
+function mostrarFaixasPlaylist(chave) {
+  const lista = document.getElementById('teste-lista');
+  lista.innerHTML = '';
+  const col = COLLECTIONS[chave];
+
+  // Título da playlist
+  const titulo = document.createElement('div');
+  titulo.style.cssText = 'color:var(--gold);font-weight:700;font-size:13px;letter-spacing:1px;padding:4px 0 8px;text-align:center;';
+  titulo.textContent = col.nome + ' — ' + col.descritivo;
+  lista.appendChild(titulo);
+
+  // Botão: playlist completa (começa na faixa 1)
+  const btnTudo = document.createElement('button');
+  btnTudo.textContent = '▶ Playlist completa (Faixa 1→' + col.musicas.length + ')';
+  btnTudo.style.cssText = 'border-color:var(--gold);color:var(--gold);';
+  btnTudo.onclick = () => testarPlaylist(chave, 1);
+  lista.appendChild(btnTudo);
+
+  // Botão por faixa individual
+  col.musicas.forEach((m, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = (idx + 1) + '. ' + m.titulo + ' — ' + m.artista;
+    btn.onclick = () => testarPlaylist(chave, idx + 1);
+    lista.appendChild(btn);
+  });
+
+  const voltar = document.createElement('button');
+  voltar.className = 'voltar';
+  voltar.textContent = '← playlists';
+  voltar.onclick = () => mostrarTesteLista();
+  lista.appendChild(voltar);
+}
+
+function testarPlaylist(chave, faixaInicial) {
+  faixaInicial = faixaInicial || 1;
+  document.getElementById('start-overlay').style.display = 'none';
+  pontos = [0, 0, 0, 0];
+  dinheiro = [0, 0, 0, 0];
+  eliminado = [false, false, false, false];
+  mutadoAteFaixa = [0, 0, 0, 0];
+  historico = [[], [], [], []];
+  escadaVencedor = null;
+  escadaEtapa = 0;
+  clearInterval(escadaTimerInterval);
+  rondaAtual = 1;
+  playlistGlobal = 1;
+  playlistNaRonda = 1;
+  collectionActual = chave;
+  collectionsUsadas = [chave];
+  musicasActuais = COLLECTIONS[chave].musicas;
+  faixaAtual = faixaInicial;
+  totalFaixasPlaylist = musicasActuais.length + 1; // +1 para o mosaico
+  quadradosGanhos = new Array(musicasActuais.length + 1).fill(false);
+  log(`🎯 Modo Teste — ${COLLECTIONS[chave].nome} · Faixa ${faixaInicial}`);
+  iniciarFaixa();
+}
+
+function arrancar() {
+  garantirAudioCtx(); // cria o contexto no gesto do utilizador
+  document.getElementById('start-overlay').style.display = 'none';
+  iniciarEscolhaCollection();
+}
+
+function testarPlaylistWrapper(chave) {
+  garantirAudioCtx(); // cria o contexto no gesto do utilizador
+  testarPlaylist(chave);
+}
+</script>
+</body>
+</html>

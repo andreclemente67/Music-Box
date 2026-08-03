@@ -1,0 +1,90 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────
+# MUSIC BOX — Criar Faixa
+# Uso: ./criar_faixa.sh <URL_YOUTUBE> <CODIGO>
+# Exemplo: ./criar_faixa.sh "https://youtube.com/watch?v=xxx" BRA001_01
+# ─────────────────────────────────────────────────────────────
+
+PASTA=~/MusicBox/app
+ORIGINAIS=$PASTA/originais
+DURACAO=15
+
+VERDE='\033[0;32m'; VERMELHO='\033[0;31m'; AMARELO='\033[1;33m'; RESET='\033[0m'; BOLD='\033[1m'
+
+if [ $# -lt 2 ]; then
+  echo "Uso: $0 <URL_YOUTUBE> <CODIGO>"
+  echo "Exemplo: $0 'https://youtube.com/watch?v=xxx' BRA001_01"
+  exit 1
+fi
+
+URL="$1"
+CODIGO="$2"
+ORIGINAL="$ORIGINAIS/${CODIGO}_orig.mp3"
+FICHEIRO_A="$PASTA/${CODIGO}_a.mp3"
+FICHEIRO_B="$PASTA/${CODIGO}_b.mp3"
+
+# Mosaico: trecho único de 30s. Faixas normais: 15s cada.
+if echo "$CODIGO" | grep -q "^MOSAICO"; then
+  DURACAO=30
+  MODO="mosaico"
+else
+  DURACAO=15
+  MODO="faixa"
+fi
+
+echo -e "\n${BOLD}MUSIC BOX — CRIAR FAIXA: $CODIGO${RESET}"
+
+# ── 1. Download ──
+echo -e "\n${AMARELO}▶ 1. Download...${RESET}"
+rm -f "$ORIGINAL"
+yt-dlp -x --audio-format mp3 -o "$ORIGINAL" "$URL"
+if [ ! -f "$ORIGINAL" ]; then
+  echo -e "${VERMELHO}✗ Download falhou${RESET}"
+  exit 1
+fi
+echo -e "${VERDE}✓ Original guardado: $ORIGINAL${RESET}"
+
+# ── 2. Analisar e sugerir trechos ──
+echo -e "\n${AMARELO}▶ 2. A analisar áudio...${RESET}"
+SUGESTAO=$(python3 "$PASTA/sugerir_trechos.py" "$ORIGINAL" 2>/dev/null)
+echo "$SUGESTAO"
+
+# Extrair timestamps sugeridos
+TEMPO_A=$(echo "$SUGESTAO" | grep "Trecho A" | grep -o '[0-9]*s' | head -1 | tr -d 's')
+TEMPO_B=$(echo "$SUGESTAO" | grep "Trecho B" | grep -o '[0-9]*s' | head -1 | tr -d 's')
+
+if [ -z "$TEMPO_A" ] || [ -z "$TEMPO_B" ]; then
+  echo -e "${AMARELO}   Detecção automática falhou — a usar defaults (A:10s B:60s)${RESET}"
+  TEMPO_A=10
+  TEMPO_B=60
+fi
+
+# ── 3. Mostrar timestamps ──
+echo -e "\n${AMARELO}▶ 3. Timestamps${RESET}"
+echo -e "   Trecho A: ${BOLD}${TEMPO_A}s${RESET} → $((TEMPO_A + DURACAO))s"
+echo -e "   Trecho B: ${BOLD}${TEMPO_B}s${RESET} → $((TEMPO_B + DURACAO))s"
+
+# ── 4. Cortar trechos ──
+echo -e "\n${AMARELO}▶ 4. A cortar trechos...${RESET}"
+ffmpeg -y -i "$ORIGINAL" -ss "$TEMPO_A" -t "$DURACAO" -acodec libmp3lame -q:a 2 "$FICHEIRO_A" 2>/dev/null
+
+if [ "$MODO" = "mosaico" ]; then
+  # Mosaico: só trecho único de 30s
+  if [ -f "$FICHEIRO_A" ]; then
+    echo -e "${VERDE}✓ $FICHEIRO_A (30s contínuos)${RESET}"
+  else
+    echo -e "${VERMELHO}✗ Erro ao cortar mosaico${RESET}"; exit 1
+  fi
+else
+  ffmpeg -y -i "$ORIGINAL" -ss "$TEMPO_B" -t "$DURACAO" -acodec libmp3lame -q:a 2 "$FICHEIRO_B" 2>/dev/null
+  if [ -f "$FICHEIRO_A" ] && [ -f "$FICHEIRO_B" ]; then
+    echo -e "${VERDE}✓ $FICHEIRO_A${RESET}"
+    echo -e "${VERDE}✓ $FICHEIRO_B${RESET}"
+  else
+    echo -e "${VERMELHO}✗ Erro ao cortar trechos${RESET}"; exit 1
+  fi
+fi
+
+
+
+echo -e "\n${VERDE}${BOLD}✓ $CODIGO concluído — A: ${TEMPO_A}s · B: ${TEMPO_B}s${RESET}\n"
