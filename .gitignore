@@ -1,2 +1,18 @@
 originais/
 yt-dlp
+
+# ambiente virtual Python (só para _servidor_librosa.py — ver DECISIONS.md)
+.venv_librosa/
+
+# bytecode Python compilado
+__pycache__/
+*.pyc
+
+# metadados do Finder (macOS)
+.DS_Store
+
+# logs de _servidor_escrita.py / _servidor_librosa.py / auto_fusao.sh
+*.log
+
+# backups locais (catalogo.json.bak, playlists.json.bak, etc.)
+*.bak
