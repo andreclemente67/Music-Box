@@ -1,0 +1,443 @@
+{
+  "STD.INT.80.MIX.001": {
+    "tipo": "standard",
+    "nome": "Anos 80",
+    "descritivo": "Grandes Êxitos",
+    "playlistCodigo": "STD.INT.80.MIX.001",
+    "universo": "Eixo Temporal",
+    "temBonus": false,
+    "dificuldade": 1,
+    "musicas": [
+      "80_01",
+      "80_02",
+      "80_03",
+      "80_04",
+      "80_05",
+      "80_06",
+      "80_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Mark Knopfler",
+      "id": "80_mosaico"
+    }
+  },
+  "STD.INT.10.MIX.001": {
+    "tipo": "standard",
+    "nome": "Anos 2010+",
+    "descritivo": "Grandes Êxitos",
+    "playlistCodigo": "STD.INT.10.MIX.001",
+    "universo": "Eixo Temporal",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "a10_01",
+      "a10_02",
+      "a10_03",
+      "a10_04",
+      "a10_05",
+      "a10_06",
+      "a10_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Taylor Swift",
+      "id": "a10_mosaico"
+    }
+  },
+  "STD.US.ALL.AME.001": {
+    "tipo": "standard",
+    "nome": "Americana",
+    "descritivo": "Favoritos",
+    "playlistCodigo": "STD.US.ALL.AME.001",
+    "universo": "Género Musical",
+    "temBonus": false,
+    "dificuldade": 2,
+    "musicas": [
+      "ame_01",
+      "ame_02",
+      "ame_03",
+      "ame_04",
+      "ame_05",
+      "ame_06",
+      "ame_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Johnny Cash",
+      "id": "ame_mosaico"
+    }
+  },
+  "STD.INT.ALL.SYN.001": {
+    "tipo": "standard",
+    "nome": "Synthwave",
+    "descritivo": "Os Clássicos",
+    "playlistCodigo": "STD.INT.ALL.SYN.001",
+    "universo": "Género Musical",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "syn001_01",
+      "syn001_02",
+      "syn001_03",
+      "syn001_04",
+      "syn001_05",
+      "syn001_06",
+      "syn001_07"
+    ],
+    "mosaico": {
+      "categoria": "Artista",
+      "pessoa": "Kavinsky",
+      "id": "syn001_mosaico"
+    }
+  },
+  "STD.BR.ALL.MIX.001": {
+    "tipo": "standard",
+    "nome": "Brasil — Clássicos",
+    "descritivo": "Vol. 1",
+    "playlistCodigo": "STD.BR.ALL.MIX.001",
+    "universo": "Músicas do Mundo",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "bra001_01",
+      "bra001_02",
+      "bra001_03",
+      "bra001_04",
+      "bra001_05",
+      "bra001_06",
+      "bra001_07"
+    ],
+    "mosaico": {
+      "categoria": "Dupla",
+      "pessoa": "Elis Regina & Adoniran Barbosa",
+      "id": "bra001_mosaico"
+    }
+  },
+  "STD.INT.ALL.GTR.001": {
+    "tipo": "standard",
+    "nome": "Solo de Guitarra",
+    "descritivo": "Clássicos",
+    "playlistCodigo": "STD.INT.ALL.GTR.001",
+    "universo": "Solistas",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "solo_01",
+      "solo_02",
+      "solo_03",
+      "solo_04",
+      "solo_05",
+      "solo_06",
+      "solo_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Carlos Santana",
+      "id": "solo_mosaico"
+    }
+  },
+  "STD.INT.ALL.BAT.001": {
+    "tipo": "standard",
+    "nome": "Solo de Bateria",
+    "descritivo": "Vol. 1",
+    "playlistCodigo": "STD.INT.ALL.BAT.001",
+    "universo": "Solistas",
+    "temBonus": false,
+    "dificuldade": 5,
+    "musicas": [
+      "bat_01",
+      "bat_02",
+      "bat_03",
+      "bat_04",
+      "bat_05",
+      "bat_06",
+      "bat_07"
+    ],
+    "mosaico": {
+      "categoria": "Baterista",
+      "pessoa": "Dave Grohl",
+      "id": "bat_mosaico"
+    }
+  },
+  "STD.PT.ALL.MIX.001": {
+    "tipo": "standard",
+    "nome": "Música Portuguesa",
+    "descritivo": "Os Essenciais",
+    "playlistCodigo": "STD.PT.ALL.MIX.001",
+    "universo": "Geografia",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "pt_01",
+      "pt_02",
+      "pt_03",
+      "pt_04",
+      "pt_05",
+      "pt_06",
+      "pt_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Sétima Legião",
+      "id": "pt_mosaico"
+    }
+  },
+  "STD.INT.ALL.CIN.001": {
+    "tipo": "standard",
+    "nome": "Cinema & Música",
+    "descritivo": "Edição Especial",
+    "playlistCodigo": "STD.INT.ALL.CIN.001",
+    "universo": "Cinema & Bandas Sonoras",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "cinema_01",
+      "cinema_02",
+      "cinema_03",
+      "cinema_04",
+      "cinema_05",
+      "cinema_06",
+      "cinema_07"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Nino Rota",
+      "id": "cinema_mosaico"
+    }
+  },
+  "STD.PT.80.MIX.001": {
+    "tipo": "standard",
+    "nome": "Portugal — Anos 80",
+    "descritivo": "Grandes Êxitos",
+    "playlistCodigo": "STD.PT.80.MIX.001",
+    "universo": "Décadas · Portugal",
+    "temBonus": false,
+    "dificuldade": 2,
+    "musicas": [
+      "pt80_01",
+      "pt80_02",
+      "pt80_03",
+      "pt80_04",
+      "pt80_05",
+      "pt80_06",
+      "pt80_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "UHF",
+      "id": "pt80_mosaico"
+    }
+  },
+  "STD.PT.ALL.BAT.001": {
+    "tipo": "standard",
+    "nome": "Bateria Portuguesa",
+    "descritivo": "Vol. 1",
+    "playlistCodigo": "STD.PT.ALL.BAT.001",
+    "universo": "Geografia",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "ptbat_01",
+      "ptbat_02",
+      "ptbat_03",
+      "ptbat_04",
+      "ptbat_05",
+      "ptbat_06",
+      "ptbat_07"
+    ],
+    "mosaico": {
+      "categoria": "Baterista",
+      "pessoa": "Alexandre Frazão",
+      "id": "ptbat_mosaico"
+    }
+  },
+  "RET.INT.ALL.VOZ.001": {
+    "tipo": "retrato",
+    "nome": "Vozes Lendárias",
+    "descritivo": "Retrato Sonoro",
+    "playlistCodigo": "RET.INT.ALL.VOZ.001",
+    "universo": "Retrato Sonoro",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "ret_01",
+      "ret_02",
+      "ret_03",
+      "ret_04",
+      "ret_05",
+      "ret_06",
+      "ret_07",
+      "ret_08"
+    ],
+    "mosaico": null
+  },
+  "TRB.UK.ALL.ROC.001": {
+    "tipo": "tributo",
+    "nome": "Tribute Beatles",
+    "descritivo": "Playlist Tributo",
+    "playlistCodigo": "TRB.UK.ALL.ROC.001",
+    "universo": "Tributo",
+    "temBonus": false,
+    "dificuldade": 3,
+    "banda": "The Beatles",
+    "posicoes": [
+      {
+        "pos": 1,
+        "tipo": "audio",
+        "id": "beatles_01",
+        "chave": "Come Together",
+        "mosaico": true
+      },
+      {
+        "pos": 2,
+        "tipo": "trivia",
+        "id": "beatles_02",
+        "pergunta": "Back in the U.S.S.R.",
+        "chave": "The Beatles",
+        "dica": "",
+        "mosaico": false
+      },
+      {
+        "pos": 3,
+        "tipo": "solo",
+        "id": "beatles_03",
+        "chave": "The End",
+        "dica": "Os três guitarristas alternam solos — único momento em toda a discografia.",
+        "mosaico": true
+      },
+      {
+        "pos": 4,
+        "tipo": "foto",
+        "id": "beatles_04",
+        "chave": "Rooftop Concert",
+        "dica": "A última atuação ao vivo dos Beatles, no telhado do edifício Apple Corps em Londres — Janeiro 1969.",
+        "mosaico": false
+      },
+      {
+        "pos": 5,
+        "tipo": "cover",
+        "id": "beatles_05",
+        "chave": "Something",
+        "dica": "Composta por George Harrison — qual é a música dos Beatles?",
+        "mosaico": true
+      },
+      {
+        "pos": 6,
+        "tipo": "riff",
+        "id": "beatles_06",
+        "chave": "A Hard Day's Night",
+        "dica": "Considerado o acorde mais famoso da história do rock.",
+        "mosaico": true
+      },
+      {
+        "pos": 7,
+        "tipo": "capa",
+        "id": null,
+        "imagem": "BEATLES_07_capa.jpg",
+        "chave": "Revolver",
+        "dica": "Álbum de 1966 com arte gráfica de Klaus Voormann.",
+        "mosaico": false
+      },
+      {
+        "pos": 8,
+        "tipo": "bateria",
+        "id": "beatles_08",
+        "chave": "The End",
+        "dica": "O único solo de bateria de Ringo Starr em toda a discografia dos Beatles.",
+        "mosaico": true
+      }
+    ],
+    "mosaico": {
+      "categoria": "album",
+      "pessoa": "Abbey Road — The Beatles (1969)",
+      "id": "beatles_recap"
+    }
+  },
+  "RET.PT.90.VOZ.001": {
+    "tipo": "retrato",
+    "nome": "Vozes Lendárias Portuguesas — Anos 90",
+    "descritivo": "Retrato Sonoro",
+    "playlistCodigo": "RET.PT.90.VOZ.001",
+    "universo": "Retrato Sonoro",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "pedro_abrunhosa_tudo_o_que_eu_te_dou",
+      "pt_06",
+      "pt_mosaico",
+      "pt_07",
+      "ptbat_02",
+      "ptbat_04",
+      "rui_veloso_porto_sentido",
+      "gnr_independanca"
+    ],
+    "mosaico": null
+  },
+  "STD.INT.ALL.MIX.001": {
+    "tipo": "standard",
+    "nome": "Correntes Subtis",
+    "descritivo": "",
+    "universo": "Multi-género / décadas",
+    "temBonus": false,
+    "dificuldade": 5,
+    "musicas": [
+      "the_durutti_column_sketch_for_summer",
+      "marconi_union_weightless",
+      "brian_eno_by_this_river",
+      "thelonious_monk_crepuscule_avec_pauline",
+      "sarah_mclachlan_surfacing",
+      "brian_eno_on_land",
+      "buena_vista_social_club_tres_palabras"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Vini Reilly",
+      "id": "the_durutti_column_for_belgian_friends"
+    }
+  },
+  "STD.INT.10.SYN.001": {
+    "tipo": "standard",
+    "nome": "Coração Sintético — Vozes que Ardem sobre Sintetizadores",
+    "descritivo": "",
+    "universo": "Anos 2010 — Synthwave (extensão DNC)",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "future_islands_seasons_waiting_on_you",
+      "new_order_blue_monday",
+      "talk_talk_it_s_my_life",
+      "james_blake_retrograde",
+      "hozier_take_me_to_church",
+      "grimes_flesh_without_blood",
+      "kate_bush_running_up_that_hill"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Samuel T. Herring",
+      "id": "future_islands_ran"
+    }
+  },
+  "STD.INT.10.SYN.002": {
+    "tipo": "standard",
+    "nome": "Heartbeats in the Dark: Synth & Soul of the 2010s",
+    "descritivo": "",
+    "universo": "Anos 2010 — Synthwave (extensão DNC)",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "future_islands_seasons_waiting_on_you_2",
+      "arctic_monkeys_do_i_wanna_know",
+      "chromatics_blue_light",
+      "lcd_soundsystem_home",
+      "grimes_oblivion",
+      "disclosure_latch",
+      "hurts_miracle"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Samuel T. Herring",
+      "id": "arcade_fire_my_body_is_a_cage"
+    }
+  }
+}

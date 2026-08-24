@@ -1,0 +1,4548 @@
+[
+  {
+    "id": "80_01",
+    "titulo": "Take On Me",
+    "artista": [
+      "a-ha"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Synth-pop",
+      "New Wave"
+    ],
+    "geografia": "Noruega",
+    "estilo": "Synth-pop com riff de sintetizador icónico e falsete marcante",
+    "instrumento": [
+      "Sintetizador",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=djV11Xbc914"
+  },
+  {
+    "id": "80_02",
+    "titulo": "Sweet Child O' Mine",
+    "artista": [
+      "Guns N' Roses"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Hard Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock com riff de guitarra inicial muito reconhecível",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=1w7OgIMMRc4"
+  },
+  {
+    "id": "80_03",
+    "titulo": "The Power of Love",
+    "artista": [
+      "Frankie Goes to Hollywood"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Synth-pop",
+      "New Wave"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Balada synth-pop com produção orquestral",
+    "instrumento": [
+      "Sintetizador",
+      "Orquestra"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=wRGJxvCOi3U"
+  },
+  {
+    "id": "80_04",
+    "titulo": "Don't You Want Me",
+    "artista": [
+      "The Human League"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Synth-pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Synth-pop com duo vocal masculino/feminino",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=uPudE8nDog0"
+  },
+  {
+    "id": "80_05",
+    "titulo": "The Final Countdown",
+    "artista": [
+      "Europe"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock",
+      "Hard Rock"
+    ],
+    "geografia": "Suécia",
+    "estilo": "Rock com introdução de sintetizador hino",
+    "instrumento": [
+      "Sintetizador",
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=9jK-NcRmVcw"
+  },
+  {
+    "id": "80_06",
+    "titulo": "Every Breath You Take",
+    "artista": [
+      "The Police"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock",
+      "New Wave"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock/pop com linha de baixo e guitarra minimalista",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Baixo"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=OMOGaugKpzs"
+  },
+  {
+    "id": "80_07",
+    "titulo": "Billie Jean",
+    "artista": [
+      "Michael Jackson"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop",
+      "R&B"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop dançável com linha de baixo sincopada icónica",
+    "instrumento": [
+      "Baixo",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07",
+    "video": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y"
+  },
+  {
+    "id": "80_mosaico",
+    "titulo": "Sultans of Swing",
+    "artista": [
+      "Dire Straits"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com guitarra fingerstyle característica de Mark Knopfler",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_ANOS80.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_ANOS80.mp3",
+    "imagem": "MOSAICO_ANOS80.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-07"
+  },
+  {
+    "id": "ret_01",
+    "titulo": "My Way",
+    "artista": [
+      "Frank Sinatra"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Jazz",
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada orquestral icónica, voz crooner por excelência",
+    "instrumento": [
+      "Orquestra",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_01.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_01.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=qQzdAsjWGPg"
+  },
+  {
+    "id": "ret_02",
+    "titulo": "Can't Help Falling in Love",
+    "artista": [
+      "Elvis Presley"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada romântica clássica, voz suave e apaixonada",
+    "instrumento": [
+      "Orquestra",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_02.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_02.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=vGJTaP6anOU"
+  },
+  {
+    "id": "ret_03",
+    "titulo": "Love of My Life",
+    "artista": [
+      "Freddie Mercury"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock",
+      "Balada"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Balada rock ao piano, voz operática marcante",
+    "instrumento": [
+      "Piano",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_03.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_03.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=_Jtpf8N5IDE"
+  },
+  {
+    "id": "ret_04",
+    "titulo": "Billie Jean",
+    "artista": [
+      "Michael Jackson"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop",
+      "R&B"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop dançável com linha de baixo sincopada icónica",
+    "instrumento": [
+      "Baixo",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_04.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_04.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y"
+  },
+  {
+    "id": "ret_05",
+    "titulo": "I Will Always Love You",
+    "artista": [
+      "Whitney Houston"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop",
+      "R&B"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada pop vocal, um dos maiores registos vocais da história",
+    "instrumento": [
+      "Voz",
+      "Orquestra"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_05.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_05.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=3JWTaaS7LdU"
+  },
+  {
+    "id": "ret_06",
+    "titulo": "Rocket Man",
+    "artista": [
+      "Elton John"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop rock melódico com piano proeminente",
+    "instrumento": [
+      "Piano",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_06.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_06.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=DtVBCG6ThDk"
+  },
+  {
+    "id": "ret_07",
+    "titulo": "Estou Além",
+    "artista": [
+      "António Variações"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop",
+      "New Wave"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Pop português vanguardista, voz única e teatral",
+    "instrumento": [
+      "Sintetizador",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "RET_07.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_07.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=G3o4RF0PCBU"
+  },
+  {
+    "id": "ret_08",
+    "titulo": "Let's Dance",
+    "artista": [
+      "David Bowie"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop",
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop rock dançável produzido por Nile Rodgers",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Baixo"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "RET_08.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "RET_08.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=N4d7Wp9kKjA"
+  },
+  {
+    "id": "ret_mosaico",
+    "titulo": "Estou Além",
+    "artista": [
+      "António Variações"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop",
+      "New Wave"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Versão usada no antigo mosaico do Universo Retrato Sonoro, entretanto descontinuado",
+    "instrumento": [
+      "Sintetizador",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_RETRATO.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_RETRATO.mp3",
+    "elegivel_mosaico": false,
+    "estado": "arquivado",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "pt_01",
+    "titulo": "Grândola, Vila Morena",
+    "artista": [
+      "José Afonso"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk",
+      "Canção de Intervenção"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Canção coral a cappella, símbolo maior da Revolução dos Cravos",
+    "instrumento": [
+      "Voz (coro)"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "01_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "01_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=QBFbbqhVCwA",
+    "imagem": "artista_pt_01.jpg"
+  },
+  {
+    "id": "pt_02",
+    "titulo": "Não Sou O Único",
+    "artista": [
+      "Xutos & Pontapés"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português de estádio com refrão-hino",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Bateria"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "02_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "02_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=6N7bPkSoUM0",
+    "imagem": "artista_pt_02.jpg"
+  },
+  {
+    "id": "pt_03",
+    "titulo": "Cantiga d'Amor (Mesmo Assim)",
+    "artista": [
+      "Rádio Macau"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Pop rock português melódico",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "03_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "03_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=Jn_dTBh7RUY",
+    "imagem": "artista_03_PT.jpg"
+  },
+  {
+    "id": "pt_04",
+    "titulo": "Pronúncia do Norte",
+    "artista": [
+      "GNR"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock",
+      "New Wave"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock/new wave com sotaque nortenho vincado",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "04_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "04_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=KLFMbA9GKCY",
+    "imagem": "artista_04_PT.jpg"
+  },
+  {
+    "id": "pt_05",
+    "titulo": "Amor de Água Fresca",
+    "artista": [
+      "Dina"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop",
+      "Balada"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Balada pop portuguesa romântica",
+    "instrumento": [
+      "Sintetizador",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "05_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "05_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=mSuGVBGVhAE",
+    "imagem": "artista_01_PT.jpg"
+  },
+  {
+    "id": "pt_06",
+    "titulo": "Canção do Mar",
+    "artista": [
+      "Dulce Pontes"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Fado",
+      "World"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Fado moderno orquestrado, voz poderosa com projeção internacional",
+    "instrumento": [
+      "Voz",
+      "Cordas"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "06_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "06_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=evsx5SKSIDY",
+    "imagem": "artista_05_PT.jpg"
+  },
+  {
+    "id": "pt_07",
+    "titulo": "Re-Tratamento",
+    "artista": [
+      "Da Weasel"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Hip-Hop",
+      "Rap"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rap português sobre batida funk/hip-hop",
+    "instrumento": [
+      "Bateria eletrónica",
+      "Baixo"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "07_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "07_PT_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=OhGpYDKB3M4",
+    "imagem": "artista_07_PT.jpg"
+  },
+  {
+    "id": "pt_mosaico",
+    "titulo": "Sete Mares",
+    "artista": [
+      "Sétima Legião"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português melódico com forte identidade vocal",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_PT_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_PT_a.mp3",
+    "imagem": "MOSAICO_PT.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "solo_01",
+    "titulo": "Stairway to Heaven",
+    "artista": [
+      "Jimmy Page"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock",
+      "Hard Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock épico com solo de guitarra lendário e crescendo dramático",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "SOLO_01_offset.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=QkF3oxziUI4",
+    "imagem": "artista_solo_01.jpg",
+    "banda": "Led Zeppelin"
+  },
+  {
+    "id": "solo_02",
+    "titulo": "Hotel California",
+    "artista": [
+      "Joe Walsh"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock",
+      "Soft Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock com duelo de guitarras no solo final",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "SOLO_02.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=EqPtz5qN7HM",
+    "imagem": "artista_solo_02.jpeg",
+    "banda": "Eagles"
+  },
+  {
+    "id": "solo_03",
+    "titulo": "Shine On You Crazy Diamond",
+    "artista": [
+      "David Gilmour"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock Progressivo"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock progressivo atmosférico, guitarra emotiva de David Gilmour",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "SOLO_03.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=54W8kktFE_o",
+    "imagem": "artista_solo_03.webp",
+    "banda": "Pink Floyd"
+  },
+  {
+    "id": "solo_04",
+    "titulo": "Eruption",
+    "artista": [
+      "Eddie Van Halen"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Hard Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Instrumental virtuosístico, técnica de tapping revolucionária",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "SOLO_04.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=XyMBPaSEFpk",
+    "imagem": "artista_solo_04.jpeg",
+    "banda": "Van Halen"
+  },
+  {
+    "id": "solo_05",
+    "titulo": "Voodoo Child",
+    "artista": [
+      "Jimi Hendrix"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock Psicadélico",
+      "Blues Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock psicadélico com guitarra distorcida e wah-wah icónica",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "SOLO_05.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=ue5jDt_n-Ys",
+    "imagem": "artista_solo_05.jpeg",
+    "banda": null
+  },
+  {
+    "id": "solo_06",
+    "titulo": "Layla",
+    "artista": [
+      "Eric Clapton"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Blues Rock",
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com riff de guitarra icónico e coda de piano",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Piano"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "SOLO_06.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=TSaThijSB1c",
+    "imagem": "artista_solo_06.jpeg",
+    "banda": "Derek and the Dominos"
+  },
+  {
+    "id": "solo_07",
+    "titulo": "Surfing with the Alien",
+    "artista": [
+      "Joe Satriani"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock Instrumental"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Instrumental virtuosístico de guitarra, técnica avançada",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "SOLO_07.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SOLO_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=H-IIiEjBuMc",
+    "imagem": "artista_solo_07.jpg",
+    "banda": null
+  },
+  {
+    "id": "solo_mosaico",
+    "titulo": "Smooth",
+    "artista": [
+      "Santana"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Latin Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock latino com guitarra característica de Carlos Santana",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Percussão"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_SOLO_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_SOLO_a.mp3",
+    "imagem": "MOSAICO_SOLO.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "cinema_01",
+    "titulo": "Blade Runner (Love Theme)",
+    "artista": [
+      "Vangelis"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Synth"
+    ],
+    "geografia": "Grécia",
+    "estilo": "Banda sonora synth atmosférica, tema de amor melancólico",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "CINEMA_01_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_01_b.mp3",
+      "inicio": 40,
+      "fim": 55
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=h9ezypI-yc4",
+    "clip": "https://www.youtube.com/watch?v=h9ezypI-yc4",
+    "filme": "Blade Runner",
+    "compositor": "Vangelis"
+  },
+  {
+    "id": "cinema_02",
+    "titulo": "Star Wars",
+    "artista": [
+      "John Williams"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Orquestral"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Tema orquestral épico com fanfarra icónica",
+    "instrumento": [
+      "Orquestra"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "CINEMA_02_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_02_b.mp3",
+      "inicio": 30,
+      "fim": 45
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=_D0ZQPqeJkk",
+    "clip": "https://www.youtube.com/watch?v=CqE4VSnT5sc&t=1s",
+    "filme": "Star Wars",
+    "compositor": "John Williams"
+  },
+  {
+    "id": "cinema_03",
+    "titulo": "The Pink Panther",
+    "artista": [
+      "Henry Mancini"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Jazz"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Tema jazzístico com saxofone sinuoso icónico",
+    "instrumento": [
+      "Saxofone",
+      "Orquestra"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "CINEMA_03_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_03_b.mp3",
+      "inicio": 30,
+      "fim": 45
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=HhHwnrlZRus",
+    "clip": "https://www.youtube.com/watch?v=HhHwnrlZRus",
+    "filme": "The Pink Panther",
+    "compositor": "Henry Mancini"
+  },
+  {
+    "id": "cinema_04",
+    "titulo": "Goldfinger",
+    "artista": [
+      "John Barry"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Orquestral"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Tema de James Bond com voz poderosa e metais dramáticos",
+    "instrumento": [
+      "Orquestra",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "CINEMA_04_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_04_b.mp3",
+      "inicio": 30,
+      "fim": 45
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=4PgzKgSBmOA",
+    "clip": "https://www.youtube.com/watch?v=Hn2oPN1cDQg&list=RDHn2oPN1cDQg&start_radio=1",
+    "filme": "Goldfinger",
+    "compositor": "John Barry"
+  },
+  {
+    "id": "cinema_05",
+    "titulo": "Inception (Time)",
+    "artista": [
+      "Hans Zimmer"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Orquestral Eletrónico"
+    ],
+    "geografia": "Alemanha",
+    "estilo": "Crescendo orquestral eletrónico emocional",
+    "instrumento": [
+      "Sintetizador",
+      "Orquestra"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "CINEMA_05_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_05_b.mp3",
+      "inicio": 30,
+      "fim": 45
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=RxabLA7UQ9k",
+    "clip": "https://www.youtube.com/watch?v=RxabLA7UQ9k",
+    "filme": "Inception",
+    "compositor": "Hans Zimmer"
+  },
+  {
+    "id": "cinema_06",
+    "titulo": "The Mission",
+    "artista": [
+      "Ennio Morricone"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Orquestral"
+    ],
+    "geografia": "Itália",
+    "estilo": "Tema orquestral solene com oboé melancólico",
+    "instrumento": [
+      "Oboé",
+      "Orquestra"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "CINEMA_06_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_06_b.mp3",
+      "inicio": 30,
+      "fim": 45
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=5PsgCEkFQpI",
+    "clip": "https://www.youtube.com/watch?v=Hy-zRZQo79Q",
+    "filme": "The Mission",
+    "compositor": "Ennio Morricone"
+  },
+  {
+    "id": "cinema_07",
+    "titulo": "Lawrence of Arabia",
+    "artista": [
+      "Maurice Jarre"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Orquestral"
+    ],
+    "geografia": "França",
+    "estilo": "Tema orquestral épico evocando a vastidão do deserto",
+    "instrumento": [
+      "Orquestra"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "CINEMA_07_a.mp3",
+      "inicio": 0,
+      "fim": 15
+    },
+    "trecho_b": {
+      "ficheiro": "CINEMA_07_b.mp3",
+      "inicio": 30,
+      "fim": 45
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=SiZGFhGIRwc",
+    "clip": "https://www.youtube.com/watch?v=Qr5E54nCDg0",
+    "filme": "Lawrence of Arabia",
+    "compositor": "Maurice Jarre"
+  },
+  {
+    "id": "cinema_mosaico",
+    "titulo": "The Godfather Theme",
+    "artista": [
+      "Nino Rota"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Banda Sonora",
+      "Orquestral"
+    ],
+    "geografia": "Itália",
+    "estilo": "Tema melancólico com trompete solo icónico",
+    "instrumento": [
+      "Trompete",
+      "Orquestra"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_CINEMA.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_CINEMA.mp3",
+    "imagem": "MOSAICO_CINEMA.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "ame_01",
+    "titulo": "Take Me Home, Country Roads",
+    "artista": [
+      "John Denver"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Country",
+      "Folk"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Folk-country com melodia hino, celebração da vida rural",
+    "instrumento": [
+      "Guitarra acústica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "AME_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=1vrEljMfXYo"
+  },
+  {
+    "id": "ame_02",
+    "titulo": "Heart of Gold",
+    "artista": [
+      "Neil Young"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk Rock",
+      "Country Rock"
+    ],
+    "geografia": "Canadá",
+    "estilo": "Folk rock intimista com harmónica em destaque",
+    "instrumento": [
+      "Guitarra acústica",
+      "Harmónica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "AME_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=Bfst_UkJzAg"
+  },
+  {
+    "id": "ame_03",
+    "titulo": "Mr. Tambourine Man",
+    "artista": [
+      "Bob Dylan"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Folk Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Folk rock poético, voz nasal característica",
+    "instrumento": [
+      "Guitarra acústica",
+      "Harmónica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "AME_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=PbpnCpEL6us"
+  },
+  {
+    "id": "ame_04",
+    "titulo": "Have You Ever Seen the Rain",
+    "artista": [
+      "Creedence Clearwater Revival"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock",
+      "Swamp Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock com toque country e riff de guitarra muito reconhecível",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "AME_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=Gu2pVPWGYMQ"
+  },
+  {
+    "id": "ame_05",
+    "titulo": "Take It Easy",
+    "artista": [
+      "Eagles"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Country Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Country rock leve, harmonias vocais características",
+    "instrumento": [
+      "Guitarra acústica",
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "AME_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=_-agl0pOQfs"
+  },
+  {
+    "id": "ame_06",
+    "titulo": "A Horse With No Name",
+    "artista": [
+      "America"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Folk rock hipnótico, construído sobre dois acordes repetidos",
+    "instrumento": [
+      "Guitarra acústica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "AME_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=qPgaX1G-ms8"
+  },
+  {
+    "id": "ame_07",
+    "titulo": "Free Fallin'",
+    "artista": [
+      "Tom Petty"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock",
+      "Heartland Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock heartland melódico com refrão muito cantável",
+    "instrumento": [
+      "Guitarra acústica",
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "AME_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "AME_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=1maqfKFy6Rc"
+  },
+  {
+    "id": "ame_mosaico",
+    "titulo": "Ring of Fire",
+    "artista": [
+      "Johnny Cash"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Country"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Country clássico com metais mariachi muito distintivos",
+    "instrumento": [
+      "Trompete",
+      "Guitarra acústica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_AMERICANA.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_AMERICANA.mp3",
+    "imagem": "MOSAICO_AMERICANA.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "bat_01",
+    "titulo": "In the Air Tonight",
+    "artista": [
+      "Phil Collins"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop rock atmosférico com entrada de bateria icónica em gated reverb",
+    "instrumento": [
+      "Bateria",
+      "Sintetizador"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BAT_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=YkADj0TPrJA",
+    "banda": null,
+    "imagem": "artista_bat_01.avif"
+  },
+  {
+    "id": "bat_02",
+    "titulo": "We Will Rock You",
+    "artista": [
+      "Roger Taylor"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock de estádio construído sobre batida de pés e palmas",
+    "instrumento": [
+      "Bateria",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BAT_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=-tJYN-eG1zk",
+    "banda": "Queen",
+    "imagem": "artista_bat_02.jpg"
+  },
+  {
+    "id": "bat_03",
+    "titulo": "Hot For Teacher",
+    "artista": [
+      "Alex Van Halen"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Hard Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Hard rock com introdução de bateria muito técnica e veloz",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "BAT_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=6M4_Ommh620",
+    "banda": "Van Halen",
+    "imagem": "artista_bat_03.jpg"
+  },
+  {
+    "id": "bat_04",
+    "titulo": "Moby Dick",
+    "artista": [
+      "John Bonham"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Hard Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Instrumental rock com longo solo de bateria de referência",
+    "instrumento": [
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BAT_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=tQLQ4Oc9vOE",
+    "banda": "Led Zeppelin",
+    "imagem": "artista_bat_04.jpg"
+  },
+  {
+    "id": "bat_05",
+    "titulo": "The End",
+    "artista": [
+      "Ringo Starr"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com o único solo de bateria de Ringo Starr em toda a discografia",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BAT_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=RHzSMRfPg_E",
+    "banda": "The Beatles",
+    "imagem": "artista_bat_05.jpg"
+  },
+  {
+    "id": "bat_06",
+    "titulo": "Walking on the Moon",
+    "artista": [
+      "Stewart Copeland"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Reggae Rock",
+      "New Wave"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Reggae rock com bateria sincopada muito característica",
+    "instrumento": [
+      "Bateria",
+      "Baixo"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BAT_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=KNIZofPB75k",
+    "banda": "The Police",
+    "imagem": "artista_bat_06.webp"
+  },
+  {
+    "id": "bat_07",
+    "titulo": "Sympathy for the Devil",
+    "artista": [
+      "Charlie Watts"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock",
+      "Samba Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com groove de samba e percussão hipnótica",
+    "instrumento": [
+      "Bateria",
+      "Percussão"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BAT_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BAT_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=GgnClrx8N2k",
+    "banda": "Rolling Stones",
+    "imagem": "artista_bat_07.webp"
+  },
+  {
+    "id": "bat_mosaico",
+    "titulo": "In Bloom",
+    "artista": [
+      "Nirvana"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Grunge"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Grunge melódico com bateria poderosa",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_BATERIA.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_BATERIA.mp3",
+    "imagem": "MOSAICO_BATERIA.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "a10_01",
+    "titulo": "Work",
+    "artista": [
+      "Rihanna",
+      "Drake"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Pop",
+      "Dancehall"
+    ],
+    "geografia": "Barbados",
+    "estilo": "Pop dancehall com cadência patois",
+    "instrumento": [
+      "Bateria eletrónica",
+      "Sintetizador"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "A10_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=HL1UzIK-flA"
+  },
+  {
+    "id": "a10_02",
+    "titulo": "Shape of You",
+    "artista": [
+      "Ed Sheeran"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop dançável com marimba e batida minimalista",
+    "instrumento": [
+      "Sintetizador",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "A10_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=JGwWNGJdvx8"
+  },
+  {
+    "id": "a10_03",
+    "titulo": "Uptown Funk",
+    "artista": [
+      "Mark Ronson",
+      "Bruno Mars"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Funk",
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Funk retro contagiante com secção de metais",
+    "instrumento": [
+      "Baixo",
+      "Metais"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "A10_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=OPf0YbXqDm0"
+  },
+  {
+    "id": "a10_04",
+    "titulo": "Blinding Lights",
+    "artista": [
+      "The Weeknd"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synth-pop"
+    ],
+    "geografia": "Canadá",
+    "estilo": "Synth-pop retro anos 80 com batida eletrónica pulsante",
+    "instrumento": [
+      "Sintetizador",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "A10_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=4NRXx6U8ABQ"
+  },
+  {
+    "id": "a10_05",
+    "titulo": "Rolling in the Deep",
+    "artista": [
+      "Adele"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Soul",
+      "Pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Soul pop intenso com voz poderosa e percussão pesada",
+    "instrumento": [
+      "Voz",
+      "Bateria"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "A10_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=rYEDA3JcQqw"
+  },
+  {
+    "id": "a10_06",
+    "titulo": "Old Town Road",
+    "artista": [
+      "Lil Nas X"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Country Rap",
+      "Trap"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Fusão country-trap com banjo e batida 808",
+    "instrumento": [
+      "Banjo",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "A10_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=r7qovpFAGrQ"
+  },
+  {
+    "id": "a10_07",
+    "titulo": "Bad Guy",
+    "artista": [
+      "Billie Eilish"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Pop Alternativo"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop minimalista sombrio com baixo distorcido",
+    "instrumento": [
+      "Baixo",
+      "Bateria eletrónica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "A10_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "A10_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=DyDfgMOUjCI"
+  },
+  {
+    "id": "a10_mosaico",
+    "titulo": "Shake It Off",
+    "artista": [
+      "Taylor Swift"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop otimista com refrão-hino muito reconhecível",
+    "instrumento": [
+      "Bateria",
+      "Metais"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_A10_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_A10_a.mp3",
+    "imagem": "MOSAICO_A10.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "pt80_01",
+    "titulo": "Porto Sentido",
+    "artista": [
+      "Rui Veloso"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock",
+      "Blues Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português com forte identidade regional (Porto)",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "PT80_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_01.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=5sGBBCIqSyA"
+  },
+  {
+    "id": "pt80_02",
+    "titulo": "Playback",
+    "artista": [
+      "Carlos Paião"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Pop português alegre, com letra bem-humorada",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "PT80_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_02.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=w3mf2Gu8FXo"
+  },
+  {
+    "id": "pt80_03",
+    "titulo": "Paixão",
+    "artista": [
+      "Heróis do Mar"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pós-Punk",
+      "New Wave"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Pós-punk português melancólico",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT80_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_03.webp",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=8iEMFVBSMhE"
+  },
+  {
+    "id": "pt80_04",
+    "titulo": "Estrada da Luz",
+    "artista": [
+      "Trovante"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock Progressivo"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock progressivo português atmosférico",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Teclado"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT80_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_04.webp",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=FJmt8_qDtmk"
+  },
+  {
+    "id": "pt80_05",
+    "titulo": "A Minha Casinha",
+    "artista": [
+      "Xutos & Pontapés"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português confessional, letra sobre a casa",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "PT80_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_05.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=tWzMhvS7ZaE"
+  },
+  {
+    "id": "pt80_06",
+    "titulo": "Um Grande, Grande Amor",
+    "artista": [
+      "Fernando Tordo"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Balada pop portuguesa romântica",
+    "instrumento": [
+      "Orquestra",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "PT80_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_06.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=gDpVDKLjGXc"
+  },
+  {
+    "id": "pt80_07",
+    "titulo": "Chiclete",
+    "artista": [
+      "Táxi"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Pop rock português animado",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT80_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT80_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_pt80_07.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=8nkEBdIRsCo"
+  },
+  {
+    "id": "pt80_mosaico",
+    "titulo": "Cavalos de Corrida",
+    "artista": [
+      "UHF"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português enérgico",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Bateria"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_PT80_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_PT80_a.mp3",
+    "imagem": "MOSAICO_PT80.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "bra001_01",
+    "titulo": "Aquarela do Brasil",
+    "artista": [
+      "Gal Costa"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "MPB",
+      "Samba"
+    ],
+    "geografia": "Brasil",
+    "estilo": "Samba-exaltação clássico, reinterpretado com voz expressiva",
+    "instrumento": [
+      "Voz",
+      "Percussão"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BRA001_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=mvTmSi4IxwQ"
+  },
+  {
+    "id": "bra001_02",
+    "titulo": "Garota de Ipanema",
+    "artista": [
+      "João Gilberto"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Bossa Nova"
+    ],
+    "geografia": "Brasil",
+    "estilo": "Bossa nova clássica, suave e sofisticada",
+    "instrumento": [
+      "Guitarra acústica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BRA001_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=o2M4niUE9G8"
+  },
+  {
+    "id": "bra001_03",
+    "titulo": "País Tropical",
+    "artista": [
+      "Jorge Ben"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "MPB",
+      "Samba Rock"
+    ],
+    "geografia": "Brasil",
+    "estilo": "Samba-rock alegre e groovy",
+    "instrumento": [
+      "Guitarra acústica",
+      "Percussão"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "BRA001_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=2_EJFtCaKKY"
+  },
+  {
+    "id": "bra001_04",
+    "titulo": "O Leãozinho",
+    "artista": [
+      "Caetano Veloso"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "MPB"
+    ],
+    "geografia": "Brasil",
+    "estilo": "MPB intimista, voz suave sobre melodia simples",
+    "instrumento": [
+      "Violão"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "BRA001_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=MxKvKFXuFrA"
+  },
+  {
+    "id": "bra001_05",
+    "titulo": "A Banda",
+    "artista": [
+      "Chico Buarque"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "MPB"
+    ],
+    "geografia": "Brasil",
+    "estilo": "MPB festiva com marcha animada",
+    "instrumento": [
+      "Voz",
+      "Metais"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "BRA001_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=TZEFBIoTzCk"
+  },
+  {
+    "id": "bra001_06",
+    "titulo": "Mas Que Nada",
+    "artista": [
+      "Sérgio Mendes"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Samba",
+      "Bossa Nova"
+    ],
+    "geografia": "Brasil",
+    "estilo": "Samba-jazz contagiante, batida de percussão marcante",
+    "instrumento": [
+      "Percussão",
+      "Piano"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BRA001_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=O8NopG3YqBo"
+  },
+  {
+    "id": "bra001_07",
+    "titulo": "Faroeste Caboclo",
+    "artista": [
+      "Legião Urbana"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Brasil",
+    "estilo": "Rock narrativo épico, letra longa e cinematográfica",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BRA001_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BRA001_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=1sMsOvAqh8I"
+  },
+  {
+    "id": "bra001_mosaico",
+    "titulo": "Tiro ao Álvaro",
+    "artista": [
+      "Elis Regina",
+      "Adoniran Barbosa"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Samba"
+    ],
+    "geografia": "Brasil",
+    "estilo": "Samba humorístico em dueto",
+    "instrumento": [
+      "Voz",
+      "Percussão"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_BRA001_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_BRA001_a.mp3",
+    "imagem": "MOSAICO_BRA001.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "syn001_01",
+    "titulo": "Midnight City",
+    "artista": [
+      "M83"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synth-pop",
+      "Dream Pop"
+    ],
+    "geografia": "França",
+    "estilo": "Synth-pop atmosférico com saxofone icónico",
+    "instrumento": [
+      "Sintetizador",
+      "Saxofone"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "SYN001_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_syn_01.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "syn001_02",
+    "titulo": "A Real Hero",
+    "artista": [
+      "College",
+      "Electric Youth"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synthwave"
+    ],
+    "geografia": "França",
+    "estilo": "Synthwave nostálgico, tema do filme Drive",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "SYN001_02_a_fix.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_syn_02.webp",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=oX8WXJMJ6_Q"
+  },
+  {
+    "id": "syn001_03",
+    "titulo": "Turbo Killer",
+    "artista": [
+      "Carpenter Brut"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synthwave",
+      "Darksynth"
+    ],
+    "geografia": "França",
+    "estilo": "Darksynth agressivo e industrial",
+    "instrumento": [
+      "Sintetizador",
+      "Bateria eletrónica"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "SYN001_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_syn_03.png",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=oLG6MkR4RO8"
+  },
+  {
+    "id": "syn001_04",
+    "titulo": "Sunset",
+    "artista": [
+      "The Midnight"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synthwave"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Synthwave melódico e nostálgico, com saxofone",
+    "instrumento": [
+      "Sintetizador",
+      "Saxofone"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "SYN001_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_syn_04.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=D0NKBf1PKqI"
+  },
+  {
+    "id": "syn001_05",
+    "titulo": "Resonance",
+    "artista": [
+      "HOME"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synthwave"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Synthwave minimalista e melancólico, muito usado em vídeo viral",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "SYN001_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=8GW6sLrK40k"
+  },
+  {
+    "id": "syn001_06",
+    "titulo": "She Is Young, She Is Beautiful, She Is Next",
+    "artista": [
+      "Perturbator"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Darksynth"
+    ],
+    "geografia": "França",
+    "estilo": "Darksynth cinematográfico e sombrio",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "SYN001_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_syn_06.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=y1brOq51MTo"
+  },
+  {
+    "id": "syn001_07",
+    "titulo": "Overdrive",
+    "artista": [
+      "Lazerhawk"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synthwave"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Synthwave energético em estilo road-trip",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "SYN001_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "SYN001_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "imagem": "artista_syn_07.webp",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=3sKVe3BpHkY"
+  },
+  {
+    "id": "syn001_mosaico",
+    "titulo": "Nightcall",
+    "artista": [
+      "Kavinsky"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synthwave",
+      "Electro"
+    ],
+    "geografia": "França",
+    "estilo": "Synthwave sombrio, voz filtrada em vocoder, tema do filme Drive",
+    "instrumento": [
+      "Sintetizador"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_SYN001_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_SYN001_a.mp3",
+    "imagem": "MOSAICO_SYN001.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "ptbat_01",
+    "titulo": "Cavalos de Corrida",
+    "artista": [
+      "UHF"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português com bateria enérgica em destaque",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=kn1JEaxiqXI"
+  },
+  {
+    "id": "ptbat_02",
+    "titulo": "À Minha Maneira",
+    "artista": [
+      "Xutos & Pontapés"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português com groove de bateria distintivo",
+    "instrumento": [
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=8dLY7RPBW-M",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Tim.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+    "id": "ptbat_03",
+    "titulo": "Sangue Oculto",
+    "artista": [
+      "GNR"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock",
+      "New Wave"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português com padrão de bateria muito marcado",
+    "instrumento": [
+      "Bateria",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=WFdRIbDEeis"
+  },
+  {
+    "id": "ptbat_04",
+    "titulo": "Capitão Romance",
+    "artista": [
+      "Ornatos Violeta"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock Alternativo"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock alternativo português com bateria dinâmica",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_04_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_04_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=3bDqLmWLGlc"
+  },
+  {
+    "id": "ptbat_05",
+    "titulo": "Last Child",
+    "artista": [
+      "RAMP"
+    ],
+    "decadas": [
+      "2000s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português contemporâneo com bateria técnica",
+    "instrumento": [
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=YfGVHGBqHXM"
+  },
+  {
+    "id": "ptbat_06",
+    "titulo": "Cão",
+    "artista": [
+      "Linda Martini"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Rock Alternativo",
+      "Post-Punk"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock alternativo português intenso",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=yNJtq5xL1vs"
+  },
+  {
+    "id": "ptbat_07",
+    "titulo": "Miúda",
+    "artista": [
+      "Capitão Fausto"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Indie Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Indie rock português com bateria marcada e melódica",
+    "instrumento": [
+      "Bateria",
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "PT_BAT_07_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "PT_BAT_07_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=H6KPKB8_Pbw"
+  },
+  {
+    "id": "ptbat_mosaico",
+    "titulo": "A Noite",
+    "artista": [
+      "Alexandre Frazão"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock português centrado na bateria, por um dos bateristas de referência nacionais",
+    "instrumento": [
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "MOSAICO_PT_BAT.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "MOSAICO_PT_BAT.mp3",
+    "imagem": "MOSAICO_PT_BAT.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "beatles_01",
+    "titulo": "Come Together",
+    "artista": [
+      "The Beatles"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com baixo e bateria minimalistas, introdução muito icónica",
+    "instrumento": [
+      "Baixo",
+      "Bateria"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BEATLES_01_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BEATLES_01_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": "BEATLES_01_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=45cYwDMibGo"
+  },
+  {
+    "id": "beatles_02",
+    "titulo": "Back in the U.S.S.R.",
+    "artista": [
+      "The Beatles"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock energético, paródia afetuosa dos Beach Boys e de Chuck Berry",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "BEATLES_02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BEATLES_02_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": "BEATLES_02_full.mp3",
+    "imagem": "BEATLES_02_white.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=nS5_EQgbuLc"
+  },
+  {
+    "id": "beatles_03",
+    "titulo": "The End (Trocas de Solo de Guitarra)",
+    "artista": [
+      "Lennon",
+      "McCartney",
+      "Harrison"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com trocas de solo de guitarra entre Lennon, McCartney e Harrison — momento único na discografia",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BEATLES_03_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BEATLES_03_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": "BEATLES_THE_END_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "beatles_04",
+    "titulo": "Don't Let Me Down",
+    "artista": [
+      "The Beatles",
+      "Billy Preston"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock ao vivo — a última atuação pública dos Beatles, no telhado da Apple Corps (Londres, Jan. 1969)",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Teclado"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "BEATLES_04.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "BEATLES_04_full.mp3",
+    "imagem": "BEATLES_04_foto.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "beatles_05",
+    "titulo": "Something (cover)",
+    "artista": [
+      "Outro artista (cover)",
+      "The Beatles",
+      "George Harrison (compositor original)"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock",
+      "Balada"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Balada rock composta por George Harrison, aqui em versão de cover",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "BEATLES_05_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BEATLES_05_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": "BEATLES_05_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "beatles_06",
+    "titulo": "A Hard Day's Night",
+    "artista": [
+      "The Beatles"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock",
+      "Pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock/pop com o acorde de abertura mais famoso da história da música popular",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BEATLES_06_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BEATLES_06_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": "BEATLES_06_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "beatles_08",
+    "titulo": "The End (Solo de Bateria)",
+    "artista": [
+      "Ringo Starr"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock com o único solo de bateria de Ringo Starr em toda a discografia dos Beatles",
+    "instrumento": [
+      "Bateria"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "BEATLES_08_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "BEATLES_08_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "beatles_recap",
+    "titulo": "Abbey Road (Recap)",
+    "artista": [
+      "The Beatles"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Medley recapitulativo do álbum Abbey Road, usado como fecho da Playlist Tributo",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Bateria"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "BEATLES_recap.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "BEATLES_recap_full.mp3",
+    "imagem": "BEATLES_mosaico.jpg",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-10"
+  },
+  {
+    "id": "pedro_abrunhosa_tudo_o_que_eu_te_dou",
+    "titulo": "Tudo O Que Eu Te Dou",
+    "artista": [
+      "Pedro Abrunhosa"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [],
+    "geografia": "Portugal",
+    "estilo": "",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-10",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Pedro_Abrunhosa.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+    "id": "pedro_abrunhosa_socorro",
+    "titulo": "Socorro",
+    "artista": [
+      "Pedro Abrunhosa"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "VOZ"
+    ],
+    "geografia": "Portugal",
+    "estilo": "",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-10",
+    "video": "https://www.youtube.com/watch?v=59HljjNg23w"
+  },
+  {
+    "id": "rui_veloso_porto_sentido",
+    "titulo": "Porto Sentido",
+    "artista": [
+      "Rui Veloso"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock",
+      "Blues"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Título e ano por confirmar por audição — sugestão não verificada (ver STATUS.md/DECISIONS.md)",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-11",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Rui_Veloso.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+    "id": "gnr_independanca",
+    "titulo": "Independança",
+    "artista": [
+      "GNR"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Título e ano por confirmar por audição — sugestão não verificada (ver STATUS.md/DECISIONS.md)",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-11",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/6/64/Concerto_Grupo_Novo_Rock_%28GNR%29_-_Maia_2019_-_DCL6408.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original"
+  },
+  {
+    "id": "the_durutti_column_sketch_for_summer",
+    "titulo": "Sketch For Summer",
+    "artista": [
+      "The Durutti Column"
+    ],
+    "decadas": [],
+    "generos": [],
+    "geografia": "",
+    "estilo": "",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "the_durutti_column_sketch_for_summer_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "the_durutti_column_sketch_for_summer_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "marconi_union_weightless",
+    "titulo": "Weightless",
+    "artista": [
+      "Marconi Union"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [],
+    "geografia": "UK",
+    "estilo": "ambient drone minimalista",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "brian_eno_by_this_river",
+    "titulo": "By This River",
+    "artista": [
+      "Brian Eno"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [],
+    "geografia": "UK",
+    "estilo": "ambient pop contemplativo",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "thelonious_monk_crepuscule_avec_pauline",
+    "titulo": "Crépuscule avec Pauline",
+    "artista": [
+      "Thelonious Monk"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [],
+    "geografia": "US",
+    "estilo": "jazz piano solo melancólico",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "sarah_mclachlan_surfacing",
+    "titulo": "Surfacing",
+    "artista": [
+      "Sarah McLachlan"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [],
+    "geografia": "US",
+    "estilo": "soft rock introspectivo vocal",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "brian_eno_on_land",
+    "titulo": "On Land",
+    "artista": [
+      "Brian Eno"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [],
+    "geografia": "UK",
+    "estilo": "ambient industrial textura",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "buena_vista_social_club_tres_palabras",
+    "titulo": "Tres Palabras",
+    "artista": [
+      "Buena Vista Social Club"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [],
+    "geografia": "CU",
+    "estilo": "bolero cubano nostálgico",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "the_durutti_column_for_belgian_friends",
+    "titulo": "For Belgian Friends",
+    "artista": [
+      "The Durutti Column"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [],
+    "geografia": "UK",
+    "estilo": "ambient guitarra pós-punk instrumental",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-13",
+    "video": null
+  },
+  {
+    "id": "future_islands_seasons_waiting_on_you",
+    "titulo": "Seasons (Waiting On You)",
+    "artista": [
+      "Future Islands"
+    ],
+    "decadas": [],
+    "generos": [],
+    "geografia": "",
+    "estilo": "",
+    "instrumento": [],
+    "tags": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "future_islands_seasons_waiting_on_you_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "future_islands_seasons_waiting_on_you_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "new_order_blue_monday",
+    "titulo": "Blue Monday",
+    "artista": [
+      "New Order"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Synth-Pop"
+    ],
+    "geografia": "UK",
+    "estilo": "Synth-pop dançável com bateria electrónica fria e baixo pulsante, marco do pós-punk electrónico",
+    "instrumento": [],
+    "tags": [
+      "sintetizador",
+      "dance",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "new_order_blue_monday_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "new_order_blue_monday_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "talk_talk_it_s_my_life",
+    "titulo": "It's My Life",
+    "artista": [
+      "Talk Talk"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Synth-Pop"
+    ],
+    "geografia": "UK",
+    "estilo": "Synth-pop emotivo com voz dramática e produção densa, entre o pop e o art rock",
+    "instrumento": [],
+    "tags": [
+      "voz dramática",
+      "sintetizador",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "talk_talk_it_s_my_life_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "talk_talk_it_s_my_life_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "james_blake_retrograde",
+    "titulo": "Retrograde",
+    "artista": [
+      "James Blake"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Electronic Soul"
+    ],
+    "geografia": "UK",
+    "estilo": "Soul electrónico minimalista com voz processada e produção esparsa e emocional",
+    "instrumento": [],
+    "tags": [
+      "minimalismo",
+      "voz",
+      "electrónica"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "james_blake_retrograde_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "james_blake_retrograde_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "hozier_take_me_to_church",
+    "titulo": "Take Me to Church",
+    "artista": [
+      "Hozier"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Indie Rock"
+    ],
+    "geografia": "IE",
+    "estilo": "Rock alternativo com intensidade gospel, voz poderosa e letra de grande carga emocional",
+    "instrumento": [],
+    "tags": [
+      "voz intensa",
+      "gospel",
+      "anos 10"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "hozier_take_me_to_church_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "hozier_take_me_to_church_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "grimes_flesh_without_blood",
+    "titulo": "Flesh Without Blood",
+    "artista": [
+      "Grimes"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Art Pop Electrónico"
+    ],
+    "geografia": "CA",
+    "estilo": "Art pop electrónico com voz etérea e produção densa e eclética",
+    "instrumento": [],
+    "tags": [
+      "electrónica",
+      "art pop",
+      "voz etérea"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "grimes_flesh_without_blood_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "grimes_flesh_without_blood_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "kate_bush_running_up_that_hill",
+    "titulo": "Running Up That Hill",
+    "artista": [
+      "Kate Bush"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Art Pop / Synth-Pop"
+    ],
+    "geografia": "UK",
+    "estilo": "Synth-pop art rock com voz única e dramaturgia emocional intensa",
+    "instrumento": [],
+    "tags": [
+      "synth-pop",
+      "voz",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "kate_bush_running_up_that_hill_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "kate_bush_running_up_that_hill_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  },
+  {
+    "id": "future_islands_ran",
+    "titulo": "Ran",
+    "artista": [
+      "Future Islands"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Synth-Pop"
+    ],
+    "geografia": "US",
+    "estilo": "Synth-pop com voz baritonal intensa alternando entre canto e growl, sobre sintetizadores pulsantes",
+    "instrumento": [],
+    "tags": [
+      "voz dramática",
+      "sintetizador",
+      "indie"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "future_islands_ran_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "future_islands_ran_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-14",
+    "video": null
+  }
+]
