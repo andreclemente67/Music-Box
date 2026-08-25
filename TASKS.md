@@ -12,6 +12,32 @@
 - [ ] **"Gerar com IA" (modo Categoria):** consistentemente devolve só 6 faixas em vez das 7 esperadas para playlists Standard (testado 2x seguidas, mesmo resultado — 6 sugestões numeradas + mosaico, quando `expectedCount('standard')` é 7). Suspeita: o prompt/lógica de contagem deste modo especificamente (`montarPromptIA`/`af_musicasIAComSemente` em modo Categoria) pede o número errado de faixas à IA. Os outros modos (URL, Tema, Semente múltipla, Playlist YouTube) não foram testados quanto a este problema. Workaround usado: "Preencher automaticamente" para completar a posição em falta depois de criar a playlist.
 - [ ] **Aba ADICIONAR FAIXA (pesquisa MusicBrainz):** a década/género gravados no catálogo vêm da gravação específica escolhida nos resultados da MusicBrainz, não da canção original — pode ficar errado quando o primeiro resultado é uma versão ao vivo, reedição ou remasterização mais tardia. Caso encontrado: "Sweet Home Alabama" (Lynyrd Skynyrd, original 1974) foi adicionada via este fluxo à playlist "Decade of Riffs" (Anos 70 — Rock) mas ficou gravada no catálogo com `decadas: ["1990s"]` e géneros "acoustic rock, blues rock, boogie rock" (vindos de uma gravação de 1997, provavelmente ao vivo/reedição), desalinhada com o resto da playlist. A causa é `afSelecionarResultado()`/`afDecadaDeAno(r.ano)` em `musicbox_studio.html`, que usa sempre o `first-release-date` da gravação específica devolvida pela API, sem distinguir gravação original de versões posteriores. Corrigir a entrada do Lynyrd Skynyrd manualmente no `catalogo.json` (década → 1970s, género → algo como "Southern Rock/Rock"), e considerar mostrar a década do resultado na lista de pesquisa (já a mostra) para o utilizador poder escolher conscientemente a gravação mais próxima do original, ou preferir resultados mais antigos por defeito.
 
+## Por decidir / continuar amanhã (sessão 2026-08-25)
+
+- [ ] **Playlist "Ambient & Introspectivo" (`STD.INT.ALL.MIX.001`)** — as 7 faixas
+      (The Durutti Column "Sketch For Summer", Marconi Union "Weightless", Brian Eno
+      "By This River" e "On Land", Thelonious Monk "Crépuscule avec Pauline", Sarah
+      McLachlan "Surfacing", Buena Vista Social Club "Tres Palabras") mais o mosaico
+      (Vini Reilly / The Durutti Column "For Belgian Friends") já têm trechos A/B
+      gerados e `estado: "rascunho"`, mas nenhuma tem campo `imagem` — bloqueia o
+      reveal em jogo. Decisão: adiado para "Versão 2" (retomar amanhã) — não incluir
+      esta playlist em rotação de episódio até estar completa (confirmar também se o
+      motor de selecção de playlists já filtra por `estado`, ou se isto hoje só é
+      travado "à mão").
+- [ ] **Faixa `the_moody_blues_tuesday_afternoon`** (Moody Blues, "Tuesday
+      Afternoon") — trechos A/B já existem em disco (gerados hoje) mas a faixa não
+      tem entrada em `catalogo.json`. Ficou de fora dos commits `18fef08`/`44cf7e0`
+      por ser órfã (não é lixo de teste como `teste`/`aqsil_01`/`jrd_01` — precisa de
+      ser catalogada).
+- [ ] **77 entradas por decidir no `git status`**, deixadas de propósito por
+      comitar após os commits `18fef08` (sidebar/`musicbox.html`) e `44cf7e0`
+      (dados/trechos/docs): `.claude/`, `backups_catalogo/`, `mp3_index.json`, os 6
+      pares de trechos órfãos (`aqsil_01`, `jrd_01`, `teste`,
+      `the_durutti_column_sketch_for_summer_2`, `the_moody_blues_tuesday_afternoon` —
+      este último já coberto acima), e um lote de imagens/scripts/docs não
+      relacionado com o pedido de hoje. Sem pressa; rever e decidir o que entra em
+      git, o que se apaga e o que fica deliberadamente fora (`.gitignore`).
+
 ## Confirmado — resposta esperada é sempre Artista/Banda (Format Book V11)
 
 Confirmado na Bíblia (V11, secção 2 "Recognition Triangle" — tabela "Category
