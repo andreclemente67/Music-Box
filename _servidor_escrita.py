@@ -45,19 +45,25 @@ POST /gerar-faixas
 
 POST /gerar-faixa
   corpo: {"url": "https://www.youtube.com/watch?v=...", "id": "syn_01"}
-     ou: {"artista": "...", "titulo": "...", "id": "syn_01"}  (sem url —
-         procura-se automaticamente no YouTube via yt-dlp ytsearch1)
-  -> 200 {"ok": true, "ficheiro_a": "syn_01_a.mp3", "ficheiro_b": "syn_01_b.mp3"}
+     ou: {"artista": "...", "titulo": "...", "id": "syn_01"}  (sem url)
+  -> 200 {"ok": true, "ficheiro_a": "syn_01_a.mp3", "ficheiro_b": "syn_01_b.mp3", "fonte": "itunes"|"youtube"}
   -> 400/500/504 {"erro": "..."}
   Usado pelo botão "⬇ Gerar trechos" na Mesa de Montagem (só aparece em
-  faixas com estado 'rascunho', sem áudio). Se o pedido não trouxer 'url',
-  usa 'artista'+'titulo' (ou 'title') para construir uma pesquisa
-  "ytsearch1:ARTISTA TITULO" e obtém o primeiro resultado com
-  `yt-dlp --get-url --no-playlist` antes de continuar. Corre gerar_faixa.py
-  <url> <id> --force como subprocesso (download via yt-dlp +
-  sugerir_trechos.py + corte via ffmpeg — ver esse ficheiro). Só devolve os
-  nomes dos ficheiros gerados; NÃO escreve em catalogo.json — quem
-  actualiza a faixa é o cliente (mesmo padrão de
+  faixas com estado 'rascunho', sem áudio). Se o pedido não trouxer 'url':
+    1. Com 'artista' E 'titulo', tenta primeiro o modo iTunes
+       (gerar_faixa.py --itunes --artista ... --titulo ... <id> --force):
+       procura na iTunes Search API, descarrega o preview oficial de 30s
+       (previewUrl) e corta sempre 0-12s/18-30s — sem YouTube, sem
+       sugerir_trechos.py, muito mais rápido e sem o risco de "Sign in to
+       confirm". Ver DECISIONS.md 2026-08-25.
+    2. Se a iTunes não tiver preview (ou só vier 'artista' ou só 'titulo'),
+       cai para o comportamento anterior: pesquisa
+       "ytsearch1:ARTISTA TITULO" via yt-dlp --get-url --no-playlist,
+       depois corre gerar_faixa.py <url> <id> --force como subprocesso
+       (download via yt-dlp + sugerir_trechos.py + corte via ffmpeg — ver
+       esse ficheiro).
+  Só devolve os nomes dos ficheiros gerados; NÃO escreve em catalogo.json —
+  quem actualiza a faixa é o cliente (mesmo padrão de
   updateClipField()/detectarMomentoClip() no Studio: fica em
   CATALOGO_PATCH, só entra em catalogo_patch.json quando se clica
   "Guardar", nunca escreve catalogo.json directamente).
@@ -100,6 +106,7 @@ GERAR_FAIXAS_TIMEOUT = 60        # segundos — geração de texto pode demorar
 GERAR_FAIXA_SCRIPT = os.path.join(APP_DIR, 'gerar_faixa.py')
 GERAR_FAIXA_TIMEOUT = 600  # segundos (10min) — download + análise + corte; músicas longas (ex. "Weightless", Marconi Union) podem demorar mais
 YT_SEARCH_TIMEOUT = 60  # segundos — yt-dlp --get-url só resolve o URL, não descarrega áudio
+GERAR_FAIXA_ITUNES_TIMEOUT = 60  # segundos — pesquisa + download do preview de 30s + corte ffmpeg (ficheiro pequeno, bem mais rápido que o modo YouTube)
 ID_FAIXA_REGEX = re.compile(r'^[A-Za-z0-9_]+$')
 
 # ── Ler playlist do YouTube sem descarregar (tab "Playlist YouTube" de
@@ -370,6 +377,34 @@ class Handler(BaseHTTPRequestHandler):
             if not artista and not titulo:
                 self._enviar_json(400, {"erro": "faltam 'url' ou 'artista'+'titulo' no corpo do pedido"})
                 return
+
+            if artista and titulo:
+                # Modo iTunes primeiro — procura o preview oficial de 30s
+                # (mais rápido, sem risco de "Sign in to confirm" do
+                # YouTube). Só cai para a pesquisa no YouTube abaixo se a
+                # iTunes não tiver preview para esta música, ou se o
+                # subprocesso demorar demasiado.
+                try:
+                    resultado_itunes = subprocess.run(
+                        [sys.executable, GERAR_FAIXA_SCRIPT, '--itunes',
+                         '--artista', artista, '--titulo', titulo, id_faixa, '--force'],
+                        cwd=APP_DIR, capture_output=True, text=True, timeout=GERAR_FAIXA_ITUNES_TIMEOUT,
+                    )
+                except subprocess.TimeoutExpired:
+                    resultado_itunes = None
+                except Exception:
+                    resultado_itunes = None
+
+                if resultado_itunes is not None and resultado_itunes.returncode == 0:
+                    ficheiro_a = f'{id_faixa}_a.mp3'
+                    ficheiro_b = f'{id_faixa}_b.mp3'
+                    if os.path.exists(os.path.join(APP_DIR, ficheiro_a)) and os.path.exists(os.path.join(APP_DIR, ficheiro_b)):
+                        self._enviar_json(200, {"ok": True, "ficheiro_a": ficheiro_a, "ficheiro_b": ficheiro_b, "fonte": "itunes"})
+                        return
+                    # ficheiros não apareceram apesar do returncode 0 — cai para YouTube também
+
+            # Fallback: pesquisa no YouTube (sem preview iTunes disponível,
+            # ou só veio 'artista' ou só 'titulo').
             consulta = ' '.join(p for p in (artista, titulo) if p)
             try:
                 pesquisa = subprocess.run(
@@ -421,7 +456,7 @@ class Handler(BaseHTTPRequestHandler):
             self._enviar_json(500, {"erro": "gerar_faixa.py terminou sem erro mas os ficheiros não apareceram em app/"})
             return
 
-        self._enviar_json(200, {"ok": True, "ficheiro_a": ficheiro_a, "ficheiro_b": ficheiro_b})
+        self._enviar_json(200, {"ok": True, "ficheiro_a": ficheiro_a, "ficheiro_b": ficheiro_b, "fonte": "youtube"})
 
     def _listar_playlist_youtube(self):
         tamanho = int(self.headers.get('Content-Length') or 0)
