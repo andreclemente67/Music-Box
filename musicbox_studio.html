@@ -2579,7 +2579,7 @@ function renderMontagem() {
     const prontos = AF_IA_PROGRESSO.faixas.filter(f => f.estado === 'pronto').length;
     const falhas  = AF_IA_PROGRESSO.faixas.filter(f => f.estado === 'falhou').length;
     const total   = AF_IA_PROGRESSO.faixas.length;
-    progressoTrechosHtml = `<span class="shape-badge ${falhas ? 'warn' : 'ok'}" title="Geração automática de trechos A/B em curso (semente do YouTube)"><span class="dot"></span>${prontos}/${total} trechos gerados${falhas ? ` (${falhas} falharam)` : ''}</span>`;
+    progressoTrechosHtml = `<span class="shape-badge ${falhas ? 'warn' : 'ok'}" title="Geração automática de trechos A/B em curso"><span class="dot"></span>${prontos}/${total} trechos gerados${falhas ? ` (${falhas} falharam)` : ''}</span>`;
   }
 
   let html = `
@@ -3596,6 +3596,7 @@ function renderSlotsSimples(pl) {
         html += `<button class="fill-artista-btn" onclick="preencherComArtista()">Preencher com este artista</button>`;
       }
       html += `<button class="fill-auto-btn" onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
+      html += `<button class="fill-auto-btn" title="Gera trechos A/B (áudio) para todas as faixas desta playlist que ainda não têm nenhum — por artista+título, sem precisar de URL. Tenta primeiro a iTunes Search API (preview de 30s, corte 0-12s/18-30s), cai para pesquisa no YouTube se não houver preview. Corre faixa a faixa, pode demorar — progresso ao vivo aparece nesta mesma página." onclick="af_gerarTrechosEmFalta()">🎧 Gerar trechos em falta</button>`;
       html += `<button class="fill-auto-btn" title="${isCinemaPlaylist() ? "Ponto de partida para todas as faixas sem excerto definido — 0-30s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário." : "Ponto de partida para todas as faixas sem início definido — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário."}" onclick="autoDefinirTrechosTodos()">⚡ Auto em toda a playlist</button>`;
       html += `<button class="fill-auto-btn" title="Associa ficheiros .mp3 já existentes em app/ às posições sem trecho_a — por nome exacto, a partir de mp3_index.json. Depois define A/B automaticamente para o que encontrar (⚡ Auto)." onclick="autoMatchMp3()">🔗 Auto-match MP3</button>`;
     }
@@ -4090,15 +4091,19 @@ function af_verMontagemAgora() {
   openPlaylist(chave);
 }
 
-// Dispara automaticamente /gerar-faixa para cada faixa criada por "Gerar
-// com IA", quando a semente da geração veio de um URL do YouTube (ver
-// sementeYoutubeUrl em importarResultadoIA/createPlaylist) — pedido
-// explícito do utilizador: nesse caso confia-se que a busca por
-// artista+título no YouTube (nunca a URL da semente, que é doutra música)
-// encontra o vídeo certo para cada uma das faixas sugeridas. Sem semente
-// do YouTube (playlist via IA só com texto livre, ou sem IA) continua a
-// exigir o botão manual "⬇ Gerar trechos" por faixa — ver DECISIONS.md
-// 2026-08-21.
+// Motor genérico de geração de trechos A/B para uma lista de ids — chama
+// /gerar-faixa (por artista+título, nunca URL) faixa a faixa. Usado por
+// dois chamadores:
+// (1) createPlaylist(), quando a semente da geração via IA veio de um URL
+//     do YouTube (ver sementeYoutubeUrl em importarResultadoIA) — pedido
+//     explícito do utilizador: nesse caso confia-se que a busca por
+//     artista+título no YouTube encontra o vídeo certo para cada faixa
+//     sugerida;
+// (2) af_gerarTrechosEmFalta() — botão manual "🎧 Gerar trechos em falta"
+//     na Mesa de Montagem, para qualquer playlist (com ou sem IA), sobre
+//     as faixas sem trecho_a ainda — ver DECISIONS.md 2026-08-24.
+// Sem nenhum dos dois gatilhos, continua a existir o botão manual por
+// faixa "⬇ Gerar trechos" (gerarTrechosViaServidor).
 //
 // Corre sequencialmente, nunca em paralelo: cada chamada pode demorar
 // vários minutos (download + corte, GERAR_FAIXA_TIMEOUT em
@@ -4115,7 +4120,7 @@ async function af_gerarTrechosAutomaticoIA(ids) {
 
   AF_IA_PROGRESSO = {
     fase: 'trechos',
-    mensagem: `A gerar trechos automaticamente para ${ids.length} faixa(s) da IA (semente do YouTube)…`,
+    mensagem: `A gerar trechos automaticamente para ${ids.length} faixa(s)…`,
     tentativaArtista: null,
     faixas: ids.map(id => {
       const t = CATALOGO_BY_ID.get(id);
@@ -4123,7 +4128,7 @@ async function af_gerarTrechosAutomaticoIA(ids) {
     }),
   };
   af_renderProgressoIA();
-  notify(`A gerar trechos automaticamente para ${ids.length} faixa(s) da IA (semente do YouTube) — corre em segundo plano, pode demorar vários minutos…`, 'ok');
+  notify(`A gerar trechos automaticamente para ${ids.length} faixa(s) — corre em segundo plano, pode demorar vários minutos…`, 'ok');
 
   let ok = 0;
   const falhas = [];
@@ -4163,16 +4168,41 @@ async function af_gerarTrechosAutomaticoIA(ids) {
 
   const semFalhas = !falhas.length;
   AF_IA_PROGRESSO.mensagem = semFalhas
-    ? `✓ Trechos gerados automaticamente para ${ok}/${ids.length} faixa(s) da IA — revê na Mesa de Montagem antes de guardar`
-    : `Trechos gerados para ${ok}/${ids.length} faixa(s) da IA — ${falhas.length} falharam`;
+    ? `✓ Trechos gerados automaticamente para ${ok}/${ids.length} faixa(s) — revê na Mesa de Montagem antes de guardar`
+    : `Trechos gerados para ${ok}/${ids.length} faixa(s) — ${falhas.length} falharam`;
   AF_IA_PROGRESSO.fase = semFalhas ? 'concluido' : 'erro';
   af_renderProgressoIA();
 
   if (semFalhas) {
     notify(AF_IA_PROGRESSO.mensagem, 'ok');
   } else {
-    notify(`Trechos gerados para ${ok}/${ids.length} faixa(s) da IA — ${falhas.length} falharam: ${falhas.join('; ')}`, 'err');
+    notify(`Trechos gerados para ${ok}/${ids.length} faixa(s) — ${falhas.length} falharam: ${falhas.join('; ')}`, 'err');
   }
+}
+
+function af_idsSemAudioNaPlaylistAtual() {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return [];
+  const idsBrutos = pl.tipo === 'tributo'
+    ? (pl.posicoes || []).filter(p => p.tipo === 'audio' && p.id).map(p => p.id)
+    : [...(pl.musicas || []), ...(pl.mosaico && pl.mosaico.id ? [pl.mosaico.id] : [])];
+  const idsUnicos = [...new Set(idsBrutos)];
+  return idsUnicos.filter(id => {
+    const t = CATALOGO_BY_ID.get(id);
+    return t && !(t.trecho_a && t.trecho_a.ficheiro);
+  });
+}
+
+function af_gerarTrechosEmFalta() {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+  const ids = af_idsSemAudioNaPlaylistAtual();
+  if (!ids.length) {
+    notify('Todas as faixas desta playlist já têm trechos gerados', 'ok');
+    return;
+  }
+  AF_CHAVE_PLAYLIST_EM_PROGRESSO = currentPlaylistKey;
+  af_gerarTrechosAutomaticoIA(ids);
 }
 
 // ─── ATRIBUIR / REMOVER FAIXAS NOS SLOTS ────────────────────
@@ -5991,7 +6021,7 @@ async function afPesquisar() {
   AF_RESULTADOS = [];
 
   try {
-    const rArtista = await fetch(`https://musicbrainz.org/ws/2/artist/?query=${encodeURIComponent('artist:"' + nomeArtista + '"')}&fmt=json&limit=5`);
+    const rArtista = await fetch(`/mb-proxy?caminho=${encodeURIComponent('artist/')}&query=${encodeURIComponent('artist:"' + nomeArtista + '"')}&fmt=json&limit=5`);
     if (!rArtista.ok) throw new Error('MusicBrainz (artista) HTTP ' + rArtista.status);
     const dadosArtista = await rArtista.json();
     const artista = (dadosArtista.artists || [])[0];
@@ -5999,13 +6029,13 @@ async function afPesquisar() {
 
     let generosMB = [];
     try {
-      const rDetalhe = await fetch(`https://musicbrainz.org/ws/2/artist/${artista.id}?fmt=json&inc=genres`);
+      const rDetalhe = await fetch(`/mb-proxy?caminho=${encodeURIComponent('artist/' + artista.id)}&fmt=json&inc=genres`);
       if (rDetalhe.ok) generosMB = ((await rDetalhe.json()).genres || []).map(g => g.name);
     } catch (eGeneros) { /* opcional — segue sem géneros pré-preenchidos */ }
 
     const paisMB = artista.country || (artista.area && artista.area.name) || '';
 
-    const rGrav = await fetch(`https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent('arid:' + artista.id)}&fmt=json&limit=100`);
+    const rGrav = await fetch(`/mb-proxy?caminho=${encodeURIComponent('recording/')}&query=${encodeURIComponent('arid:' + artista.id)}&fmt=json&limit=100`);
     if (!rGrav.ok) throw new Error('MusicBrainz (gravações) HTTP ' + rGrav.status);
     const dadosGrav = await rGrav.json();
 

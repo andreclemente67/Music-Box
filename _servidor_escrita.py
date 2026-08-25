@@ -13,6 +13,18 @@ GET /qualquer/ficheiro.ext
   -> 403 se o caminho tentar sair de app/ (ex.: ../)
   -> 404 se o ficheiro não existir
 
+GET /mb-proxy?caminho=artist/&query=...&fmt=json&limit=5
+GET /mb-proxy?caminho=artist/<mbid>&fmt=json&inc=genres
+GET /mb-proxy?caminho=recording/&query=...&fmt=json&limit=100
+  -> 200 + corpo devolvido pela MusicBrainz (JSON), sem alterações
+  -> 400/502 {"erro": "..."}
+  Proxy do lado do servidor para a API da MusicBrainz — chamar
+  musicbrainz.org directamente do browser dá net::ERR_CONNECTION_CLOSED,
+  porque a MusicBrainz exige um User-Agent próprio e o fetch() do browser
+  não permite defini-lo (forbidden header). `caminho` restrito a
+  `artist/`, `recording/` ou `artist/<mbid>` — nunca um caminho arbitrário
+  da MusicBrainz. Ver DECISIONS.md 2026-08-25.
+
 Uso: python3 _servidor_escrita.py (stdlib puro, sem dependências — ao
 contrário de _servidor_librosa.py não precisa de venv).
 
@@ -87,7 +99,7 @@ import sys
 import urllib.error
 import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import urlparse, parse_qs, unquote, urlencode
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 PORTA = 8002
@@ -108,6 +120,11 @@ GERAR_FAIXA_TIMEOUT = 600  # segundos (10min) — download + análise + corte; m
 YT_SEARCH_TIMEOUT = 60  # segundos — yt-dlp --get-url só resolve o URL, não descarrega áudio
 GERAR_FAIXA_ITUNES_TIMEOUT = 60  # segundos — pesquisa + download do preview de 30s + corte ffmpeg (ficheiro pequeno, bem mais rápido que o modo YouTube)
 ID_FAIXA_REGEX = re.compile(r'^[A-Za-z0-9_]+$')
+
+# ── Proxy de pedidos à MusicBrainz (GET /mb-proxy — ver _mb_proxy) ───────
+MUSICBRAINZ_BASE = 'https://musicbrainz.org/ws/2/'
+MUSICBRAINZ_TIMEOUT = 15
+MUSICBRAINZ_USER_AGENT = 'MusicBoxStudio/1.0 (andreclemente67@gmail.com)'
 
 # ── Ler playlist do YouTube sem descarregar (tab "Playlist YouTube" de
 # "Gerar com IA" no Studio) ──────────────────────────────────────────────
@@ -151,7 +168,12 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         # Serve ficheiros estáticos de app/ (musicbox_studio.html, .mp3,
         # imagens, .json, etc.) para a app poder correr só na porta 8002.
-        caminho_pedido = unquote(urlparse(self.path).path)
+        parsed = urlparse(self.path)
+        if parsed.path == '/mb-proxy':
+            self._mb_proxy(parsed)
+            return
+
+        caminho_pedido = unquote(parsed.path)
         relativo = caminho_pedido.lstrip('/')
         caminho = os.path.realpath(os.path.join(APP_DIR, relativo))
 
@@ -175,6 +197,51 @@ class Handler(BaseHTTPRequestHandler):
 
         self.send_response(200)
         self.send_header('Content-Type', tipo or 'application/octet-stream')
+        self.send_header('Content-Length', str(len(dados)))
+        self.end_headers()
+        self.wfile.write(dados)
+
+    def _mb_proxy(self, parsed):
+        # Proxy de pedidos à API da MusicBrainz do lado do servidor — o
+        # browser, ao chamar musicbrainz.org directamente, recebe
+        # net::ERR_CONNECTION_CLOSED: a MusicBrainz exige um User-Agent
+        # próprio identificando a aplicação e o fetch() do browser não
+        # permite definir esse cabeçalho (forbidden header), pelo que os
+        # pedidos chegam com o User-Agent genérico do Chrome e são
+        # recusados. Aqui controlamos o User-Agent e o problema
+        # desaparece. Ver DECISIONS.md 2026-08-25.
+        #
+        # GET /mb-proxy?caminho=artist/&query=...&fmt=json&limit=5
+        # GET /mb-proxy?caminho=artist/<mbid>&fmt=json&inc=genres
+        # GET /mb-proxy?caminho=recording/&query=...&fmt=json&limit=100
+        params = parse_qs(parsed.query)
+        caminho = (params.get('caminho') or [''])[0]
+        permitido = caminho in ('artist/', 'recording/') or re.match(r'^artist/[0-9a-fA-F-]+$', caminho or '')
+        if not permitido:
+            self._enviar_json(400, {"erro": f"caminho MusicBrainz não permitido: {caminho!r}"})
+            return
+
+        resto = {k: v[0] for k, v in params.items() if k != 'caminho'}
+        url = f'{MUSICBRAINZ_BASE}{caminho}?{urlencode(resto)}'
+
+        pedido = urllib.request.Request(url, headers={
+            'User-Agent': MUSICBRAINZ_USER_AGENT,
+            'Accept': 'application/json',
+        })
+        try:
+            with urllib.request.urlopen(pedido, timeout=MUSICBRAINZ_TIMEOUT) as resp:
+                dados = resp.read()
+                status = resp.status
+        except urllib.error.HTTPError as e:
+            self._enviar_json(e.code, {"erro": f"MusicBrainz HTTP {e.code}"})
+            return
+        except urllib.error.URLError as e:
+            self._enviar_json(502, {"erro": f"falha a contactar a MusicBrainz: {e}"})
+            return
+
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Access-Control-Allow-Origin', ORIGEM_PERMITIDA)
         self.send_header('Content-Length', str(len(dados)))
         self.end_headers()
         self.wfile.write(dados)
