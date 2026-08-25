@@ -341,6 +341,25 @@
     color: var(--text3);
   }
 
+  /* Botão de apagar playlist — só visível ao hover do item (ver
+     renderSidebar()/af_apagarPlaylist()), para não poluir a lista quando
+     não está a ser usado. */
+  .sidebar-delete-btn {
+    opacity: 0;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 12px;
+    line-height: 1;
+    border-radius: 3px;
+    transition: opacity 0.15s, color 0.15s, background 0.15s;
+  }
+  .sidebar-item:hover .sidebar-delete-btn { opacity: 1; }
+  .sidebar-delete-btn:hover { color: var(--red); background: rgba(224,85,85,0.12); }
+
   .sidebar-group-label {
     padding: 8px 16px 4px;
     font-family: var(--mono);
@@ -2202,6 +2221,7 @@ function renderSidebar() {
         <span class="dot"></span>
         <span>${pl.nome || chave}</span>
         <span class="sidebar-count">${count}</span>
+        <button type="button" class="sidebar-delete-btn" title="Apagar playlist" onclick="af_apagarPlaylist('${chave}', event)">🗑</button>
       </li>`;
     });
   });
@@ -2226,6 +2246,40 @@ function selectPlaylistFilter(chave) {
   if (chave !== 'ALL' && document.getElementById('view-montagem').classList.contains('active')) {
     openPlaylist(chave);
   }
+}
+
+// Botão de lixo por item da sidebar (ver template partilhado em
+// renderSidebar(), usado pelos 4 grupos Standard/Solo/Retrato/Tributo).
+// event.stopPropagation() evita que o clique também dispare o onclick do
+// <li> pai (selectPlaylistFilter, que abriria a playlist em vez de a
+// apagar). Só mexe em PLAYLISTS em memória — mesmo padrão de
+// createPlaylist(): fica por gravar até "↓ Guardar playlists.json"
+// (markDirty), nunca escreve em disco sozinho.
+function af_apagarPlaylist(chave, event) {
+  if (event) event.stopPropagation();
+  const pl = PLAYLISTS[chave];
+  if (!pl) return;
+  const nome = pl.nome || chave;
+  if (!confirm(`Apagar a playlist "${nome}"? Esta ação não pode ser desfeita.`)) return;
+
+  delete PLAYLISTS[chave];
+  markDirty();
+
+  // Se era a playlist aberta na Mesa de Montagem, limpa o estado —
+  // renderMontagem() já mostra sozinho o ecrã vazio ("Seleciona uma
+  // playlist...") quando currentPlaylistKey deixa de apontar para nada.
+  if (currentPlaylistKey === chave) {
+    currentPlaylistKey = null;
+    selectedSlot = null;
+  }
+  if (selectedPlaylistFilter === chave) {
+    selectedPlaylistFilter = 'ALL';
+  }
+
+  renderSidebar();
+  renderMontagem();
+  renderBiblioteca();
+  notify(`Playlist "${nome}" apagada — inclui-se em playlists.json ao guardar`, 'ok');
 }
 
 // ─── BIBLIOTECA (catálogo real, só leitura) ─────────────────
