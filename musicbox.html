@@ -143,7 +143,7 @@
   .log { max-width:700px; margin:6px auto 20px; font-size:11px; color:#6a6a66; text-align:center; min-height:16px; }
   audio { display:none; }
 
-  #start-overlay { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:16px; }
+  #start-overlay { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:16px; overflow-y:auto; padding:24px 0; box-sizing:border-box; }
   #start-overlay button { background:var(--accent); color:#1a1508; border:none; border-radius:8px; padding:18px 40px; font-size:18px; font-weight:900; letter-spacing:2px; cursor:pointer; }
   #start-overlay p { color:#8a8a86; font-size:12px; max-width:320px; text-align:center; }
   #start-overlay .btn-secundario { background:var(--bg3); color:var(--text); font-size:13px; padding:10px 24px; }
@@ -576,29 +576,6 @@ const COLLECTIONS = {
     mosaico: null
   },
 
-  // ── PLAYLIST TRIBUTO — Led Zeppelin ──
-  // Mecânica mista: 8 posições curadas, cada uma com tipo próprio.
-  // Tipos: 'audio' | 'trivia' | 'cover' | 'foto' | 'solo' | 'logo' | 'riff' | 'bateria'
-  // trivia: sem áudio, pergunta lida pelo apresentador, resposta verbal.
-  // foto/logo: imagem revelada em grelha 4×4 ao longo de 20s.
-  // audio/solo/cover/riff/bateria: reconhecimento auditivo normal (Trecho A + B).
-  TRIBUTO_LED: {
-    nome: 'Led Zeppelin', descritivo: 'Playlist Tributo', playlistCodigo: 'TRB-LED-001', universo: 'Tributo', temBonus: false, dificuldade: 4, temTributo: true,
-    banda: 'Led Zeppelin',
-    posicoes: [
-      { pos:1, tipo:'audio', titulo:'Whole Lotta Love', artista:'Led Zeppelin', a:'LED_01_a.mp3', b:'LED_01_b.mp3', chave:'Whole Lotta Love' },
-      { pos:2, tipo:'trivia', pergunta:'Em que ano foi fundada a banda Led Zeppelin?', chave:'1968', dica:'Formada em Londres por Jimmy Page.' },
-      { pos:3, tipo:'solo', titulo:'Stairway to Heaven — Solo Final', artista:'Jimmy Page', a:'LED_03_solo.mp3', b:'LED_03_solo_b.mp3', chave:'Stairway to Heaven' },
-      { pos:4, tipo:'foto', titulo:'Robert Plant', imagem:'LED_04_foto.jpg', chave:'Robert Plant', dica:'Vocalista e letrista da banda.' },
-      { pos:5, tipo:'cover', titulo:'Whole Lotta Love (cover)', artista:'Wolfmother', a:'LED_05_cover.mp3', b:'LED_05_cover_b.mp3', chave:'Whole Lotta Love', dica:'Versão de Wolfmother — qual é a música original dos Led Zeppelin?' },
-      { pos:6, tipo:'riff', titulo:'Black Dog — Riff', artista:'Led Zeppelin', a:'LED_06_riff.mp3', b:'LED_06_riff_b.mp3', chave:'Black Dog' },
-      { pos:7, tipo:'trivia', pergunta:'Como se chamava o baterista dos Led Zeppelin, que morreu em 1980?', chave:'John Bonham', dica:'Considerado um dos maiores bateristas de rock de todos os tempos.' },
-      { pos:8, tipo:'logo', titulo:'Led Zeppelin — Logótipo', imagem:'LED_08_logo.jpg', a:'LED_08_logo.mp3', chave:'Led Zeppelin' },
-    ],
-    musicas: [],
-    mosaico: null
-  },
-
   // ── PLAYLIST TRIBUTO — Beatles ──
   // 8 posições curadas com tipos mistos.
   // Mosaico activo: posições 1, 3, 5, 6, 8 (reconhecimento auditivo cego).
@@ -649,14 +626,14 @@ const UNIVERSOS_EXTERNOS = [
   // (que já está completo e correcto). Sem código aqui para resolver
   // `posicoes` externamente, esta entrada nunca fez nada além de gerar erro
   // no arranque — removida em vez de fingir que funciona.
-  { playlists: 'STD.BR.ALL.MIX.001',  collections: 'BRASIL' },
+  { playlists: 'STD.BR.ALL.MIX.001',  collections: 'BRA001' },
   { playlists: 'STD.INT.ALL.CIN.001', collections: 'CINEMA' },
   { playlists: 'STD.PT.ALL.MIX.001',  collections: 'PT' },
   { playlists: 'STD.PT.80.MIX.001',   collections: 'PT80' },
   { playlists: 'STD.PT.ALL.BAT.001',  collections: 'PT_BAT' },
   { playlists: 'RET.INT.ALL.VOZ.001', collections: 'RETRATO_VOZES' },
   { playlists: 'STD.INT.ALL.GTR.001', collections: 'SOLO' },
-  { playlists: 'STD.INT.ALL.SYN.001', collections: 'SYNTHWAVE' },
+  { playlists: 'STD.INT.ALL.SYN.001', collections: 'SYN001' },
 ];
 
 function resolverFaixaExterna(catalogoPorId, id) {
@@ -1268,12 +1245,11 @@ const FAMILIA_COLECAO = {
   RETRATO_VOZES: FAMILIA_GENEROS,
   PT_BAT:        FAMILIA_GENEROS,
   LOGO001:        FAMILIA_GENEROS,
-  TRIBUTO_LED:    FAMILIA_GENEROS,
   TRIBUTO_BEATLES:FAMILIA_GENEROS,
 };
 
 // Universos Especiais/Temáticos — só disponíveis a partir da Ronda 2 (bíblia 3.2.1)
-const UNIVERSOS_ESPECIAIS = new Set(['CINEMA', 'SYN001', 'RETRATO_VOZES', 'PT_BAT', 'LOGO001', 'TRIBUTO_LED', 'TRIBUTO_BEATLES']);
+const UNIVERSOS_ESPECIAIS = new Set(['CINEMA', 'SYN001', 'RETRATO_VOZES', 'PT_BAT', 'LOGO001', 'TRIBUTO_BEATLES']);
 // Décadas disponíveis (inclui Anos 2020 — Bíblia 27.12)
 const DECADAS_LABEL = {
   ANOS80: 'Anos 80',

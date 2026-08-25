@@ -369,6 +369,18 @@
     color: var(--text3);
   }
 
+  /* Sub-cabeçalho de década dentro da família "Décadas" — mais discreto e
+     indentado que .sidebar-group-label, que passa a marcar só as duas
+     famílias (Décadas / Géneros Atemporais). Ver renderSidebar(). */
+  .sidebar-subgroup-label {
+    padding: 4px 16px 2px 22px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    opacity: 0.75;
+  }
+
   /* Filtros rápidos + pesquisa da sidebar de Playlists — search-input e
      filter-select reaproveitados da Biblioteca (mesma cor/fonte), só
      empilhados a 100% de largura em vez de numa toolbar horizontal. */
@@ -1226,7 +1238,7 @@
 
   /* ASSETS VIEW */
   .assets-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; padding:20px; overflow-y:auto; }
-  .assets-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .assets-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; overflow:visible; align-self:start; }
   .assets-card-header { padding:10px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
   .assets-card-title { font-weight:500; font-size:13px; }
   .assets-card-meta { font-size:11px; color:var(--text3); margin-left:auto; font-family:var(--mono); }
@@ -1308,7 +1320,7 @@
   </div>
   <div class="header-actions">
     <button class="btn" onclick="importPlaylists()">↑ Importar playlists.json</button>
-    <button class="btn" onclick="window.open('http://localhost:8002/musicbox.html')" title="Abrir app">▶ App</button>
+    <button class="btn" onclick="af_abrirApp()" title="Abrir app">▶ App</button>
     <button class="btn" id="fs-auth-btn" onclick="pedirPastaApp()" title="Só é preciso se o _servidor_escrita.py (porta 8002) não estiver a correr — normalmente 'Guardar playlists.json' já escreve directamente em disco sem autorização nenhuma, via esse servidor (ver iniciar_editor.command). Isto é só o fallback: autoriza a pasta app/ via File System Access API.">📁 Autorizar pasta (fallback)</button>
     <button class="btn btn-primary" onclick="exportPlaylists()">↓ Guardar playlists.json <span class="dirty-dot" id="dirty-dot"></span></button>
   </div>
@@ -1457,6 +1469,7 @@
             <option value="">Todas as playlists</option>
           </select>
           <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="assets-summary"></span>
+          <button class="btn" onclick="af_pesquisarImagensEmFaltaCatalogo()" title="Pesquisa Wikimedia Commons para todas as faixas do catálogo sem imagem, uma a seguir à outra">🖼 Preencher imagens em falta</button>
         </div>
         <div class="assets-grid" id="assets-grid"></div>
       </div>
@@ -2187,18 +2200,34 @@ function renderSidebar() {
   );
   document.getElementById('pl-filtros-limpar').style.display = filtrosAtivos ? 'block' : 'none';
 
+  // Agrupamento primário por TIPO estrutural (Standard/Solo/Retrato/
+  // Tributo) — a "Família" (Décadas/Géneros Atemporais, derivada do DEC da
+  // chave, ver DECISIONS.md 2026-08-25) é especificamente o painel de
+  // categorias que o concorrente escolhe no jogo STANDARD; Retrato e
+  // Tributo são mecânicas de ronda diferentes e nem aparecem nesse painel.
+  // Correcção 2026-08-25: Família volta a ser sub-agrupamento, só dentro
+  // de Standard — Solo/Retrato/Tributo mantêm-se secções de Tipo simples,
+  // sem sub-agrupamento nenhum (como estava antes da tentativa anterior).
+  const ORDEM_DECADAS = ['50', '60', '70', '80', '90', '00', '10', '20'];
+  const NOME_DECADA = { '50': 'Anos 50', '60': 'Anos 60', '70': 'Anos 70', '80': 'Anos 80', '90': 'Anos 90', '00': 'Anos 2000', '10': 'Anos 2010', '20': 'Anos 2020' };
+  const LABEL_TIPO = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo' };
+
   // Solo (GTR/BAT) sai de Standard para a sua própria secção — distinção
   // pelo segmento GENERO da chave estruturada [TIPO].[GEO].[DEC].[GENERO].[VOL]
   // (ex.: "STD.INT.ALL.GTR.001" -> GENERO="GTR"), não por um campo `genero`
   // à parte em playlists.json (não existe um). Apanha Solo de Guitarra,
   // Solo de Bateria e também Bateria Portuguesa (STD.PT.ALL.BAT.001, mesmo
-  // GENERO=BAT) — é a regra pedida, não uma lista fixa de nomes.
+  // GENERO=BAT).
+  function af_tipoEfetivo(chave, pl) {
+    const genero = chave.split('.')[3];
+    return (genero === 'GTR' || genero === 'BAT') ? 'solo' : pl.tipo;
+  }
+
   const grupos = { standard: [], solo: [], retrato: [], tributo: [] };
   Object.entries(PLAYLISTS)
     .filter(([chave, pl]) => af_playlistPassaFiltros(chave, pl))
     .forEach(([chave, pl]) => {
-      const genero = chave.split('.')[3];
-      const grupo = (genero === 'GTR' || genero === 'BAT') ? 'solo' : pl.tipo;
+      const grupo = af_tipoEfetivo(chave, pl);
       (grupos[grupo] || (grupos[grupo] = [])).push([chave, pl]);
     });
 
@@ -2206,24 +2235,71 @@ function renderSidebar() {
     <span class="dot"></span> Todas <span class="sidebar-count" id="count-ALL">${CATALOGO.length}</span>
   </li>`;
 
-  const labels = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo' };
   const totalFiltrado = Object.values(grupos).reduce((n, entries) => n + entries.length, 0);
   if (filtrosAtivos && !totalFiltrado) {
     list.innerHTML += `<li style="padding:10px 10px;font-size:11px;color:var(--text3);font-family:var(--mono);">Nenhuma playlist corresponde aos filtros.</li>`;
   }
-  Object.entries(grupos).forEach(([tipo, entries]) => {
-    if (!entries.length) return;
-    list.innerHTML += `<li class="sidebar-group-label">${labels[tipo] || tipo}</li>`;
-    entries.forEach(([chave, pl]) => {
-      const count = (pl.musicas || pl.posicoes || []).length;
-      const active = selectedPlaylistFilter === chave ? 'active' : '';
-      list.innerHTML += `<li class="sidebar-item ${active}" onclick="selectPlaylistFilter('${chave}')" data-id="${chave}">
-        <span class="dot"></span>
-        <span>${pl.nome || chave}</span>
-        <span class="sidebar-count">${count}</span>
-        <button type="button" class="sidebar-delete-btn" title="Apagar playlist" onclick="af_apagarPlaylist('${chave}', event)">🗑</button>
-      </li>`;
+
+  function af_renderItemPlaylist(chave, pl) {
+    const count = (pl.musicas || pl.posicoes || []).length;
+    const active = selectedPlaylistFilter === chave ? 'active' : '';
+    list.innerHTML += `<li class="sidebar-item ${active}" onclick="selectPlaylistFilter('${chave}')" data-id="${chave}">
+      <span class="dot"></span>
+      <span>${pl.nome || chave}</span>
+      <span class="sidebar-count">${count}</span>
+      <button type="button" class="sidebar-delete-btn" title="Apagar playlist" onclick="af_apagarPlaylist('${chave}', event)">🗑</button>
+    </li>`;
+  }
+
+  // Standard — único grupo sub-agrupado por Família (Décadas, mais antiga
+  // primeiro; Géneros Atemporais, ordem alfabética), porque é o único que
+  // corresponde ao painel de categorias do jogo.
+  if (grupos.standard.length) {
+    list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO.standard}</li>`;
+
+    const porDecada = {};   // "80" -> [[chave,pl],...]
+    const atemporais = [];
+    grupos.standard.forEach(([chave, pl]) => {
+      const dec = chave.split('.')[2];
+      if (dec === 'ALL') {
+        atemporais.push([chave, pl]);
+      } else {
+        (porDecada[dec] || (porDecada[dec] = [])).push([chave, pl]);
+      }
     });
+
+    // Décadas fora de ORDEM_DECADAS (código novo/imprevisto) ficam no fim,
+    // ordenadas alfabeticamente, para nunca perder uma playlist por
+    // omissão da lista.
+    const decadasPresentes = Object.keys(porDecada).sort((a, b) => {
+      const ia = ORDEM_DECADAS.indexOf(a), ib = ORDEM_DECADAS.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b);
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    });
+    decadasPresentes.forEach(dec => {
+      list.innerHTML += `<li class="sidebar-subgroup-label">${NOME_DECADA[dec] || `Anos ${dec}`}</li>`;
+      porDecada[dec].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
+    });
+
+    if (atemporais.length) {
+      list.innerHTML += `<li class="sidebar-subgroup-label">Géneros Atemporais</li>`;
+      atemporais
+        .slice()
+        .sort((a, b) => (a[1].nome || a[0]).localeCompare(b[1].nome || b[0]))
+        .forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
+    }
+  }
+
+  // Solo / Retrato / Tributo — secções de Tipo simples, sem sub-
+  // agrupamento por família (mecânicas de ronda diferentes, não aparecem
+  // no painel de categorias Standard). Ordem = a de playlists.json,
+  // como antes.
+  ['solo', 'retrato', 'tributo'].forEach(tipo => {
+    if (!grupos[tipo].length) return;
+    list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO[tipo]}</li>`;
+    grupos[tipo].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
   });
 
   // Filtro de playlist na Biblioteca
@@ -2611,6 +2687,99 @@ function openPlaylist(chave) {
   renderResultadosYoutube();
 }
 
+// Percorre as posições (musicas + mosaico, ou posicoes tipo 'audio' em
+// tributo — mesma enumeração de af_idsSemAudioNaPlaylistAtual()) e devolve
+// os problemas de trechos em falta: [{posicao, titulo, artista, falta:
+// ['A']|['B']|['A','B']}]. Pedido explícito do utilizador, motivado por um
+// caso real: "Love of My Life"/"Rocket Man" (ret_03/ret_06) têm trecho_a
+// mas não trecho_b em "Decade of Riffs" (Standard) — só visível nas
+// etiquetas A/B de cada posição, nada avisava disto antes.
+//
+// NÃO reutiliza af_idsSemAudioNaPlaylistAtual() tal e qual — aquela função
+// só olha para trecho_a (suficiente para decidir "isto precisa de ser
+// gerado de raiz", que é o que o botão "🎧 Gerar trechos em falta"
+// precisa), por isso não apanhava exactamente este caso (tem A, falta B).
+// Aqui verificam-se A e B em separado, como pedido.
+//
+// Duas excepções necessárias, não pedidas mas indispensáveis para não
+// gerar avisos falsos (confirmadas nos dados/código antes de as aplicar,
+// não assumidas):
+// 1) ret_03/ret_06 vêm do universo Retrato Sonoro, onde trecho_b é sempre
+//    null POR DESENHO (um único excerto por faixa, sem alternância A/B —
+//    mesma razão de isCinemaPlaylist()/temExcertoUnico). Sem esta
+//    excepção, qualquer playlist Retrato ou "Cinema"
+//    (STD.INT.ALL.CIN.001) apareceria sempre com avisos falsos — por isso
+//    o "falta B" das posições normais só é reportado para playlists
+//    Standard/Tributo, nunca para Retrato ou Cinema.
+// 2) O mosaico NUNCA precisa de trecho_b, seja qual for o tipo de
+//    playlist — confirmado em musicbox.html, onde a resolução do mosaico
+//    só lê `.a` (`audio: faixaMosaico.a`, tanto no loop de
+//    UNIVERSOS_EXTERNOS como no novo loop dinâmico) e todo o literal
+//    COLLECTIONS só tem um campo `audio` por mosaico, nunca um par A/B.
+// Ver DECISIONS.md 2026-08-25.
+function verificarCompletudePlaylist(playlist) {
+  if (!playlist) return [];
+  const ehExcertoUnico = playlist.tipo === 'retrato' || playlist.playlistCodigo === 'STD.INT.ALL.CIN.001';
+
+  // Imagem obrigatória em TODAS as posições, qualquer tipo de playlist —
+  // pedido explícito: qualquer faixa tem de poder ser ilustrada quando o
+  // concorrente acerta, não só mosaico/Retrato. Corrigido em 2026-08-25
+  // depois de "Anos 80" ter dado "sem problemas" por engano — as 7 faixas
+  // Standard não tinham imagem, só não estavam a ser verificadas.
+
+  const posicoes = playlist.tipo === 'tributo'
+    ? (playlist.posicoes || [])
+        .filter(p => p.tipo === 'audio' && p.id)
+        .map(p => ({ id: p.id, posicao: p.pos, ehMosaico: false }))
+    : (playlist.musicas || []).map((id, i) => ({ id, posicao: i + 1, ehMosaico: false }));
+  if (playlist.mosaico && playlist.mosaico.id) {
+    posicoes.push({ id: playlist.mosaico.id, posicao: 'mosaico', ehMosaico: true });
+  }
+
+  const problemas = [];
+  posicoes.forEach(({ id, posicao, ehMosaico }) => {
+    if (!id) return; // vaga vazia — problema diferente (contagem de posições), não "trecho em falta"
+    const t = CATALOGO_BY_ID.get(id);
+    if (!t) return; // id referenciado mas em falta no catálogo — idem, fora de âmbito aqui
+
+    const falta = [];
+    if (!(t.trecho_a && t.trecho_a.ficheiro)) falta.push('A');
+    if (!ehMosaico && !ehExcertoUnico && !(t.trecho_b && t.trecho_b.ficheiro)) falta.push('B');
+    if (!t.imagem) falta.push('img');
+    if (falta.length) {
+      problemas.push({ posicao, titulo: t.titulo || id, artista: artistaTexto(t), falta });
+    }
+  });
+  return problemas;
+}
+
+// Botão "▶ App" — verifica a playlist actualmente aberta na Mesa de
+// Montagem (verificarCompletudePlaylist) antes de navegar para
+// musicbox.html. Se houver trechos em falta, confirm() com a lista
+// exacta; cancelar mantém no Studio, sem abrir nada. Sem playlist aberta,
+// navega directamente (nada para verificar). Pedido explícito do
+// utilizador — ver DECISIONS.md 2026-08-25.
+function af_abrirApp() {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (pl) {
+    // Só A/B bloqueiam esta confirmação — são os que impedem o jogo de
+    // tocar (sem áudio). "img" fica só como aviso na Mesa de Montagem
+    // (badge de renderMontagem, que continua a mostrar tudo): agora que a
+    // verificação de imagem é universal, praticamente todas as playlists
+    // Standard têm alguma faixa sem imagem, e um confirm() disparado por
+    // isso deixaria de sinalizar "isto não vai tocar" para passar a
+    // "há sempre qualquer coisa" — inútil. Ver 2026-08-25.
+    const problemasAudio = verificarCompletudePlaylist(pl)
+      .map(p => ({ ...p, falta: p.falta.filter(f => f === 'A' || f === 'B') }))
+      .filter(p => p.falta.length);
+    if (problemasAudio.length) {
+      const lista = problemasAudio.map(p => `${p.titulo} (${p.falta.join('/')})`).join(', ');
+      if (!confirm(`Esta playlist tem trechos em falta: ${lista}. Continuar mesmo assim para a App?`)) return;
+    }
+  }
+  window.open('http://localhost:8002/musicbox.html');
+}
+
 function renderMontagem() {
   const el = document.getElementById('montagem-content');
   if (!currentPlaylistKey || !PLAYLISTS[currentPlaylistKey]) {
@@ -2636,6 +2805,19 @@ function renderMontagem() {
     progressoTrechosHtml = `<span class="shape-badge ${falhas ? 'warn' : 'ok'}" title="Geração automática de trechos A/B em curso"><span class="dot"></span>${prontos}/${total} trechos gerados${falhas ? ` (${falhas} falharam)` : ''}</span>`;
   }
 
+  // Aviso de trechos em falta (ver verificarCompletudePlaylist) — visível
+  // logo no cabeçalho, sem ter de abrir cada posição para ver as etiquetas
+  // A/B pequenas. Pedido explícito do utilizador.
+  const problemasCompletude = verificarCompletudePlaylist(pl);
+  let avisoCompletudeHtml = '';
+  if (problemasCompletude.length) {
+    const listaPosicoes = problemasCompletude
+      .map(p => (typeof p.posicao === 'number' ? String(p.posicao).padStart(2, '0') : p.posicao))
+      .join(', ');
+    const tooltip = problemasCompletude.map(p => `${p.titulo} (${p.falta.join('/')})`).join('; ');
+    avisoCompletudeHtml = `<span class="shape-badge warn" title="${escapeAttr(tooltip)}">⚠ ${problemasCompletude.length} trecho${problemasCompletude.length > 1 ? 's' : ''} em falta (posições ${listaPosicoes})</span>`;
+  }
+
   let html = `
     <div class="playlist-header">
       <div class="playlist-name">${escapeHtml(pl.nome || currentPlaylistKey)}</div>
@@ -2645,6 +2827,7 @@ function renderMontagem() {
         <span>${pl.universo || '—'}</span>
         <span>dificuldade ${pl.dificuldade ?? '—'}</span>
         <span class="shape-badge ${shapeOk?'ok':'warn'}"><span class="dot"></span>${exp===null ? current+' posições' : current+'/'+exp+' posições'}</span>
+        ${avisoCompletudeHtml}
         ${progressoTrechosHtml}
       </div>
     </div>`;
@@ -3605,6 +3788,27 @@ async function pesquisarImagensEmFalta() {
   }
 
   notify(`A pesquisar imagens para ${semImagem.length} faixa(s)…`, 'ok');
+  IMG_FAIXA_FILA = semImagem.slice(1);
+  abrirPesquisaImagem(semImagem[0].id, artistaTexto(semImagem[0]), semImagem[0].titulo);
+}
+
+// Pesquisa em lote alargada a TODO o catálogo, não só à playlist Retrato
+// aberta — botão "🖼 Preencher imagens em falta" na aba ASSETS. Reaproveita
+// exactamente o mesmo mecanismo de pesquisarImagensEmFalta() acima
+// (abrirPesquisaImagem/usarImagemWikimedia/usarImagemManual/
+// IMG_FAIXA_FILA, nenhum alterado) — só muda a origem da lista de faixas,
+// de pl.musicas (uma playlist) para CATALOGO inteiro. O botão "🔍 Imagem"
+// e pesquisarImagensEmFalta() continuam intactos, este é um acesso
+// adicional, não uma substituição. Ver 2026-08-25.
+async function af_pesquisarImagensEmFaltaCatalogo() {
+  const semImagem = CATALOGO.filter(t => t && !t.imagem);
+
+  if (!semImagem.length) {
+    notify('Todas as faixas do catálogo já têm imagem', 'ok');
+    return;
+  }
+
+  notify(`A pesquisar imagens para ${semImagem.length} faixa(s) do catálogo…`, 'ok');
   IMG_FAIXA_FILA = semImagem.slice(1);
   abrirPesquisaImagem(semImagem[0].id, artistaTexto(semImagem[0]), semImagem[0].titulo);
 }
@@ -6197,6 +6401,31 @@ async function afAdicionarAoCatalogo() {
   notify(escritoDirectamente
     ? 'catalogo_adicionar.json escrito directamente em app/ — funde manualmente com catalogo.json'
     : 'catalogo_adicionar.json descarregado — funde manualmente com catalogo.json', 'ok');
+
+  // Reaproveita o mesmo fluxo de pesquisa de imagem no Wikimedia Commons já
+  // usado em Retrato (abrirPesquisaImagem/usarImagemWikimedia/
+  // usarImagemManual, nenhuma das três alterada) — pedido explícito do
+  // utilizador: em vez de só avisar que falta imagem, abre-se logo a
+  // pesquisa, pré-preenchida com artista+título, para escolher ali mesmo.
+  // "Fechar" no painel continua a funcionar como saída sem bloquear nada.
+  //
+  // Nuance de persistência, sinalizada por transparência: o
+  // catalogo_adicionar.json escrito acima já não leva imagem (ainda não
+  // tinha sido escolhida). Para usarImagemWikimedia()/usarImagemManual()
+  // (inalteradas) conseguirem gravar a escolha, a entrada tem de existir
+  // em CATALOGO_BY_ID — por isso entra também em CATALOGO/CATALOGO_BY_ID
+  // em memória aqui (mesmo padrão de criarFaixaRascunhoIA()). A imagem
+  // escolhida fica em CATALOGO_PATCH, tal como qualquer outra edição de
+  // imagem no Studio — só entra em catalogo_patch.json ao clicar "↓
+  // Guardar playlists.json" (mesma condição que já existe para o resto do
+  // catálogo). auto_fusao.sh funde os dois ficheiros na mesma corrida
+  // (skip para catalogo_adicionar.json, depois upsert para
+  // catalogo_patch.json), por isso a imagem acaba sempre por alcançar a
+  // entrada certa em catalogo.json, mesmo escrita separadamente — mas só
+  // se "Guardar" for mesmo clicado. Ver DECISIONS.md 2026-08-25.
+  CATALOGO.push(entrada);
+  CATALOGO_BY_ID.set(entrada.id, entrada);
+  abrirPesquisaImagem(entrada.id, artistaTexto, titulo);
 }
 
 // ─── INIT ───────────────────────────────────────────────────
