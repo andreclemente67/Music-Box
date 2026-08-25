@@ -6,6 +6,39 @@
 - [ ] Testar no browser os 5 modos de "✦ Gerar com IA" (URL/Tema/Categoria/Semente múltipla/Playlist YouTube) — trocar sub-tabs, ler uma playlist real do YouTube e rever/editar a lista, gerar em cada modo, confirmar retentativas por artista repetido e o fallback claro após 3 tentativas. Só validado com testes isolados fora do browser + 1 chamada real à API. Ver `DECISIONS.md` 2026-08-21.
 - [ ] Testar no browser o feedback ao vivo na Mesa de Montagem durante a geração de trechos A/B (contador + estado por faixa, incluindo depois de clicar "Ver na Mesa de Montagem" antes do lote terminar). Ver `DECISIONS.md` 2026-08-21.
 
+## Bugs conhecidos (sessão 2026-08-25)
+
+- [ ] **Catálogo:** "We Will Rock You" está atribuída a "Roger Taylor" em vez de "Queen" — devia ser "Queen" (banda), não o baterista a solo. Encontrado ao recriar a playlist "Decade of Riffs" (STD.INT.70.ROC.001): "Preencher automaticamente" trouxe esta faixa para a posição 07, apesar de já haver uma faixa dos Queen ("Bohemian Rhapsody") na posição 01 — porque a validação de artista repetido compara a string do campo `artista`, e "Roger Taylor" ≠ "Queen" não é apanhado. Corrigir o campo `artista` desta entrada no `catalogo.json`. Pode haver outras entradas com o mesmo tipo de erro (membro individual em vez da banda) — vale a pena rever o catálogo à procura de casos parecidos.
+- [ ] **"Gerar com IA" (modo Categoria):** consistentemente devolve só 6 faixas em vez das 7 esperadas para playlists Standard (testado 2x seguidas, mesmo resultado — 6 sugestões numeradas + mosaico, quando `expectedCount('standard')` é 7). Suspeita: o prompt/lógica de contagem deste modo especificamente (`montarPromptIA`/`af_musicasIAComSemente` em modo Categoria) pede o número errado de faixas à IA. Os outros modos (URL, Tema, Semente múltipla, Playlist YouTube) não foram testados quanto a este problema. Workaround usado: "Preencher automaticamente" para completar a posição em falta depois de criar a playlist.
+- [ ] **Aba ADICIONAR FAIXA (pesquisa MusicBrainz):** a década/género gravados no catálogo vêm da gravação específica escolhida nos resultados da MusicBrainz, não da canção original — pode ficar errado quando o primeiro resultado é uma versão ao vivo, reedição ou remasterização mais tardia. Caso encontrado: "Sweet Home Alabama" (Lynyrd Skynyrd, original 1974) foi adicionada via este fluxo à playlist "Decade of Riffs" (Anos 70 — Rock) mas ficou gravada no catálogo com `decadas: ["1990s"]` e géneros "acoustic rock, blues rock, boogie rock" (vindos de uma gravação de 1997, provavelmente ao vivo/reedição), desalinhada com o resto da playlist. A causa é `afSelecionarResultado()`/`afDecadaDeAno(r.ano)` em `musicbox_studio.html`, que usa sempre o `first-release-date` da gravação específica devolvida pela API, sem distinguir gravação original de versões posteriores. Corrigir a entrada do Lynyrd Skynyrd manualmente no `catalogo.json` (década → 1970s, género → algo como "Southern Rock/Rock"), e considerar mostrar a década do resultado na lista de pesquisa (já a mostra) para o utilizador poder escolher conscientemente a gravação mais próxima do original, ou preferir resultados mais antigos por defeito.
+
+## Confirmado — resposta esperada é sempre Artista/Banda (Format Book V11)
+
+Confirmado na Bíblia (V11, secção 2 "Recognition Triangle" — tabela "Category
+Objects — Matrizes Fechadas" — e secção 12 "Sistema de Validação"): para
+Rock/Pop, Jazz/Blues/Soul, Hip Hop, Dance/Electrónica e Televisão, a QUESTION
+permitida é sempre "Artista/Banda" — nunca nome da faixa. A secção 12 reforça
+isto de forma explícita: "Resposta aceite: Nome do artista ou banda. Uma
+única tipologia de resposta." Excepções: Música Clássica usa
+"Compositor/Obra"; Cinema/Bandas Sonoras permite também "Filme"/"Compositor"
+como alternativas.
+
+Implicação prática: o campo `artista` de cada faixa no `catalogo.json` não é
+só metadado — é o valor exacto que vai ser validado contra a resposta do
+concorrente (Audio Timestamp + Speech-to-Text IA + Árbitro humano). Isto
+torna o bug "We Will Rock You"/"Roger Taylor" (acima) mais crítico do que
+parecia à primeira vista — não é só um erro de catalogação bonito-ou-feio, é
+uma resposta que o sistema validaria mal num jogo real.
+
+- [ ] Auditar o catálogo à procura de mais casos "membro individual em vez
+      da banda" no campo `artista` (mesmo padrão do bug "We Will Rock You").
+- [ ] Tratar o título da faixa (`titulo`) sempre como metadado de apoio
+      (organização no Studio, reveal de imagem quando o concorrente acerta)
+      — nunca como o que se pede ao concorrente para identificar.
+- [ ] Quando existir UI de resposta/validação em jogo, não pode assumir
+      sempre "artista/banda" de forma rígida — tem de saber qual QUESTION
+      está activa por categoria (Música Clássica e Cinema diferem).
+
 ## Próximas tarefas
 
 - [ ] Sistema de validação do catálogo
@@ -66,6 +99,39 @@ formato — decisão editorial central ainda por definir. Opções em aberto:
 
 Esta decisão define a tensão dramática do programa e deve ser documentada
 na Bíblia V1.2 quando a mecânica estiver validada em testes de produção.
+
+### PENDENTE — QUESTION específico para playlists Tributo
+
+Reparado ao rever as entradas estáticas do `musicbox.html` (playlist
+"Tribute Led Zeppelin", entretanto removida por não ter dados reais por
+trás — ver `DECISIONS.md`): playlists Tributo (ex: "Tribute Beatles")
+têm uma diferença estrutural das restantes que ainda não está pensada a
+sério. Em todas as outras categorias, a regra confirmada (Format Book V11
+§2/§12 — ver secção acima "Confirmado — resposta esperada é sempre
+Artista/Banda") é que o concorrente identifica o artista/banda, que varia
+faixa a faixa e não é conhecido à partida. Numa playlist Tributo isso não
+faz sentido — o concorrente já sabe à partida qual é a banda (está no
+nome da própria Music Box, ex: "Tribute Beatles"), por isso "quem é o
+artista" deixa de ser uma pergunta com informação nenhuma.
+
+A estrutura de `posicoes` já usada em `playlists.json` para Tributo (cada
+posição com um `tipo` próprio — audio/trivia/solo/foto/cover/riff/capa/
+bateria) sugere que a resposta já foi parcialmente pensada na direcção
+certa (testar conhecimento profundo de fã sobre essa banda em específico,
+não reconhecimento de artista), mas isto nunca foi documentado
+explicitamente como decisão, nem ligado à mecânica QUESTION do
+Recognition Triangle. Antes de criar mais playlists Tributo (ex: Led
+Zeppelin, se vier a ser recriada com dados reais), definir: qual é o
+QUESTION real de cada `tipo` de posição em Tributo (ex: `trivia` pede
+título da faixa? `foto` pede o quê exactamente?), e como isto se encaixa
+(ou não) na tabela "Category Objects — Matrizes Fechadas" do Format Book,
+que hoje não cobre Tributo.
+
+### PENDENTE — Playlist "Logótipos" (referência guardada, por fazer mais tarde)
+
+Entrada estática `LOG-001` em `musicbox.html`, sem dados reais por trás.
+Mantida deliberadamente como referência para se construir mais tarde —
+ver `DECISIONS.md` 2026-08-25. Não apagar sem decisão explícita.
 
 ### PENDENTE — Categoria: Séries de TV / Banda Sonora
 

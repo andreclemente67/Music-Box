@@ -879,3 +879,55 @@ Validado com `deno check` sobre o bloco `<script>` completo e
 sintaxe. **Não testado no browser real** o fluxo de UI completo (trocar de
 sub-tab, ler uma playlist real e rever/editar a lista, gerar nos 4 modos
 novos) — falta essa confirmação end-to-end (ver `TASKS.md`).
+
+## 2026-08-25 — Regra fixa de organização e nomenclatura: Duas Famílias (Format Book V11 §3)
+
+Confirmado que a Bíblia do formato (V11, secção 3 "Sistema de Categorias")
+já define a estrutura primária de organização das playlists — não é
+"géneros OU anos" como escolha única, são **duas famílias paralelas**:
+
+- **Família 1 — Décadas**: Anos 50 a Anos 2010, cada uma com os géneros
+  predominantes dessa década.
+- **Família 2 — Géneros Atemporais**: Jazz, Blues, Rock, Hip Hop, Soul &
+  R&B, Dance & Electrónica, Cinema & Bandas Sonoras, Slot Local — géneros
+  que atravessam décadas e não cabem numa só.
+
+Dois níveis de produção usam estas famílias: **Standard** — o concorrente
+escolhe uma categoria do painel, década OU género atemporal; **Premium**
+— escolha dupla género+década, painel só acende combinações com conteúdo.
+
+**Confirmado que o Sistema de Chaves já codifica isto**, sem ter sido
+desenhado explicitamente para tal: no formato `[TIPO].[GEO].[DEC].[GENERO].[VOL]`,
+`DEC=ALL` corresponde sempre a Família 2 (género atemporal — ex:
+`STD.INT.ALL.SYN.001` "Synthwave", `STD.INT.ALL.CIN.001` "Cinema &
+Música"), e `DEC=<década específica>` corresponde sempre a Família 1 (ex:
+`STD.INT.80.MIX.001` "Anos 80", `STD.INT.70.ROC.001`). Não é preciso
+nenhum campo novo — a família de uma playlist deriva-se directamente do
+segmento `DEC` da sua chave.
+
+**Regra de nomenclatura fixada** (campo `nome` em `playlists.json`),
+resolvendo a inconsistência encontrada entre playlists antigas
+(nomeadas à mão, funcionais) e playlists mais recentes geradas via
+"Gerar com IA" (títulos longos/poéticos):
+
+- `nome` — sempre funcional e curto, reflectindo a família: Família 1 →
+  `"Anos XX — [tema/género]"`; Família 2 → só o nome do género/tema
+  (`"Synthwave"`, `"Rock"`, `"Cinema & Música"`). Nunca títulos poéticos
+  aqui.
+- `descritivo` (campo já existente em `playlists.json`, hoje quase sempre
+  vazio) — é aqui que entra o tom criativo/poético, como subtítulo, sem
+  aparecer na lista principal da barra lateral do Studio.
+
+**Nota:** foi precisamente nas playlists com nomes poéticos/fora do
+padrão que apareceram os problemas de dados mais sérios encontrados nesta
+sessão (playlist "Heartbeats in the Dark: Synth & Soul of the 2010s" com
+8 ids inexistentes no catálogo; "Decade of Riffs" com vários bugs) — reforça
+que a falta de disciplina de nomenclatura coincidiu com falta de disciplina
+de dados, não é só uma questão estética.
+
+**Acção decidida:** renomear as playlists fora do padrão (ver `TASKS.md`
+para a lista concreta) e reorganizar a barra lateral do Studio para
+agrupar primariamente por Família (Décadas / Géneros Atemporais),
+substituindo o agrupamento actual por Tipo estrutural
+(Standard/Solo/Retrato/Tributo) — este passa a aparecer como etiqueta
+secundária por playlist, não como cabeçalho de grupo.
