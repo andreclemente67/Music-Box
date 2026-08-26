@@ -1267,6 +1267,40 @@
   .assets-card-title { font-weight:500; font-size:13px; }
   .assets-card-meta { font-size:11px; color:var(--text3); margin-left:auto; font-family:var(--mono); }
   .assets-card-body { padding:6px 0; }
+
+  /* FOTOTECA VIEW */
+  .fototeca-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .fototeca-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+  .fototeca-artista {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+  }
+  .fototeca-titulo {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: -2px;
+  }
   .asset-row-check { display:flex; align-items:center; gap:8px; padding:3px 14px; }
   .asset-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
   .asset-dot.ok       { background:var(--green); }
@@ -1341,6 +1375,7 @@
     <button class="tab" onclick="switchTab('adicionar')">Adicionar Faixa</button>
     <button class="tab" onclick="switchTab('exportar')">Exportar</button>
     <button class="tab" onclick="switchTab('concorrentes')">Concorrentes</button>
+    <button class="tab" onclick="switchTab('fototeca')">🖼 Fototeca</button>
   </div>
   <div class="header-actions">
     <button class="btn" onclick="importPlaylists()">↑ Importar playlists.json</button>
@@ -1495,6 +1530,7 @@
           <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="assets-summary"></span>
           <button class="btn" onclick="af_pesquisarImagensEmFaltaCatalogo()" title="Pesquisa Wikimedia Commons para todas as faixas do catálogo sem imagem, uma a seguir à outra">🖼 Preencher imagens em falta</button>
           <button class="btn" onclick="af_reverTodasImagensCatalogo()" title="Percorre TODAS as faixas do catálogo (com ou sem imagem) para reveres/trocares cada uma, uma a seguir à outra">🔁 Rever todas as imagens (catálogo)</button>
+          <button class="btn" onclick="af_autoPreencherFotosArtistaCascata()" title="Corre a cascata TheAudioDB/Wikipedia/iTunes para todas as faixas sem imagem 'livre', em segundo plano — fica em CATALOGO_PATCH para reveres na Fototeca antes de guardar">🤖 Auto-preencher fotos de artista (cascata)</button>
         </div>
         <div class="assets-grid" id="assets-grid"></div>
       </div>
@@ -1633,6 +1669,20 @@
         </p>
         <div id="concorrentes-lista" style="display:flex;flex-direction:column;gap:16px;"></div>
         <button class="btn btn-primary" style="margin-top:18px;" onclick="guardarConcorrentes(); guardarApresentador();">↓ Guardar concorrentes.json + apresentador.json</button>
+      </div>
+    </div>
+
+    <!-- FOTOTECA VIEW — grelha com todas as faixas do catálogo, para rever/
+         trocar imagem em massa. Reutiliza abrirPesquisaImagem() (mesmo fluxo
+         de pesquisa Wikimedia já usado na Montagem/Assets) e as classes
+         .posicao-thumb/.posicao-thumb-placeholder, só com tamanho maior. -->
+    <div class="view" id="view-fototeca">
+      <div style="display:flex;flex:1;overflow:hidden;flex-direction:column;">
+        <div style="padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-shrink:0;">
+          <input class="search-input" type="text" id="fototeca-search" placeholder="Pesquisar por artista ou título…" style="flex:1;max-width:360px;" oninput="renderFototeca()">
+          <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="fototeca-summary"></span>
+        </div>
+        <div class="fototeca-grid" id="fototeca-grid"></div>
       </div>
     </div>
 
@@ -2503,6 +2553,7 @@ function switchTab(name) {
   if (name === 'assets') renderAssets();
   if (name === 'exportar') refreshExportPreview();
   if (name === 'concorrentes') { renderConcorrentes(); renderApresentadorCampo(); }
+  if (name === 'fototeca') renderFototeca();
 }
 
 function switchTabProgrammatic(name) {
@@ -3850,6 +3901,108 @@ async function af_pesquisarImagensEmFaltaCatalogo() {
   notify(`A pesquisar imagens para ${semImagem.length} faixa(s) do catálogo…`, 'ok');
   IMG_FAIXA_FILA = semImagem.slice(1);
   abrirPesquisaImagem(semImagem[0].id, artistaTexto(semImagem[0]), semImagem[0].titulo);
+}
+
+// ─── ESTRATÉGIA DE IMAGEM PARA O PILOTO (além do Wikimedia) ─────────
+// Cascata iTunes → TheAudioDB → Wikipedia (infobox) → pesquisa geral
+// (por implementar) — lógica real corre em _servidor_escrita.py
+// (GET /buscar-imagem-artista), esta função é só o fetch do lado do
+// cliente. Ver comentário no cabeçalho desse ficheiro para o detalhe de
+// cada fonte e porque a cascata vive no servidor, não aqui.
+//
+// af_buscarMelhorImagemArtista() só PESQUISA — não grava nada, não
+// mexe em nenhuma faixa. af_aplicarMelhorImagemArtista(id), abaixo,
+// é que aplica o resultado a uma faixa concreta.
+//
+// IMPLEMENTADO MAS NÃO CORRIDO EM LOTE — só testar faixa a faixa
+// (ex.: af_aplicarMelhorImagemArtista('bat_02') na consola) até
+// validar qualidade em 3-5 faixas escolhidas. Ver DECISIONS.md.
+async function af_buscarMelhorImagemArtista(artista) {
+  try {
+    const r = await fetch(`/buscar-imagem-artista?artista=${encodeURIComponent(artista)}`);
+    const dados = await r.json();
+    if (!r.ok || !dados.ok) return null;
+    return dados;
+  } catch (e) {
+    console.error('af_buscarMelhorImagemArtista falhou:', e);
+    return null;
+  }
+}
+
+// Aplica o resultado da cascata a UMA faixa (por id). Nunca mexe numa
+// faixa cuja imagem já esteja marcada "livre" — essas ficam
+// intocáveis, pedido explícito do utilizador. Grava em CATALOGO_PATCH
+// (mesmo mecanismo de usarImagemWikimedia()/usarImagemManual()), só
+// entra em catalogo_patch.json ao clicar "Guardar".
+async function af_aplicarMelhorImagemArtista(id) {
+  const t = CATALOGO_BY_ID.get(id);
+  if (!t) { notify(`Faixa "${id}" não encontrada`, 'erro'); return null; }
+
+  if (t.imagem_licenca_estado === 'livre') {
+    notify(`"${t.titulo}" já tem imagem livre confirmada — não mexida`, 'ok');
+    return null;
+  }
+
+  const resultado = await af_buscarMelhorImagemArtista(artistaTexto(t));
+  if (!resultado) {
+    notify(`Nenhuma fonte encontrou imagem ≥300x300 para "${artistaTexto(t)}"`, 'erro');
+    return null;
+  }
+
+  t.imagem = resultado.imagem;
+  t.imagem_fonte = resultado.imagem_fonte;
+  t.imagem_credito = resultado.imagem_credito;
+  t.imagem_url_origem = resultado.imagem_url_origem;
+  t.imagem_data_captura = resultado.imagem_data_captura;
+  t.imagem_licenca_estado = resultado.imagem_licenca_estado;
+  CATALOGO_PATCH.set(t.id, t);
+  markDirty();
+  renderFototeca();
+  renderMontagem();
+
+  notify(`Imagem de "${t.titulo}" actualizada via ${resultado.imagem_fonte} (${resultado.imagem_licenca_estado}) — inclui-se em catalogo_patch.json ao guardar`, 'ok');
+  return resultado;
+}
+
+// Botão "🤖 Auto-preencher fotos de artista (cascata)" na aba ASSETS —
+// corre af_aplicarMelhorImagemArtista() para TODO o catálogo de uma vez,
+// com pausa entre pedidos (não sobrecarregar TheAudioDB/Wikipedia/iTunes).
+// Continua a respeitar as mesmas regras dessa função: nunca mexe em
+// imagem_licenca_estado==='livre', só regista em CATALOGO_PATCH (memória),
+// nunca escreve ficheiro nenhum sozinho — isso só acontece ao clicar
+// "↓ Guardar playlists.json", depois de reveres na Fototeca. Nota: cada
+// af_aplicarMelhorImagemArtista() já dispara o seu próprio notify() por
+// faixa — em 135 faixas isso pisca bastante; aceite como é, o resumo final
+// (alert) é que interessa realmente.
+async function af_autoPreencherFotosArtistaCascata() {
+  const elegiveis = CATALOGO.filter(t => t && t.id && t.imagem_licenca_estado !== 'livre');
+  if (!elegiveis.length) {
+    notify('Todas as faixas já têm imagem livre confirmada — nada a fazer', 'ok');
+    return;
+  }
+  if (!confirm(`Isto vai tentar melhorar imagens em ${elegiveis.length} faixas via TheAudioDB/Wikipedia/iTunes. Continuar?`)) return;
+
+  const melhoradas = [];
+  const semResultado = [];
+
+  for (const t of elegiveis) {
+    const resultado = await af_aplicarMelhorImagemArtista(t.id);
+    if (resultado) {
+      melhoradas.push({ id: t.id, artista: artistaTexto(t), fonte: resultado.imagem_fonte });
+    } else {
+      semResultado.push({ id: t.id, artista: artistaTexto(t) });
+    }
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  const resumo = `Auto-preenchimento concluído — ${elegiveis.length} faixa(s) processadas.\n\n`
+    + `✓ Melhoradas: ${melhoradas.length}\n`
+    + `✗ Sem resultado: ${semResultado.length}\n\n`
+    + `Melhoradas:\n${melhoradas.map(m => `- ${m.artista} (${m.id}) via ${m.fonte}`).join('\n') || '(nenhuma)'}\n\n`
+    + `Sem resultado:\n${semResultado.map(m => `- ${m.artista} (${m.id})`).join('\n') || '(nenhuma)'}`;
+
+  alert(resumo);
+  notify(`Auto-preenchimento: ${melhoradas.length} melhoradas, ${semResultado.length} sem resultado — revê na Fototeca antes de guardar`, 'ok');
 }
 
 async function af_reverTodasImagensCatalogo() {
@@ -6226,6 +6379,51 @@ function renderAssets() {
   }).join('');
 
   document.getElementById('assets-summary').textContent = `${totalOk} assets OK · ${totalMissing} em falta`;
+}
+
+// ─── FOTOTECA (grelha de imagens de todo o CATALOGO) ───────────────
+// Pesquisa por título/artista (mesmo padrão de renderBiblioteca/search-input).
+// Cada card reutiliza abrirPesquisaImagem() para trocar a imagem — mesmo
+// fluxo já usado na Mesa de Montagem/Assets, sem duplicar lógica.
+
+// #img-search-panel só existe dentro da view-montagem — clicar "Trocar" a
+// partir da Fototeca (outra view) chamava abrirPesquisaImagem() sem o
+// painel estar visível em lado nenhum. Mesmo problema já resolvido em
+// af_reverTodasImagensCatalogo(): muda primeiro para Montagem
+// (switchTabProgrammatic, não é um clique real no separador) e só depois
+// abre a pesquisa.
+function fototecaTrocarImagem(id, artista, titulo) {
+  switchTabProgrammatic('montagem');
+  abrirPesquisaImagem(id, artista, titulo);
+}
+
+function renderFototeca() {
+  const grid = document.getElementById('fototeca-grid');
+  if (!grid) return;
+
+  const q = (document.getElementById('fototeca-search')?.value || '').trim().toLowerCase();
+  const faixas = CATALOGO.filter(t => {
+    if (!q) return true;
+    return (t.titulo || '').toLowerCase().includes(q) || artistaTexto(t).toLowerCase().includes(q);
+  });
+
+  grid.innerHTML = faixas.map(t => {
+    const hasImg = !!t.imagem;
+    const thumb = hasImg
+      ? `<img class="posicao-thumb" style="width:100px;height:100px;" src="${escapeAttr(t.imagem)}" alt="" loading="lazy">`
+      : `<div class="posicao-thumb-placeholder" style="width:100px;height:100px;font-size:32px;" title="Sem imagem">🖼</div>`;
+    const aviso = t.imagem_licenca_estado === 'confirmar'
+      ? `<span style="color:#e0a030;font-size:13px;" title="Imagem colada manualmente — confirmar licença de uso antes de lançamento público">⚠️</span>`
+      : '';
+    return `<div class="fototeca-card">
+      ${thumb}
+      <div class="fototeca-artista">${escapeHtml(artistaTexto(t))}${aviso}</div>
+      <div class="fototeca-titulo">${escapeHtml(t.titulo)}</div>
+      <button class="timing-btn" onclick="fototecaTrocarImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar</button>
+    </div>`;
+  }).join('');
+
+  document.getElementById('fototeca-summary').textContent = `${faixas.length} de ${CATALOGO.length} faixas`;
 }
 
 // ─── VÍDEO INLINE (embed directo no painel de detalhe, sem modal) ──

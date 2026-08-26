@@ -4305,44 +4305,6 @@
     "imagem_licenca_estado": "confirmar"
   },
   {
-    "id": "beatles_05",
-    "titulo": "Something (cover)",
-    "artista": [
-      "Outro artista (cover)",
-      "The Beatles",
-      "George Harrison (compositor original)"
-    ],
-    "decadas": [
-      "1960s"
-    ],
-    "generos": [
-      "Rock",
-      "Balada"
-    ],
-    "geografia": "Reino Unido",
-    "estilo": "Balada rock composta por George Harrison, aqui em versão de cover",
-    "instrumento": [
-      "Guitarra elétrica"
-    ],
-    "universal": false,
-    "nivel": 3,
-    "trecho_a": {
-      "ficheiro": "BEATLES_05_a.mp3",
-      "inicio": null,
-      "fim": null
-    },
-    "trecho_b": {
-      "ficheiro": "BEATLES_05_b.mp3",
-      "inicio": null,
-      "fim": null
-    },
-    "full": "BEATLES_05_full.mp3",
-    "elegivel_mosaico": true,
-    "estado": "ativo",
-    "curador": "André Clemente",
-    "data": "2026-08-10"
-  },
-  {
     "id": "beatles_06",
     "titulo": "A Hard Day's Night",
     "artista": [
