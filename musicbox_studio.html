@@ -688,6 +688,30 @@
   .tipo-capa { background: rgba(78,201,142,0.08); color: #77ddaa; }
   .tipo-mosaico { background: rgba(232,197,71,0.14); color: var(--accent); }
 
+  .posicao-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+  }
+  .posicao-thumb-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text3);
+    font-size: 20px;
+    opacity: 0.5;
+  }
+
   .posicao-info { flex: 1; min-width: 0; }
 
   .posicao-titulo {
@@ -1470,6 +1494,7 @@
           </select>
           <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="assets-summary"></span>
           <button class="btn" onclick="af_pesquisarImagensEmFaltaCatalogo()" title="Pesquisa Wikimedia Commons para todas as faixas do catálogo sem imagem, uma a seguir à outra">🖼 Preencher imagens em falta</button>
+          <button class="btn" onclick="af_reverTodasImagensCatalogo()" title="Percorre TODAS as faixas do catálogo (com ou sem imagem) para reveres/trocares cada uma, uma a seguir à outra">🔁 Rever todas as imagens (catálogo)</button>
         </div>
         <div class="assets-grid" id="assets-grid"></div>
       </div>
@@ -3152,12 +3177,16 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
       <span class="drag-handle">⠿</span>
       <span class="posicao-num">${extraLabel}</span>
       <span class="posicao-tipo-badge ${tipoBadge}">${kind==='mosaico'?'mosaico':'audio'}</span>
+      ${hasImg
+        ? `<img class="posicao-thumb" src="${escapeAttr(t.imagem)}" alt="" loading="lazy">`
+        : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}
       <div class="posicao-info">
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
         <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
         <div class="timing-row">
           <button class="timing-btn" title="${cinema ? 'Definir início do Excerto (fim = início + 30s)' : 'Definir início do Trecho A (fim = início + 15s)'}" onclick="toggleTimingEditor('${kind}',${index},'a',event)">⏱ Definir início</button>
           ${precisaAuto ? `<button class="timing-btn auto-btn" title="${cinema ? "Ponto de partida — excerto em 0-30s. Confirma por audição e ajusta com 'Definir início' se necessário." : "Ponto de partida — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' se necessário."}" onclick="autoDefinirTrechos('${kind}',${index},event)">⚡ Auto</button>` : ''}
+          <button class="timing-btn" title="Procurar/trocar a imagem desta faixa (Wikimedia Commons)" onclick="event.stopPropagation();abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar imagem</button>
           ${timingLabelHtml(t, kind, index)}
         </div>
       </div>
@@ -3677,6 +3706,15 @@ function fecharPesquisaImagem() {
   IMG_RESULTADOS = [];
   const painel = document.getElementById('img-search-panel');
   if (painel) painel.innerHTML = '';
+
+  // Se houver uma fila de revisão em curso (af_reverTodasImagensCatalogo/
+  // Playlist ou pesquisarImagensEmFalta), fechar sem escolher avança para a
+  // faixa seguinte em vez de parar a revisão a meio — a imagem actual desta
+  // faixa fica tal como estava, sem alteração.
+  if (IMG_FAIXA_FILA && IMG_FAIXA_FILA.length > 0) {
+    const proxima = IMG_FAIXA_FILA.shift();
+    abrirPesquisaImagem(proxima.id, artistaTexto(proxima), proxima.titulo);
+  }
 }
 
 async function executarPesquisaImagem() {
@@ -3747,6 +3785,7 @@ function usarImagemWikimedia(indice) {
   if (!resultado || !t) return;
 
   t.imagem = resultado.fullUrl;
+  t.imagem_licenca_estado = 'livre';
   CATALOGO_PATCH.set(t.id, t);
 
   fecharPesquisaImagem();
@@ -3813,6 +3852,36 @@ async function af_pesquisarImagensEmFaltaCatalogo() {
   abrirPesquisaImagem(semImagem[0].id, artistaTexto(semImagem[0]), semImagem[0].titulo);
 }
 
+async function af_reverTodasImagensCatalogo() {
+  const todas = CATALOGO.filter(t => t && t.id);
+  if (!todas.length) {
+    notify('Catálogo vazio', 'erro');
+    return;
+  }
+  notify(`A rever imagens de ${todas.length} faixa(s) do catálogo, uma a uma…`, 'ok');
+  switchTabProgrammatic('montagem');
+  IMG_FAIXA_FILA = todas.slice(1);
+  abrirPesquisaImagem(todas[0].id, artistaTexto(todas[0]), todas[0].titulo);
+}
+
+async function af_reverTodasImagensPlaylist(playlistKey) {
+  const pl = PLAYLISTS[playlistKey || currentPlaylistKey];
+  if (!pl) {
+    notify('Playlist não encontrada', 'erro');
+    return;
+  }
+  const musicas = (pl.musicas || [])
+    .map(id => CATALOGO_BY_ID.get(id))
+    .filter(t => t);
+  if (!musicas.length) {
+    notify('Esta playlist não tem faixas com id no catálogo', 'erro');
+    return;
+  }
+  notify(`A rever imagens de "${pl.nome}" — ${musicas.length} faixa(s), uma a uma…`, 'ok');
+  IMG_FAIXA_FILA = musicas.slice(1);
+  abrirPesquisaImagem(musicas[0].id, artistaTexto(musicas[0]), musicas[0].titulo);
+}
+
 // Fallback ao Wikimedia Commons: cola-se um URL de imagem directamente
 // (ex. quando a pesquisa não encontra nada aproveitável). Usa
 // IMG_FAIXA_ALVO — a mesma variável que abrirPesquisaImagem() já define —
@@ -3826,6 +3895,8 @@ function usarImagemManual() {
   if (!t) return;
 
   t.imagem = url;
+  t.imagem_licenca_estado = 'confirmar';
+  t.imagem_credito = 'URL manual — licença por confirmar antes de uso público';
   CATALOGO_PATCH.set(t.id, t);
   markDirty();
 
@@ -3888,6 +3959,7 @@ function renderPosicoesTributo(pl) {
     const hasA = t && t.trecho_a && t.trecho_a.ficheiro;
     const hasB = t && t.trecho_b && t.trecho_b.ficheiro;
     const hasImg = (t && t.imagem) || p.imagem;
+    const imgUrl = (t && t.imagem) || p.imagem || '';
     html += `<div class="posicao-card ${selected?'selected':''}"
         draggable="true" ondragstart="dragMoveStart(event,'posicao',${i})"
         onclick="selectSlot('posicao',${i})"
@@ -3898,11 +3970,15 @@ function renderPosicoesTributo(pl) {
         <span class="drag-handle">⠿</span>
         <span class="posicao-num">${String(p.pos).padStart(2,'0')}</span>
         <span class="posicao-tipo-badge tipo-${p.tipo}">${p.tipo}</span>
+        ${hasImg
+          ? `<img class="posicao-thumb" src="${escapeAttr(imgUrl)}" alt="" loading="lazy">`
+          : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}
         <div class="posicao-info">
           <div class="posicao-titulo">${escapeHtml(titulo)}</div>
           <div class="posicao-artista">${escapeHtml(artista)}</div>
           ${t ? `<div class="timing-row">
             <button class="timing-btn" title="Definir início do Trecho A (fim = início + 15s)" onclick="toggleTimingEditor('posicao',${i},'a',event)">⏱ Definir início</button>
+            <button class="timing-btn" title="Procurar/trocar a imagem desta faixa (Wikimedia Commons)" onclick="event.stopPropagation();abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar imagem</button>
             ${timingLabelHtml(t, 'posicao', i)}
           </div>` : ''}
         </div>
@@ -4004,7 +4080,7 @@ function renderDetail() {
         <div class="asset-row"><span class="asset-row-label">A</span><span class="asset-row-file ${hasA?'':'missing'}">${hasA?t.trecho_a.ficheiro:'em falta'}</span>${hasA?`<button class="play-btn" onclick="playFicheiro('${t.trecho_a.ficheiro}',this)">▶</button>`:''}</div>
         <div class="asset-row"><span class="asset-row-label">B</span><span class="asset-row-file ${hasB?'':'missing'}">${hasB?t.trecho_b.ficheiro:'em falta'}</span>${hasB?`<button class="play-btn" onclick="playFicheiro('${t.trecho_b.ficheiro}',this)">▶</button>`:''}</div>
         <div class="asset-row"><span class="asset-row-label">F</span><span class="asset-row-file ${t.full?'':'missing'}">${t.full||'em falta'}</span>${t.full?`<button class="play-btn" onclick="playFicheiro('${t.full}',this)">▶</button>`:''}</div>
-        <div class="asset-row"><span class="asset-row-label">IMG</span><span class="asset-row-file ${t.imagem?'':'missing'}">${t.imagem||'em falta'}</span>${t.imagem?`<button class="play-btn" onclick="previewImagem('${t.imagem}','${escapeAttr(t.titulo)}')">🖼</button>`:''}${pl.tipo==='retrato'?`<button class="timing-btn" onclick="abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔍 Imagem</button>`:''}</div>
+        <div class="asset-row"><span class="asset-row-label">IMG</span><span class="asset-row-file ${t.imagem?'':'missing'}">${t.imagem||'em falta'}</span>${t.imagem_licenca_estado==='confirmar'?`<span style="color:#e0a030;font-size:11px;margin-left:6px;" title="Imagem colada manualmente — confirmar licença de uso antes de lançamento público">⚠️ confirmar licença</span>`:''}${t.imagem?`<button class="play-btn" onclick="previewImagem('${t.imagem}','${escapeAttr(t.titulo)}')">🖼</button>`:''}${pl.tipo==='retrato'?`<button class="timing-btn" onclick="abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔍 Imagem</button>`:''}</div>
 
         ${t.video ? `
           <button class="video-toggle-btn" id="video-toggle-btn" onclick="toggleVideoEmbed('${t.video}')">▶ Ver vídeo do YouTube</button>

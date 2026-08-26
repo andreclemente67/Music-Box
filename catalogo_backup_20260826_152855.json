@@ -21,12 +21,12 @@
     "universal": true,
     "nivel": 1,
     "trecho_a": {
-      "ficheiro": "80_01_a.mp3",
+      "ficheiro": "01_a.mp3",
       "inicio": null,
       "fim": null
     },
     "trecho_b": {
-      "ficheiro": "80_01_b.mp3",
+      "ficheiro": "01_b.mp3",
       "inicio": null,
       "fim": null
     },
@@ -35,11 +35,7 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=djV11Xbc914",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music60/v4/21/c6/3a/21c63aa1-8c84-2af6-374c-ff520bb63e4d/mzm.qcpavuiv.jpg/600x600bb.jpg",
-    "imagem_credito": "Capa iTunes (Apple Music)",
-    "imagem_fonte": "itunes_artwork",
-    "imagem_licenca_estado": "confirmar"
+    "video": "https://www.youtube.com/watch?v=djV11Xbc914"
   },
   {
     "id": "80_02",
@@ -1260,11 +1256,7 @@
     "video": "https://www.youtube.com/watch?v=h9ezypI-yc4",
     "clip": "https://www.youtube.com/watch?v=h9ezypI-yc4",
     "filme": "Blade Runner",
-    "compositor": "Vangelis",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/b8/cb/fd/b8cbfdbe-db9a-ab11-a1f6-80887e74aee9/18UMGIM77526.rgb.jpg/600x600bb.jpg",
-    "imagem_credito": "Capa iTunes (Apple Music)",
-    "imagem_fonte": "itunes_artwork",
-    "imagem_licenca_estado": "confirmar"
+    "compositor": "Vangelis"
   },
   {
     "id": "cinema_02",
@@ -1304,11 +1296,7 @@
     "video": "https://www.youtube.com/watch?v=_D0ZQPqeJkk",
     "clip": "https://www.youtube.com/watch?v=CqE4VSnT5sc&t=1s",
     "filme": "Star Wars",
-    "compositor": "John Williams",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/73/22/33/732233a6-c3ad-3be6-3f51-9dad7927a830/195497992379.jpg/600x600bb.jpg",
-    "imagem_credito": "Capa iTunes (Apple Music)",
-    "imagem_fonte": "itunes_artwork",
-    "imagem_licenca_estado": "confirmar"
+    "compositor": "John Williams"
   },
   {
     "id": "cinema_03",
@@ -1583,11 +1571,7 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
-    "video": "https://www.youtube.com/watch?v=1vrEljMfXYo",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/52/ed/f3/52edf3b6-5b73-c52d-e3f6-4473412eec7c/886443406193.jpg/600x600bb.jpg",
-    "imagem_credito": "Capa iTunes (Apple Music)",
-    "imagem_fonte": "itunes_artwork",
-    "imagem_licenca_estado": "confirmar"
+    "video": "https://www.youtube.com/watch?v=1vrEljMfXYo"
   },
   {
     "id": "ame_02",
@@ -1736,11 +1720,7 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
-    "video": "https://www.youtube.com/watch?v=_-agl0pOQfs",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/8f/e7/f4/8fe7f417-d464-8879-b00e-3d4965a9cfd1/075596062329.jpg/600x600bb.jpg",
-    "imagem_credito": "Capa iTunes (Apple Music)",
-    "imagem_fonte": "itunes_artwork",
-    "imagem_licenca_estado": "confirmar"
+    "video": "https://www.youtube.com/watch?v=_-agl0pOQfs"
   },
   {
     "id": "ame_06",
