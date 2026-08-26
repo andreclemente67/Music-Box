@@ -71,7 +71,8 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=1w7OgIMMRc4"
+    "video": "https://www.youtube.com/watch?v=1w7OgIMMRc4",
+    "imagem": "https://commons.wikimedia.org/wiki/Special:FilePath/Guns_N%27_Roses_(48).JPG"
   },
   {
     "id": "80_03",
@@ -109,7 +110,8 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=wRGJxvCOi3U"
+    "video": "https://www.youtube.com/watch?v=wRGJxvCOi3U",
+    "imagem": "https://commons.wikimedia.org/wiki/Special:FilePath/Frankie_Goes_to_Hollywood_in_London_cropped.jpg"
   },
   {
     "id": "80_04",
@@ -145,7 +147,8 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=uPudE8nDog0"
+    "video": "https://www.youtube.com/watch?v=uPudE8nDog0",
+    "imagem": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Human_League_2007.jpg"
   },
   {
     "id": "80_05",
@@ -183,7 +186,8 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=9jK-NcRmVcw"
+    "video": "https://www.youtube.com/watch?v=9jK-NcRmVcw",
+    "imagem": "https://commons.wikimedia.org/wiki/Special:FilePath/Europe_the_band_in_Stockholm_2016.jpg"
   },
   {
     "id": "80_06",
@@ -221,7 +225,8 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=OMOGaugKpzs"
+    "video": "https://www.youtube.com/watch?v=OMOGaugKpzs",
+    "imagem": "https://commons.wikimedia.org/wiki/Special:FilePath/The_Police_2008.jpg"
   },
   {
     "id": "80_07",
@@ -259,7 +264,8 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
-    "video": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y"
+    "video": "https://www.youtube.com/watch?v=Zi_XLOBDo_Y",
+    "imagem": "https://commons.wikimedia.org/wiki/Special:FilePath/Michael_Jackson_1984.jpg"
   },
   {
     "id": "80_mosaico",
