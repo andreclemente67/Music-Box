@@ -931,3 +931,101 @@ agrupar primariamente por Família (Décadas / Géneros Atemporais),
 substituindo o agrupamento actual por Tipo estrutural
 (Standard/Solo/Retrato/Tributo) — este passa a aparecer como etiqueta
 secundária por playlist, não como cabeçalho de grupo.
+
+## 2026-08-25 — Imagem obrigatória em todas as posições + pesquisa Wikimedia automática em ADICIONAR FAIXA
+
+*(Entrada escrita em 2026-08-26, retroactivamente — o código já tinha isto
+implementado e commitado, mas os três comentários que o assinalam no
+código apontam para "ver DECISIONS.md 2026-08-25" e a entrada
+correspondente nunca tinha sido escrita aqui. Confirmado por leitura
+directa do código em `~/MusicBox2026/musicbox_studio.html`, commit
+`18fef08` de 2026-08-25 18:17.)*
+
+**Contexto:** utilizador propôs mostrar a imagem da faixa ao lado do
+concorrente quando este acerta, para **todas** as faixas (até então só
+acontecia nalgumas). Validado como boa ideia — reforça o momento de
+reconhecimento, e a infra-estrutura (`imagem` por faixa) já existia.
+Ressalvas levantadas antes de implementar: (1) isto torna-se trabalho
+contínuo — toda faixa nova passa a precisar de imagem, daí a decisão de
+tornar isso obrigatório logo em ADICIONAR FAIXA, no momento da criação;
+(2) não deve competir visualmente com "O Ícone" (Format Book: momento
+raro, 36 peças, só 2 momentos no episódio) — o reveal normal mantém-se
+discreto/pequeno, para o Ícone continuar a ser especial.
+
+**Como o Studio já obtinha imagens antes desta decisão** (via grep ao
+código, não assumido):
+- **Standard:** upload manual local — utilizador escolhe um ficheiro do
+  computador, grava directo em `app/`, associa a `t.imagem` (mesmo
+  mecanismo da foto do apresentador).
+- **Retrato Sonoro:** pesquisa automática via API pública do Wikimedia
+  Commons (`abrirPesquisaImagem`/`executarPesquisaImagem`/
+  `usarImagemWikimedia`, botão "🔍 Imagem") — pesquisa por texto
+  (artista+título), grelha de resultados, grava o URL remoto do
+  Wikimedia directamente em `t.imagem` (excepção conhecida e comentada
+  no código: aqui `imagem` é um URL remoto, não um ficheiro local — o
+  `validar_catalogo.py` acusa isto como "em falta" localmente, é
+  esperado). Tem fallback de colar URL à mão (`usarImagemManual`) e um
+  modo "fila" que percorre automaticamente todas as faixas sem imagem
+  de uma playlist Retrato.
+
+**Implementação (as três peças pedidas):**
+
+1. **ADICIONAR FAIXA abre a pesquisa Wikimedia automaticamente.**
+   `afAdicionarAoCatalogo()` — depois de gravar a faixa nova, chama-se
+   sempre `abrirPesquisaImagem(entrada.id, artistaTexto, titulo)` (linha
+   6428), sem condição — deixou de ser só um aviso de "falta imagem".
+   Comentário no código (linhas 6405-6410): "em vez de só avisar que
+   falta imagem, abre-se logo a pesquisa, pré-preenchida com
+   artista+título". Detalhe técnico registado: a query de pesquisa em si
+   usa `${artista} musician` (linha 3649) — o título aparece como
+   etiqueta no painel, não está literalmente concatenado na caixa de
+   pesquisa; o pré-preenchimento é real, só não é "artista+título"
+   colados num único campo de texto.
+
+2. **`verificarCompletudePlaylist()` estendida a todas as faixas.**
+   Linhas 2724-2728, comentário no próprio código: "Imagem obrigatória em
+   TODAS as posições, qualquer tipo de playlist... Corrigido em
+   2026-08-25 depois de 'Anos 80' ter dado 'sem problemas' por engano —
+   as 7 faixas Standard não tinham imagem, só não estavam a ser
+   verificadas." `if (!t.imagem) falta.push('img')` (linha 2748) corre
+   para qualquer posição, sem excepção por tipo de playlist — só o
+   Retrato (e a excepção pontual `STD.INT.ALL.CIN.001`) fica de fora da
+   exigência de `trecho_b`, **não** da exigência de imagem.
+
+3. **Mosaico também exige imagem.** O mosaico entra na mesma lista de
+   posições verificadas (`posicoes.push({..., ehMosaico: true})`, linha
+   2736) e passa pelo mesmo `if (!t.imagem) falta.push('img')` — não há
+   bypass para `ehMosaico`.
+
+**Estado de teste:** código commitado (`18fef08`, "Reorganiza sidebar do
+Studio..."), `git status` limpo neste ficheiro à data desta entrada. Não
+confirmado nesta entrada se houve teste end-to-end no browser (ver
+`TASKS.md` para o padrão habitual de itens "por confirmar visualmente"
+usado no resto deste documento) — esta entrada documenta o que o código
+faz, verificado por leitura directa, não um novo teste realizado agora.
+
+## 2026-08-26 — Retrato Sonoro é excepção à regra "resposta = Artista/Banda"
+
+Durante correcção de "membro individual em vez da banda" no campo
+`artista` (mesma categoria de bug já corrigida em "We Will Rock You" →
+"Queen"), foi identificado o caso `ret_03` — "Love of My Life", com
+`artista: ["Freddie Mercury"]` em vez de "Queen".
+
+**Decisão: manter "Freddie Mercury".** Não é o mesmo bug.
+
+A série Retrato Sonoro (`ret_01`–`ret_08`) não segue a regra geral
+"resposta esperada = Artista/Banda" — o conceito da série é retratar uma
+pessoa/ícone através de uma canção que a define, não identificar quem
+tocou a canção. Os outros 7 exemplos confirmam o padrão a 100%: Frank
+Sinatra, Elvis Presley, Michael Jackson, Whitney Houston, Elton John,
+António Variações, David Bowie — todos indivíduos, nenhuma banda. Trocar
+"Freddie Mercury" por "Queen" só neste caso quebraria a consistência da
+série inteira.
+
+**Regra explícita a partir de agora:** dentro do Retrato Sonoro, a
+resposta esperada é sempre a pessoa retratada, mesmo quando a canção é
+creditada a uma banda (ex: Freddie Mercury em "Love of My Life", não
+Queen). A regra geral "Artista/Banda" continua a aplicar-se a todos os
+outros tipos de playlist (standard, mosaicos temáticos, etc.).
+
+Registado para evitar que um audit futuro "corrija" isto por engano.
