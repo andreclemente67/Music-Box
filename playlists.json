@@ -573,5 +573,35 @@
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
+  },
+  "STD.INT.ALL.TV.001": {
+    "tipo": "standard",
+    "nome": "Televisão — Temas Icónicos",
+    "descritivo": "Temas Icónicos",
+    "playlistCodigo": "STD.INT.ALL.TV.001",
+    "universo": "Televisão",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "tv_01",
+      "tv_02",
+      "tv_03",
+      "tv_04",
+      "tv_05",
+      "tv_06",
+      "tv_07"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Angelo Badalamenti",
+      "id": "tv_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }
