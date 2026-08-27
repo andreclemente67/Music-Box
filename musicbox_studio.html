@@ -2046,7 +2046,7 @@
   </div>
 </div>
 
-<!-- Lista de faixas com _alerta_dados não-nulo — ver
+<!-- Lista de faixas sinalizadas em AF_ALERTAS_DADOS — ver
      af_verificarConsistenciaArtistaBanda()/af_abrirInconsistenciasArtistaBanda(). -->
 <div class="modal-overlay" id="modal-inconsistencias-artista-banda">
   <div class="modal" style="width:560px;">
@@ -2585,8 +2585,9 @@ function riscoAmbiguidadeBadgeHtml(t) {
 // Distinto do ⚠️ acima (imagem_risco_ambiguidade é sobre a FOTO; isto é
 // sobre o campo `artista` em si) — ver af_verificarConsistenciaArtistaBanda().
 function alertaDadosBadgeHtml(t) {
-  if (!t || !t._alerta_dados) return '';
-  const titulo = t._alerta_dados === 'artista_deveria_ser_pessoa'
+  const alerta = t && AF_ALERTAS_DADOS.get(t.id);
+  if (!alerta) return '';
+  const titulo = alerta === 'artista_deveria_ser_pessoa'
     ? 'Faixa de Solista — "artista" parece ser o nome da banda, devia ser a pessoa'
     : 'Faixa de banda — "artista" parece ser só um membro isolado, devia ser a banda';
   return `<span class="alerta-dados-badge" title="${escapeAttr(titulo)}">🔀</span>`;
@@ -4235,27 +4236,40 @@ function af_faixaPertenceASolistas(id) {
   return Object.values(PLAYLISTS).some(p => p.universo === 'Solistas' && Array.isArray(p.musicas) && p.musicas.includes(id));
 }
 
-// Corre ao carregar o catálogo (ver INIT) — anota `_alerta_dados` em
-// TODAS as faixas (null quando não há problema, como pedido), sem gravar
-// nada em CATALOGO_PATCH: é um diagnóstico de sessão, recalculado sempre
-// que o catálogo recarrega, não um campo persistido em catalogo.json.
+// AF_ALERTAS_DADOS: id -> 'artista_deveria_ser_pessoa'|'artista_deveria_ser_banda'.
+// Map à parte, NUNCA um campo escrito na própria faixa (era
+// `t._alerta_dados` antes) — bug encontrado 2026-08-27: mutar o objecto de
+// CATALOGO directamente vazava o campo para catalogo_patch.json sempre
+// que a faixa fosse gravada por OUTRO motivo (CATALOGO_PATCH.set(t.id, t)
+// grava o objecto inteiro, incluindo qualquer campo "privado" pendurado
+// nele). Aconteceu com `ptbat_mosaico` ao corrigir a imagem manualmente.
+// Qualquer anotação de sessão que não deva ir para catalogo.json fica
+// sempre à parte assim, nunca escrita directamente na faixa.
+let AF_ALERTAS_DADOS = new Map();
+
+// Corre ao carregar o catálogo (ver INIT) — recalcula AF_ALERTAS_DADOS de
+// raiz a cada chamada; é um diagnóstico de sessão, nunca persistido.
 function af_verificarConsistenciaArtistaBanda() {
   const sinalizadas = [];
+  AF_ALERTAS_DADOS = new Map();
   CATALOGO.forEach(t => {
-    t._alerta_dados = null;
     const artistaPrincipal = (Array.isArray(t.artista) ? t.artista[0] : t.artista || '').trim();
     if (!artistaPrincipal) return;
     const artistaMin = artistaPrincipal.toLowerCase();
     const solista = af_faixaPertenceASolistas(t.id);
+    let alerta = null;
     if (solista) {
       const bandaMin = (t.banda || '').toLowerCase();
       if ((bandaMin && artistaMin === bandaMin) || AF_BANDAS_CONHECIDAS.includes(artistaMin)) {
-        t._alerta_dados = 'artista_deveria_ser_pessoa';
+        alerta = 'artista_deveria_ser_pessoa';
       }
     } else if (AF_MEMBROS_NUNCA_SOLO.includes(artistaMin)) {
-      t._alerta_dados = 'artista_deveria_ser_banda';
+      alerta = 'artista_deveria_ser_banda';
     }
-    if (t._alerta_dados) sinalizadas.push(t);
+    if (alerta) {
+      AF_ALERTAS_DADOS.set(t.id, alerta);
+      sinalizadas.push(t);
+    }
   });
   return sinalizadas;
 }
@@ -4273,7 +4287,7 @@ function af_abrirInconsistenciasArtistaBanda() {
   } else {
     body.innerHTML = `<p style="color:var(--text3);margin-bottom:10px;">${sinalizadas.length} faixa(s) sinalizada(s):</p>` +
       sinalizadas.map(t => {
-        const label = t._alerta_dados === 'artista_deveria_ser_pessoa'
+        const label = AF_ALERTAS_DADOS.get(t.id) === 'artista_deveria_ser_pessoa'
           ? 'artista devia ser a pessoa (Solista), não a banda'
           : 'artista devia ser a banda, não um membro isolado';
         return `<div class="detail-field" style="border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:8px;">
@@ -7078,10 +7092,10 @@ setInterval(async () => {
 
 // ─── INIT ───────────────────────────────────────────────────
 loadData().then(() => {
-  // Depois de loadData() (CATALOGO/PLAYLISTS já populados) — anota
-  // `_alerta_dados` em cada faixa e volta a desenhar Fototeca/Montagem
-  // para os selos 🔀 aparecerem já na primeira vista, sem esperar por
-  // nenhuma acção do utilizador. Ver af_verificarConsistenciaArtistaBanda().
+  // Depois de loadData() (CATALOGO/PLAYLISTS já populados) — preenche
+  // AF_ALERTAS_DADOS e volta a desenhar Fototeca/Montagem para os selos 🔀
+  // aparecerem já na primeira vista, sem esperar por nenhuma acção do
+  // utilizador. Ver af_verificarConsistenciaArtistaBanda().
   af_verificarConsistenciaArtistaBanda();
   renderFototeca();
   renderMontagem();
