@@ -713,6 +713,17 @@
     padding: 2px;
     pointer-events: auto;
   }
+  .alerta-dados-badge {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    font-size: 12px;
+    line-height: 1;
+    background: #2a2a2a;
+    border-radius: 50%;
+    padding: 2px;
+    pointer-events: auto;
+  }
   .posicao-thumb-placeholder {
     width: 56px;
     height: 56px;
@@ -1547,6 +1558,7 @@
           <button class="btn" onclick="af_pesquisarImagensEmFaltaCatalogo()" title="Pesquisa Wikimedia Commons para todas as faixas do catálogo sem imagem, uma a seguir à outra">🖼 Preencher imagens em falta</button>
           <button class="btn" onclick="af_reverTodasImagensCatalogo()" title="Percorre TODAS as faixas do catálogo (com ou sem imagem) para reveres/trocares cada uma, uma a seguir à outra">🔁 Rever todas as imagens (catálogo)</button>
           <button class="btn" onclick="af_autoPreencherFotosArtistaCascata()" title="Corre a cascata TheAudioDB/Wikipedia/iTunes para todas as faixas sem imagem 'livre', em segundo plano — fica em CATALOGO_PATCH para reveres na Fototeca antes de guardar">🤖 Auto-preencher fotos de artista (cascata)</button>
+          <button class="btn" onclick="af_abrirInconsistenciasArtistaBanda()" title="Verifica se `artista` está trocado com `banda` — pessoa isolada nas playlists Solistas, ou membro isolado a substituir a banda nas outras">🔀 Ver inconsistências artista/banda</button>
         </div>
         <div class="assets-grid" id="assets-grid"></div>
       </div>
@@ -2030,6 +2042,21 @@
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-propor-chave')">Cancelar</button>
       <button class="btn btn-primary" onclick="submitProposta()">Guardar Proposta</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lista de faixas com _alerta_dados não-nulo — ver
+     af_verificarConsistenciaArtistaBanda()/af_abrirInconsistenciasArtistaBanda(). -->
+<div class="modal-overlay" id="modal-inconsistencias-artista-banda">
+  <div class="modal" style="width:560px;">
+    <div class="modal-header">
+      <span class="modal-title">🔀 Inconsistências artista/banda</span>
+      <button class="close-btn" onclick="closeModal('modal-inconsistencias-artista-banda')">×</button>
+    </div>
+    <div class="modal-body" id="inconsistencias-artista-banda-body"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-inconsistencias-artista-banda')">Fechar</button>
     </div>
   </div>
 </div>
@@ -2553,6 +2580,16 @@ function riscoAmbiguidadeBadgeHtml(t) {
   return (t && t.imagem_risco_ambiguidade === true)
     ? `<span class="risco-ambiguidade-badge" title="Nome de artista ambíguo — confirmar se a foto é da pessoa certa">⚠️</span>`
     : '';
+}
+
+// Distinto do ⚠️ acima (imagem_risco_ambiguidade é sobre a FOTO; isto é
+// sobre o campo `artista` em si) — ver af_verificarConsistenciaArtistaBanda().
+function alertaDadosBadgeHtml(t) {
+  if (!t || !t._alerta_dados) return '';
+  const titulo = t._alerta_dados === 'artista_deveria_ser_pessoa'
+    ? 'Faixa de Solista — "artista" parece ser o nome da banda, devia ser a pessoa'
+    : 'Faixa de banda — "artista" parece ser só um membro isolado, devia ser a banda';
+  return `<span class="alerta-dados-badge" title="${escapeAttr(titulo)}">🔀</span>`;
 }
 
 function updateStats() {
@@ -3252,7 +3289,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
       <span class="posicao-tipo-badge ${tipoBadge}">${kind==='mosaico'?'mosaico':'audio'}</span>
       <span class="posicao-thumb-wrap">${hasImg
         ? `<img class="posicao-thumb" src="${escapeAttr(t.imagem)}" alt="" loading="lazy">`
-        : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}</span>
+        : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
       <div class="posicao-info">
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
         <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
@@ -3735,15 +3772,35 @@ function usarResultadoYoutube(indice) {
 // isso acontecer — comportamento esperado, não é um bug).
 let IMG_FAIXA_ALVO = null;   // id da faixa (CATALOGO) cujo campo `imagem` vai ser actualizado
 let IMG_TITULO_ALVO = '';    // só para o cabeçalho do painel
-let IMG_RESULTADOS = [];     // resultados actuais do Wikimedia Commons
+let IMG_RESULTADOS = [];     // resultados actuais da pesquisa livre no Wikimedia Commons (só sob pedido — ver af_mostrarPesquisaLivreWikimedia)
+let IMG_RESULTADOS_BRUTOS_TOTAL = 0; // antes do filtro de conteúdo não-musical — ver executarPesquisaImagem()/renderGrelhaResultadosImagem()
+let IMG_RESULTADOS_CASCATA = []; // resultados por defeito ao abrir o painel — TheAudioDB + Wikipedia, ver af_carregarResultadosCascata()
 let IMG_FAIXA_FILA = [];     // faixas (objectos CATALOGO) ainda por pesquisar, depois da actual — ver pesquisarImagensEmFalta
 
 const IMG_EXTENSOES_VALIDAS = /\.(jpe?g|png|webp)$/i;
 
+// Corta resultados obviamente não-musicais da pesquisa livre no Wikimedia
+// Commons (ex.: o Congresso dos EUA a aparecer numa pesquisa de artista) —
+// lista simples, não exaustiva, só para os casos mais óbvios. "actor" fica
+// de fora do corte em playlists de Cinema (ver isCinemaPlaylist()), onde é
+// uma palavra-chave legítima. Ver executarPesquisaImagem().
+const IMG_PALAVRAS_NAO_MUSICAIS = [
+  'congress', 'politician', 'government', 'senate', 'military', 'police',
+  'royal family', 'athlete', 'sports',
+];
+
+// Painel "🔄 Trocar imagem": por defeito mostra a cascata boa (TheAudioDB
+// retrato+fanarts, Wikipedia infobox — ver af_carregarResultadosCascata())
+// como opções principais na grelha. A pesquisa livre do Wikimedia Commons
+// (menos fiável — já apanhou o Congresso dos EUA numa pesquisa de artista)
+// deixa de correr ao abrir o painel — só arranca se o utilizador clicar
+// "🔍 Pesquisar mais no Wikimedia" (af_mostrarPesquisaLivreWikimedia()).
+// Pedido do utilizador, 2026-08-27 — ver DECISIONS.md.
 function abrirPesquisaImagem(faixaId, artista, titulo) {
   IMG_FAIXA_ALVO = faixaId;
   IMG_TITULO_ALVO = titulo || '';
   IMG_RESULTADOS = [];
+  IMG_RESULTADOS_CASCATA = [];
 
   const painel = document.getElementById('img-search-panel');
   if (!painel) return;
@@ -3751,15 +3808,26 @@ function abrirPesquisaImagem(faixaId, artista, titulo) {
   const query = `${artista} musician`;
   painel.innerHTML = `
     <div class="img-panel">
-      <div class="detail-label">Imagem (Wikimedia Commons) — ${escapeHtml(IMG_TITULO_ALVO)}</div>
       <div class="img-panel-header">
-        <input class="search-input" type="text" id="img-search-query" value="${escapeAttr(query)}" style="flex:1;"
-          onkeydown="if(event.key==='Enter') executarPesquisaImagem();">
-        <button class="btn btn-primary" onclick="executarPesquisaImagem()">Pesquisar</button>
+        <div class="detail-label" style="flex:1;margin:0;">Imagem — ${escapeHtml(IMG_TITULO_ALVO)}</div>
         <button class="btn" onclick="fecharPesquisaImagem()">Fechar</button>
       </div>
-      <div class="img-status" id="img-search-status"></div>
-      <div class="img-grid" id="img-search-grid"></div>
+      <div class="img-status" id="img-cascata-status">A procurar em TheAudioDB/Wikipedia…</div>
+      <div class="img-grid" id="img-cascata-grid"></div>
+
+      <div class="img-panel-header" style="margin-top:12px;">
+        <button class="btn" id="img-wikimedia-livre-btn" onclick="af_mostrarPesquisaLivreWikimedia()">🔍 Pesquisar mais no Wikimedia</button>
+      </div>
+      <div id="img-wikimedia-livre-wrap" style="display:none;">
+        <div class="img-panel-header">
+          <input class="search-input" type="text" id="img-search-query" value="${escapeAttr(query)}" style="flex:1;"
+            onkeydown="if(event.key==='Enter') executarPesquisaImagem();">
+          <button class="btn btn-primary" onclick="executarPesquisaImagem()">Pesquisar</button>
+        </div>
+        <div class="img-status" id="img-search-status"></div>
+        <div class="img-grid" id="img-search-grid"></div>
+      </div>
+
       <div class="img-manual-url">
         <label>Ou cola um URL directamente</label>
         <div class="img-manual-row">
@@ -3772,13 +3840,117 @@ function abrirPesquisaImagem(faixaId, artista, titulo) {
       </div>
     </div>`;
 
-  executarPesquisaImagem();
+  af_carregarResultadosCascata();
+}
+
+// Toggle do bloco de pesquisa livre no Wikimedia Commons — nunca corre
+// sozinho ao abrir o painel (ver abrirPesquisaImagem()). Primeira vez que
+// se revela, dispara logo a pesquisa (a query já vem pré-preenchida), para
+// não obrigar a um segundo clique em "Pesquisar".
+function af_mostrarPesquisaLivreWikimedia() {
+  const wrap = document.getElementById('img-wikimedia-livre-wrap');
+  if (!wrap) return;
+  const aVaiAbrir = wrap.style.display === 'none';
+  wrap.style.display = aVaiAbrir ? 'block' : 'none';
+  if (aVaiAbrir && IMG_RESULTADOS.length === 0) executarPesquisaImagem();
+}
+
+// Cascata boa por defeito (TheAudioDB + Wikipedia) — GET
+// /buscar-imagens-cascata, que devolve VÁRIAS candidatas (ao contrário de
+// /buscar-imagem-artista, usado por af_aplicarMelhorImagemArtista(), que
+// pára na primeira e é pensado para aplicar sozinho em lote).
+async function af_carregarResultadosCascata() {
+  const status = document.getElementById('img-cascata-status');
+  const grid = document.getElementById('img-cascata-grid');
+  if (!status || !grid) return;
+
+  const t = IMG_FAIXA_ALVO ? CATALOGO_BY_ID.get(IMG_FAIXA_ALVO) : null;
+  const artista = t ? artistaTexto(t) : '';
+  if (!artista) {
+    status.textContent = 'Sem artista definido nesta faixa — usa a pesquisa livre ou um URL manual abaixo.';
+    return;
+  }
+
+  status.textContent = `A procurar "${artista}" no TheAudioDB/Wikipedia…`;
+  grid.innerHTML = '';
+  IMG_RESULTADOS_CASCATA = [];
+
+  try {
+    const r = await fetch(`/buscar-imagens-cascata?artista=${encodeURIComponent(artista)}`);
+    const dados = await r.json();
+    if (!r.ok || !dados.ok) throw new Error(dados.erro || ('HTTP ' + r.status));
+
+    IMG_RESULTADOS_CASCATA = (dados.resultados || []).map(res => ({
+      thumbUrl: res.imagem,
+      fullUrl: res.imagem,
+      credito: res.imagem_credito,
+      fonte: res.imagem_fonte,
+      urlOrigem: res.imagem_url_origem,
+      dataCaptura: res.imagem_data_captura,
+      licenca: res.imagem_licenca_estado,
+    }));
+
+    // Playlists "Solistas" (Solo de Guitarra/Bateria): fanarts (fotos de
+    // acção, ao vivo) à frente do retrato estático — dão fotos mais
+    // aliciantes para este contexto do que o thumb parado. .sort() é
+    // estável (V8/Deno), por isso só troca fanart<->thumb, não baralha a
+    // ordem das restantes fontes entre si.
+    if (t && af_faixaPertenceASolistas(t.id)) {
+      IMG_RESULTADOS_CASCATA.sort((a, b) => (a.fonte === 'theaudiodb_fanart' ? 0 : 1) - (b.fonte === 'theaudiodb_fanart' ? 0 : 1));
+    }
+
+    status.textContent = IMG_RESULTADOS_CASCATA.length ? ''
+      : 'Sem imagens nas fontes automáticas — tenta "Pesquisar mais no Wikimedia" abaixo, ou um URL manual.';
+    grid.innerHTML = IMG_RESULTADOS_CASCATA.map((img, i) => `
+      <div class="img-thumb-wrap" title="${escapeAttr(img.credito)}">
+        <img src="${escapeAttr(img.thumbUrl)}" alt="${escapeAttr(img.credito)}" loading="lazy">
+        <div class="img-thumb-credito">${escapeHtml(img.credito)}</div>
+        <button class="img-thumb-usar" onclick="af_usarImagemCascata(${i})">✓ Usar</button>
+      </div>`).join('');
+  } catch (e) {
+    status.textContent = 'Erro a procurar imagens automáticas: ' + e.message;
+    console.error(e);
+  }
+}
+
+// Aplica um resultado da cascata (mesmo mecanismo de gravação/fila de
+// usarImagemWikimedia(), mas preserva imagem_fonte/imagem_licenca_estado
+// próprios de cada fonte — TheAudioDB nunca é "livre" automaticamente,
+// Wikipedia só quando a licença Commons foi mesmo confirmada no servidor
+// — ao contrário de usarImagemWikimedia(), que assume sempre 'livre').
+function af_usarImagemCascata(indice) {
+  const resultado = IMG_RESULTADOS_CASCATA[indice];
+  const t = IMG_FAIXA_ALVO ? CATALOGO_BY_ID.get(IMG_FAIXA_ALVO) : null;
+  if (!resultado || !t) return;
+
+  t.imagem = resultado.fullUrl;
+  t.imagem_fonte = resultado.fonte;
+  t.imagem_credito = resultado.credito;
+  t.imagem_url_origem = resultado.urlOrigem;
+  t.imagem_data_captura = resultado.dataCaptura;
+  t.imagem_licenca_estado = resultado.licenca;
+  t.imagem_risco_ambiguidade = false;
+  CATALOGO_PATCH.set(t.id, t);
+
+  fecharPesquisaImagem();
+  markDirty();
+  if (selectedSlot) renderDetail();
+  renderMontagem();
+  renderFototeca();
+
+  if (IMG_FAIXA_FILA && IMG_FAIXA_FILA.length > 0) {
+    const proxima = IMG_FAIXA_FILA.shift();
+    abrirPesquisaImagem(proxima.id, artistaTexto(proxima), proxima.titulo);
+  } else {
+    IMG_FAIXA_FILA = [];
+  }
 }
 
 function fecharPesquisaImagem() {
   IMG_FAIXA_ALVO = null;
   IMG_TITULO_ALVO = '';
   IMG_RESULTADOS = [];
+  IMG_RESULTADOS_CASCATA = [];
   const painel = document.getElementById('img-search-panel');
   if (painel) painel.innerHTML = '';
 
@@ -3790,6 +3962,27 @@ function fecharPesquisaImagem() {
     const proxima = IMG_FAIXA_FILA.shift();
     abrirPesquisaImagem(proxima.id, artistaTexto(proxima), proxima.titulo);
   }
+}
+
+// Junta o texto do extmetadata que costuma denunciar um resultado
+// obviamente não-musical (Categories, ObjectName, ImageDescription/
+// Description) com o próprio título do ficheiro, para comparar com
+// IMG_PALAVRAS_NAO_MUSICAIS. HTML das descrições é ignorado (só o texto).
+function _extmetadataTextoParaFiltro(tituloFicheiro, meta) {
+  let texto = tituloFicheiro || '';
+  ['Categories', 'ObjectName', 'ImageDescription', 'Description'].forEach(campo => {
+    const valor = meta[campo] && meta[campo].value;
+    if (valor) texto += ' ' + String(valor).replace(/<[^>]*>/g, ' ');
+  });
+  return texto.toLowerCase();
+}
+
+// "actor" só entra no corte fora de playlists de Cinema — lá é uma
+// categoria legítima (ex.: Henry Mancini/Pink Panther, cena de filme).
+function _resultadoImagemENaoMusical(tituloFicheiro, meta) {
+  const texto = _extmetadataTextoParaFiltro(tituloFicheiro, meta);
+  const palavras = isCinemaPlaylist() ? IMG_PALAVRAS_NAO_MUSICAIS : IMG_PALAVRAS_NAO_MUSICAIS.concat('actor');
+  return palavras.some(palavra => texto.includes(palavra));
 }
 
 async function executarPesquisaImagem() {
@@ -3815,8 +4008,11 @@ async function executarPesquisaImagem() {
     const dados = await r.json();
     const paginas = (dados.query && dados.query.pages) ? Object.values(dados.query.pages) : [];
 
-    IMG_RESULTADOS = paginas
-      .filter(p => p.title && IMG_EXTENSOES_VALIDAS.test(p.title) && p.imageinfo && p.imageinfo[0])
+    const validas = paginas.filter(p => p.title && IMG_EXTENSOES_VALIDAS.test(p.title) && p.imageinfo && p.imageinfo[0]);
+    IMG_RESULTADOS_BRUTOS_TOTAL = validas.length;
+
+    IMG_RESULTADOS = validas
+      .filter(p => !_resultadoImagemENaoMusical(p.title, p.imageinfo[0].extmetadata || {}))
       .map(p => {
         const info = p.imageinfo[0];
         const meta = info.extmetadata || {};
@@ -3832,7 +4028,7 @@ async function executarPesquisaImagem() {
         };
       });
 
-    console.log('[executarPesquisaImagem]', IMG_RESULTADOS.length, 'imagem(ns) JPG/PNG/WEBP para', JSON.stringify(query));
+    console.log('[executarPesquisaImagem]', IMG_RESULTADOS.length, 'de', IMG_RESULTADOS_BRUTOS_TOTAL, 'imagem(ns) JPG/PNG/WEBP para', JSON.stringify(query), '(resto cortado pelo filtro não-musical)');
     renderGrelhaResultadosImagem();
   } catch (e) {
     status.textContent = 'Erro na pesquisa Wikimedia Commons: ' + e.message;
@@ -3845,7 +4041,10 @@ function renderGrelhaResultadosImagem() {
   const grid = document.getElementById('img-search-grid');
   if (!status || !grid) return;
 
-  status.textContent = IMG_RESULTADOS.length ? '' : 'Sem imagens JPG/PNG/WEBP para esta pesquisa.';
+  status.textContent = IMG_RESULTADOS.length ? ''
+    : IMG_RESULTADOS_BRUTOS_TOTAL > 0
+      ? 'Sem resultados relevantes — tenta afinar o texto de pesquisa'
+      : 'Sem imagens JPG/PNG/WEBP para esta pesquisa.';
   grid.innerHTML = IMG_RESULTADOS.map((img, i) => `
     <div class="img-thumb-wrap" title="${escapeAttr(img.titulo)} — ${escapeAttr(img.credito)}">
       <img src="${escapeAttr(img.thumbUrl)}" alt="${escapeAttr(img.titulo)}" loading="lazy">
@@ -3999,6 +4198,83 @@ async function af_aplicarMelhorImagemArtista(id) {
 // af_aplicarMelhorImagemArtista() já dispara o seu próprio notify() por
 // faixa — em 135 faixas isso pisca bastante; aceite como é, o resumo final
 // (alert) é que interessa realmente.
+// ─── CONSISTÊNCIA ARTISTA/BANDA ──────────────────────────────
+// Listas curadas, pequenas de propósito (não exaustivas — só os casos mais
+// óbvios, mesmo critério da lista de risco de ambiguidade de imagem).
+// AF_BANDAS_CONHECIDAS: nomes de banda que nunca deviam aparecer como
+// `artista` numa faixa de Solista (aí o artista tem de ser a pessoa).
+const AF_BANDAS_CONHECIDAS = [
+  'queen', 'led zeppelin', 'pink floyd', 'van halen', 'the beatles',
+  'the police', 'rolling stones', 'eagles', 'nirvana', 'rush', 'genesis',
+  'fleetwood mac', 'ac/dc', 'metallica', 'u2', 'foo fighters',
+];
+// AF_MEMBROS_NUNCA_SOLO: músicos que nunca são creditados a solo fora do
+// contexto "Solista" (ao contrário de, p.ex., Eric Clapton ou Ringo Starr,
+// que têm carreira a solo legítima e por isso ficam de fora desta lista,
+// para não gerar falsos positivos).
+const AF_MEMBROS_NUNCA_SOLO = [
+  'john bonham', 'charlie watts', 'alex van halen', 'stewart copeland',
+];
+
+// Universo "Solistas" (Solo de Guitarra/Solo de Bateria) — as únicas
+// playlists onde `artista` é propositadamente a pessoa, não a banda (ver
+// campo `banda` nessas faixas). Verifica por PERTENÇA à playlist, não por
+// t.banda estar preenchido — há faixas legítimas de Solista sem banda
+// conhecida (ex: Jimi Hendrix, Joe Satriani, Phil Collins a solo).
+function af_faixaPertenceASolistas(id) {
+  return Object.values(PLAYLISTS).some(p => p.universo === 'Solistas' && Array.isArray(p.musicas) && p.musicas.includes(id));
+}
+
+// Corre ao carregar o catálogo (ver INIT) — anota `_alerta_dados` em
+// TODAS as faixas (null quando não há problema, como pedido), sem gravar
+// nada em CATALOGO_PATCH: é um diagnóstico de sessão, recalculado sempre
+// que o catálogo recarrega, não um campo persistido em catalogo.json.
+function af_verificarConsistenciaArtistaBanda() {
+  const sinalizadas = [];
+  CATALOGO.forEach(t => {
+    t._alerta_dados = null;
+    const artistaPrincipal = (Array.isArray(t.artista) ? t.artista[0] : t.artista || '').trim();
+    if (!artistaPrincipal) return;
+    const artistaMin = artistaPrincipal.toLowerCase();
+    const solista = af_faixaPertenceASolistas(t.id);
+    if (solista) {
+      const bandaMin = (t.banda || '').toLowerCase();
+      if ((bandaMin && artistaMin === bandaMin) || AF_BANDAS_CONHECIDAS.includes(artistaMin)) {
+        t._alerta_dados = 'artista_deveria_ser_pessoa';
+      }
+    } else if (AF_MEMBROS_NUNCA_SOLO.includes(artistaMin)) {
+      t._alerta_dados = 'artista_deveria_ser_banda';
+    }
+    if (t._alerta_dados) sinalizadas.push(t);
+  });
+  return sinalizadas;
+}
+
+// Botão "🔀 Ver inconsistências artista/banda" na aba ASSETS — corre a
+// verificação de novo (é barata, sem chamadas de rede) e mostra a lista
+// num modal em vez de notify(), que não dá para listar várias faixas.
+function af_abrirInconsistenciasArtistaBanda() {
+  const sinalizadas = af_verificarConsistenciaArtistaBanda();
+  renderFototeca();
+  renderMontagem();
+  const body = document.getElementById('inconsistencias-artista-banda-body');
+  if (!sinalizadas.length) {
+    body.innerHTML = `<p style="color:var(--text3);">Nenhuma inconsistência encontrada — ${CATALOGO.length} faixas verificadas.</p>`;
+  } else {
+    body.innerHTML = `<p style="color:var(--text3);margin-bottom:10px;">${sinalizadas.length} faixa(s) sinalizada(s):</p>` +
+      sinalizadas.map(t => {
+        const label = t._alerta_dados === 'artista_deveria_ser_pessoa'
+          ? 'artista devia ser a pessoa (Solista), não a banda'
+          : 'artista devia ser a banda, não um membro isolado';
+        return `<div class="detail-field" style="border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:8px;">
+          <strong>${escapeHtml(t.titulo)}</strong> (${escapeHtml(t.id)})<br>
+          <span style="color:var(--text3);font-size:12px;">artista: "${escapeHtml(artistaTexto(t))}"${t.banda ? ` · banda: "${escapeHtml(t.banda)}"` : ''} — ${label}</span>
+        </div>`;
+      }).join('');
+  }
+  openModal('modal-inconsistencias-artista-banda');
+}
+
 async function af_autoPreencherFotosArtistaCascata() {
   const elegiveis = CATALOGO.filter(t => t && t.id && t.imagem_licenca_estado !== 'livre');
   if (!elegiveis.length) {
@@ -4199,7 +4475,7 @@ function renderPosicoesTributo(pl) {
         <span class="posicao-tipo-badge tipo-${p.tipo}">${p.tipo}</span>
         <span class="posicao-thumb-wrap">${hasImg
           ? `<img class="posicao-thumb" src="${escapeAttr(imgUrl)}" alt="" loading="lazy">`
-          : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}</span>
+          : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
         <div class="posicao-info">
           <div class="posicao-titulo">${escapeHtml(titulo)}</div>
           <div class="posicao-artista">${escapeHtml(artista)}</div>
@@ -6490,7 +6766,7 @@ function renderFototeca() {
       ? `<span style="color:#e0a030;font-size:13px;" title="Imagem colada manualmente — confirmar licença de uso antes de lançamento público">⚠️</span>`
       : '';
     return `<div class="fototeca-card">
-      <span class="posicao-thumb-wrap">${thumb}${riscoAmbiguidadeBadgeHtml(t)}</span>
+      <span class="posicao-thumb-wrap">${thumb}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
       <div class="fototeca-artista">${escapeHtml(artistaTexto(t))}${aviso}</div>
       <div class="fototeca-titulo">${escapeHtml(t.titulo)}</div>
       <button class="timing-btn" onclick="fototecaTrocarImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar</button>
@@ -6776,8 +7052,30 @@ async function afAdicionarAoCatalogo() {
   abrirPesquisaImagem(entrada.id, artistaTexto, titulo);
 }
 
+// ─── AUTO-GUARDAR (60s) ─────────────────────────────────────
+// A cada 60s, se houver alterações por guardar (dirty, ou CATALOGO_PATCH
+// com entradas — saveTimingEditor() por ex. só mexe em CATALOGO_PATCH, sem
+// markDirty()), chama a mesma função do botão "↓ Guardar playlists.json".
+// exportPlaylists() já mostra a sua própria notificação detalhada — esta
+// notify() corre logo a seguir e substitui-a no mesmo elemento #notif por
+// uma mensagem discreta, só para distinguir um guardar automático de um
+// manual. Nada a mostrar quando não há alterações pendentes no ciclo.
+setInterval(async () => {
+  if (!dirty && CATALOGO_PATCH.size === 0) return;
+  await exportPlaylists();
+  notify('Guardado automaticamente', 'ok');
+}, 60000);
+
 // ─── INIT ───────────────────────────────────────────────────
-loadData();
+loadData().then(() => {
+  // Depois de loadData() (CATALOGO/PLAYLISTS já populados) — anota
+  // `_alerta_dados` em cada faixa e volta a desenhar Fototeca/Montagem
+  // para os selos 🔀 aparecerem já na primeira vista, sem esperar por
+  // nenhuma acção do utilizador. Ver af_verificarConsistenciaArtistaBanda().
+  af_verificarConsistenciaArtistaBanda();
+  renderFototeca();
+  renderMontagem();
+});
 </script>
 </body>
 </html>

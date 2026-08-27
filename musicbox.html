@@ -50,6 +50,7 @@
   .rv-transcricao.rv-match { color:#8fc95a; }
   .btn-mic { background:#152233; color:#7ab8e0; }
   .trecho-label { font-size:11px; letter-spacing:3px; color:var(--orange); margin-top:4px; }
+  .resposta-esperada { font-size:11px; letter-spacing:1px; color:var(--text3); margin-top:2px; }
   .timer { font-size:36px; font-weight:900; font-variant-numeric:tabular-nums; margin:4px 0; }
   .timer.critico { color:var(--red); }
   .barra { width:260px; height:5px; background:var(--bg3); border-radius:3px; overflow:hidden; margin-bottom:4px; }
@@ -202,6 +203,9 @@
   <!-- BUILD 2026-07-30-P13 -->
   <button onclick="arrancar()">▶ INICIAR</button>
   <button class="btn-secundario" onclick="mostrarTesteLista()">◎ Testar uma Playlist</button>
+  <!-- Atalho discreto para o Studio (curação de catálogo/playlists) — abre
+       numa nova aba, não interfere com o jogo em curso nesta aba. -->
+  <button class="btn-secundario" onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" style="font-size:11px;opacity:0.7;">⚙️ Studio</button>
   <p>Clica para autorizar o som (obrigatório uma vez, por causa das regras dos browsers).</p>
   <div id="teste-lista"></div>
 </div>
@@ -257,7 +261,13 @@
   </div>
   <div class="titulo-musica" id="m-titulo"></div>
   <div class="artista-musica" id="m-artista"></div>
-  <div class="trecho-label" id="trecho-label">TRECHO 1</div>
+  <!-- Reaproveita col.mosaico.categoria (já curado por playlist em
+       playlists.json — ver DECISIONS.md) como indicação do tipo de
+       resposta esperado nos momentos 1-7, não só no Mosaico (momento 8).
+       Escondida quando a playlist não tem `mosaico` (ex: Retrato de Vozes)
+       — ver carregarTrecho(). -->
+  <div class="resposta-esperada" id="resposta-esperada" style="display:none;"></div>
+  <div class="trecho-label" id="trecho-label">TRECHO A</div>
   <div class="timer" id="timer">15</div>
   <div class="barra"><div class="barra-fill" id="barra-fill" style="width:100%"></div></div>
   <div class="chave-resposta" id="chave-resposta">◆ Título OU Artista: —</div>
@@ -453,12 +463,12 @@ const COLLECTIONS = {
     mosaico: { categoria: 'Intérprete', pessoa: 'Carlos Santana', titulo: 'Smooth', artista: 'Santana', imagem: 'MOSAICO_SOLO.jpg', audio: 'MOSAICO_SOLO_a.mp3' }
   },
   CINEMA: {
-    // temExcertoUnico: um só excerto contínuo de 30s (trecho_a), sem Fast
-    // Forward nem troca para trecho_b a meio — ver tick()/iniciarFaixa()/
-    // atualizarTimerUI()/carregarTrecho(). Antes tocava Trecho A (15s) +
-    // FF + Trecho B (15s), o que recarregava o iframe do clip do YouTube a
-    // meio da faixa e fazia os créditos (título/canal) reaparecerem.
-    temExcertoUnico: true,
+    // Formato standard Trecho A/Gap/Trecho B, igual às outras playlists —
+    // ver carregarTrecho() (embedCinema respeita trechoAtual). Tinha um
+    // modo especial (temExcertoUnico: excerto único de 30s, trecho_a
+    // encadeado a trecho_b via audio.onended) removido em 2026-08-27 a
+    // pedido do utilizador (avançava sozinho aos 15s em vez dos 30s
+    // esperados — ver DECISIONS.md).
     nome: 'Cinema', descritivo: 'Edição Especial', playlistCodigo: 'CIN-001', universo: 'Media & Entretenimento', temBonus: false, dificuldade: 4,
     musicas: [
       { titulo:'Blade Runner (Love Theme)', artista:'Vangelis', a:'CINEMA_01_a.mp3', b:'CINEMA_01_b.mp3' },
@@ -551,7 +561,7 @@ const COLLECTIONS = {
     mosaico: { categoria: 'Artista', pessoa: 'Kavinsky', titulo: 'Nightcall', artista: 'Kavinsky', imagem: 'MOSAICO_SYN001.jpg', audio: 'MOSAICO_SYN001_a.mp3' }
   },
   PT_BAT: {
-    nome: 'Bateria Portuguesa', descritivo: 'Vol. 1', playlistCodigo: 'PT-BAT-001', universo: 'Geografia', temBonus: false, dificuldade: 4,
+    nome: 'Bateria Portuguesa', descritivo: 'Vol. 1', playlistCodigo: 'PT-BAT-001', universo: 'Solistas', temBonus: false, dificuldade: 4,
     musicas: [
       { titulo:'Cavalos de Corrida', artista:'UHF', a:'PT_BAT_01_a.mp3', b:'PT_BAT_01_b.mp3' },
       { titulo:'\u00c0 Minha Maneira', artista:'Xutos & Pontap\u00e9s', a:'PT_BAT_02_a.mp3', b:'PT_BAT_02_b.mp3' },
@@ -1620,7 +1630,7 @@ function iniciarFaixaTributo() {
     trechoAtual = 1;
     tempoRestante = JANELA_TRECHO;
     document.getElementById('m-titulo').textContent = pos.pergunta || 'Identifica a música';
-    definirTrechoLabel('TRECHO 1', 1);
+    definirTrechoLabel('TRECHO A', 1);
     document.getElementById('chave-resposta').textContent = `◆ Resposta: "${pos.chave}"${pos.dica ? ' — ' + pos.dica : ''}`;
     audio.src = pos.a + "?v=" + Date.now();
     audio.play().catch(() => {});
@@ -1750,9 +1760,17 @@ function carregarTrecho() {
   document.getElementById('m-titulo').textContent = '';
   document.getElementById('m-artista').textContent = '';
   definirTrechoLabel(
-    temImagem ? 'REVELAÇÃO EM CURSO' : temExcertoUnico ? 'EXCERTO (30s)' : 'TRECHO ' + trechoAtual,
+    temImagem ? 'REVELAÇÃO EM CURSO' : temExcertoUnico ? 'EXCERTO (30s)' : 'TRECHO ' + (trechoAtual === 1 ? 'A' : 'B'),
     (!temImagem && !temExcertoUnico) ? trechoAtual : undefined
   );
+  const respostaEsperadaEl = document.getElementById('resposta-esperada');
+  const categoriaMosaico = COLLECTIONS[collectionActual].mosaico && COLLECTIONS[collectionActual].mosaico.categoria;
+  if (categoriaMosaico) {
+    respostaEsperadaEl.textContent = `Resposta esperada: ${categoriaMosaico}`;
+    respostaEsperadaEl.style.display = '';
+  } else {
+    respostaEsperadaEl.style.display = 'none';
+  }
   if (collectionActual === 'CINEMA') {
     // Cinema & Música: além de Título/Artista, aceita-se também Compositor
     // (normalmente igual ao Artista aqui, mas fica explícito) e Filme.
@@ -1805,33 +1823,22 @@ function carregarTrecho() {
   if (embedCinema) {
     // Cinema com `clip`: vídeo do YouTube mudo (&mute=1, só imagem) e áudio
     // local arrancam ao mesmo tempo — o som é sempre o do MP3, nunca o do
-    // YouTube, para não haver duas fontes de áudio. Excerto único e
-    // contínuo de 30s a partir de trecho_a (temExcertoUnico — ver tick()):
-    // sem Fast Forward nem troca para trecho_b a meio, por isso este
-    // carregarTrecho() só corre uma vez por faixa e o iframe só carrega
-    // (e mostra créditos) uma única vez.
+    // YouTube, para não haver duas fontes de áudio. Formato standard
+    // Trecho A/Gap/Trecho B, igual às outras playlists (modo "excerto
+    // único" de 30s, com trecho_a encadeado a trecho_b via audio.onended,
+    // removido em 2026-08-27 — avançava sozinho aos 15s em vez dos 30s
+    // esperados). carregarTrecho() corre uma vez por Trecho (via
+    // fastForward()), por isso o iframe recarrega — e os créditos do
+    // YouTube reaparecem brevemente — na troca para o Trecho B; tradeoff
+    // aceite ao voltar ao formato standard.
     // O iframe fica invisível (opacity:0) nos primeiros ~4s do carregamento
     // — é o tempo que o YouTube demora a esconder o overlay de título/canal
     // que mostra ao arrancar, e que os masks CSS não cobrem por completo.
     clipWrap.style.display = 'block';
     clipIframe.src = `https://www.youtube.com/embed/${embedCinema.id}?start=${embedCinema.inicio}&autoplay=1&mute=1&enablejsapi=1`;
     cinemaClipFadeTimer = setTimeout(() => { clipWrap.style.opacity = '1'; }, 4000);
-    audio.src = m.a + "?v=" + Date.now();
+    audio.src = (trechoAtual === 1 ? m.a : m.b) + "?v=" + Date.now();
     audio.play().catch(() => {});
-    // Bug corrigido: trecho_a.ficheiro tem ~15s (cortado como "Trecho A"
-    // antes de existir o excerto único de 30s) — mais curto que a janela de
-    // 30s (JANELA_LOGO, ver tick()/iniciarFaixa()). Sem isto, o áudio
-    // acabava aos 15s e ficava em silêncio até ao fim da janela, embora o
-    // cronómetro continuasse a contar certo até aos 30s. Em vez de recortar
-    // ficheiros novos, encadeia trecho_b a seguir, sem tocar no iframe nem
-    // no timer — dá um excerto audível de facto com ~30s.
-    if (m.b) {
-      audio.onended = () => {
-        audio.onended = null;
-        audio.src = m.b + "?v=" + Date.now();
-        audio.play().catch(() => {});
-      };
-    }
   } else if (temImagem) {
     // Retrato Sonoro: áudio imediato
     audio.src = m.a + "?v=" + Date.now();
@@ -2022,7 +2029,7 @@ function fastForwardTributo() {
   tempoRestante = JANELA_TRECHO;
   const pos = musicasActuais[faixaAtual - 1];
   setTimeout(() => {
-    definirTrechoLabel('TRECHO 2', 2);
+    definirTrechoLabel('TRECHO B', 2);
     audio.src = pos.b + "?v=" + Date.now();
     audio.play().catch(() => {});
     atualizarTimerUI();

@@ -2142,7 +2142,7 @@
     "id": "bat_02",
     "titulo": "We Will Rock You",
     "artista": [
-      "Queen"
+      "Roger Taylor"
     ],
     "decadas": [
       "1970s"
@@ -2175,13 +2175,13 @@
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=-tJYN-eG1zk",
     "banda": "Queen",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/srxwyp1347980615.jpg",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/ttyvqr1378751676.jpg",
     "imagem_fonte": "theaudiodb",
     "imagem_credito": "TheAudioDB",
-    "imagem_url_origem": "https://www.theaudiodb.com/artist/111238",
-    "imagem_data_captura": "2026-08-26",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/118481",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar",
-    "imagem_risco_ambiguidade": true
+    "imagem_risco_ambiguidade": false
   },
   {
     "id": "bat_03",
@@ -3853,13 +3853,14 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/122594",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar",
-    "imagem_risco_ambiguidade": true
+    "imagem_risco_ambiguidade": true,
+    "nota_curadoria": "Artista não confirmado com confiança — banda mantida. Investigação preliminar (Wikipedia PT) não conseguiu determinar o baterista específico da gravação; precisa de fonte primária (arquivo/discografia), não Wikipedia. Ver TASKS.md."
   },
   {
     "id": "ptbat_02",
     "titulo": "À Minha Maneira",
     "artista": [
-      "Xutos & Pontapés"
+      "Kalú"
     ],
     "decadas": [
       "1990s"
@@ -3895,13 +3896,15 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/121404",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "banda": "Xutos & Pontapés",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_03",
     "titulo": "Sangue Oculto",
     "artista": [
-      "GNR"
+      "Tóli César Machado"
     ],
     "decadas": [
       "1980s"
@@ -3940,13 +3943,14 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/165245",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar",
-    "imagem_risco_ambiguidade": true
+    "imagem_risco_ambiguidade": true,
+    "banda": "GNR"
   },
   {
     "id": "ptbat_04",
     "titulo": "Capitão Romance",
     "artista": [
-      "Ornatos Violeta"
+      "Kinörm"
     ],
     "decadas": [
       "1990s"
@@ -3983,7 +3987,9 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/141412",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "banda": "Ornatos Violeta",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_05",
@@ -4026,13 +4032,14 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/141134",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar",
-    "imagem_risco_ambiguidade": true
+    "imagem_risco_ambiguidade": true,
+    "nota_curadoria": "Artista não confirmado com confiança — banda mantida. Investigação preliminar (Wikipedia PT) não conseguiu determinar o baterista específico da gravação; precisa de fonte primária (arquivo/discografia), não Wikipedia. Ver TASKS.md."
   },
   {
     "id": "ptbat_06",
     "titulo": "Cão",
     "artista": [
-      "Linda Martini"
+      "Hélio Morais"
     ],
     "decadas": [
       "2010s"
@@ -4070,13 +4077,15 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/131729",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "banda": "Linda Martini",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_07",
     "titulo": "Miúda",
     "artista": [
-      "Capitão Fausto"
+      "Salvador Seabra"
     ],
     "decadas": [
       "2010s"
@@ -4113,7 +4122,9 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/148665",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "banda": "Capitão Fausto",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_mosaico",

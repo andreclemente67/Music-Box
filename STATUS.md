@@ -1,7 +1,38 @@
 # Music Box — Status
 
 ## Última actualização
-2026-08-21
+2026-08-27
+
+## 2026-08-27 — "Bateria Portuguesa" reclassificada para o universo "Solistas"
+`STD.PT.ALL.BAT.001` tinha `universo: "Geografia"` apesar de ser
+conceptualmente uma playlist de Solo de Bateria, tal como a internacional
+(`STD.INT.ALL.BAT.001`) — causa raiz de as suas 7 faixas terem `artista` =
+banda em vez do baterista. Corrigido `universo` para `"Solistas"` em
+`playlists.json` e no literal `COLLECTIONS.PT_BAT` de `musicbox.html`
+(sobreposto em runtime pelo `playlists.json`, mas actualizado por
+consistência de código-fonte). Não muda a "família" mostrada no ecrã de
+escolha de playlist do jogo (continua `FAMILIA_GENEROS`, mapeamento
+separado do `universo`).
+
+Das 7 faixas (`ptbat_01`–`07`), 5 tiveram `artista` corrigido para o
+baterista real (confirmado por texto sourced da Wikipedia PT, não por
+memória): `ptbat_02` Kalú/Xutos & Pontapés, `ptbat_03` Tóli César
+Machado/GNR, `ptbat_04` Kinörm/Ornatos Violeta, `ptbat_06` Hélio
+Morais/Linda Martini, `ptbat_07` Salvador Seabra/Capitão Fausto — todas
+com `banda` preenchido, mesmo padrão de `solo_*`/`bat_*`. Nenhuma tem foto
+da pessoa disponível (TheAudioDB/Wikipedia/Wikimedia Commons sem
+resultado para nenhum dos 5 nomes) — ficou a foto da banda, com
+`imagem_risco_ambiguidade: true`.
+
+`ptbat_01` (UHF) e `ptbat_05` (RAMP) ficaram deliberadamente por
+confirmar — identidade do baterista específico não determinável com
+confiança a partir da Wikipedia (múltiplos bateristas sem datas claras).
+`artista` mantido como a banda, `imagem_risco_ambiguidade: true` +
+`nota_curadoria` novo campo a explicar o motivo. Detalhe em `TASKS.md`
+("Pendente (sessão 2026-08-27)").
+
+`af_verificarConsistenciaArtistaBanda()` (Studio, aba ASSETS) corrida
+antes e depois — 0 faixas sinalizadas depois da reclassificação.
 
 ## 2026-08-21 — 5 modos de geração em "Gerar com IA" (URL/Tema/Categoria/Semente múltipla/Playlist YouTube)
 Além do modo URL já existente: **Tema/Mood** (texto livre), **Categoria**

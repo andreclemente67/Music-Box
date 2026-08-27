@@ -308,6 +308,55 @@ def _theaudiodb_imagem_artista(artista):
     }
 
 
+def _theaudiodb_imagens_multiplas_artista(artista):
+    """Como _theaudiodb_imagem_artista, mas devolve TODAS as imagens úteis
+    do primeiro artista encontrado (retrato + até 4 fanarts), não só a
+    melhor — usado por GET /buscar-imagens-cascata para dar opções à
+    escolha no painel "Trocar imagem" do Studio, em vez de aplicar cegamente
+    a primeira boa (isso continua a ser o papel de
+    /buscar-imagem-artista, usado pela cascata automática em lote)."""
+    try:
+        dados = _get_json(f'https://www.theaudiodb.com/api/v1/json/2/search.php?s={quote(artista)}')
+    except Exception:
+        return []
+    artistas = dados.get('artists') or []
+    if not artistas:
+        return []
+    a = artistas[0]
+    id_artista = a.get('idArtist')
+    origem = f'https://www.theaudiodb.com/artist/{id_artista}' if id_artista else 'https://www.theaudiodb.com/'
+
+    campos = (
+        ('strArtistThumb', 'theaudiodb', 'TheAudioDB — retrato'),
+        ('strArtistFanart', 'theaudiodb_fanart', 'TheAudioDB — fanart 1'),
+        ('strArtistFanart2', 'theaudiodb_fanart', 'TheAudioDB — fanart 2'),
+        ('strArtistFanart3', 'theaudiodb_fanart', 'TheAudioDB — fanart 3'),
+        ('strArtistFanart4', 'theaudiodb_fanart', 'TheAudioDB — fanart 4'),
+    )
+    resultados = []
+    for campo, fonte, credito in campos:
+        url_img = a.get(campo)
+        if not url_img:
+            continue
+        try:
+            with urllib.request.urlopen(url_img, timeout=IMAGEM_ARTISTA_TIMEOUT) as resp:
+                img_bytes = resp.read()
+        except Exception:
+            continue
+        dim = _dimensoes_imagem(img_bytes)
+        if not dim or dim[0] < RESOLUCAO_MINIMA_IMAGEM or dim[1] < RESOLUCAO_MINIMA_IMAGEM:
+            continue
+        resultados.append({
+            'imagem': url_img,
+            'imagem_fonte': fonte,
+            'imagem_credito': credito,
+            'imagem_url_origem': origem,
+            'imagem_licenca_estado': 'confirmar',
+            'largura': dim[0], 'altura': dim[1],
+        })
+    return resultados
+
+
 def _licenca_commons_e_livre(nome_ficheiro):
     """Confirma (não assume) que um ficheiro do Wikimedia Commons tem
     licença livre reconhecida, via extmetadata — mesmo campo já lido em
@@ -478,6 +527,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == '/buscar-imagem-artista':
             self._buscar_imagem_artista(parsed)
             return
+        if parsed.path == '/buscar-imagens-cascata':
+            self._buscar_imagens_cascata(parsed)
+            return
 
         caminho_pedido = unquote(parsed.path)
         relativo = caminho_pedido.lstrip('/')
@@ -581,6 +633,37 @@ class Handler(BaseHTTPRequestHandler):
                 return
 
         self._enviar_json(404, {"ok": False, "erro": f"nenhuma fonte devolveu imagem ≥{RESOLUCAO_MINIMA_IMAGEM}x{RESOLUCAO_MINIMA_IMAGEM}px para {artista!r}"})
+
+    def _buscar_imagens_cascata(self, parsed):
+        # GET /buscar-imagens-cascata?artista=X — ao contrário de
+        # /buscar-imagem-artista (pára na 1ª fonte boa, devolve UMA imagem,
+        # pensado para aplicar automaticamente em lote), devolve TODAS as
+        # candidatas das fontes boas (TheAudioDB retrato+fanarts, Wikipedia
+        # infobox) para o painel "Trocar imagem" do Studio mostrar como
+        # opções por defeito ao abrir — a pesquisa livre do Wikimedia
+        # Commons deixa de ser o comportamento por omissão (pedido do
+        # utilizador, 2026-08-27 — ver DECISIONS.md).
+        params = parse_qs(parsed.query)
+        artista_bruto = (params.get('artista') or [''])[0].strip()
+        if not artista_bruto:
+            self._enviar_json(400, {"erro": "falta o parâmetro 'artista'"})
+            return
+        artista = _artista_principal(artista_bruto)
+
+        resultados = _theaudiodb_imagens_multiplas_artista(artista)
+        try:
+            wiki = _wikipedia_imagem_artista(artista)
+        except Exception as e:
+            wiki = None
+            print(f"[_servidor_escrita] _wikipedia_imagem_artista falhou para {artista!r}: {e}")
+        if wiki:
+            resultados.append(wiki)
+
+        hoje = datetime.now().strftime('%Y-%m-%d')
+        for r in resultados:
+            r['imagem_data_captura'] = hoje
+
+        self._enviar_json(200, {"ok": True, "resultados": resultados})
 
     def _enviar_texto(self, status, mensagem):
         payload = mensagem.encode('utf-8')
