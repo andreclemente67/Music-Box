@@ -603,5 +603,35 @@
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
+  },
+  "STD.INT.ALL.GAM.001": {
+    "tipo": "standard",
+    "nome": "Videojogos — Trilhas Sonoras",
+    "descritivo": "Trilhas Sonoras",
+    "playlistCodigo": "STD.INT.ALL.GAM.001",
+    "universo": "Videojogos",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "gam_01",
+      "gam_02",
+      "gam_03",
+      "gam_04",
+      "gam_05",
+      "gam_06",
+      "gam_07"
+    ],
+    "mosaico": {
+      "categoria": "Compositora",
+      "pessoa": "Yoko Shimomura",
+      "id": "gam_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }
