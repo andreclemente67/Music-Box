@@ -213,7 +213,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114078",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "80_06",
@@ -329,13 +330,13 @@
     },
     "trecho_b": null,
     "full": "MOSAICO_ANOS80.mp3",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qsrpru1479331864.jpg",
+    "imagem": "artista_80_mosaico.png",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-07",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111278",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -368,7 +369,7 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qvyyuu1414273386.jpg",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/4/41/Frank_Sinatra_%281957%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
@@ -378,7 +379,7 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/119238",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "livre"
   },
   {
     "id": "ret_02",
@@ -407,14 +408,14 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/t4ledf1741080085.jpg",
+    "imagem": "artista_ret_02.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=vGJTaP6anOU",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111248",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -447,14 +448,14 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/57zgbr1755109044.jpg",
+    "imagem": "artista_ret_03.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=_Jtpf8N5IDE",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114476",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -527,7 +528,7 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qpxuqt1345562631.jpg",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/5/52/Whitney_Houston_%28cropped3%29.JPEG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
@@ -537,7 +538,7 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/112696",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "livre"
   },
   {
     "id": "ret_06",
@@ -566,14 +567,14 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/9o30sk1687869267.jpg",
+    "imagem": "artista_ret_06.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=DtVBCG6ThDk",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111256",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -606,14 +607,14 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/vqppvw1453144155.jpg",
+    "imagem": "artista_ret_07.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=G3o4RF0PCBU",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/131721",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -646,14 +647,14 @@
     },
     "trecho_b": null,
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wqvrup1363521389.jpg",
+    "imagem": "artista_ret_08.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=N4d7Wp9kKjA",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111444",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -733,9 +734,9 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=QBFbbqhVCwA",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xrprvs1366388620.jpg",
+    "imagem": "artista_pt_01.jpg",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/118744",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -819,9 +820,9 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=Jn_dTBh7RUY",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/urtpwr1413322651.jpg",
+    "imagem": "artista_pt_03.png",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/132587",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -868,7 +869,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/165245",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "pt_05",
@@ -907,9 +909,9 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=mSuGVBGVhAE",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/yqwyuy1420844284.jpg",
+    "imagem": "artista_pt_05.jpg",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/119752",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -1076,10 +1078,10 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=QkF3oxziUI4",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/or3yck1710390974.jpg",
+    "imagem": "artista_solo_01.jpg",
     "banda": "Led Zeppelin",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/112653",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -1120,10 +1122,10 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=EqPtz5qN7HM",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/upyvur1364078947.jpg",
+    "imagem": "artista_solo_02.jpeg",
     "banda": "Eagles",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/117068",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -1164,13 +1166,13 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=54W8kktFE_o",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rxyryt1512688909.jpg",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/f/f2/David_Gilmour_Argentina_2015_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "banda": "Pink Floyd",
     "imagem_fonte": "theaudiodb",
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111704",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "livre"
   },
   {
     "id": "solo_04",
@@ -1207,10 +1209,10 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=XyMBPaSEFpk",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/van-halen-eddie-50ce02a2a0ff0.jpg",
+    "imagem": "artista_solo_04.jpeg",
     "banda": "Van Halen",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114367",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -1251,13 +1253,13 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=ue5jDt_n-Ys",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xuqsrw1385847758.jpg",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Jimi_Hendrix_%281967%29_%28cropped%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "banda": null,
     "imagem_fonte": "theaudiodb",
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111468",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "livre"
   },
   {
     "id": "solo_06",
@@ -1296,10 +1298,10 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=TSaThijSB1c",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/1v70pb1678817888.jpg",
+    "imagem": "artista_solo_06.jpeg",
     "banda": "Derek and the Dominos",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111431",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -1339,10 +1341,10 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=H-IIiEjBuMc",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xxxxtu1385856091.jpg",
+    "imagem": "artista_solo_07.jpg",
     "banda": null,
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/112195",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -1374,7 +1376,7 @@
     },
     "trecho_b": null,
     "full": "MOSAICO_SOLO_a.mp3",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/50k29c1753318508.jpg",
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/5/54/Santana_2010.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
@@ -1383,7 +1385,7 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111310",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "livre"
   },
   {
     "id": "cinema_01",
@@ -1964,7 +1966,8 @@
     "imagem_fonte": "theaudiodb",
     "imagem_licenca_estado": "confirmar",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111416",
-    "imagem_data_captura": "2026-08-26"
+    "imagem_data_captura": "2026-08-26",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ame_06",
@@ -2006,7 +2009,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114279",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ame_07",
@@ -2079,13 +2083,13 @@
     },
     "trecho_b": null,
     "full": "MOSAICO_AMERICANA.mp3",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rxqyxx1483806891.jpg",
+    "imagem": "artista_ame_mosaico.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111372",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -2176,7 +2180,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111238",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "bat_03",
@@ -2435,7 +2440,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111319",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "a10_01",
@@ -2475,11 +2481,11 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=HL1UzIK-flA",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/e7/ba/c3/e7bac380-e05a-5942-e576-cf426e4c41f2/21UMGIM55277.rgb.jpg/600x600bb.jpg",
-    "imagem_fonte": "itunes_artist",
-    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
-    "imagem_url_origem": "https://music.apple.com/us/album/drake/1572737677?i=1572737688&uo=4",
-    "imagem_data_captura": "2026-08-26",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/1k2c431756300759.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111305",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
   },
   {
@@ -2563,11 +2569,11 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=OPf0YbXqDm0",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7e/30/c5/7e30c572-aa47-5f7b-c6fd-42d50cd2c56d/886444959797.jpg/600x600bb.jpg",
-    "imagem_fonte": "itunes_artist",
-    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
-    "imagem_url_origem": "https://music.apple.com/us/album/uptown-funk-feat-bruno-mars/943946661?i=943946671&uo=4",
-    "imagem_data_captura": "2026-08-26",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/7hhjw81749814740.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/112372",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
   },
   {
@@ -2655,7 +2661,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111493",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "a10_06",
@@ -2855,14 +2862,14 @@
       "fim": null
     },
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/ylubtr1667646065.jpg",
+    "imagem": "artista_pt80_02.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=w3mf2Gu8FXo",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/173338",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
@@ -3080,7 +3087,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/122630",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "pt80_mosaico",
@@ -3118,7 +3126,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/122594",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "bra001_01",
@@ -3493,16 +3502,17 @@
       "fim": null
     },
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wuvvru1386288633.jpg",
+    "imagem": "artista_syn001_01.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114021",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": false
   },
   {
     "id": "syn001_02",
@@ -3535,16 +3545,16 @@
       "fim": null
     },
     "full": null,
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/d8/41/05/d8410576-a78b-21c3-2649-02e94b474630/cover.jpg/600x600bb.jpg",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/g2vu0f1737829658.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=oX8WXJMJ6_Q",
-    "imagem_fonte": "itunes_artist",
-    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
-    "imagem_url_origem": "https://music.apple.com/us/album/a-real-hero-feat-electric-youth/347480488?i=347480516&uo=4",
-    "imagem_data_captura": "2026-08-26",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB — foto de Electric Youth (não de College, que não deu foto real de pessoa em nenhuma fonte)",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/135377",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
   },
   {
@@ -3669,12 +3679,13 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=8GW6sLrK40k",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/sstruu1413617318.jpg",
+    "imagem": "artista_syn001_05.png",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/132651",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": false
   },
   {
     "id": "syn001_06",
@@ -3748,17 +3759,18 @@
       "fim": null
     },
     "full": null,
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qpsqps1396019634.jpg",
+    "imagem": "artista_syn001_07.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=3sKVe3BpHkY",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/121569",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": false
   },
   {
     "id": "syn001_mosaico",
@@ -3787,16 +3799,17 @@
     },
     "trecho_b": null,
     "full": "MOSAICO_SYN001_a.mp3",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/cm3f321658644277.jpg",
+    "imagem": "artista_syn001_mosaico.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/115567",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": false
   },
   {
     "id": "ptbat_01",
@@ -3839,7 +3852,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/122594",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_02",
@@ -3925,7 +3939,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/165245",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_04",
@@ -4010,7 +4025,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/141134",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "ptbat_06",
@@ -4226,9 +4242,7 @@
     "id": "beatles_03",
     "titulo": "The End (Trocas de Solo de Guitarra)",
     "artista": [
-      "Lennon",
-      "McCartney",
-      "Harrison"
+      "The Beatles"
     ],
     "decadas": [
       "1960s"
@@ -4258,11 +4272,11 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/65/f9/05/65f9056d-fa26-79c5-5127-8c579713ead5/mzi.phjbeynw.jpg/600x600bb.jpg",
-    "imagem_fonte": "itunes_artist",
-    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
-    "imagem_url_origem": "https://music.apple.com/us/album/while-my-guitar-gently-weeps-live/477066806?i=477067012&uo=4",
-    "imagem_data_captura": "2026-08-26",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qpvwuv1347996168.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111247",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
   },
   {
@@ -4293,15 +4307,15 @@
     },
     "trecho_b": null,
     "full": "BEATLES_04_full.mp3",
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/01/69/02/01690216-48fc-1c54-b1de-48170d16b1c3/00602567725268.rgb.jpg/600x600bb.jpg",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qpvwuv1347996168.jpg",
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
-    "imagem_fonte": "itunes_artist",
-    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
-    "imagem_url_origem": "https://music.apple.com/us/album/get-back/1441133181?i=1441134400&uo=4",
-    "imagem_data_captura": "2026-08-26",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB — mesma foto oficial já usada em beatles_03 (mesmo intérprete, The Beatles)",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111247",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
   },
   {
@@ -4613,7 +4627,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/165245",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "the_durutti_column_sketch_for_summer",
@@ -5177,7 +5192,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/113657",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "kate_bush_running_up_that_hill",
@@ -5351,7 +5367,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111238",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "eagles_hotel_california",
@@ -5396,7 +5413,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111416",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "led_zeppelin_stairway_to_heaven",
@@ -5609,7 +5627,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111615",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "arctic_monkeys_do_i_wanna_know",
@@ -5744,7 +5763,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/113657",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "disclosure_latch",
@@ -5785,11 +5805,11 @@
     "curador": "",
     "data": "2026-08-26",
     "video": null,
-    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/57/93/e0/5793e0d6-4877-e015-ef54-3fd4eff87344/14UMGIM12348.rgb.jpg/600x600bb.jpg",
-    "imagem_fonte": "itunes_artist",
-    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
-    "imagem_url_origem": "https://music.apple.com/us/album/latch/1440862011?i=1440862129&uo=4",
-    "imagem_data_captura": "2026-08-26",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/uywuyx1366138373.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/118619",
+    "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
   },
   {
@@ -5835,7 +5855,8 @@
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/112342",
     "imagem_data_captura": "2026-08-26",
-    "imagem_licenca_estado": "confirmar"
+    "imagem_licenca_estado": "confirmar",
+    "imagem_risco_ambiguidade": true
   },
   {
     "id": "arcade_fire_my_body_is_a_cage",

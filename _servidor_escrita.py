@@ -234,6 +234,22 @@ def _get_json(url, timeout=IMAGEM_ARTISTA_TIMEOUT):
         return json.loads(resp.read().decode('utf-8'))
 
 
+def _artista_principal(artista):
+    """Para pesquisa: usa só o primeiro nome quando o artista tem vários
+    juntos por " / " — o único separador que artistaTexto() usa no cliente
+    para juntar t.artista[]. Nunca faz parte do nome de um único acto (ver
+    SESSAO_2026_08_10.md §4: "Xutos & Pontapés"/"Guns N' Roses" ficam array
+    de 1 elemento, propositadamente não partidos — por isso dividir aqui só
+    por " / " nunca corta um nome real ao meio).
+
+    Descoberto em 2026-08-26/27 ao investigar a10_01 ("Rihanna / Drake") e
+    beatles_03 ("Lennon / McCartney / Harrison"): pesquisar a string
+    composta inteira dá resultados errados ou aleatórios (capa de artista
+    não relacionado, compilação-tributo) — usar só o primeiro nome dá muito
+    melhor taxa de acerto nas fontes todas (iTunes/TheAudioDB/Wikipedia)."""
+    return artista.split(' / ')[0].strip()
+
+
 def _itunes_imagem_artista(artista):
     # NOTA HONESTA: a API gratuita da iTunes não devolve fotos de artista,
     # só artwork de álbum/single — usado aqui como aproximação, sinalizado
@@ -541,10 +557,11 @@ class Handler(BaseHTTPRequestHandler):
         # fonte com resultado ≥300x300px; cada função de fonte já faz a
         # sua própria verificação de resolução.
         params = parse_qs(parsed.query)
-        artista = (params.get('artista') or [''])[0].strip()
-        if not artista:
+        artista_bruto = (params.get('artista') or [''])[0].strip()
+        if not artista_bruto:
             self._enviar_json(400, {"erro": "falta o parâmetro 'artista'"})
             return
+        artista = _artista_principal(artista_bruto)
 
         # Ordem revista em 2026-08-26, depois de testar 5 artistas: TheAudioDB
         # acertou 5/5 (foto real), Wikipedia 3/5 (uma delas com licença por

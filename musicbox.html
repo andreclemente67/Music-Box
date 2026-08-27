@@ -302,6 +302,12 @@
   <div class="mosaico-grelha" id="mosaico-grelha"></div>
   <div class="mosaico-timer-ms" id="mosaico-timer-ms">3</div>
   <div class="mosaico-status" id="mosaico-status">—</div>
+  <!-- "◉ Revelar" do Mosaico — réplica de #cinema-revelar-btn (momentos 1-7,
+       ver revelarInfo()/carregarTrecho()) para o momento 8, que ficava sem
+       este botão por correr num fluxo à parte (iniciarMosaico(), não passa
+       por carregarTrecho()). Ver revelarInfoMosaico(). -->
+  <button id="mosaico-revelar-btn" onclick="revelarInfoMosaico()" style="display:none;margin-top:4px;padding:6px 14px;border-radius:6px;border:1px solid var(--border2);background:var(--bg2);color:var(--accent);font-size:12px;cursor:pointer;">◉ Revelar</button>
+  <div id="mosaico-revelar-painel" style="display:none;margin-top:8px;padding:10px 14px;border-radius:6px;background:var(--bg2);border:1px solid var(--border2);font-size:13px;line-height:1.6;"></div>
   <div class="mosaico-acoes">
     <button id="btn-revelacao" onclick="avancarRevelacao()">⏭ Revelação terminada → Morte Súbita</button>
     <button onclick="revelarMosaicoCompleto()" title="Mostra a imagem toda de imediato — controlo manual do operador, independente da revelação automática por acertos">▦ Revelar Mosaico Completo</button>
@@ -1705,6 +1711,25 @@ function revelarInfo() {
   painel.style.display = 'block';
 }
 
+// Réplica de revelarInfo() para o Mosaico (momento 8) — ver botão
+// #mosaico-revelar-btn em iniciarMosaico(). Mostra Título/Categoria/Pessoa
+// da faixa dedicada do Mosaico (col.mosaico), sem tocar na grelha de
+// quadrados nem em revelarMosaicoCompleto() (que só revela a imagem).
+function revelarInfoMosaico() {
+  const infoMosaico = COLLECTIONS[collectionActual].mosaico;
+  if (!infoMosaico) return;
+  const painel = document.getElementById('mosaico-revelar-painel');
+  if (!painel) return;
+
+  if (painel.style.display === 'block') {
+    painel.style.display = 'none';
+    return;
+  }
+
+  painel.innerHTML = `<strong>Título:</strong> ${infoMosaico.titulo}<br><strong>${infoMosaico.categoria}:</strong> ${infoMosaico.pessoa}`;
+  painel.style.display = 'block';
+}
+
 let cinemaClipFadeTimer = null;
 
 // Indicador visual de qual trecho está realmente a tocar — Trecho A a
@@ -2242,6 +2267,10 @@ function iniciarMosaico() {
     `Quadrados conquistados: ${quadradosGanhos.filter(Boolean).length} de 8. A revelar...`;
   animarRevelacaoGrelha();
   atualizarBotaoRevelacao();
+  const revelarBtnM8 = document.getElementById('mosaico-revelar-btn');
+  if (revelarBtnM8) revelarBtnM8.style.display = 'inline-block';
+  const revelarPainelM8 = document.getElementById('mosaico-revelar-painel');
+  if (revelarPainelM8) revelarPainelM8.style.display = 'none';
 }
 
 function confirmarMosaicoAcerto(i) {

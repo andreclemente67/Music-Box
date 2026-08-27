@@ -697,6 +697,22 @@
     background: var(--bg3);
     border: 1px solid var(--border);
   }
+  .posicao-thumb-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+  .risco-ambiguidade-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 12px;
+    line-height: 1;
+    background: #2a2a2a;
+    border-radius: 50%;
+    padding: 2px;
+    pointer-events: auto;
+  }
   .posicao-thumb-placeholder {
     width: 56px;
     height: 56px;
@@ -2533,6 +2549,12 @@ function escapeHtml(s) {
 }
 function escapeAttr(s) { return String(s ?? '').replace(/'/g, ''); }
 
+function riscoAmbiguidadeBadgeHtml(t) {
+  return (t && t.imagem_risco_ambiguidade === true)
+    ? `<span class="risco-ambiguidade-badge" title="Nome de artista ambíguo — confirmar se a foto é da pessoa certa">⚠️</span>`
+    : '';
+}
+
 function updateStats() {
   const total = CATALOGO.length;
   const cols = Object.keys(PLAYLISTS).length;
@@ -3228,9 +3250,9 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
       <span class="drag-handle">⠿</span>
       <span class="posicao-num">${extraLabel}</span>
       <span class="posicao-tipo-badge ${tipoBadge}">${kind==='mosaico'?'mosaico':'audio'}</span>
-      ${hasImg
+      <span class="posicao-thumb-wrap">${hasImg
         ? `<img class="posicao-thumb" src="${escapeAttr(t.imagem)}" alt="" loading="lazy">`
-        : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}
+        : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}</span>
       <div class="posicao-info">
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
         <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
@@ -3744,6 +3766,8 @@ function abrirPesquisaImagem(faixaId, artista, titulo) {
           <input type="text" id="img-manual-input" placeholder="https://..."
             onkeydown="if(event.key==='Enter') usarImagemManual();">
           <button class="btn" onclick="usarImagemManual()">✓ Usar</button>
+          <button class="btn" onclick="document.getElementById('img-local-input').click()">📁 Escolher do computador</button>
+          <input type="file" id="img-local-input" accept="image/*" style="display:none" onchange="onImagemLocalEscolhida(this)">
         </div>
       </div>
     </div>`;
@@ -3837,6 +3861,7 @@ function usarImagemWikimedia(indice) {
 
   t.imagem = resultado.fullUrl;
   t.imagem_licenca_estado = 'livre';
+  t.imagem_risco_ambiguidade = false;
   CATALOGO_PATCH.set(t.id, t);
 
   fecharPesquisaImagem();
@@ -4050,21 +4075,70 @@ function usarImagemManual() {
   t.imagem = url;
   t.imagem_licenca_estado = 'confirmar';
   t.imagem_credito = 'URL manual — licença por confirmar antes de uso público';
+  t.imagem_risco_ambiguidade = false;
   CATALOGO_PATCH.set(t.id, t);
   markDirty();
 
+  // fecharPesquisaImagem() já avança a fila sozinha (IMG_FAIXA_FILA) quando
+  // há uma revisão em lote em curso — chamá-lo aqui e DEPOIS avançar outra
+  // vez saltava uma faixa a cada "✓ Usar" (bug corrigido em 2026-08-27,
+  // reparado ao construir onImagemLocalEscolhida(), que já não o replicava).
   fecharPesquisaImagem();
-
-  if (IMG_FAIXA_FILA && IMG_FAIXA_FILA.length > 0) {
-    const proxima = IMG_FAIXA_FILA.shift();
-    abrirPesquisaImagem(proxima.id, artistaTexto(proxima), proxima.titulo);
-  } else {
-    IMG_FAIXA_FILA = [];
-  }
 
   if (selectedSlot) renderDetail();
   renderMontagem();
   notify(`Imagem de "${t.titulo}" guardada — inclui-se em catalogo_patch.json ao guardar`, 'ok');
+}
+
+// Botão "📁 Escolher do computador" no painel de pesquisa/troca de imagem.
+// Reaproveita o endpoint /upload já existente (usado por
+// onFotoArtistaSelecionada() no painel de detalhe) e a mesma convenção de
+// nome — artista_<id>.<ext> — em vez de um endpoint novo: já está na
+// whitelist do servidor (NOME_UPLOAD_REGEX) e, por ser determinístico por
+// id, um novo upload para a MESMA faixa substitui sempre o ficheiro
+// anterior (os.replace no servidor) — nunca há "já existe, sobrescrevo?"
+// a perguntar, porque é sempre essa a intenção de trocar a imagem.
+async function onImagemLocalEscolhida(inputEl) {
+  const file = inputEl.files && inputEl.files[0];
+  if (!file || !IMG_FAIXA_ALVO) { inputEl.value = ''; return; }
+
+  const t = CATALOGO_BY_ID.get(IMG_FAIXA_ALVO);
+  if (!t) { inputEl.value = ''; return; }
+
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (!['jpg', 'jpeg', 'png'].includes(ext)) {
+    notify('Só ficheiros JPEG ou PNG.', 'err');
+    inputEl.value = '';
+    return;
+  }
+
+  const nomeFicheiro = `artista_${t.id}.${ext}`;
+  try {
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/upload?ficheiro=${encodeURIComponent(nomeFicheiro)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      body: file
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' — ' + (await r.text().catch(() => '')));
+
+    t.imagem = nomeFicheiro;
+    t.imagem_licenca_estado = 'confirmar';
+    t.imagem_credito = 'Ficheiro local carregado manualmente';
+    t.imagem_risco_ambiguidade = false;
+    CATALOGO_PATCH.set(t.id, t);
+    markDirty();
+
+    fecharPesquisaImagem();
+    if (selectedSlot) renderDetail();
+    renderMontagem();
+    renderFototeca();
+    notify(`Imagem de "${t.titulo}" gravada em app/${nomeFicheiro} — inclui-se em catalogo_patch.json ao guardar`, 'ok');
+  } catch (e) {
+    notify('Não foi possível enviar a imagem — o _servidor_escrita.py (porta 8002) está a correr?', 'err');
+    console.error('[onImagemLocalEscolhida]', e);
+  } finally {
+    inputEl.value = '';
+  }
 }
 
 function renderSlotsSimples(pl) {
@@ -4123,9 +4197,9 @@ function renderPosicoesTributo(pl) {
         <span class="drag-handle">⠿</span>
         <span class="posicao-num">${String(p.pos).padStart(2,'0')}</span>
         <span class="posicao-tipo-badge tipo-${p.tipo}">${p.tipo}</span>
-        ${hasImg
+        <span class="posicao-thumb-wrap">${hasImg
           ? `<img class="posicao-thumb" src="${escapeAttr(imgUrl)}" alt="" loading="lazy">`
-          : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}
+          : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}</span>
         <div class="posicao-info">
           <div class="posicao-titulo">${escapeHtml(titulo)}</div>
           <div class="posicao-artista">${escapeHtml(artista)}</div>
@@ -6416,7 +6490,7 @@ function renderFototeca() {
       ? `<span style="color:#e0a030;font-size:13px;" title="Imagem colada manualmente — confirmar licença de uso antes de lançamento público">⚠️</span>`
       : '';
     return `<div class="fototeca-card">
-      ${thumb}
+      <span class="posicao-thumb-wrap">${thumb}${riscoAmbiguidadeBadgeHtml(t)}</span>
       <div class="fototeca-artista">${escapeHtml(artistaTexto(t))}${aviso}</div>
       <div class="fototeca-titulo">${escapeHtml(t.titulo)}</div>
       <button class="timing-btn" onclick="fototecaTrocarImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar</button>
