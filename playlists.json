@@ -543,5 +543,35 @@
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
+  },
+  "STD.INT.ALL.MET.001": {
+    "tipo": "standard",
+    "nome": "Metal",
+    "descritivo": "Clássicos",
+    "playlistCodigo": "STD.INT.ALL.MET.001",
+    "universo": "Metal",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "metal_01",
+      "metal_02",
+      "metal_03",
+      "metal_04",
+      "metal_05",
+      "metal_06",
+      "metal_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Bruce Dickinson",
+      "id": "metal_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }
