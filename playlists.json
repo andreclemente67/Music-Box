@@ -483,5 +483,35 @@
     "mosaico": null,
     "estado": "piloto_protótipo",
     "nota_curadoria": "NÃO APROVADA PARA EMISSÃO REAL. Imagens são logótipos/emblemas oficiais de marcas registadas (Nirvana, Guns N' Roses, Aerosmith, Iron Maiden, Motörhead, Grateful Dead, Pink Floyd, Rolling Stones) — direitos de marca não confirmados, ao contrário de fotos de artista (só \"confirmar\"/\"livre\"). Só para testes internos do mecanismo de Retrato Logótipo (temLogo). Ver Bíblia 27.15."
+  },
+  "STD.INT.ALL.ROC.001": {
+    "tipo": "standard",
+    "nome": "Rock — Clássicos",
+    "descritivo": "Clássicos",
+    "playlistCodigo": "STD.INT.ALL.ROC.001",
+    "universo": "Rock",
+    "temBonus": false,
+    "dificuldade": 1,
+    "musicas": [
+      "rock_01",
+      "rock_02",
+      "rock_03",
+      "rock_04",
+      "rock_05",
+      "rock_06",
+      "rock_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Bruce Springsteen",
+      "id": "rock_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }
