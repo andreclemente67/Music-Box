@@ -3876,7 +3876,15 @@ async function af_carregarResultadosCascata() {
   IMG_RESULTADOS_CASCATA = [];
 
   try {
-    const r = await fetch(`/buscar-imagens-cascata?artista=${encodeURIComponent(artista)}`);
+    // `contexto` (o campo `banda`, quando existir) só é usado pelo
+    // servidor se TheAudioDB/Wikipedia não devolverem nada — desambigua a
+    // pesquisa geral de recurso (DuckDuckGo) para nomes curtos/comuns, ex.
+    // "Kalú" sozinho arrisca-se a devolver lixo, "Kalú Xutos & Pontapés"
+    // não. Ver af_buscarImagensCascata() no servidor, Bíblia Cap. 27.14.
+    const contexto = (t && t.banda) ? t.banda : '';
+    const urlBusca = `/buscar-imagens-cascata?artista=${encodeURIComponent(artista)}`
+      + (contexto ? `&contexto=${encodeURIComponent(contexto)}` : '');
+    const r = await fetch(urlBusca);
     const dados = await r.json();
     if (!r.ok || !dados.ok) throw new Error(dados.erro || ('HTTP ' + r.status));
 
@@ -3899,12 +3907,14 @@ async function af_carregarResultadosCascata() {
       IMG_RESULTADOS_CASCATA.sort((a, b) => (a.fonte === 'theaudiodb_fanart' ? 0 : 1) - (b.fonte === 'theaudiodb_fanart' ? 0 : 1));
     }
 
-    status.textContent = IMG_RESULTADOS_CASCATA.length ? ''
-      : 'Sem imagens nas fontes automáticas — tenta "Pesquisar mais no Wikimedia" abaixo, ou um URL manual.';
+    const veioDaPesquisaGeral = IMG_RESULTADOS_CASCATA.length > 0 && IMG_RESULTADOS_CASCATA[0].fonte === 'web_geral';
+    status.textContent = IMG_RESULTADOS_CASCATA.length
+      ? (veioDaPesquisaGeral ? '⚠ TheAudioDB/Wikipedia sem resultado — isto é pesquisa geral na web, confirma bem antes de usar.' : '')
+      : 'Sem imagens em nenhuma fonte automática — tenta "Pesquisar mais no Wikimedia" abaixo, ou um URL manual.';
     grid.innerHTML = IMG_RESULTADOS_CASCATA.map((img, i) => `
       <div class="img-thumb-wrap" title="${escapeAttr(img.credito)}">
         <img src="${escapeAttr(img.thumbUrl)}" alt="${escapeAttr(img.credito)}" loading="lazy">
-        <div class="img-thumb-credito">${escapeHtml(img.credito)}</div>
+        <div class="img-thumb-credito">${img.fonte === 'web_geral' ? '🌐 ' : ''}${escapeHtml(img.credito)}</div>
         <button class="img-thumb-usar" onclick="af_usarImagemCascata(${i})">✓ Usar</button>
       </div>`).join('');
   } catch (e) {

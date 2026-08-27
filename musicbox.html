@@ -221,7 +221,14 @@
       style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;">← Playlists</button>
     <h1>MUSIC BOX <sup style="font-size:0.6em;">®</sup></h1>
   </div>
-  <div class="badge" id="fase-badge">RONDA 1 · PLAYLIST 1</div>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="badge" id="fase-badge">RONDA 1 · PLAYLIST 1</div>
+    <!-- Mesmo botão do #start-overlay, aqui na barra .topo (sempre presente
+         no DOM — ver nota acima do "← Playlists") para ficar acessível a
+         partir de qualquer ecrã principal, não só do arranque. -->
+    <button onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" title="Abre o Studio numa nova aba"
+      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;">⚙️ Studio</button>
+  </div>
 </div>
 <!-- BUILD 2026-07-30-P13 — CINEMA corrigido · temBonus off · Lawrence of Arabia -->
 

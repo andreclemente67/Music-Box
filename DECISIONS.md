@@ -1029,3 +1029,40 @@ Queen). A regra geral "Artista/Banda" continua a aplicar-se a todos os
 outros tipos de playlist (standard, mosaicos temáticos, etc.).
 
 Registado para evitar que um audit futuro "corrija" isto por engano.
+
+## 2026-08-27 — Pesquisa geral na web (DuckDuckGo) como último recurso da cascata de imagem
+
+Regra permanente (Bíblia, Cap. 27.14): a cascata de imagem de artista
+(`_theaudiodb_imagem_artista` → `_wikipedia_imagem_artista` →
+`_itunes_imagem_artista`) tem cobertura fraca do Catálogo Local — músicos
+portugueses menos conhecidos internacionalmente (ex.: Kalú/Xutos &
+Pontapés, Fernando Tordo, Alexandre Frazão) raramente têm entrada em
+TheAudioDB ou artigo próprio na Wikipedia. A API da Bing Image Search
+(única alternativa prevista) foi descontinuada pela Microsoft em
+2025-08-11 (ver `_bing_imagem_artista`), e o Google Custom Search JSON API
+é pago e precisa de credenciais.
+
+**Solução escolhida:** scraping do próprio motor de imagens da
+DuckDuckGo (`duckduckgo.com/i.js`), sem chave nem custos — por trás,
+devolve resultados do Bing na mesma, sem a API paga. Testado ao vivo em
+2026-08-27 com 3 casos reais (Kalú+contexto, Fernando Tordo, Alexandre
+Frazão), todos com resultados utilizáveis. É scraping não-documentado
+oficialmente — pode parar de funcionar sem aviso se a DuckDuckGo mudar o
+mecanismo; falha sempre para o lado seguro (lista vazia).
+
+**Regra de segurança inegociável:** ao contrário das outras fontes da
+cascata (aplicadas automaticamente por `af_aplicarMelhorImagemArtista()`
+via `GET /buscar-imagem-artista`), os resultados da pesquisa geral **nunca
+são aplicados automaticamente**. Só entram em
+`_duckduckgo_imagens_artista()`, chamada exclusivamente por `GET
+/buscar-imagens-cascata` (o endpoint da grelha de revisão manual no
+painel "Trocar imagem" do Studio), e só quando TheAudioDB e Wikipedia não
+devolvem nada. `/buscar-imagem-artista` (a cascata automática em lote)
+nunca chama esta função — mantém-se TheAudioDB → Wikipedia → iTunes →
+Bing (stub morto). Resultados desta fonte ficam marcados
+`imagem_fonte: "web_geral"`, com selo 🌐 e aviso explícito no painel para
+o curador confirmar bem antes de escolher.
+
+Novo parâmetro opcional `contexto` em `GET /buscar-imagens-cascata`
+(ex.: o campo `banda` da faixa) — desambigua nomes curtos/comuns antes de
+consultar o DuckDuckGo (ex. "Kalú Xutos & Pontapés" em vez de só "Kalú").

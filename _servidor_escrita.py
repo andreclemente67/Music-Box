@@ -496,6 +496,75 @@ def _bing_imagem_artista(artista):
     return None
 
 
+DDG_IMAGENS_TIMEOUT = 15
+DDG_MAX_RESULTADOS = 6
+
+
+def _duckduckgo_imagens_artista(query):
+    """Pesquisa geral de imagens (scraping do DuckDuckGo, sem API key nem
+    custos) — último recurso da cascata, para quando TheAudioDB e
+    Wikipedia não têm cobertura do artista (tipicamente Catálogo Local —
+    músicos portugueses menos conhecidos internacionalmente, ex.: Kalú/
+    Xutos & Pontapés, Fernando Tordo, Alexandre Frazão). Confirmado
+    funcional em 2026-08-27, depois de a Bing Image Search API ter sido
+    descontinuada (ver _bing_imagem_artista acima) — o DuckDuckGo tem o seu
+    próprio endpoint de imagens (i.js) que, por trás, ainda usa resultados
+    do Bing, sem precisar de chave nenhuma — só de um token `vqd` obtido
+    num pedido prévio à página de pesquisa. Padrão conhecido de scraping,
+    não documentado oficialmente pela DuckDuckGo — pode parar de funcionar
+    sem aviso se mudarem o mecanismo; falha sempre para o lado seguro
+    (devolve lista vazia, nunca lança excepção para quem chama).
+
+    IMPORTANTE: ao contrário das outras fontes da cascata, os resultados
+    daqui NUNCA são aplicados automaticamente — só alimentam a grelha de
+    revisão manual em GET /buscar-imagens-cascata (ver Bíblia, Cap.
+    27.14). Por isso este teste de resolução usa as dimensões que a
+    própria API já devolve, sem descarregar cada imagem para confirmar
+    (ao contrário de _theaudiodb_imagens_multiplas_artista) — é só para
+    pré-visualização, o utilizador vê a miniatura real antes de escolher."""
+    try:
+        pagina_url = f'https://duckduckgo.com/?{urlencode({"q": query, "iax": "images", "ia": "images"})}'
+        req = urllib.request.Request(pagina_url, headers={'User-Agent': APP_USER_AGENT})
+        with urllib.request.urlopen(req, timeout=DDG_IMAGENS_TIMEOUT) as resp:
+            html = resp.read().decode('utf-8', errors='ignore')
+        m = re.search(r"vqd=['\"]?([\d-]+)", html)
+        if not m:
+            return []
+        vqd = m.group(1)
+
+        img_url = f'https://duckduckgo.com/i.js?{urlencode({"q": query, "o": "json", "vqd": vqd, "f": ",,,,,", "p": "1"})}'
+        req2 = urllib.request.Request(img_url, headers={
+            'User-Agent': APP_USER_AGENT,
+            'Referer': 'https://duckduckgo.com/',
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'X-Requested-With': 'XMLHttpRequest',
+        })
+        with urllib.request.urlopen(req2, timeout=DDG_IMAGENS_TIMEOUT) as resp2:
+            dados = json.loads(resp2.read().decode('utf-8'))
+    except Exception as e:
+        print(f"[_servidor_escrita] _duckduckgo_imagens_artista falhou para {query!r}: {e}")
+        return []
+
+    resultados = []
+    for r in (dados.get('results') or []):
+        if len(resultados) >= DDG_MAX_RESULTADOS:
+            break
+        largura, altura = r.get('width') or 0, r.get('height') or 0
+        if largura < RESOLUCAO_MINIMA_IMAGEM or altura < RESOLUCAO_MINIMA_IMAGEM:
+            continue
+        if not r.get('image'):
+            continue
+        resultados.append({
+            'imagem': r['image'],
+            'imagem_fonte': 'web_geral',
+            'imagem_credito': f"Pesquisa web — {r.get('title', '')[:120]}",
+            'imagem_url_origem': r.get('url', ''),
+            'imagem_licenca_estado': 'confirmar',
+            'largura': largura, 'altura': altura,
+        })
+    return resultados
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, formato, *args):
         print(f"[_servidor_escrita] {self.address_string()} - {formato % args}")
@@ -635,7 +704,7 @@ class Handler(BaseHTTPRequestHandler):
         self._enviar_json(404, {"ok": False, "erro": f"nenhuma fonte devolveu imagem ≥{RESOLUCAO_MINIMA_IMAGEM}x{RESOLUCAO_MINIMA_IMAGEM}px para {artista!r}"})
 
     def _buscar_imagens_cascata(self, parsed):
-        # GET /buscar-imagens-cascata?artista=X — ao contrário de
+        # GET /buscar-imagens-cascata?artista=X&contexto=Y — ao contrário de
         # /buscar-imagem-artista (pára na 1ª fonte boa, devolve UMA imagem,
         # pensado para aplicar automaticamente em lote), devolve TODAS as
         # candidatas das fontes boas (TheAudioDB retrato+fanarts, Wikipedia
@@ -643,12 +712,23 @@ class Handler(BaseHTTPRequestHandler):
         # opções por defeito ao abrir — a pesquisa livre do Wikimedia
         # Commons deixa de ser o comportamento por omissão (pedido do
         # utilizador, 2026-08-27 — ver DECISIONS.md).
+        #
+        # Último recurso (Bíblia, Cap. 27.14): quando TheAudioDB e
+        # Wikipedia não devolvem nada — típico do Catálogo Local, artistas
+        # portugueses menos cobertos internacionalmente — cai para
+        # pesquisa geral via DuckDuckGo (_duckduckgo_imagens_artista).
+        # `contexto` é opcional (ex.: o campo `banda` da faixa) e só serve
+        # para desambiguar esta pesquisa extra — sem ele, nomes curtos
+        # (ex. "Kalú") arriscam-se a devolver lixo. Nunca usado nas outras
+        # fontes, nem entra na cascata automática de /buscar-imagem-artista
+        # — estes resultados só alimentam a grelha de revisão manual.
         params = parse_qs(parsed.query)
         artista_bruto = (params.get('artista') or [''])[0].strip()
         if not artista_bruto:
             self._enviar_json(400, {"erro": "falta o parâmetro 'artista'"})
             return
         artista = _artista_principal(artista_bruto)
+        contexto = (params.get('contexto') or [''])[0].strip()
 
         resultados = _theaudiodb_imagens_multiplas_artista(artista)
         try:
@@ -658,6 +738,10 @@ class Handler(BaseHTTPRequestHandler):
             print(f"[_servidor_escrita] _wikipedia_imagem_artista falhou para {artista!r}: {e}")
         if wiki:
             resultados.append(wiki)
+
+        if not resultados:
+            query_ddg = f"{artista} {contexto}".strip() if contexto else artista
+            resultados = _duckduckgo_imagens_artista(query_ddg)
 
         hoje = datetime.now().strftime('%Y-%m-%d')
         for r in resultados:
