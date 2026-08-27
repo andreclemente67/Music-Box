@@ -461,5 +461,27 @@
       "pessoa": "Rush",
       "id": "rush_tom_sawyer"
     }
+  },
+  "LOGO-001": {
+    "tipo": "retrato",
+    "nome": "Logótipos — Edição Especial",
+    "descritivo": "Edição Especial",
+    "playlistCodigo": "LOGO-001",
+    "universo": "Logótipos",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "logo_01",
+      "logo_02",
+      "logo_03",
+      "logo_04",
+      "logo_05",
+      "logo_06",
+      "logo_07",
+      "logo_08"
+    ],
+    "mosaico": null,
+    "estado": "piloto_protótipo",
+    "nota_curadoria": "NÃO APROVADA PARA EMISSÃO REAL. Imagens são logótipos/emblemas oficiais de marcas registadas (Nirvana, Guns N' Roses, Aerosmith, Iron Maiden, Motörhead, Grateful Dead, Pink Floyd, Rolling Stones) — direitos de marca não confirmados, ao contrário de fotos de artista (só \"confirmar\"/\"livre\"). Só para testes internos do mecanismo de Retrato Logótipo (temLogo). Ver Bíblia 27.15."
   }
 }

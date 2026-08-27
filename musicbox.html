@@ -585,16 +585,20 @@ const COLLECTIONS = {
   // Áudio entra ao segundo 15 (a meio da revelação). Duração total: 30s.
   // O concorrente identifica a banda/artista pelo logótipo.
   // temLogo:true activa esta mecânica no motor.
+  // Fallback só usado se catalogo.json/playlists.json não carregarem (ver
+  // catalogoPronto/UNIVERSOS_EXTERNOS) — dados reais em playlists.json
+  // "LOGO-001" + catalogo.json logo_01..08 têm sempre prioridade.
   LOGO001: {
-    nome: 'Logótipos', descritivo: 'Edição Especial', playlistCodigo: 'LOG-001', universo: 'Retrato Visual', temBonus: false, dificuldade: 3, temLogo: true,
+    nome: 'Logótipos — Edição Especial', descritivo: 'Edição Especial', playlistCodigo: 'LOGO-001', universo: 'Logótipos', temBonus: false, dificuldade: 3, temLogo: true,
     musicas: [
-      { titulo:'The Rolling Stones', artista:'The Rolling Stones', a:'LOGO_01.mp3', imagem:'LOGO_01.jpg' },
-      { titulo:'AC/DC', artista:'AC/DC', a:'LOGO_02.mp3', imagem:'LOGO_02.jpg' },
-      { titulo:'Pink Floyd', artista:'Pink Floyd', a:'LOGO_03.mp3', imagem:'LOGO_03.jpg' },
-      { titulo:'Metallica', artista:'Metallica', a:'LOGO_04.mp3', imagem:'LOGO_04.jpg' },
-      { titulo:'The Beatles', artista:'The Beatles', a:'LOGO_05.mp3', imagem:'LOGO_05.jpg' },
-      { titulo:'Nirvana', artista:'Nirvana', a:'LOGO_06.mp3', imagem:'LOGO_06.jpg' },
-      { titulo:'Queen', artista:'Queen', a:'LOGO_07.mp3', imagem:'LOGO_07.jpg' },
+      { titulo:'Smells Like Teen Spirit', artista:'Nirvana', a:'LOGO_01.mp3', imagem:'LOGO_01.png' },
+      { titulo:"Sweet Child O' Mine", artista:"Guns N' Roses", a:'02_a.mp3', imagem:'LOGO_02.png' },
+      { titulo:'Dream On', artista:'Aerosmith', a:'LOGO_03.mp3', imagem:'LOGO_03.png' },
+      { titulo:'The Trooper', artista:'Iron Maiden', a:'LOGO_04.mp3', imagem:'LOGO_04.png' },
+      { titulo:'Ace of Spades', artista:'Motörhead', a:'LOGO_05.mp3', imagem:'LOGO_05.png' },
+      { titulo:"Truckin'", artista:'Grateful Dead', a:'LOGO_06.mp3', imagem:'LOGO_06.png' },
+      { titulo:'Money', artista:'Pink Floyd', a:'LOGO_07.mp3', imagem:'LOGO_07.png' },
+      { titulo:"(I Can't Get No) Satisfaction", artista:'The Rolling Stones', a:'LOGO_08.mp3', imagem:'LOGO_08.png' },
     ],
     mosaico: null
   },
@@ -657,6 +661,7 @@ const UNIVERSOS_EXTERNOS = [
   { playlists: 'RET.INT.ALL.VOZ.001', collections: 'RETRATO_VOZES' },
   { playlists: 'STD.INT.ALL.GTR.001', collections: 'SOLO' },
   { playlists: 'STD.INT.ALL.SYN.001', collections: 'SYN001' },
+  { playlists: 'LOGO-001',            collections: 'LOGO001' },
 ];
 
 function resolverFaixaExterna(catalogoPorId, id) {

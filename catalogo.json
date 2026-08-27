@@ -4026,13 +4026,13 @@
     "curador": "André Clemente",
     "data": "2026-08-10",
     "video": "https://www.youtube.com/watch?v=YfGVHGBqHXM",
-    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/vvutvv1453398330.jpg",
+    "imagem": "artista_ptbat_05.png",
     "imagem_fonte": "theaudiodb",
-    "imagem_credito": "TheAudioDB",
+    "imagem_credito": "Ficheiro local carregado manualmente",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/141134",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar",
-    "imagem_risco_ambiguidade": true,
+    "imagem_risco_ambiguidade": false,
     "nota_curadoria": "Artista não confirmado com confiança — banda mantida. Investigação preliminar (Wikipedia PT) não conseguiu determinar o baterista específico da gravação; precisa de fonte primária (arquivo/discografia), não Wikipedia. Ver TASKS.md."
   },
   {
@@ -5961,5 +5961,339 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111688",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "logo_01",
+    "titulo": "Smells Like Teen Spirit",
+    "artista": [
+      "Nirvana"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Grunge",
+      "Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Hino grunge, riff distorcido que definiu os anos 90",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Bateria",
+      "Baixo",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "LOGO_01.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_01.png",
+    "imagem_credito": "Carinha sorridente Nirvana — StickPNG, sem texto",
+    "imagem_url_origem": "https://assets.stickpng.com/images/612a43ef7c7c75000443b294.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_02",
+    "titulo": "Sweet Child O' Mine",
+    "artista": [
+      "Guns N' Roses"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Hard Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock com riff de guitarra inicial muito reconhecível",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "02_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_02.png",
+    "imagem_credito": "Emblema pistolas+rosas — StickPNG, recortado para remover o anel de texto \"GUNS N' ROSES\"",
+    "imagem_url_origem": "https://assets.stickpng.com/images/612d04e6fe2fdd00041d6f60.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_03",
+    "titulo": "Dream On",
+    "artista": [
+      "Aerosmith"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Hard Rock",
+      "Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada rock com escalada dramática, clássico do rock americano",
+    "instrumento": [
+      "Piano",
+      "Guitarra elétrica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "LOGO_03.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_03.png",
+    "imagem_credito": "Emblema alado (versão 1974) — logolook.net, recortado para remover o texto \"AEROSMITH\"",
+    "imagem_url_origem": "https://logolook.net/wp-content/uploads/2023/10/Aerosmith-Logo-1974.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_04",
+    "titulo": "The Trooper",
+    "artista": [
+      "Iron Maiden"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Heavy Metal"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Heavy metal galopante, inspirado na Carga da Brigada Ligeira",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Baixo",
+      "Bateria",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "LOGO_04.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_04.png",
+    "imagem_credito": "Mascote \"Eddie\" — pngitem.com, sem texto",
+    "imagem_url_origem": "https://www.pngitem.com/pimgs/m/153-1537505_transparent-iron-maiden-logo-png-iron-maiden-eddie.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_05",
+    "titulo": "Ace of Spades",
+    "artista": [
+      "Motörhead"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Heavy Metal",
+      "Rock and Roll"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Hino do rock pesado, riff de baixo frenético de Lemmy",
+    "instrumento": [
+      "Baixo",
+      "Guitarra elétrica",
+      "Bateria",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "LOGO_05.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_05.png",
+    "imagem_credito": "\"Snaggletooth\" — StickPNG, recortado para remover a faixa \"MOTÖRHEAD\"",
+    "imagem_url_origem": "https://assets.stickpng.com/images/6136280af5966900044cbf7c.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_06",
+    "titulo": "Truckin'",
+    "artista": [
+      "Grateful Dead"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock",
+      "Americana"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock americana, hino da estrada e da cultura Deadhead",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Baixo",
+      "Bateria",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "LOGO_06.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_06.png",
+    "imagem_credito": "Caveira \"Steal Your Face\" — pngwing.com, fundo em xadrez falso removido (floodfill, transparência real confirmada)",
+    "imagem_url_origem": "https://w7.pngwing.com/pngs/817/67/png-transparent-red-blue-and-white-lightning-and-skull-band-logo-winterland-ballroom-steal-your-face-grateful-dead-logo-deadhead-dead-miscellaneous-album-sticker.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_07",
+    "titulo": "Money",
+    "artista": [
+      "Pink Floyd"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock Progressivo"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Groove de baixo em compasso 7/4, sons de caixa registadora icónicos",
+    "instrumento": [
+      "Baixo",
+      "Saxofone",
+      "Guitarra elétrica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "LOGO_07.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_07.png",
+    "imagem_credito": "Prisma (Dark Side of the Moon) — recriação digital sem texto, categoria Wikimedia Commons \"The Dark Side of the Moon\"",
+    "imagem_url_origem": "https://upload.wikimedia.org/wikipedia/commons/5/59/Optical-dispersion.png",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
+  },
+  {
+    "id": "logo_08",
+    "titulo": "(I Can't Get No) Satisfaction",
+    "artista": [
+      "The Rolling Stones"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Riff de guitarra fuzz mais reconhecível do rock clássico",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "LOGO_08.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "imagem": "LOGO_08.png",
+    "imagem_credito": "Língua e lábios — desenho oficial de John Pasche, ficheiro não-livre da Wikipedia (en), recriado em alta resolução a partir do SVG",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Tongue_and_lips_logo",
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "André Clemente",
+    "data": "2026-08-27",
+    "imagem_fonte": "manual",
+    "imagem_licenca_estado": "confirmar",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_risco_ambiguidade": false,
+    "nota_curadoria": "Imagem = logótipo/emblema da banda (marca registada), não retrato do artista. Playlist piloto/protótipo — direitos de marca não confirmados para emissão real, ver estado da playlist LOGO-001."
   }
 ]
