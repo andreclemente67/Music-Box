@@ -3,6 +3,60 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — Campo `sources` implementado (schema definido pelo utilizador) + confirmação de década
+Schema definido pelo utilizador: `sources: {audio, imagem, data_recolha}`
+— proveniência básica por faixa. Adicionado a todas as 284 faixas de
+`catalogo.json` (`_adicionar_sources.py`, scratchpad):
+- `imagem`: inferido de `imagem_fonte` (já existia, 100% das faixas
+  preenchido).
+- `data_recolha`: inferido de `imagem_data_captura` (fallback `data`).
+- `audio`: **deixado `null` em todas as faixas retroactivamente** — não
+  existe nenhum campo no catálogo actual que registe iTunes vs YouTube
+  por faixa (confirmado: `_construir_playlist.py` calculava isto em
+  memória — `e["_fonte_audio"]` — mas `_aplicar_playlist.py` nunca o
+  persistia em `catalogo.json`, perdia-se sempre). Sem sinal fiável
+  para inferir retroactivamente sem adivinhar, como pedido.
+
+**Corrigido o root cause para faixas futuras**: `_aplicar_playlist.py`
+(scratchpad, script usado para todas as playlists criadas nesta sessão)
+actualizado para gravar `sources.audio` a partir de `_fonte_audio` a
+partir de agora — deixa de se perder essa informação em playlists
+novas.
+
+**Confirmação sobre o Mosaico "Anos 2010 — Synth II"**: `decadas` de
+`arcade_fire_my_body_is_a_cage` **já estava `["2000s"]`** — não
+precisou de correcção, só confirmação (o campo já reflectia a data real
+de lançamento, 2007; a divergência é só temática/editorial da playlist,
+não um erro de dados).
+
+Validado: JSON válido; `deno check` (exit 0, nenhum `.html` alterado).
+
+## 2026-08-29 — Resolvida a discrepância "4 vs 10" da Fototeca (investigação de histórico git)
+Pedido do utilizador: perceber o que aconteceu às outras 6 faixas da
+"lista antiga de 10" que a revisão de 28 Ago só encontrou 4.
+**Resposta: já tinham sido corrigidas na mesma sessão, antes mesmo de
+eu começar a auditar — não é um gap real.**
+
+Reconstruído via `git show <commit>:catalogo.json` em cada commit que
+tocou o catálogo: no commit `3e797e8` (26 Ago, 17:38 — "Adiciona
+cascata de imagens de artista... aplica 139 imagens melhoradas"), o
+catálogo tinha mesmo **exactamente 10** faixas com `imagem_fonte`
+iTunes: `a10_01, a10_03, pt80_04, pt80_06, bra001_mosaico, syn001_02,
+ptbat_mosaico, beatles_03, beatles_04, disclosure_latch` — esta é, com
+alta confiança, a origem real da "lista de 10". Logo no commit
+**seguinte**, `1c47fdd` ("Checkpoint: recuperação de imagens apagadas
+acidentalmente"), 6 dessas 10 (`a10_01, a10_03, syn001_02, beatles_03,
+beatles_04, disclosure_latch`) já aparecem com `imagem_fonte:
+"theaudiodb"` — confirmado que continuam assim, com retratos reais,
+no catálogo actual. As 4 restantes (`pt80_04, pt80_06, bra001_mosaico,
+ptbat_mosaico`) mantiveram-se iTunes até à revisão de 28 Ago (ver
+entrada anterior), que as reviu/melhorou.
+
+Conclusão: a contagem "10" estava correcta na altura em que foi feita;
+6 delas foram corrigidas numa sessão anterior (mesmo dia, poucos
+commits depois); as 4 finais foram as que a auditoria de 28 Ago
+encontrou e reviu. Nada por resolver aqui.
+
 ## 2026-08-29 — Botão "👁 Revelar" no Mosaico da Mesa de Montagem
 Novo botão no cartão do Mosaico (`slotCardHtml`, `kind==='mosaico'` +
 tem imagem) — pré-visualiza a imagem já totalmente nítida, reaproveitando
