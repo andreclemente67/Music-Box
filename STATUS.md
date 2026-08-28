@@ -3,6 +3,29 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — Botão "👁 Revelar" no Mosaico da Mesa de Montagem
+Novo botão no cartão do Mosaico (`slotCardHtml`, `kind==='mosaico'` +
+tem imagem) — pré-visualiza a imagem já totalmente nítida, reaproveitando
+o mini-player flutuante já existente (`previewImagem()`, o mesmo usado
+pelo ícone 🖼 na Biblioteca), sem simular a mecânica de revelação
+progressiva do jogo, como pedido.
+
+Aplica-se a Standard e Retrato (ambos usam `slotCardHtml('mosaico', ...)`
+em `renderSlotsSimples`) — **e também ao "Mosaico / Recap" das playlists
+Tributo**, que reaproveita a mesma função de card do Mosaico
+(`renderPosicoesTributo` chama `slotCardHtml('mosaico', ...)` no fim,
+para o Recap final tipo "Abbey Road (Recap)"). Não removi essa extensão
+— é o mesmo mecanismo de pré-visualização a fazer sentido no mesmo
+sítio, mas fica documentado aqui porque o pedido original mencionava só
+Standard/Retrato. Confirmado que playlists Retrato Sonoro sem Mosaico
+(regra 30-Jul) continuam sem o botão, correctamente.
+
+Validado: `deno check` (exit 0); teste real em Chrome
+(`_teste_revelar_mosaico.js`, scratchpad) — clique no Mosaico de "Jazz"
+abre o mini-player com a imagem certa ("Strange Fruit"); "Vozes
+Lendárias" (Retrato Sonoro) confirmado sem Mosaico, sem botão; Tributo
+Beatles mostra o botão no Recap, comportamento descrito acima.
+
 ## 2026-08-29 — Botão "Ver na app" na Mesa de Montagem
 `musicbox.html` ganha suporte a abrir directamente numa playlist
 específica via `?playlist=<chave>` (ex.

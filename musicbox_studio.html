@@ -3803,6 +3803,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
           <button class="timing-btn" title="${cinema ? 'Definir início do Excerto (fim = início + 30s)' : 'Definir início do Trecho A (fim = início + 15s)'}" onclick="toggleTimingEditor('${kind}',${index},'a',event)">⏱ Definir início</button>
           ${precisaAuto ? `<button class="timing-btn auto-btn" title="${cinema ? "Ponto de partida — excerto em 0-30s. Confirma por audição e ajusta com 'Definir início' se necessário." : "Ponto de partida — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' se necessário."}" onclick="autoDefinirTrechos('${kind}',${index},event)">⚡ Auto</button>` : ''}
           <button class="timing-btn" title="Procurar/trocar a imagem desta faixa (Wikimedia Commons)" onclick="event.stopPropagation();abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar imagem</button>
+          ${kind === 'mosaico' && hasImg ? `<button class="timing-btn" title="Pré-visualiza a imagem do Mosaico já totalmente nítida, tal como fica no fim da revelação no jogo — sem simular a mecânica de revelação progressiva, só para conferência rápida." onclick="event.stopPropagation();previewImagem('${escapeAttr(t.imagem)}','${escapeAttr(t.titulo)}')">👁 Revelar</button>` : ''}
           ${timingLabelHtml(t, kind, index)}
         </div>
       </div>
