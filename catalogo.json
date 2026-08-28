@@ -9639,5 +9639,337 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/112317",
     "imagem_data_captura": "2026-08-28",
     "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_01",
+    "titulo": "Levitating",
+    "artista": [
+      "Dua Lipa"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Disco-pop contemporâneo",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "dec20_01_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_01_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/h2av1v1763076747.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/143553",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_02",
+    "titulo": "drivers license",
+    "artista": [
+      "Olivia Rodrigo"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada pop confessional, fenómeno viral",
+    "instrumento": [
+      "Piano",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "dec20_02_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_02_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/kgncf61615628037.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/165531",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_03",
+    "titulo": "As It Was",
+    "artista": [
+      "Harry Styles"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Synth-pop introspetivo",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec20_03_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_03_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/upuupu1494747775.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/146664",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_04",
+    "titulo": "Anti-Hero",
+    "artista": [
+      "Taylor Swift"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop introspectivo e auto-irónico",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec20_04_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_04_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/k60sy91751894007.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111352",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_05",
+    "titulo": "Flowers",
+    "artista": [
+      "Miley Cyrus"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop de auto-afirmação",
+    "instrumento": [
+      "Voz",
+      "Guitarra"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec20_05_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_05_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/1yv13w1710945800.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/113672",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_06",
+    "titulo": "Cuff It",
+    "artista": [
+      "Beyoncé"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Dance & Electrónica"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Dance-funk contemporâneo",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec20_06_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_06_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/1347b11737198631.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/114364",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_07",
+    "titulo": "Espresso",
+    "artista": [
+      "Sabrina Carpenter"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop dançável de verão",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "dec20_07_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec20_07_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/97izsb1748116183.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/137425",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec20_mosaico",
+    "titulo": "Save Your Tears",
+    "artista": [
+      "The Weeknd"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Synth Pop"
+    ],
+    "geografia": "Canadá",
+    "estilo": "Synth-pop com influência dos anos 80",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec20_mosaico_full.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "dec20_mosaico_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/a49x1j1673778621.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/112024",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
   }
 ]
