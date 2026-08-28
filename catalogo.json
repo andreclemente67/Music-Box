@@ -3999,10 +3999,10 @@
     "id": "ptbat_05",
     "titulo": "Last Child",
     "artista": [
-      "RAMP"
+      "Paulo"
     ],
     "decadas": [
-      "2000s"
+      "1990s"
     ],
     "generos": [
       "Rock"
@@ -4036,8 +4036,9 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/141134",
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar",
-    "imagem_risco_ambiguidade": false,
-    "nota_curadoria": "Artista não confirmado com confiança — banda mantida. Investigação preliminar (Wikipedia PT) não conseguiu determinar o baterista específico da gravação; precisa de fonte primária (arquivo/discografia), não Wikipedia. Ver TASKS.md."
+    "imagem_risco_ambiguidade": true,
+    "banda": "RAMP",
+    "nota_curadoria": "Baterista identificado com fonte primária (2026-08-29): 'Last Child' é do mini-LP de estreia 'Thoughts' (RAMP, PT), gravado nos Exit Studios em Setembro de 1991, editado em Fevereiro de 1992 — logo décadas corrigido de 2000s para 1990s. Baterista da formação original e desta gravação: Paulo (constam ambos rampmetal.com/biography — ex-membro 'Paulinho' — e o historial detalhado com datas de sessão em portugal80smetal.blogspot.com/2011/09/ramp.html, que nomeia 'Paulo' explicitamente como baterista da sessão de 'Thoughts'). Apelido não confirmado em nenhuma fonte encontrada. Imagem actual (artista_ptbat_05.png, carregada manualmente) NÃO confirmada como sendo desta pessoa — imagem_risco_ambiguidade mantido true até se confirmar ou substituir (ver tarefa separada de revisão da Fototeca)."
   },
   {
     "id": "ptbat_06",
