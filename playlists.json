@@ -900,5 +900,35 @@
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
+  },
+  "STD.INT.ALL.HIP.001": {
+    "tipo": "standard",
+    "nome": "Hip Hop",
+    "descritivo": "Do Bronx ao Mundo",
+    "playlistCodigo": "STD.INT.ALL.HIP.001",
+    "universo": "Hip Hop",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "hip_01",
+      "hip_02",
+      "hip_03",
+      "hip_04",
+      "hip_05",
+      "hip_06",
+      "hip_07"
+    ],
+    "mosaico": {
+      "categoria": "Grupo",
+      "pessoa": "Grandmaster Flash and the Furious Five",
+      "id": "hip_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }
