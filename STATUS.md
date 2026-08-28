@@ -3,6 +3,31 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — Botão "Ver na app" na Mesa de Montagem
+`musicbox.html` ganha suporte a abrir directamente numa playlist
+específica via `?playlist=<chave>` (ex.
+`musicbox.html?playlist=STD.INT.ALL.JAZ.001`) — não existia antes.
+Nova IIFE `af_abrirPlaylistPorURL()` no fim do script: lê o parâmetro,
+espera `catalogoPronto`, e reaproveita `testarPlaylist()` (mesmo
+mecanismo do botão "◎ Testar uma Playlist" já existente) — chave
+inexistente cai de volta ao ecrã inicial normal, sem rebentar.
+
+No Studio, reaproveitado o botão "▶ App" já existente
+(`af_abrirApp()`, cabeçalho geral) em vez de criar uma função
+duplicada — agora inclui o parâmetro `?playlist=` quando há uma
+playlist aberta, e abre sempre numa aba nova (`_blank`, nunca perde o
+estado da Mesa de Montagem). Novo botão "▶ Ver na app" adicionado
+directamente no cabeçalho de cada playlist na Mesa de Montagem
+(`renderMontagem()`) — aplica-se a todos os tipos (Standard, Retrato,
+Tributo, Vídeo), chama a mesma `af_abrirApp()`.
+
+Validado: `deno check` (exit 0) em ambos os ficheiros; teste real em
+Chrome via puppeteer-core (`_teste_ver_na_app.js`, scratchpad) — URL
+directo abre e já está a tocar a playlist certa (`modoTeste:true`,
+`faseGeral:"faixa"`); chave inexistente cai no ecrã inicial sem erro;
+clique no botão "▶ Ver na app" (playlist Hip Hop aberta no Studio) abre
+mesmo uma aba nova com a playlist certa a tocar.
+
 ## 2026-08-29 — Tooltips em controlos não óbvios (UX, item de baixa prioridade)
 Passagem leve, não exaustiva ("sem pressa" — pedido de baixa
 prioridade): a maioria dos botões de preenchimento automático já tinha

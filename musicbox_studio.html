@@ -3380,12 +3380,20 @@ function verificarCompletudePlaylist(playlist) {
   return problemas;
 }
 
-// Botão "▶ App" — verifica a playlist actualmente aberta na Mesa de
-// Montagem (verificarCompletudePlaylist) antes de navegar para
-// musicbox.html. Se houver trechos em falta, confirm() com a lista
-// exacta; cancelar mantém no Studio, sem abrir nada. Sem playlist aberta,
-// navega directamente (nada para verificar). Pedido explícito do
-// utilizador — ver DECISIONS.md 2026-08-25.
+// Botão "▶ App" (cabeçalho geral) / "▶ Ver na app" (por playlist, na
+// Mesa de Montagem) — verifica a playlist actualmente aberta
+// (verificarCompletudePlaylist) antes de navegar para musicbox.html. Se
+// houver trechos em falta, confirm() com a lista exacta; cancelar
+// mantém no Studio, sem abrir nada. Sem playlist aberta, navega
+// directamente (nada para verificar). Pedido explícito do utilizador —
+// ver DECISIONS.md 2026-08-25.
+//
+// Actualizado 2026-08-29 (pedido explícito do utilizador): quando há
+// uma playlist aberta, a nova aba abre-a directamente em modo teste via
+// ?playlist=<chave> — ver af_abrirPlaylistPorURL() em musicbox.html,
+// que reaproveita testarPlaylistWrapper() (mesmo mecanismo do botão
+// "◎ Testar uma Playlist"). Sempre numa aba nova (nunca substitui a
+// aba do Studio, para não perder o estado da Mesa de Montagem).
 function af_abrirApp() {
   const pl = PLAYLISTS[currentPlaylistKey];
   if (pl) {
@@ -3404,7 +3412,10 @@ function af_abrirApp() {
       if (!confirm(`Esta playlist tem trechos em falta: ${lista}. Continuar mesmo assim para a App?`)) return;
     }
   }
-  window.open('http://localhost:8002/musicbox.html');
+  const url = pl
+    ? `http://localhost:8002/musicbox.html?playlist=${encodeURIComponent(currentPlaylistKey)}`
+    : 'http://localhost:8002/musicbox.html';
+  window.open(url, '_blank');
 }
 
 function renderMontagem() {
@@ -3447,7 +3458,10 @@ function renderMontagem() {
 
   let html = `
     <div class="playlist-header">
-      <div class="playlist-name">${escapeHtml(pl.nome || currentPlaylistKey)}</div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div class="playlist-name">${escapeHtml(pl.nome || currentPlaylistKey)}</div>
+        <button class="btn" style="flex-shrink:0;" title="Abre esta playlist directamente no jogo (musicbox.html), numa aba nova, em modo teste — sem perder o estado desta Mesa de Montagem." onclick="af_abrirApp()">▶ Ver na app</button>
+      </div>
       <div class="playlist-meta">
         <span class="posicao-tipo-badge tipo-${pl.tipo === 'tributo' ? 'trivia' : pl.tipo === 'video' ? 'video' : 'audio'}" style="text-transform:capitalize">${pl.tipo}</span>
         <span>${currentPlaylistKey}</span>

@@ -3051,6 +3051,32 @@ async function testarPlaylistWrapper(chave) {
   await catalogoPronto;
   testarPlaylist(chave);
 }
+
+// Abertura directa numa playlist específica via URL — ?playlist=<chave>
+// (ex.: musicbox.html?playlist=STD.INT.ALL.JAZ.001). Pedido explícito do
+// utilizador: botão "▶ Ver na app" na Mesa de Montagem do Studio
+// (af_abrirApp() em musicbox_studio.html) abre esta página numa aba nova
+// já com o parâmetro, para testar uma playlist concreta sem navegar
+// manualmente até "Testar uma Playlist". Reaproveita testarPlaylist()
+// tal e qual — mesmo modo de teste do botão "◎ Testar uma Playlist",
+// só accionado automaticamente ao carregar em vez de por clique.
+// NOTA: tal como o resto do modo de teste, o primeiro som pode ficar
+// bloqueado pela política de autoplay do browser até ao primeiro clique
+// nesta aba — comportamento já existente do "◎ Testar uma Playlist",
+// não introduzido por esta funcionalidade.
+(async function af_abrirPlaylistPorURL() {
+  const params = new URLSearchParams(window.location.search);
+  const chave = params.get('playlist');
+  if (!chave) return;
+  log('A carregar catálogo…');
+  await catalogoPronto;
+  if (!COLLECTIONS[chave]) {
+    console.error(`[af_abrirPlaylistPorURL] playlist "${chave}" não encontrada em COLLECTIONS — a mostrar o ecrã inicial.`);
+    return;
+  }
+  garantirAudioCtx();
+  testarPlaylist(chave);
+})();
 </script>
 </body>
 </html>
