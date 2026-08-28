@@ -3,6 +3,27 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Códigos de género reservados realinhados (JAZ/SOU/HIP/CLA)
+Decisão do utilizador (ver DECISIONS.md): em vez de renomear as 4
+playlists já publicadas, realinhados os códigos "reservados" no
+Studio para corresponderem aos códigos reais já em uso —
+`JZZ→JAZ`, `SOL→SOU`, `HHP→HIP`, `CLX→CLA` — nas 5 estruturas que os
+usavam: `OPCOES_GENERO` (filtro de Género + modal "Propor Nova Chave"),
+`CHAVE_GENERO_PARA_PALAVRAS` (usado por `criteriosDaChave`/
+`faixaCorrespondeCriterios` para "Preencher automaticamente"),
+`CHAVE_GENERO_PARA_QUERY` (constrói a frase de pesquisa a partir da
+chave), `MIGRACAO_CHAVES` (mapping informativo no modal de migração) e
+`montarPromptIA()` (lista de códigos válidos passada à IA ao gerar uma
+playlist nova — evita que a IA volte a inventar um código diferente
+para o mesmo género). `playlists.json` e os ids das 4 playlists reais
+mantêm-se intocados, como pedido.
+
+Validado: `deno check` (exit 0); teste real em Chrome via
+puppeteer-core (`_teste_codigos_realinhados.js`, scratchpad) — filtrar
+Género por JAZ/SOU/HIP/CLA encontra agora directamente
+`STD.INT.ALL.JAZ.001`/`SOU`/`HIP`/`CLA` pela etiqueta dominante (antes
+só apareciam via `universos_secundarios` explícito).
+
 ## 2026-08-28 — Etiquetas secundárias de Universo (Bíblia §27.14b)
 Novo campo opcional `universos_secundarios` (array de nomes canónicos de
 Universo, ex. `["Rock", "Anos 80"]`) em playlists.json — vazio/ausente

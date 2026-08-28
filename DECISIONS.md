@@ -1173,3 +1173,10 @@ código real da chave, não de `OPCOES_GENERO`).
    muda o que está "reservado" para futuras playlists.
 Recomendação: opção 2, mas fica para confirmação do utilizador antes de
 qualquer alteração.
+
+**Resolvido 2026-08-28**: utilizador confirmou a opção 2 — códigos
+reservados realinhados para JAZ/SOU/HIP/CLA (não só em `OPCOES_GENERO`,
+também em `CHAVE_GENERO_PARA_PALAVRAS`, `CHAVE_GENERO_PARA_QUERY`,
+`MIGRACAO_CHAVES` e `montarPromptIA()` — todas as estruturas que
+referenciavam os códigos antigos JZZ/SOL/HHP/CLX). Playlists já
+publicadas mantidas intocadas. Ver STATUS.md.

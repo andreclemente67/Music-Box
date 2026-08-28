@@ -2534,12 +2534,7 @@ const UNIVERSOS_CANONICOS = {
 // só para comparar `universos_secundarios` (nomes canónicos, Bíblia
 // §27.14b) aos filtros de Década/Género da sidebar, que trabalham por
 // código curto — a etiqueta dominante já é comparada assim (ver
-// af_playlistPassaFiltros). Não confundir com os códigos reservados em
-// OPCOES_GENERO (usados só no modal "Propor Nova Chave"): 4 dos géneros
-// criados em 2026-08-28 (Jazz/Soul & R&B/Hip Hop/Clássica) usam
-// GENERO=JAZ/SOU/HIP/CLA nas suas chaves reais, não JZZ/SOL/HHP/CLX
-// como ali reservado — divergência pré-existente, fora do âmbito desta
-// funcionalidade (ver aviso em DECISIONS.md 2026-08-28).
+// af_playlistPassaFiltros).
 const DEC_CODIGO_DO_NOME = Object.fromEntries(Object.entries(DECADA_NOME).map(([c, n]) => [n, c]));
 const GENERO_CODIGO_DO_NOME = Object.fromEntries([
   ...Object.entries(GENERO_UNIVERSO_GENEROS),
@@ -3877,10 +3872,10 @@ const CHAVE_DEC_PARA_DECADA = {
   // ALL: sem restrição.
 };
 const CHAVE_GENERO_PARA_PALAVRAS = {
-  ROC: ['rock'], POP: ['pop'], JZZ: ['jazz'], BLU: ['blues'],
-  SOL: ['soul', 'r&b'], HHP: ['hip-hop', 'hip hop', 'rap'],
+  ROC: ['rock'], POP: ['pop'], JAZ: ['jazz'], BLU: ['blues'],
+  SOU: ['soul', 'r&b'], HIP: ['hip-hop', 'hip hop', 'rap'],
   DNC: ['dance', 'electro'], SYN: ['synth'], MET: ['metal'],
-  CLX: ['clássic', 'orquestral'], WLD: ['world'],
+  CLA: ['clássic', 'orquestral'], WLD: ['world'],
   LAT: ['latin', 'samba', 'bossa', 'mpb'],
   AME: ['country', 'americana', 'folk', 'heartland', 'swamp'],
   CIN: ['banda sonora'], TV: ['televisão'], GAM: ['videojog'],
@@ -3918,9 +3913,9 @@ function faixaCorrespondeCriterios(t, criterios) {
 // voz canção oficial" (pedido do utilizador, 2026-08-11 — corrigido para
 // incluir o termo do género/tema no fim da frase, antes do sufixo).
 const CHAVE_GENERO_PARA_QUERY = {
-  MIX: '', ROC: 'rock', POP: 'pop', JZZ: 'jazz', BLU: 'blues',
-  SOL: 'soul', HHP: 'hip hop', DNC: 'dance', SYN: 'synthwave', MET: 'metal',
-  CLX: 'clássica', WLD: 'world music', LAT: 'latin', AME: 'americana',
+  MIX: '', ROC: 'rock', POP: 'pop', JAZ: 'jazz', BLU: 'blues',
+  SOU: 'soul', HIP: 'hip hop', DNC: 'dance', SYN: 'synthwave', MET: 'metal',
+  CLA: 'clássica', WLD: 'world music', LAT: 'latin', AME: 'americana',
   CIN: 'bandas sonoras', TV: 'televisão', GAM: 'videojogos',
   VOZ: 'voz', GTR: 'guitarra solo', BAT: 'bateria solo',
   FAD: 'fado', NAT: 'natal', EUR: 'eurovisão',
@@ -5746,14 +5741,14 @@ const OPCOES_GENERO = [
   { v: 'MIX', label: 'MIX — Multi-género / décadas'       },
   { v: 'ROC', label: 'ROC — Rock'                         },
   { v: 'POP', label: 'POP — Pop'                          },
-  { v: 'JZZ', label: 'JZZ — Jazz'                         },
+  { v: 'JAZ', label: 'JAZ — Jazz'                         },
   { v: 'BLU', label: 'BLU — Blues'                        },
-  { v: 'SOL', label: 'SOL — Soul & R&B'                   },
-  { v: 'HHP', label: 'HHP — Hip Hop'                      },
+  { v: 'SOU', label: 'SOU — Soul & R&B'                   },
+  { v: 'HIP', label: 'HIP — Hip Hop'                      },
   { v: 'DNC', label: 'DNC — Dance & Electrónica'          },
   { v: 'SYN', label: 'SYN — Synthwave (extensão DNC)'     },
   { v: 'MET', label: 'MET — Metal'                        },
-  { v: 'CLX', label: 'CLX — Clássica'                     },
+  { v: 'CLA', label: 'CLA — Clássica'                     },
   { v: 'WLD', label: 'WLD — World Music'                  },
   { v: 'LAT', label: 'LAT — Latin'                        },
   { v: 'AME', label: 'AME — Americana'                    },
@@ -5777,10 +5772,10 @@ const MIGRACAO_CHAVES = {
   'AN90': 'STD.INT.90.MIX.001', 'A00':  'STD.INT.00.MIX.001',
   'A10':  'STD.INT.10.MIX.001', 'A20':  'STD.INT.20.MIX.001',
   'ROCK': 'STD.INT.ALL.ROC.001','POP':  'STD.INT.ALL.POP.001',
-  'JAZZ': 'STD.INT.ALL.JZZ.001','BLU':  'STD.INT.ALL.BLU.001',
-  'RNB':  'STD.INT.ALL.SOL.001','HIP':  'STD.INT.ALL.HHP.001',
+  'JAZZ': 'STD.INT.ALL.JAZ.001','BLU':  'STD.INT.ALL.BLU.001',
+  'RNB':  'STD.INT.ALL.SOU.001','HIP':  'STD.INT.ALL.HIP.001',
   'DANCE':'STD.INT.ALL.DNC.001','SYN':  'STD.INT.ALL.SYN.001',
-  'MET':  'STD.INT.ALL.MET.001','CLA':  'STD.INT.ALL.CLX.001',
+  'MET':  'STD.INT.ALL.MET.001','CLA':  'STD.INT.ALL.CLA.001',
   'WORLD':'STD.INT.ALL.WLD.001','BRA':  'STD.BR.ALL.MIX.001',
   'LAT':  'STD.INT.ALL.LAT.001','AME':  'STD.US.ALL.AME.001',
   'SOLO': 'STD.INT.ALL.GTR.001','BAT':  'STD.INT.ALL.BAT.001',
@@ -6536,7 +6531,7 @@ function montarPromptIA() {
 - nome: um título editorial apelativo para a playlist
 - geo: um destes códigos — INT (internacional), PT, BR, ES, FR, UK, US
 - decadas: um destes códigos — 50, 60, 70, 80, 90, 00, 10, 20, ou ALL (atemporal/multi-década)
-- genero: um destes códigos — MIX, ROC, POP, JZZ, BLU, SOL, HHP, DNC, SYN, MET, CLX, WLD, LAT, AME, CIN, TV, GAM, VOZ, GTR, BAT, FAD, NAT, EUR
+- genero: um destes códigos — MIX, ROC, POP, JAZ, BLU, SOU, HIP, DNC, SYN, MET, CLA, WLD, LAT, AME, CIN, TV, GAM, VOZ, GTR, BAT, FAD, NAT, EUR
 - dificuldade: um número de 1 (muito fácil) a 5 (muito difícil)
 - tipo: normalmente "STD" (Standard, áudio puro)`;
 
