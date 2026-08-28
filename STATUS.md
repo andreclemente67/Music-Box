@@ -3,6 +3,37 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Parte 2: Escolha única por Ronda + Pontuação plana (Bíblia §10.10/§11.2)
+`musicbox.html` — duas alterações às regras do motor:
+
+- **Escolha única por Ronda**: `iniciarEscolhaCollection()` reescrita —
+  P1=Blind Draw, P2=Motor (automático), P3=Escolha, P4=Motor, P5=Motor,
+  por cada Ronda (`playlistNaRonda` 1-5), substituindo a lógica antiga
+  em que o líder do ranking geral escolhia em 4 das 5 Playlists. P3 é
+  decidida pelo vencedor de P2 (nova `vencedorMotorEscolha()`): mais
+  pontos ganhos nessa Playlist especificamente, não o total acumulado;
+  empate desempatado por menor tempo de resposta acumulado
+  (`TEMPO_RESPOSTA_MOTOR_ESCOLHA`, alimentado em `acertouFaixa()` a
+  partir do `tempoRestante` já existente). Estado armado no início de
+  P2 (`PONTOS_ANTES_MOTOR_ESCOLHA` = snapshot de `pontos[]`), lido no
+  início de P3.
+- **Pontuação plana**: removida a excepção `PONTOS_FAIXA5` (5ª Faixa
+  valia 200) — as 7 Faixas Regulares valem sempre `PONTOS_FAIXA` (100).
+  `PONTOS_MOSAICO` (200) inalterado. (Ronda 4, sistema de € separado,
+  não tocada — fora do âmbito deste pedido.)
+
+Validado: `deno check` (exit 0); teste real em Chrome via
+puppeteer-core (`_teste_motor_escolha.js`, scratchpad, usando as
+funções reais do jogo — `iniciarEscolhaCollection`/`acertouFaixa`, não
+mocks) — ciclo completo de uma Ronda (P1-P5): P1 "BLIND DRAW" auto-
+seleccionou `STD.INT.50.MIX.001`; P2 "MOTOR" armou o rasto
+correctamente; simulado concorrente 3 a ganhar +200 pts em P2 (2
+faixas) contra concorrente 1 a ganhar +100 (1 faixa), apesar de
+concorrente 1 ser o líder do ranking GERAL (600 vs 200 pts totais); P3
+mostrou correctamente "Concorrente 3 ESCOLHE A FAMÍLIA" — confirma que
+é o vencedor de P2, não o líder geral, que escolhe; P4 e P5 ambos
+"MOTOR". Faixa 5 e Faixa 3 confirmadas a valer ambas exactamente +100.
+
 ## 2026-08-28 — Códigos de género reservados realinhados (JAZ/SOU/HIP/CLA)
 Decisão do utilizador (ver DECISIONS.md): em vez de renomear as 4
 playlists já publicadas, realinhados os códigos "reservados" no

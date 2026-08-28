@@ -824,8 +824,11 @@ const DURACAO_TRECHO_B = 10;
 const TRIVIA_AUDIO_DELAY = 0; // milissegundos — ajustar aqui
 const JANELA_LOGO = 30;
 const LOGO_AUDIO_OFFSET = 15;
+// Pontuação plana (Bíblia §11.2, actualizada 2026-08-28): as 7 Faixas
+// Regulares valem sempre +100, sem excepção de posição — remove a
+// excepção antiga em que a 5ª Faixa valia o dobro (recuperação de
+// atrasados). Mosaico mantém-se em +200 (PONTOS_MOSAICO).
 const PONTOS_FAIXA = 100;
-const PONTOS_FAIXA5 = 200; // Faixa 5 vale o dobro (recuperação de atrasados)
 const FAIXAS_COM_BONUS = [3, 6]; // só estas Faixas (1-7) disparam a Pergunta Bónus
 const PONTOS_MOSAICO = 200;
 const MORTE_SUBITA_SEG = 3;
@@ -889,6 +892,14 @@ let escadaTimerInterval = null;
 let rondaAtual = 1;          // 1, 2, 3, 4
 let playlistGlobal = 1;      // 1-15, depois "Ronda 4"
 let playlistNaRonda = 1;     // 1-5 dentro da ronda
+// Escolha única por Ronda (Bíblia §10.10, actualizada 2026-08-28): P3 de
+// cada Ronda é escolhida pelo vencedor de P2 (mais pontos ganhos nessa
+// Playlist; empate desempatado por menor tempo de resposta acumulado),
+// não pelo líder do ranking geral. Armado no início de P2
+// (iniciarEscolhaCollection), lido no início de P3 (vencedorMotorEscolha).
+let PONTOS_ANTES_MOTOR_ESCOLHA = null;
+let TEMPO_RESPOSTA_MOTOR_ESCOLHA = [0, 0, 0, 0];
+let A_REGISTAR_TEMPO_MOTOR_ESCOLHA = false;
 // true em testarPlaylist()/testarMosaico() (◎ Testar uma Playlist — uma só
 // playlist, fora de qualquer sequência de rondas), false em arrancar() — ver
 // actualizarBadge(). Isto é um piloto: "RONDA 1 · PLAYLIST 1/15" nunca fez
@@ -965,6 +976,26 @@ function lider() {
   const activos = concorrentesActivos();
   let melhor = activos[0];
   for (const i of activos) if (pontos[i] > pontos[melhor]) melhor = i;
+  return melhor;
+}
+
+// Vencedor da Playlist "Motor" anterior (P2) desta Ronda — quem ganhou
+// mais pontos nela; empate desempatado por menor tempo de resposta
+// acumulado (Bíblia §10.10). Usado para decidir quem escolhe em P3
+// ("Escolha"), em vez do líder do ranking geral. Fallback para lider()
+// se por alguma razão não houver rasto de P2 armado (não deve acontecer
+// no fluxo normal — ver iniciarEscolhaCollection).
+function vencedorMotorEscolha() {
+  if (!PONTOS_ANTES_MOTOR_ESCOLHA) return lider();
+  const activos = concorrentesActivos();
+  const ganho = i => pontos[i] - PONTOS_ANTES_MOTOR_ESCOLHA[i];
+  const maiorGanho = Math.max(...activos.map(ganho));
+  const empatados = activos.filter(i => ganho(i) === maiorGanho);
+  if (empatados.length === 1) return empatados[0];
+  let melhor = empatados[0];
+  for (const i of empatados) {
+    if (TEMPO_RESPOSTA_MOTOR_ESCOLHA[i] < TEMPO_RESPOSTA_MOTOR_ESCOLHA[melhor]) melhor = i;
+  }
   return melhor;
 }
 
@@ -1337,17 +1368,31 @@ function iniciarEscolhaCollection() {
   const pool = filtrarPorDificuldade(naoUsadas, playlistNaRonda);
   const [bandaMin, bandaMax] = bandaDificuldade(playlistNaRonda);
 
-  const primeiraDaRonda = (playlistNaRonda === 1);
   const titulo = document.getElementById('collection-titulo');
   const sub = document.getElementById('collection-sub');
   const lista = document.getElementById('collection-lista');
   lista.innerHTML = '';
   document.getElementById('collection-resultado').textContent = '';
 
-  // PASSO 0 — SORTEIO ALEATÓRIO (primeira playlist de cada ronda)
-  if (primeiraDaRonda) {
-    titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — SORTEIO ALEATÓRIO';
-    sub.textContent = `Início de Ronda: o Universo é sorteado pelo sistema. Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
+  // Escolha única por Ronda (Bíblia §10.10, actualizada 2026-08-28):
+  // P1=Blind Draw, P2=Motor (automático, arma o rasto para a Escolha de
+  // P3), P3=Escolha (vencedor de P2 escolhe — ver vencedorMotorEscolha),
+  // P4=Motor, P5=Motor. Substitui a lógica antiga em que o líder do
+  // ranking geral escolhia em 4 das 5 Playlists.
+  if (playlistNaRonda === 2) {
+    PONTOS_ANTES_MOTOR_ESCOLHA = pontos.slice();
+    TEMPO_RESPOSTA_MOTOR_ESCOLHA = [0, 0, 0, 0];
+    A_REGISTAR_TEMPO_MOTOR_ESCOLHA = true;
+  }
+
+  // PASSO 0 — BLIND DRAW (P1) / MOTOR automático (P2, P4, P5)
+  if (playlistNaRonda !== 3) {
+    const ehBlindDraw = playlistNaRonda === 1;
+    titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + (ehBlindDraw ? 'BLIND DRAW' : 'MOTOR');
+    sub.textContent = (ehBlindDraw
+      ? 'Início de Ronda: o Universo é sorteado pelo sistema.'
+      : 'Selecção automática pelo motor do jogo.')
+      + ` Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
     setTimeout(() => {
       const escolha = pool[Math.floor(Math.random() * pool.length)];
       confirmarCollection(escolha, true);
@@ -1355,10 +1400,12 @@ function iniciarEscolhaCollection() {
     return;
   }
 
-  // PASSO 1 — ESCOLHA DA FAMÍLIA (DÉCADAS, GÉNEROS ou ESPECIAIS)
-  const liderIdx = lider();
-  titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[liderIdx] + ' ESCOLHE A FAMÍLIA';
-  sub.textContent = `Passo 1 de 2: escolher primeiro DÉCADAS, GÉNEROS ou ESPECIAIS. Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
+  // PASSO 1 — ESCOLHA DA FAMÍLIA (só P3 de cada Ronda) — decidida pelo
+  // vencedor de P2, não pelo líder do ranking geral.
+  const escolhedorIdx = vencedorMotorEscolha();
+  A_REGISTAR_TEMPO_MOTOR_ESCOLHA = false;
+  titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[escolhedorIdx] + ' ESCOLHE A FAMÍLIA';
+  sub.textContent = `Passo 1 de 2: escolher primeiro DÉCADAS, GÉNEROS ou ESPECIAIS (vencedor da Playlist anterior escolhe). Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
 
   const temDecadas = pool.some(k => familiaDeChave(k) === FAMILIA_DECADAS);
   const temGeneros = pool.some(k => familiaDeChave(k) === FAMILIA_GENEROS);
@@ -1374,20 +1421,20 @@ function iniciarEscolhaCollection() {
     btn.style.fontSize = '15px';
     btn.textContent = emoji + ' ' + familia;
     if (!activo) btn.disabled = true;
-    btn.onclick = () => escolherUniversoDaFamilia(familia, pool, liderIdx, bandaMin, bandaMax);
+    btn.onclick = () => escolherUniversoDaFamilia(familia, pool, escolhedorIdx, bandaMin, bandaMax);
     lista.appendChild(btn);
   });
 }
 
 // PASSO 2 — ESCOLHA DO UNIVERSO DENTRO DA FAMÍLIA
-function escolherUniversoDaFamilia(familia, pool, liderIdx, bandaMin, bandaMax) {
+function escolherUniversoDaFamilia(familia, pool, escolhedorIdx, bandaMin, bandaMax) {
   const titulo = document.getElementById('collection-titulo');
   const sub = document.getElementById('collection-sub');
   const lista = document.getElementById('collection-lista');
   lista.innerHTML = '';
   document.getElementById('collection-resultado').textContent = '';
 
-  titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[liderIdx] + ' ESCOLHE O UNIVERSO';
+  titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[escolhedorIdx] + ' ESCOLHE O UNIVERSO';
   sub.textContent = `Passo 2 de 2: família ${familia} escolhida. Selecciona o Universo específico.`;
 
   const opcoes = pool.filter(k => familiaDeChave(k) === familia);
@@ -2103,9 +2150,14 @@ function acertouFaixa(i) {
   vencedorFaixa = i;
   respostaFoto[i] = 'correcto';
   mostrarMomentoResposta(i, 'correcto');
-  const ganhos = (faixaAtual === 5) ? PONTOS_FAIXA5 : PONTOS_FAIXA;
-  pontos[i] += ganhos;
+  pontos[i] += PONTOS_FAIXA;
   quadradosGanhos[faixaAtual - 1] = true;
+  // Rasto do tempo de resposta para o desempate da Escolha (P3) —
+  // ver vencedorMotorEscolha(). tempoRestante conta a descer a partir
+  // de JANELA_TRECHO, logo o tempo decorrido é a diferença.
+  if (A_REGISTAR_TEMPO_MOTOR_ESCOLHA) {
+    TEMPO_RESPOSTA_MOTOR_ESCOLHA[i] += (JANELA_TRECHO - tempoRestante);
+  }
   historico[i].push({ faixa: faixaAtual, tipo: 'acerto', musica: musicasActuais[faixaAtual - 1].titulo || musicasActuais[faixaAtual - 1].chave || '?' , pontosApos: pontos[i]});
   renderCabines();
   renderProgresso();
@@ -2125,15 +2177,15 @@ function acertouFaixa(i) {
     setTimeout(() => {
       mostrarSoPainel('bonus-painel');
       document.getElementById('bonus-quem').textContent =
-        `${NOMES[i]} ganhou a Faixa ${faixaAtual} (+${ganhos} pontos). Pergunta Bónus temática (${COLLECTIONS[collectionActual].nome}):`;
+        `${NOMES[i]} ganhou a Faixa ${faixaAtual} (+${PONTOS_FAIXA} pontos). Pergunta Bónus temática (${COLLECTIONS[collectionActual].nome}):`;
     }, pausaAposAcerto);
     log(`✓ ${NOMES[i]} acertou — quadrado ${faixaAtual} conquistado.`);
   } else if (!universoTemBonus && ESCADA_MEMORIA_ACTIVA) {
-    log(`✓ ${NOMES[i]} acertou (+${ganhos} pontos) — Universo musical: arranca a Escada de Memória.`);
+    log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — Universo musical: arranca a Escada de Memória.`);
     setTimeout(() => iniciarEscada(i), pausaAposAcerto);
   } else {
     faseGeral = 'fim';
-    log(`✓ ${NOMES[i]} acertou (+${ganhos} pontos) — mosaico a revelar…`);
+    log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — mosaico a revelar…`);
     if (COLLECTIONS[collectionActual].temTributo) dispararAudioProximaPosicao();
     setTimeout(() => avancarParaProximaFaixaOuMosaico(), pausaAposAcerto);
   }
