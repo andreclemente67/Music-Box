@@ -720,5 +720,35 @@
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
+  },
+  "STD.INT.60.MIX.001": {
+    "tipo": "standard",
+    "nome": "Anos 60",
+    "descritivo": "Revolução Sonora",
+    "playlistCodigo": "STD.INT.60.MIX.001",
+    "universo": "Eixo Temporal",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "dec60_01",
+      "dec60_02",
+      "dec60_03",
+      "dec60_04",
+      "dec60_05",
+      "dec60_06",
+      "dec60_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Sam Cooke",
+      "id": "dec60_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }

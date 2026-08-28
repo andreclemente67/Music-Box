@@ -8975,5 +8975,337 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/128938",
     "imagem_data_captura": "2026-08-28",
     "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_01",
+    "titulo": "Respect",
+    "artista": [
+      "Aretha Franklin"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Hino soul de empoderamento",
+    "instrumento": [
+      "Voz",
+      "Metais"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "dec60_01_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_01_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/vuxryw1385244001.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111464",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_02",
+    "titulo": "(I Can't Get No) Satisfaction",
+    "artista": [
+      "The Rolling Stones"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Riff de guitarra fuzz icónico",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "dec60_02_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_02_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rputqs1367245834.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/119227",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_03",
+    "titulo": "Good Vibrations",
+    "artista": [
+      "The Beach Boys"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop-sinfónico com theremin",
+    "instrumento": [
+      "Voz",
+      "Theremin"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec60_03_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_03_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rvqysx1385325837.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111251",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_04",
+    "titulo": "Like a Rolling Stone",
+    "artista": [
+      "Bob Dylan"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Folk Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Folk-rock que mudou a letra popular",
+    "instrumento": [
+      "Guitarra",
+      "Voz",
+      "Órgão"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec60_04_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_04_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rytwxw1363687167.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111326",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_05",
+    "titulo": "My Girl",
+    "artista": [
+      "The Temptations"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Motown clássico, harmonias vocais",
+    "instrumento": [
+      "Voz",
+      "Metais"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec60_05_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_05_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/yxvtsq1340734230.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111421",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_06",
+    "titulo": "Purple Haze",
+    "artista": [
+      "Jimi Hendrix"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Psicadelia com guitarra revolucionária",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec60_06_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_06_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xuqsrw1385847758.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111468",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_07",
+    "titulo": "White Rabbit",
+    "artista": [
+      "Jefferson Airplane"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Psicadelia"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock psicadélico, referências a Alice no País das Maravilhas",
+    "instrumento": [
+      "Voz",
+      "Guitarra"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "dec60_07_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec60_07_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/jefferson-airplane-501f174052cff.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/114607",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec60_mosaico",
+    "titulo": "A Change Is Gonna Come",
+    "artista": [
+      "Sam Cooke"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada soul icónica dos direitos civis",
+    "instrumento": [
+      "Voz",
+      "Orquestra"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec60_mosaico_full.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "dec60_mosaico_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/yqtruq1388161622.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111459",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
   }
 ]
