@@ -3,6 +3,24 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Parte 2: removida restrição de Ronda para a família ESPECIAIS
+`musicbox.html`: removida a regra "Especiais só a partir da Ronda 2"
+(bíblia 3.2.1, já revogada pela Bíblia actualizada — 7.10/27.12). O ecrã
+de escolha de família (Passo 1 de 2) mostra agora sempre 3 opções —
+DÉCADAS/GÉNEROS/ESPECIAIS — desde a Playlist 1 da Ronda 1.
+`FAMILIA_COLECAO` (mapa estático, só cobria 14 chaves legadas — as 12
+playlists descobertas automaticamente de playlists.json ficavam
+invisíveis no selector de família) substituído por `familiaDeChave()` +
+`familiaDeUniversoCodigo()`, que derivam a família a partir do código
+estruturado da playlist (mesma lógica de `af_familiaDePlaylist()` do
+Studio, Parte 1). Validado: `deno check` (exit 0); teste real em Chrome
+via puppeteer-core (`_teste_familia_jogo.js`, scratchpad) — Ronda 1,
+Playlist 2: os 3 botões de família aparecem todos activos (nenhum
+`disabled`); clicar em ESPECIAIS mostra os universos reais (Retrato
+Sonoro, Geografia, Logótipos, Televisão, Ativadores Psicológicos, etc.),
+sem cair no fallback "pool toda" nem em erro de página. Screenshot em
+scratchpad/familia_especiais_ronda1.png.
+
 ## 2026-08-28 — Parte 1: sidebar do Studio reorganizada por Família (DÉCADAS/GÉNEROS/ESPECIAIS)
 `renderSidebar()` em `musicbox_studio.html` reescrita para agrupar
 primeiro por Família (nova função `af_familiaDePlaylist`), depois por

@@ -1264,29 +1264,55 @@ function filtrarPorDificuldade(chaves, posicaoNaRonda) {
   return semAbaixoDoPiso.length > 0 ? semAbaixoDoPiso : chaves; // último recurso: nunca travar o jogo
 }
 
-// ── FAMÍLIAS DE UNIVERSOS (Bíblia Cap. 27.12 — dois passos: família → universo) ──
-// Chave da COLLECTION → família a que pertence
+// ── FAMÍLIAS DE UNIVERSOS (Bíblia 7.10/27.12, actualizada 2026-08-28) ──
+// DÉCADAS / GÉNEROS / ESPECIAIS são as 3 famílias em pé de igualdade,
+// escolha em dois passos (família → universo), disponíveis desde a
+// Playlist 1 (a regra "Especiais só a partir da Ronda 2" foi removida da
+// Bíblia — ver DECISIONS.md 2026-08-28). Família derivada do código
+// estruturado da playlist [TIPO].[GEO].[DEC].[GENERO].[VOL] guardado em
+// COLLECTIONS[chave].playlistCodigo (preenchido a partir de
+// playlists.json — ver catalogoPronto) + do tipo (retrato é sempre
+// Especiais). FAMILIA_COLECAO_OFFLINE cobre o caso raro de
+// catalogo.json/playlists.json não carregarem (fetch falhou): nesse caso
+// playlistCodigo fica no literal antigo hardcoded (ex. "AN80-001"), sem
+// segmentos estruturados para ler — mesma lógica usada em
+// af_familiaDePlaylist() de musicbox_studio.html (Parte 1, ver
+// DECISIONS.md), adaptada aqui à indirecção chave-curta → COLLECTIONS.
 const FAMILIA_DECADAS = 'DÉCADAS';
 const FAMILIA_GENEROS = 'GÉNEROS';
-const FAMILIA_COLECAO = {
-  ANOS80:        FAMILIA_DECADAS,
-  PT80:          FAMILIA_DECADAS,
-  ANOS2010:      FAMILIA_DECADAS,
-  PT:            FAMILIA_GENEROS,
-  SOLO:          FAMILIA_GENEROS,
-  CINEMA:        FAMILIA_GENEROS,
-  AMERICANA:     FAMILIA_GENEROS,
-  BATERIA:       FAMILIA_GENEROS,
-  BRA001:        FAMILIA_GENEROS,
-  SYN001:        FAMILIA_GENEROS,
-  RETRATO_VOZES: FAMILIA_GENEROS,
-  PT_BAT:        FAMILIA_GENEROS,
-  LOGO001:        FAMILIA_GENEROS,
-  TRIBUTO_BEATLES:FAMILIA_GENEROS,
+const FAMILIA_ESPECIAIS = 'ESPECIAIS';
+const GENERO_FAMILIA = {
+  ROC: FAMILIA_GENEROS, POP: FAMILIA_GENEROS, MET: FAMILIA_GENEROS, AME: FAMILIA_GENEROS,
+  SYN: FAMILIA_GENEROS, DNC: FAMILIA_GENEROS, GTR: FAMILIA_GENEROS, BAT: FAMILIA_GENEROS,
+  CIN: FAMILIA_ESPECIAIS, TV: FAMILIA_ESPECIAIS, GAM: FAMILIA_ESPECIAIS, NAT: FAMILIA_ESPECIAIS,
+  VOZ: FAMILIA_ESPECIAIS,
 };
-
-// Universos Especiais/Temáticos — só disponíveis a partir da Ronda 2 (bíblia 3.2.1)
-const UNIVERSOS_ESPECIAIS = new Set(['CINEMA', 'SYN001', 'RETRATO_VOZES', 'PT_BAT', 'LOGO001', 'TRIBUTO_BEATLES']);
+const FAMILIA_COLECAO_OFFLINE = {
+  ANOS80: FAMILIA_DECADAS, PT80: FAMILIA_ESPECIAIS, ANOS2010: FAMILIA_DECADAS,
+  PT: FAMILIA_ESPECIAIS, SOLO: FAMILIA_GENEROS, CINEMA: FAMILIA_ESPECIAIS,
+  AMERICANA: FAMILIA_GENEROS, BATERIA: FAMILIA_GENEROS, BRA001: FAMILIA_GENEROS,
+  SYN001: FAMILIA_GENEROS, RETRATO_VOZES: FAMILIA_ESPECIAIS, PT_BAT: FAMILIA_GENEROS,
+  LOGO001: FAMILIA_ESPECIAIS, TRIBUTO_BEATLES: FAMILIA_GENEROS,
+};
+function familiaDeUniversoCodigo(codigoEstruturado) {
+  const partes = (codigoEstruturado || '').split('.');
+  if (partes.length < 4) return null; // não estruturado — chamador decide fallback
+  const [tipo, geo, dec, genero] = partes;
+  if (tipo === 'RET') return FAMILIA_ESPECIAIS; // Retrato Sonoro é sempre Especiais
+  if (geo === 'PT') {
+    if (genero === 'BAT' || genero === 'GTR') return FAMILIA_GENEROS; // Solistas (Bateria Portuguesa)
+    return FAMILIA_ESPECIAIS; // Slot Local (dec=ALL) ou Cruzamento (dec com valor)
+  }
+  if (dec !== 'ALL') return FAMILIA_DECADAS;
+  if (genero === 'MIX' && geo === 'INT') return FAMILIA_ESPECIAIS; // Cruzamento/Multi-género
+  return GENERO_FAMILIA[genero] || FAMILIA_GENEROS;
+}
+function familiaDeChave(chave) {
+  const col = COLLECTIONS[chave];
+  const daCodigo = col && familiaDeUniversoCodigo(col.playlistCodigo);
+  if (daCodigo) return daCodigo;
+  return FAMILIA_COLECAO_OFFLINE[chave] || FAMILIA_GENEROS;
+}
 // Décadas disponíveis (inclui Anos 2020 — Bíblia 27.12)
 const DECADAS_LABEL = {
   ANOS80: 'Anos 80',
@@ -1302,12 +1328,11 @@ function iniciarEscolhaCollection() {
   actualizarBadge();
 
   const disponiveis = CHAVES_COLLECTIONS.filter(k => !collectionsUsadas.includes(k));
+  // Restrição antiga "Especiais só a partir da Ronda 2" (bíblia 3.2.1)
+  // removida 2026-08-28 — Bíblia actualizada (7.10/27.12): as 3 famílias
+  // ficam disponíveis desde a Playlist 1. Ver DECISIONS.md.
   const naoUsadas = disponiveis.length > 0 ? disponiveis : CHAVES_COLLECTIONS;
-  // Ronda 1: Especiais/Temáticos não disponíveis (bíblia 3.2.1)
-  const naoUsadasFiltradas = rondaAtual === 1
-    ? naoUsadas.filter(k => !UNIVERSOS_ESPECIAIS.has(k))
-    : naoUsadas;
-  const pool = filtrarPorDificuldade(naoUsadasFiltradas, playlistNaRonda);
+  const pool = filtrarPorDificuldade(naoUsadas, playlistNaRonda);
   const [bandaMin, bandaMax] = bandaDificuldade(playlistNaRonda);
 
   const primeiraDaRonda = (playlistNaRonda === 1);
@@ -1328,17 +1353,19 @@ function iniciarEscolhaCollection() {
     return;
   }
 
-  // PASSO 1 — ESCOLHA DA FAMÍLIA (DÉCADAS ou GÉNEROS)
+  // PASSO 1 — ESCOLHA DA FAMÍLIA (DÉCADAS, GÉNEROS ou ESPECIAIS)
   const liderIdx = lider();
   titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[liderIdx] + ' ESCOLHE A FAMÍLIA';
-  sub.textContent = `Passo 1 de 2: escolher primeiro DÉCADAS ou GÉNEROS. Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
+  sub.textContent = `Passo 1 de 2: escolher primeiro DÉCADAS, GÉNEROS ou ESPECIAIS. Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
 
-  const temDecadas = pool.some(k => FAMILIA_COLECAO[k] === FAMILIA_DECADAS);
-  const temGeneros = pool.some(k => FAMILIA_COLECAO[k] === FAMILIA_GENEROS);
+  const temDecadas = pool.some(k => familiaDeChave(k) === FAMILIA_DECADAS);
+  const temGeneros = pool.some(k => familiaDeChave(k) === FAMILIA_GENEROS);
+  const temEspeciais = pool.some(k => familiaDeChave(k) === FAMILIA_ESPECIAIS);
 
   [
     { familia: FAMILIA_DECADAS, emoji: '▤', activo: temDecadas },
     { familia: FAMILIA_GENEROS, emoji: '♪', activo: temGeneros },
+    { familia: FAMILIA_ESPECIAIS, emoji: '★', activo: temEspeciais },
   ].forEach(({ familia, emoji, activo }) => {
     const btn = document.createElement('button');
     btn.className = 'collection-btn';
@@ -1361,7 +1388,7 @@ function escolherUniversoDaFamilia(familia, pool, liderIdx, bandaMin, bandaMax) 
   titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[liderIdx] + ' ESCOLHE O UNIVERSO';
   sub.textContent = `Passo 2 de 2: família ${familia} escolhida. Selecciona o Universo específico.`;
 
-  const opcoes = pool.filter(k => FAMILIA_COLECAO[k] === familia);
+  const opcoes = pool.filter(k => familiaDeChave(k) === familia);
 
   if (opcoes.length === 0) {
     // fallback: não há opções nesta família, abre toda a pool
@@ -2737,7 +2764,7 @@ async function mostrarTesteLista(categoria) {
     .forEach(chave => {
       const col = COLLECTIONS[chave];
       const dif = col.dificuldade || 3;
-      const familia = FAMILIA_COLECAO[chave] || '—';
+      const familia = familiaDeChave(chave);
       const btn = document.createElement('button');
       btn.style.cssText = 'background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:12px;text-align:left;cursor:pointer;line-height:1.5;';
       btn.innerHTML = '<span style="color:#8a8a86;font-size:10px;letter-spacing:1px;">' + familia + ' ›</span><br><strong>' + col.nome + '</strong><br><span style="color:#6a6a66;font-size:10px;">Dif. ' + dif + '/5 · ' + col.descritivo + ' <span style="color:#5a5a56">(' + col.playlistCodigo + ')</span></span>';
