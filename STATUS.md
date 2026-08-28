@@ -1,7 +1,21 @@
 # Music Box — Status
 
 ## Última actualização
-2026-08-27
+2026-08-28
+
+## 2026-08-28 — Parte 1: sidebar do Studio reorganizada por Família (DÉCADAS/GÉNEROS/ESPECIAIS)
+`renderSidebar()` em `musicbox_studio.html` reescrita para agrupar
+primeiro por Família (nova função `af_familiaDePlaylist`), depois por
+Tipo (Standard/Retrato/Tributo), depois lista as playlists. Ver
+DECISIONS.md 2026-08-28 para a lógica completa de classificação.
+Validado: `deno check` (exit 0) sobre o `<script>` extraído; teste real
+em Chrome via puppeteer-core (`_teste_sidebar_familia.js`, scratchpad) —
+confirma as 26 playlists agrupadas correctamente (DÉCADAS: 6, GÉNEROS: 10,
+ESPECIAIS: 10) e que o filtro "Tipo = Retrato" continua a funcionar por
+cima da nova estrutura (devolve exactamente as 3 playlists Retrato,
+espalhadas por 2 famílias diferentes — Vozes Lendárias/Portuguesas e
+Logótipos, todas em ESPECIAIS). Screenshot em
+scratchpad/sidebar_familia.png.
 
 ## 2026-08-27 — "Bateria Portuguesa" reclassificada para o universo "Solistas"
 `STD.PT.ALL.BAT.001` tinha `universo: "Geografia"` apesar de ser

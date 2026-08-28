@@ -2304,6 +2304,39 @@ function af_limparFiltrosPlaylist() {
   renderSidebar();
 }
 
+// ── FAMÍLIAS DE UNIVERSOS (Bíblia 7.10/27.12, actualizada 2026-08-28) ──
+// DÉCADAS / GÉNEROS / ESPECIAIS passam a ser as 3 famílias em pé de
+// igualdade — estrutura de organização primária da sidebar (ver
+// renderSidebar()). Derivada do código estruturado da playlist
+// [TIPO].[GEO].[DEC].[GENERO].[VOL] (ver CODIGOS.md) + do campo `tipo`
+// (retrato é sempre Retrato Sonoro/Logótipos = Especiais, independente de
+// GEO/DEC). Casos verificados contra as 26 playlists reais em
+// playlists.json (2026-08-28) — ver DECISIONS.md.
+const FAMILIA_DECADAS = 'DÉCADAS';
+const FAMILIA_GENEROS = 'GÉNEROS';
+const FAMILIA_ESPECIAIS = 'ESPECIAIS';
+const GENERO_FAMILIA = {
+  ROC: FAMILIA_GENEROS, POP: FAMILIA_GENEROS, MET: FAMILIA_GENEROS, AME: FAMILIA_GENEROS,
+  SYN: FAMILIA_GENEROS, DNC: FAMILIA_GENEROS, GTR: FAMILIA_GENEROS, BAT: FAMILIA_GENEROS,
+  CIN: FAMILIA_ESPECIAIS, TV: FAMILIA_ESPECIAIS, GAM: FAMILIA_ESPECIAIS, NAT: FAMILIA_ESPECIAIS,
+  VOZ: FAMILIA_ESPECIAIS,
+};
+function af_familiaDePlaylist(chave, pl) {
+  if (pl.tipo === 'retrato') return FAMILIA_ESPECIAIS;
+  const partes = chave.split('.');
+  if (partes.length < 4) return FAMILIA_GENEROS; // código não estruturado (ex. legado) — fallback seguro
+  const [, geo, dec, genero] = partes;
+  if (geo === 'PT') {
+    // Solistas portugueses (Bateria Portuguesa) são Género, não Slot
+    // Local/Cruzamento — mesma lógica dos Solistas internacionais.
+    if (genero === 'BAT' || genero === 'GTR') return FAMILIA_GENEROS;
+    return FAMILIA_ESPECIAIS; // Slot Local (dec=ALL) ou Cruzamento (dec com valor)
+  }
+  if (dec !== 'ALL') return FAMILIA_DECADAS;
+  if (genero === 'MIX' && geo === 'INT') return FAMILIA_ESPECIAIS; // Cruzamento/Multi-género
+  return GENERO_FAMILIA[genero] || FAMILIA_GENEROS;
+}
+
 function renderSidebar() {
   const list = document.getElementById('sidebar-playlists');
 
@@ -2318,42 +2351,35 @@ function renderSidebar() {
   );
   document.getElementById('pl-filtros-limpar').style.display = filtrosAtivos ? 'block' : 'none';
 
-  // Agrupamento primário por TIPO estrutural (Standard/Solo/Retrato/
-  // Tributo) — a "Família" (Décadas/Géneros Atemporais, derivada do DEC da
-  // chave, ver DECISIONS.md 2026-08-25) é especificamente o painel de
-  // categorias que o concorrente escolhe no jogo STANDARD; Retrato e
-  // Tributo são mecânicas de ronda diferentes e nem aparecem nesse painel.
-  // Correcção 2026-08-25: Família volta a ser sub-agrupamento, só dentro
-  // de Standard — Solo/Retrato/Tributo mantêm-se secções de Tipo simples,
-  // sem sub-agrupamento nenhum (como estava antes da tentativa anterior).
+  // Agrupamento primário por FAMÍLIA (DÉCADAS/GÉNEROS/ESPECIAIS, ver
+  // af_familiaDePlaylist acima) — Nível 2 dentro de cada família é o TIPO
+  // estrutural (Standard/Retrato/Tributo/Vídeo). Reorganização pedida pelo
+  // utilizador 2026-08-28 (Bíblia 7.10/27.12): as 3 famílias passam a ser a
+  // estrutura primária em todo o sistema, substituindo o agrupamento
+  // anterior por Tipo (Standard/Solo/Retrato/Tributo) com Família só como
+  // sub-agrupamento dentro de Standard. Ver DECISIONS.md 2026-08-28.
   const ORDEM_DECADAS = ['50', '60', '70', '80', '90', '00', '10', '20'];
-  const NOME_DECADA = { '50': 'Anos 50', '60': 'Anos 60', '70': 'Anos 70', '80': 'Anos 80', '90': 'Anos 90', '00': 'Anos 2000', '10': 'Anos 2010', '20': 'Anos 2020' };
-  const LABEL_TIPO = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo' };
+  const ORDEM_FAMILIA = [FAMILIA_DECADAS, FAMILIA_GENEROS, FAMILIA_ESPECIAIS];
+  const ORDEM_TIPO = ['standard', 'retrato', 'tributo', 'video'];
+  const LABEL_TIPO = { standard: 'Standard', retrato: 'Retrato', tributo: 'Tributo', video: 'Vídeo' };
 
-  // Solo (GTR/BAT) sai de Standard para a sua própria secção — distinção
-  // pelo segmento GENERO da chave estruturada [TIPO].[GEO].[DEC].[GENERO].[VOL]
-  // (ex.: "STD.INT.ALL.GTR.001" -> GENERO="GTR"), não por um campo `genero`
-  // à parte em playlists.json (não existe um). Apanha Solo de Guitarra,
-  // Solo de Bateria e também Bateria Portuguesa (STD.PT.ALL.BAT.001, mesmo
-  // GENERO=BAT).
-  function af_tipoEfetivo(chave, pl) {
-    const genero = chave.split('.')[3];
-    return (genero === 'GTR' || genero === 'BAT') ? 'solo' : pl.tipo;
-  }
-
-  const grupos = { standard: [], solo: [], retrato: [], tributo: [] };
+  const grupos = {}; // familia -> tipo -> [[chave,pl],...]
+  ORDEM_FAMILIA.forEach(f => { grupos[f] = {}; });
   Object.entries(PLAYLISTS)
     .filter(([chave, pl]) => af_playlistPassaFiltros(chave, pl))
     .forEach(([chave, pl]) => {
-      const grupo = af_tipoEfetivo(chave, pl);
-      (grupos[grupo] || (grupos[grupo] = [])).push([chave, pl]);
+      const familia = af_familiaDePlaylist(chave, pl);
+      const tipo = pl.tipo || 'standard';
+      const porFamilia = grupos[familia] || (grupos[familia] = {});
+      (porFamilia[tipo] || (porFamilia[tipo] = [])).push([chave, pl]);
     });
 
   list.innerHTML = `<li class="sidebar-item ${selectedPlaylistFilter==='ALL'?'active':''}" onclick="selectPlaylistFilter('ALL')" data-id="ALL">
     <span class="dot"></span> Todas <span class="sidebar-count" id="count-ALL">${CATALOGO.length}</span>
   </li>`;
 
-  const totalFiltrado = Object.values(grupos).reduce((n, entries) => n + entries.length, 0);
+  const totalFiltrado = Object.values(grupos)
+    .reduce((n, porTipo) => n + Object.values(porTipo).reduce((m, entries) => m + entries.length, 0), 0);
   if (filtrosAtivos && !totalFiltrado) {
     list.innerHTML += `<li style="padding:10px 10px;font-size:11px;color:var(--text3);font-family:var(--mono);">Nenhuma playlist corresponde aos filtros.</li>`;
   }
@@ -2369,55 +2395,40 @@ function renderSidebar() {
     </li>`;
   }
 
-  // Standard — único grupo sub-agrupado por Família (Décadas, mais antiga
-  // primeiro; Géneros Atemporais, ordem alfabética), porque é o único que
-  // corresponde ao painel de categorias do jogo.
-  if (grupos.standard.length) {
-    list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO.standard}</li>`;
+  ORDEM_FAMILIA.forEach(familia => {
+    const porTipo = grupos[familia];
+    const totalFamilia = Object.values(porTipo).reduce((n, entries) => n + entries.length, 0);
+    if (!totalFamilia) return;
+    list.innerHTML += `<li class="sidebar-group-label">${familia}</li>`;
 
-    const porDecada = {};   // "80" -> [[chave,pl],...]
-    const atemporais = [];
-    grupos.standard.forEach(([chave, pl]) => {
-      const dec = chave.split('.')[2];
-      if (dec === 'ALL') {
-        atemporais.push([chave, pl]);
-      } else {
-        (porDecada[dec] || (porDecada[dec] = [])).push([chave, pl]);
-      }
-    });
-
-    // Décadas fora de ORDEM_DECADAS (código novo/imprevisto) ficam no fim,
-    // ordenadas alfabeticamente, para nunca perder uma playlist por
-    // omissão da lista.
-    const decadasPresentes = Object.keys(porDecada).sort((a, b) => {
-      const ia = ORDEM_DECADAS.indexOf(a), ib = ORDEM_DECADAS.indexOf(b);
+    // Tipos na ordem canónica primeiro; qualquer tipo futuro/imprevisto
+    // fica no fim, alfabético, para nunca perder uma playlist por omissão.
+    const tiposPresentes = Object.keys(porTipo).sort((a, b) => {
+      const ia = ORDEM_TIPO.indexOf(a), ib = ORDEM_TIPO.indexOf(b);
       if (ia === -1 && ib === -1) return a.localeCompare(b);
       if (ia === -1) return 1;
       if (ib === -1) return -1;
       return ia - ib;
     });
-    decadasPresentes.forEach(dec => {
-      list.innerHTML += `<li class="sidebar-subgroup-label">${NOME_DECADA[dec] || `Anos ${dec}`}</li>`;
-      porDecada[dec].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
+
+    tiposPresentes.forEach(tipo => {
+      list.innerHTML += `<li class="sidebar-subgroup-label">${LABEL_TIPO[tipo] || tipo}</li>`;
+      const entradas = porTipo[tipo].slice();
+      if (familia === FAMILIA_DECADAS) {
+        // Ordem cronológica pelo segmento DEC do código.
+        entradas.sort((a, b) => {
+          const da = a[0].split('.')[2], db = b[0].split('.')[2];
+          const ia = ORDEM_DECADAS.indexOf(da), ib = ORDEM_DECADAS.indexOf(db);
+          if (ia === -1 && ib === -1) return da.localeCompare(db);
+          if (ia === -1) return 1;
+          if (ib === -1) return -1;
+          return ia - ib;
+        });
+      } else {
+        entradas.sort((a, b) => (a[1].nome || a[0]).localeCompare(b[1].nome || b[0]));
+      }
+      entradas.forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
     });
-
-    if (atemporais.length) {
-      list.innerHTML += `<li class="sidebar-subgroup-label">Géneros Atemporais</li>`;
-      atemporais
-        .slice()
-        .sort((a, b) => (a[1].nome || a[0]).localeCompare(b[1].nome || b[0]))
-        .forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
-    }
-  }
-
-  // Solo / Retrato / Tributo — secções de Tipo simples, sem sub-
-  // agrupamento por família (mecânicas de ronda diferentes, não aparecem
-  // no painel de categorias Standard). Ordem = a de playlists.json,
-  // como antes.
-  ['solo', 'retrato', 'tributo'].forEach(tipo => {
-    if (!grupos[tipo].length) return;
-    list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO[tipo]}</li>`;
-    grupos[tipo].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
   });
 
   // Filtro de playlist na Biblioteca

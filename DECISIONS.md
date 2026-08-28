@@ -1066,3 +1066,31 @@ o curador confirmar bem antes de escolher.
 Novo parâmetro opcional `contexto` em `GET /buscar-imagens-cascata`
 (ex.: o campo `banda` da faixa) — desambigua nomes curtos/comuns antes de
 consultar o DuckDuckGo (ex. "Kalú Xutos & Pontapés" em vez de só "Kalú").
+
+## 2026-08-28 — DÉCADAS/GÉNEROS/ESPECIAIS como estrutura primária (pedido explícito, Bíblia 7.10/27.12)
+As 3 famílias de Universos (DÉCADAS, GÉNEROS, ESPECIAIS) passam a ser a
+estrutura de organização primária em todo o sistema, substituindo a
+distinção antiga Standard/Solo/Retrato/Tributo como nível 1. A Bíblia já
+foi actualizada pelo utilizador (7.10 e 27.12 removem a regra "Especiais
+só a partir da Ronda 2" — as 3 famílias ficam disponíveis desde a
+Playlist 1, em pé de igualdade).
+
+**Parte 1 (Studio)**: `renderSidebar()` em `musicbox_studio.html` passa a
+agrupar por Família (nível 1) → Tipo (nível 2: Standard/Retrato/Tributo)
+→ playlists. Nova função `af_familiaDePlaylist(chave, pl)` deriva a
+família a partir do código estruturado `[TIPO].[GEO].[DEC].[GENERO].[VOL]`
++ do campo `tipo` (retrato é sempre Especiais — Retrato Sonoro/Logótipos
+são 2 dos 7 Universos Especiais canónicos). Regras chave, verificadas
+contra as 26 playlists reais: GEO=PT + GENERO≠BAT/GTR → Especiais (Slot
+Local se DEC=ALL, Cruzamento se DEC com valor); DEC≠ALL (fora do caso
+GEO=PT) → Décadas; GENERO=MIX+GEO=INT+DEC=ALL → Especiais (Cruzamento);
+resto por tabela GENERO→família (Rock/Pop/Metal/Americana/Synth/Dance/
+Guitarra/Bateria→Géneros, Cinema/TV/Videojogos/Ativadores/Vozes→
+Especiais). Filtros existentes (Década/Género/Geo/Dificuldade/Tipo/
+Estado) mantidos, agora a filtrar por cima da nova estrutura.
+
+**Parte 2 (Jogo)**: remover a restrição "Especiais só a partir da Ronda
+2" em `musicbox.html` (`UNIVERSOS_ESPECIAIS`/`FAMILIA_COLECAO`) — ecrã de
+escolha de família passa a mostrar sempre 3 opções.
+
+**Parte 3**: corrigir `playlistCodigo` em falta em `playlists.json`.
