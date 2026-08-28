@@ -3,6 +3,38 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Correcção de 2 gaps concretos da auditoria total (decadas vazio + imagem em falta)
+Fora da lista de 10 pendências já enviada — pedido isolado sobre 2
+achados específicos da Parte 1 (auditoria total):
+
+- **`decadas: []` vazio corrigido (2 faixas)**, ano confirmado por
+  pesquisa antes de aplicar:
+  - `the_durutti_column_sketch_for_summer` → `["1980s"]` ("Sketch for
+    Summer", 1980, álbum de estreia *The Return of the Durutti Column*,
+    Factory Records).
+  - `future_islands_seasons_waiting_on_you` → `["2010s"]` ("Seasons
+    (Waiting on You)", single de 2014, álbum *Singles*) — consistente
+    com o uso desta faixa nas playlists "Anos 2010 — Synth".
+- **`beatles_05` ("Something (cover)", Tribute Beatles) — imagem
+  associada**: sem imagem nenhuma antes; aplicada a mesma foto de banda
+  já usada nas outras 5 posições "The Beatles" desta playlist
+  (`beatles_01/02/03/04/06`, via `GET /buscar-imagem-artista?artista=The
+  Beatles` — TheAudioDB, mesmo URL que as outras já tinham), por
+  consistência editorial (o "cover" testa reconhecer a música dos
+  Beatles, não o artista da versão cover, que fica genérico "Outro
+  artista"). `imagem_licenca_estado: "confirmar"` — não havia imagem
+  prévia marcada `"livre"` nesta faixa, nada a proteger.
+
+**Reverificação das 3 imagens afectadas pelo rate-limit da Wikimedia**
+(`solo_mosaico`, `bra001_03`, `hip_mosaico`): todas as 3 confirmadas a
+carregar normalmente agora (HTTP 200, JPEG real, tamanhos plausíveis
+245KB-1.9MB) — confirma que eram mesmo falsos positivos do rate-limit
+temporário, sem nenhum problema real. Nada a corrigir.
+
+Validado: `python3 -m json.tool`/JSON válido; `deno check` (exit 0) em
+ambos os ficheiros (nenhum JS alterado nesta correcção, só
+catalogo.json).
+
 ## 2026-08-28 — Parte 3: 4º tipo de Playlist "Vídeo" (Bíblia §29.2)
 `STD.INT.ALL.CIN.001` ("Cinema & Música") reclassificada de
 `tipo: "standard"` para `tipo: "video"` em `playlists.json` — só o

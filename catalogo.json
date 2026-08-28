@@ -4370,7 +4370,13 @@
     "elegivel_mosaico": true,
     "estado": "ativo",
     "curador": "André Clemente",
-    "data": "2026-08-10"
+    "data": "2026-08-10",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qpvwuv1347996168.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111247",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
   },
   {
     "id": "beatles_06",
@@ -4652,7 +4658,7 @@
     "artista": [
       "The Durutti Column"
     ],
-    "decadas": [],
+    "decadas": ["1980s"],
     "generos": [],
     "geografia": "",
     "estilo": "",
@@ -4954,7 +4960,7 @@
     "artista": [
       "Future Islands"
     ],
-    "decadas": [],
+    "decadas": ["2010s"],
     "generos": [],
     "geografia": "",
     "estilo": "",
