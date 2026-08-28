@@ -6333,9 +6333,11 @@ const AF_MAX_TENTATIVAS_ARTISTA_REPETIDO = 3;
 // incluir a resposta anterior completa como contexto, num único prompt
 // auto-suficiente, em vez de depender de histórico de conversa.
 function af_montarPromptCorretivoArtistaRepetido(res, conflitos) {
-  const nomesProibidos = af_nomesProibidosIA(af_infoModoGeracaoIA());
+  const info = af_infoModoGeracaoIA();
+  const nFaixasIA = 7 - info.faixasFixas.length;
+  const nomesProibidos = af_nomesProibidosIA(info);
   const avisoSemente = nomesProibidos.length
-    ? ` Lembrete: os artistas ${nomesProibidos.map(n => `"${n}"`).join(', ')} já estão a ser usados (semente/contexto desta geração) — continuam PROIBIDOS de aparecer nas 6 faixas ou no mosaico. Lembrete também: a pessoa a adivinhar no mosaico não pode ser membro conhecido de nenhum artista já listado nas 7 faixas.`
+    ? ` Lembrete: os artistas ${nomesProibidos.map(n => `"${n}"`).join(', ')} já estão a ser usados (semente/contexto desta geração) — continuam PROIBIDOS de aparecer nas ${nFaixasIA} faixas ou no mosaico. Lembrete também: a pessoa a adivinhar no mosaico não pode ser membro conhecido de nenhum artista já listado nas 7 faixas.`
     : ' Lembrete: a pessoa a adivinhar no mosaico não pode ser membro conhecido de nenhum artista já listado nas 7 faixas.';
   return `A tua resposta anterior teve artista(s) repetido(s), o que não é permitido — nenhum artista pode aparecer mais do que uma vez em toda a playlist, nem nas 7 faixas principais nem no mosaico (nem como artista da faixa do mosaico, nem como a pessoa a adivinhar).${avisoSemente}
 
@@ -6345,7 +6347,7 @@ ${JSON.stringify(res)}
 Problema(s) encontrado(s):
 ${conflitos.map(c => `- ${c}`).join('\n')}
 
-Corrige substituindo APENAS a(s) faixa(s)/mosaico envolvidos por uma alternativa real e verificável, com artista diferente de todos os outros já usados na lista — mantém tudo o resto exactamente igual (títulos/artistas das faixas sem problema, metadados da playlist). Responde de novo com o objecto JSON completo, no mesmo formato de antes (campos "playlist", "musicas" com exactamente 6 objectos, "mosaico"), sem markdown, sem comentários, sem texto antes ou depois.`;
+Corrige substituindo APENAS a(s) faixa(s)/mosaico envolvidos por uma alternativa real e verificável, com artista diferente de todos os outros já usados na lista — mantém tudo o resto exactamente igual (títulos/artistas das faixas sem problema, metadados da playlist). Responde de novo com o objecto JSON completo, no mesmo formato de antes (campos "playlist", "musicas" com exactamente ${nFaixasIA} objectos, "mosaico"), sem markdown, sem comentários, sem texto antes ou depois.`;
 }
 
 // Chama directamente POST /gerar-faixas (_servidor_escrita.py, porta 8002)
@@ -6519,13 +6521,21 @@ function af_nomesProibidosIA(info) {
 
 // Pede à IA os metadados da playlist (nome/geo/décadas/género/dificuldade/
 // tipo — excepto os fixos no modo Categoria) sugeridos a partir do
-// contexto do modo activo (af_infoModoGeracaoIA), além das 6 faixas +
-// mosaico habituais. A resposta é importada por af_aplicarResultadoIA(),
-// que usa o objecto "playlist" para preencher automaticamente a tab
-// "Estrutura".
+// contexto do modo activo (af_infoModoGeracaoIA), além das (7 - nº de
+// faixas fixas do modo activo) faixas + mosaico habituais — nunca um
+// número fixo, ver nFaixasIA abaixo. A resposta é importada por
+// af_aplicarResultadoIA(), que usa o objecto "playlist" para preencher
+// automaticamente a tab "Estrutura".
 function montarPromptIA() {
   const info = af_infoModoGeracaoIA();
   const nomesProibidos = af_nomesProibidosIA(info);
+  // Bug corrigido 2026-08-29: estava hardcoded a 6, mas o total de faixas
+  // regulares é sempre 7 — só é seguro pedir 6 à IA quando o modo activo
+  // já fixa exactamente 1 faixa (ex. URL com semente preenchida). Nos
+  // outros modos (Categoria, Tema, Playlist-YouTube, ou Semente Múltipla
+  // com 0/2/3 sementes) isto pedia sempre o número errado a menos —
+  // Categoria e Tema, com 0 faixasFixas, geravam sempre 6, nunca 7.
+  const nFaixasIA = 7 - info.faixasFixas.length;
 
   const instrucaoMetadados = info.criteriosFixos
     ? `Os critérios geo/decadas/genero da playlist já estão FIXOS — usa exactamente estes valores no JSON "playlist": geo="${info.criteriosFixos.geo}", decadas="${info.criteriosFixos.dec}", genero="${info.criteriosFixos.genero}". Só precisas de sugerir:
@@ -6541,17 +6551,17 @@ function montarPromptIA() {
 - tipo: normalmente "STD" (Standard, áudio puro)`;
 
   const avisoProibidos = nomesProibidos.length
-    ? ` Os seguintes artistas JÁ estão a ser usados (semente/contexto desta geração) — estão PROIBIDOS de voltar a aparecer em qualquer uma das 6 faixas ou no mosaico, nem como artista nem como pessoa a adivinhar: ${nomesProibidos.map(n => `"${n}"`).join(', ')}.`
+    ? ` Os seguintes artistas JÁ estão a ser usados (semente/contexto desta geração) — estão PROIBIDOS de voltar a aparecer em qualquer uma das ${nFaixasIA} faixas ou no mosaico, nem como artista nem como pessoa a adivinhar: ${nomesProibidos.map(n => `"${n}"`).join(', ')}.`
     : '';
 
   return `Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
 
 ${instrucaoMetadados}
 
-Depois, com base nesses critérios, sugere exactamente 6 faixas adicionais REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas ou factos), diferentes entre si e com afinidade ao contexto acima, mais 1 "mosaico": uma faixa cujo intérprete, baterista, compositor ou membro é, ele próprio, a pista que os jogadores têm de adivinhar (ex.: categoria "Intérprete", pessoa "Mark Knopfler", faixa "Sultans of Swing" dos Dire Straits, porque Knopfler é o guitarrista da banda).
+Depois, com base nesses critérios, sugere exactamente ${nFaixasIA} faixas adicionais REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas ou factos), diferentes entre si e com afinidade ao contexto acima, mais 1 "mosaico": uma faixa cujo intérprete, baterista, compositor ou membro é, ele próprio, a pista que os jogadores têm de adivinhar (ex.: categoria "Intérprete", pessoa "Mark Knopfler", faixa "Sultans of Swing" dos Dire Straits, porque Knopfler é o guitarrista da banda).
 
 Regras obrigatórias sobre repetição de artistas:
-1) Nenhum artista pode repetir-se em toda a playlist — nem entre as 6 faixas, nem no mosaico (nem como artista da própria faixa do mosaico, nem como a pessoa a adivinhar).
+1) Nenhum artista pode repetir-se em toda a playlist — nem entre as ${nFaixasIA} faixas, nem no mosaico (nem como artista da própria faixa do mosaico, nem como a pessoa a adivinhar).
 2) A pessoa a adivinhar no mosaico não pode ser membro (passado ou presente), compositor ou colaborador conhecido de NENHUM artista já listado nas 7 faixas principais — não basta o nome ser diferente, tens de verificar a ligação (ex.: se uma das 7 faixas for de "Joy Division", a pessoa do mosaico não pode ser "Ian Curtis", "Peter Hook", "Bernard Sumner" nem "Stephen Morris" — nenhum membro conhecido dessa banda).${avisoProibidos}
 
 Para cada uma dessas faixas (incluindo o mosaico), indica também:
@@ -6567,7 +6577,7 @@ Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem
   ],
   "mosaico": {"categoria": "Artista|Baterista|Compositor|Dupla|Intérprete", "pessoa": "nome a adivinhar", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "descrição curta do estilo", "genero": "...", "tags": ["...", "...", "..."], "universal": true}
 }
-O array "musicas" tem de ter exactamente 6 objectos.`;
+O array "musicas" tem de ter exactamente ${nFaixasIA} objectos.`;
 }
 
 // Monta o prompt (montarPromptIA) e mostra-o na caixa de texto para
@@ -6679,8 +6689,12 @@ function aplicarMetadadosPlaylistIA(playlist) {
 // af_gerarFaixasIAServidor(), antes de haver um NP_IA_RESULTADO). Devolve
 // sempre um array novo — nunca modifica res.musicas.
 function af_musicasIAComSemente(res) {
-  const musicas = Array.isArray(res && res.musicas) ? res.musicas.slice(0, 6) : [];
   const { faixasFixas } = af_infoModoGeracaoIA();
+  // Bug corrigido 2026-08-29: .slice(0, 6) fixo cortava sempre a 6, o que
+  // só está certo quando faixasFixas.length===1 (ex. URL com semente) —
+  // nos outros modos (Categoria/Tema/Playlist-YouTube, com 0 fixas)
+  // devolvia sempre 6 faixas totais em vez de 7. Ver montarPromptIA().
+  const musicas = Array.isArray(res && res.musicas) ? res.musicas.slice(0, 7 - faixasFixas.length) : [];
   // Insere de trás para a frente para ficarem na ordem #1, #2, #3...
   for (let i = faixasFixas.length - 1; i >= 0; i--) {
     const s = faixasFixas[i];
