@@ -10629,5 +10629,336 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114319",
     "imagem_data_captura": "2026-08-28",
     "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_01",
+    "titulo": "September",
+    "artista": [
+      "Earth, Wind & Fire"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Funk-soul festivo e atemporal",
+    "instrumento": [
+      "Voz",
+      "Metais"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "soul_01_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_01_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rrptyr1414800034.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/112408",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_02",
+    "titulo": "What's Going On",
+    "artista": [
+      "Marvin Gaye"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Soul de consciência social, produção suave",
+    "instrumento": [
+      "Voz",
+      "Orquestra"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "soul_02_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_02_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/uyttsy1386374068.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111456",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_03",
+    "titulo": "Higher Ground",
+    "artista": [
+      "Stevie Wonder"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Funk-soul com clavinet marcante",
+    "instrumento": [
+      "Voz",
+      "Sintetizador"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "soul_03_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_03_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/425a5f1637703861.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/119237",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_04",
+    "titulo": "Lean on Me",
+    "artista": [
+      "Bill Withers"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Balada soul de apoio e solidariedade",
+    "instrumento": [
+      "Piano",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "soul_04_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_04_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/vsyxtp1357997382.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/113602",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_05",
+    "titulo": "Let's Stay Together",
+    "artista": [
+      "Al Green"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Soul romântico de Memphis",
+    "instrumento": [
+      "Voz",
+      "Metais"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "soul_05_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_05_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/yypqsy1454453781.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111423",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_06",
+    "titulo": "It's a Man's Man's Man's World",
+    "artista": [
+      "James Brown"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Soul dramático, o Padrinho do Soul",
+    "instrumento": [
+      "Voz",
+      "Orquestra"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "soul_06_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_06_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wuwyts1385804988.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111467",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_07",
+    "titulo": "Try a Little Tenderness",
+    "artista": [
+      "Otis Redding"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Soul de Stax Records, crescendo intenso",
+    "instrumento": [
+      "Voz",
+      "Metais"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "soul_07_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "soul_07_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/sqxjme1659328089.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111454",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "soul_mosaico",
+    "titulo": "Chain of Fools",
+    "artista": [
+      "Aretha Franklin"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soul"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Soul groove com guitarra fuzz distintiva",
+    "instrumento": [
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "soul_mosaico_full.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "soul_mosaico_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/vuxryw1385244001.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111464",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
   }
 ]
