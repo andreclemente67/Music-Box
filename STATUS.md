@@ -3,6 +3,41 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — Tags secundárias aplicadas a 21 playlists (`universos_secundarios`)
+Plano proposto (36 playlists analisadas via `_dados_36_playlists.txt`) e
+aprovado pelo utilizador sem alterações — aplicado tal e qual via
+`_aplicar_tags_secundarias.py` (scratchpad). Preenche apenas o campo
+`universos_secundarios` (eixo interno de metadados, nunca visível no
+jogo); nenhum ID/código publicado foi alterado. As 3 Famílias jogáveis
+(Décadas/Géneros/Especiais) e os 28 Universos canónicos mantêm-se
+inalterados.
+
+21 playlists actualizadas: `LOGO-001` (Guitarra), `STD.INT.00.MIX.001`
+(Estados Unidos), `STD.INT.10.SYN.001` (Reino Unido, Alternative/Indie),
+`STD.INT.10.SYN.002` (Alternative/Indie), `STD.INT.20.MIX.001` (Estados
+Unidos), `STD.INT.50.MIX.001` (Estados Unidos), `STD.INT.60.MIX.001`
+(Estados Unidos), `STD.INT.80.MIX.001` (Reino Unido, Synth),
+`STD.INT.ALL.BAT.001` (Reino Unido), `STD.INT.ALL.BLU.001` (Estados
+Unidos), `STD.INT.ALL.CIN.001` (Instrumental), `STD.INT.ALL.GAM.001`
+(Instrumental), `STD.INT.ALL.HIP.001` (Estados Unidos),
+`STD.INT.ALL.JAZ.001` (Estados Unidos), `STD.INT.ALL.MET.001` (Estados
+Unidos), `STD.INT.ALL.MIX.001` (Ambient, Reino Unido),
+`STD.INT.ALL.POP.001` (Estados Unidos), `STD.INT.ALL.SOU.001` (Estados
+Unidos, Funk/Disco), `STD.INT.ALL.SYN.001` (França), `STD.INT.ALL.TV.001`
+(Estados Unidos), `STD.US.ALL.AME.001` (Country/Folk, Acústico).
+
+Estas tags usam também os códigos reservados nesta ronda (não aplicados
+a nenhum dropdown/UI ainda, só reservados para uso futuro): Géneros —
+ALT, FUK, REG, COU; Geografia — BR, US, UK, ES, FR, IT, AF, JP, LATAM;
+Som/Performance — KEY, RIF, INR, OUT, ACO, LIV, COV, INS; Especiais —
+AMB.
+
+**Validado**: `playlists.json` continua JSON válido; `git diff` confirma
+que só o campo `universos_secundarios` foi adicionado/alterado em 21
+entradas (nenhuma outra chave tocada); `deno check` limpo em
+`musicbox_studio.html` e `musicbox.html` (nenhum `.html` foi alterado
+neste passo, mas confirmado por precaução).
+
 ## 2026-08-29 — Campo `sources` implementado (schema definido pelo utilizador) + confirmação de década
 Schema definido pelo utilizador: `sources: {audio, imagem, data_recolha}`
 — proveniência básica por faixa. Adicionado a todas as 284 faixas de
