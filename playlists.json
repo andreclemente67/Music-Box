@@ -690,5 +690,35 @@
       "pessoa": "Giorgio Moroder",
       "id": "donna_summer_i_feel_love"
     }
+  },
+  "STD.INT.50.MIX.001": {
+    "tipo": "standard",
+    "nome": "Anos 50",
+    "descritivo": "As Origens do Rock",
+    "playlistCodigo": "STD.INT.50.MIX.001",
+    "universo": "Eixo Temporal",
+    "temBonus": false,
+    "dificuldade": 2,
+    "musicas": [
+      "dec50_01",
+      "dec50_02",
+      "dec50_03",
+      "dec50_04",
+      "dec50_05",
+      "dec50_06",
+      "dec50_07"
+    ],
+    "mosaico": {
+      "categoria": "Intérprete",
+      "pessoa": "Ritchie Valens",
+      "id": "dec50_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }

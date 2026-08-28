@@ -8298,7 +8298,9 @@
     "artista": [
       "Faithless"
     ],
-    "decadas": [],
+    "decadas": [
+      "1990s"
+    ],
     "generos": [],
     "geografia": "",
     "estilo": "",
@@ -8641,6 +8643,336 @@
     "imagem_fonte": "theaudiodb",
     "imagem_credito": "TheAudioDB",
     "imagem_url_origem": "https://www.theaudiodb.com/artist/114241",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_01",
+    "titulo": "Rock Around the Clock",
+    "artista": [
+      "Bill Haley & His Comets"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rock and Roll"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rock and roll pioneiro, hino da era",
+    "instrumento": [
+      "Guitarra elétrica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "dec50_01_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_01_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xswryr1364836113.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/116484",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_02",
+    "titulo": "Hound Dog",
+    "artista": [
+      "Elvis Presley"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rock and Roll"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rockabilly clássico, o Rei do Rock",
+    "instrumento": [
+      "Voz",
+      "Guitarra"
+    ],
+    "universal": true,
+    "nivel": 1,
+    "trecho_a": {
+      "ficheiro": "dec50_02_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_02_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/t4ledf1741080085.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111248",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_03",
+    "titulo": "Johnny B. Goode",
+    "artista": [
+      "Chuck Berry"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rock and Roll"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Riff fundacional do rock moderno",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec50_03_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_03_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/berry-chuck-4fb749ac7ba9a.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111469",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_04",
+    "titulo": "Great Balls of Fire",
+    "artista": [
+      "Jerry Lee Lewis"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rock and Roll"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Piano frenético, energia pura",
+    "instrumento": [
+      "Piano",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec50_04_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_04_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/msg9dr1659328299.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111453",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_05",
+    "titulo": "That'll Be the Day",
+    "artista": [
+      "Buddy Holly"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rock and Roll"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Pop-rock influente, óculos icónicos",
+    "instrumento": [
+      "Guitarra",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec50_05_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_05_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/0ajj6h1639568263.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111460",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_06",
+    "titulo": "Mack the Knife",
+    "artista": [
+      "Bobby Darin"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Jazz"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Swing/jazz vocal sofisticado",
+    "instrumento": [
+      "Orquestra",
+      "Voz"
+    ],
+    "universal": false,
+    "nivel": 3,
+    "trecho_a": {
+      "ficheiro": "dec50_06_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_06_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rrxxvy1364083539.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/117102",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_07",
+    "titulo": "Blue Suede Shoes",
+    "artista": [
+      "Carl Perkins"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rockabilly"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Rockabilly original, popularizado por Elvis",
+    "instrumento": [
+      "Guitarra elétrica"
+    ],
+    "universal": false,
+    "nivel": 4,
+    "trecho_a": {
+      "ficheiro": "dec50_07_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dec50_07_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wtwqww1424124317.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111398",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dec50_mosaico",
+    "titulo": "La Bamba",
+    "artista": [
+      "Ritchie Valens"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Rock and Roll"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Adaptação rock de canção folk mexicana, pioneira do rock latino",
+    "instrumento": [
+      "Guitarra",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dec50_mosaico_full.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": "dec50_mosaico_full.mp3",
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-08-28",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/valens-ritchie-52c9355986368.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/128938",
     "imagem_data_captura": "2026-08-28",
     "imagem_licenca_estado": "confirmar"
   }
