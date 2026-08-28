@@ -3,6 +3,21 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — Exportar créditos de imagem
+Nova função `af_exportarCreditosImagem()` (botão "↓ Descarregar
+créditos_imagem.md" na tab Exportar) — gera uma tabela Markdown com
+id/título/artista/fonte/crédito/licença/URL de origem de cada imagem em
+uso no catálogo. Cobre TODAS as fontes (TheAudioDB, Wikimedia/Wikipedia
+via `usarImagemWikimedia()`, pesquisa web geral, ficheiros manuais),
+não só Wikimedia como o nome da função original sugeria. Só leitura,
+nunca altera `catalogo.json`; download directo via `downloadBlob()`
+(não é ficheiro de dados da app, não precisa do servidor de escrita).
+
+Validado: `deno check` (exit 0); teste real em Chrome (interceptando
+`downloadBlob` para inspecionar o conteúdo sem accionar o download) —
+284/284 faixas com imagem exportadas correctamente, tabela com o
+número certo de linhas.
+
 ## 2026-08-29 — "Anos 2010 — Synth II": discrepância encontrada + 2 bugs reais corrigidos
 Pedido do utilizador dizia "faltam 6 faixas + mosaico" em
 `STD.INT.10.SYN.002` — **não confirmado**: as 7 músicas e o Mosaico já

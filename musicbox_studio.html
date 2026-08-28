@@ -1820,6 +1820,14 @@
           <button class="btn" onclick="copyExportPreview()">Copiar</button>
         </div>
         <textarea id="export-output" style="width:100%;height:400px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px;color:var(--green);font-family:var(--mono);font-size:11px;outline:none;resize:vertical;" placeholder="Pré-visualização do playlists.json atual…" readonly></textarea>
+
+        <div class="panel-title" style="margin-top:28px;">Créditos de Imagem</div>
+        <p style="color:var(--text2);margin-bottom:16px;line-height:1.6;">
+          Tabela com a fonte, crédito, estado de licença e URL de origem de cada imagem em uso no catálogo
+          (TheAudioDB, Wikimedia/Wikipedia via <code style="font-family:var(--mono);color:var(--accent);font-size:12px;">usarImagemWikimedia()</code>,
+          pesquisa web geral, ficheiros manuais, etc.) — para consulta/atribuição, nunca altera dados.
+        </p>
+        <button class="btn btn-primary" onclick="af_exportarCreditosImagem()">↓ Descarregar créditos_imagem.md</button>
       </div>
     </div>
 
@@ -7268,6 +7276,42 @@ function copyExportPreview() {
   ta.select();
   document.execCommand('copy');
   notify('Copiado', 'ok');
+}
+
+// Exporta uma tabela Markdown com a fonte/crédito/licença/URL de origem
+// de cada imagem em uso no catálogo — cobre todas as fontes (TheAudioDB,
+// Wikimedia/Wikipedia via usarImagemWikimedia(), pesquisa web geral via
+// af_usarImagemCascata()/DuckDuckGo, ficheiros manuais), não só
+// Wikimedia. Só leitura — nunca altera CATALOGO/catalogo.json. Download
+// directo (downloadBlob), sem passar pelo servidor de escrita — é um
+// relatório de consulta, não um ficheiro de dados da app.
+function af_exportarCreditosImagem() {
+  const comImagem = CATALOGO.filter(t => t.imagem).slice().sort((a, b) => a.id.localeCompare(b.id));
+  const semImagem = CATALOGO.length - comImagem.length;
+
+  const linhas = [
+    '# Créditos de Imagem — Music Box',
+    '',
+    `Gerado em ${new Date().toISOString().slice(0, 10)} — ${CATALOGO.length} faixas no catálogo, ${comImagem.length} com imagem associada${semImagem ? `, ${semImagem} sem imagem` : ''}.`,
+    '',
+    '| id | Título | Artista | Fonte | Crédito | Licença | URL de origem |',
+    '|---|---|---|---|---|---|---|',
+  ];
+  const escapaCelula = s => String(s ?? '—').replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  comImagem.forEach(t => {
+    linhas.push('| ' + [
+      t.id,
+      escapaCelula(t.titulo),
+      escapaCelula(artistaTexto(t)),
+      escapaCelula(t.imagem_fonte),
+      escapaCelula(t.imagem_credito),
+      escapaCelula(t.imagem_licenca_estado),
+      escapaCelula(t.imagem_url_origem),
+    ].join(' | ') + ' |');
+  });
+
+  downloadBlob('creditos_imagem.md', linhas.join('\n') + '\n');
+  notify(`Créditos de imagem exportados — ${comImagem.length} faixas`, 'ok');
 }
 
 // ─── MODAIS ─────────────────────────────────────────────────
