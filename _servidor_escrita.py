@@ -28,10 +28,20 @@ GET /mb-proxy?caminho=recording/&query=...&fmt=json&limit=100
 Uso: python3 _servidor_escrita.py (stdlib puro, sem dependências — ao
 contrário de _servidor_librosa.py não precisa de venv).
 
-POST /escrever?ficheiro=playlists.json
+POST /escrever?ficheiro=playlists.json[&esperado_mtime=1735689600.123]
   corpo: conteúdo literal do ficheiro (texto, UTF-8)
-  -> 200 {"ok": true, "ficheiro": "...", "bytes": N}
+  -> 200 {"ok": true, "ficheiro": "...", "bytes": N, "mtime": 1735689600.456}
   -> 400/403/500 {"erro": "..."}
+  -> 409 {"erro": "conflito: ...", "mtime_esperado": ..., "mtime_actual": ...}
+     se esperado_mtime vier presente e não bater com o mtime actual em
+     disco (ficheiro alterado fora desta aba desde a última leitura) —
+     ver GET /versao. Omitir esperado_mtime mantém a escrita
+     incondicional de sempre.
+
+GET /versao?ficheiro=playlists.json
+  -> 200 {"ok": true, "ficheiro": "...", "existe": true, "mtime": 1735689600.123}
+  -> 200 {"ok": true, "ficheiro": "...", "existe": false, "mtime": null}
+  -> 403 {"erro": "..."} se o ficheiro não estiver na whitelist
 
 POST /upload?ficheiro=concorrente_1.jpg
   corpo: bytes binários da imagem (JPEG/PNG)
@@ -599,6 +609,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == '/buscar-imagens-cascata':
             self._buscar_imagens_cascata(parsed)
             return
+        if parsed.path == '/versao':
+            self._versao_ficheiro(parsed)
+            return
 
         caminho_pedido = unquote(parsed.path)
         relativo = caminho_pedido.lstrip('/')
@@ -627,6 +640,30 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Length', str(len(dados)))
         self.end_headers()
         self.wfile.write(dados)
+
+    def _versao_ficheiro(self, parsed):
+        # GET /versao?ficheiro=playlists.json -> {"ok":true,"existe":bool,"mtime":float|null}
+        # Usado pelo Studio para guardar, ao carregar, a versão do ficheiro
+        # em disco (baseline) e comparar antes de qualquer escrita
+        # automática (ver DECISIONS.md — correcção ao bug do auto-save que
+        # sobrescrevia playlists.json às cegas). Mesma whitelist de
+        # /escrever — só ficheiros que o Studio pode escrever têm versão
+        # com sentido aqui.
+        params = parse_qs(parsed.query)
+        ficheiro = (params.get('ficheiro') or [''])[0]
+        if ficheiro not in FICHEIROS_PERMITIDOS:
+            self._enviar_json(403, {"erro": f"ficheiro não permitido: {ficheiro!r}"})
+            return
+        caminho = os.path.join(APP_DIR, ficheiro)
+        if not os.path.isfile(caminho):
+            self._enviar_json(200, {"ok": True, "ficheiro": ficheiro, "existe": False, "mtime": None})
+            return
+        try:
+            mtime = os.path.getmtime(caminho)
+        except OSError as e:
+            self._enviar_json(500, {"erro": f"falha a ler versão: {e}"})
+            return
+        self._enviar_json(200, {"ok": True, "ficheiro": ficheiro, "existe": True, "mtime": mtime})
 
     def _mb_proxy(self, parsed):
         # Proxy de pedidos à API da MusicBrainz do lado do servidor — o
@@ -779,6 +816,35 @@ class Handler(BaseHTTPRequestHandler):
             self._enviar_json(403, {"erro": f"ficheiro não permitido: {ficheiro!r} — só {sorted(FICHEIROS_PERMITIDOS)}"})
             return
 
+        # esperado_mtime (opcional): mtime que o cliente tinha quando
+        # carregou/leu pela última vez este ficheiro (ver GET /versao).
+        # Se vier presente e não bater certo com o mtime actual em disco,
+        # o ficheiro mudou fora desta aba (edição directa, outra aba, git
+        # pull, etc.) — recusa a escrita com 409 em vez de sobrescrever às
+        # cegas. Correcção ao bug estrutural do auto-save (ver
+        # DECISIONS.md). Omitir o parâmetro mantém o comportamento antigo
+        # (sem verificação) — usado por escritas manuais que o próprio
+        # utilizador já confirmou substituir (ver "forçar" no Studio).
+        esperado_mtime_raw = (params.get('esperado_mtime') or [''])[0]
+        if esperado_mtime_raw:
+            try:
+                esperado_mtime = float(esperado_mtime_raw)
+            except ValueError:
+                self._enviar_json(400, {"erro": f"esperado_mtime inválido: {esperado_mtime_raw!r}"})
+                return
+            caminho_actual = os.path.join(APP_DIR, ficheiro)
+            mtime_actual = os.path.getmtime(caminho_actual) if os.path.isfile(caminho_actual) else None
+            # Tolerância de 1ms — só para arredondamentos de float, não
+            # para deixar passar alterações reais.
+            if mtime_actual is not None and abs(mtime_actual - esperado_mtime) > 0.001:
+                self._enviar_json(409, {
+                    "erro": "conflito: o ficheiro no disco foi alterado desde a última leitura desta aba",
+                    "ficheiro": ficheiro,
+                    "mtime_esperado": esperado_mtime,
+                    "mtime_actual": mtime_actual,
+                })
+                return
+
         tamanho = int(self.headers.get('Content-Length') or 0)
         if tamanho <= 0:
             self._enviar_json(400, {"erro": "corpo vazio"})
@@ -802,7 +868,8 @@ class Handler(BaseHTTPRequestHandler):
             self._enviar_json(500, {"erro": f"falha a escrever: {e}"})
             return
 
-        self._enviar_json(200, {"ok": True, "ficheiro": ficheiro, "bytes": len(corpo)})
+        mtime_novo = os.path.getmtime(caminho)
+        self._enviar_json(200, {"ok": True, "ficheiro": ficheiro, "bytes": len(corpo), "mtime": mtime_novo})
 
     def _upload_binario(self, parsed):
         params = parse_qs(parsed.query)

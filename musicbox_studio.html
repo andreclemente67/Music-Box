@@ -381,6 +381,67 @@
     opacity: 0.75;
   }
 
+  /* Rótulos de Família (Décadas/Géneros/Especiais) — abrem o Mapa da
+     Biblioteca (ver af_abrirMapaBiblioteca). Sempre visíveis, mesmo com a
+     lista de playlists colapsada — ver renderSidebar(). */
+  .sidebar-familia-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-familia-link:hover {
+    background: var(--bg3);
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .sidebar-familia-arrow { font-size: 10px; opacity: 0.6; letter-spacing: normal; text-transform: none; }
+
+  /* Toggle "Ver todas as playlists" — controla AF_SIDEBAR_PLAYLISTS_EXPANDIDO */
+  .sidebar-toggle-playlists {
+    padding: 8px 16px;
+    margin-top: 4px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--text3);
+    cursor: pointer;
+    border-top: 1px solid var(--border);
+  }
+  .sidebar-toggle-playlists:hover { color: var(--text2); }
+
+  /* Chip de foco de Universo (activado a partir de um cartão do Mapa da
+     Biblioteca) — ver af_focarUniverso/af_limparFocoUniverso. */
+  .sidebar-foco-universo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 6px 12px;
+    padding: 6px 10px;
+    background: rgba(232,197,71,0.1);
+    border: 1px solid var(--accent2);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--text);
+  }
+  .sidebar-foco-universo button {
+    background: none;
+    border: none;
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+    padding: 0 2px;
+  }
+  .sidebar-foco-universo button:hover { color: var(--red); }
+
   /* Filtros rápidos + pesquisa da sidebar de Playlists — search-input e
      filter-select reaproveitados da Biblioteca (mesma cor/fonte), só
      empilhados a 100% de largura em vez de numa toolbar horizontal. */
@@ -1190,6 +1251,92 @@
 
   .close-btn:hover { color: var(--text); }
 
+  /* MAPA DA BIBLIOTECA — Décadas/Géneros/Especiais (pedido do utilizador
+     2026-08-28). Layout adaptado do protótipo de referência (mockup
+     estático fornecido pelo utilizador) à paleta/tipografia já existentes
+     do Studio (var(--bg)/--bg2/--bg3, var(--accent) dourado, var(--mono)).
+     --mapa-warn é um laranja só usado aqui (badge "por criar"), sem
+     equivalente nas variáveis globais do Studio. */
+  .mapa-modal { width: min(1180px, 94vw); max-height: 88vh; }
+  .mapa-wrap { padding: 28px 30px 34px; --mapa-warn: #d68a4c; --mapa-warn-bg: #2a1d10; }
+  .mapa-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 20px; margin-bottom: 22px; flex-wrap: wrap;
+  }
+  .mapa-subtitle { color: var(--text2); font-size: 12.5px; max-width: 52ch; margin-top: 6px; line-height: 1.5; }
+  .mapa-stats { display: flex; gap: 24px; font-family: var(--mono); }
+  .mapa-stat { text-align: right; }
+  .mapa-stat .n { font-size: 22px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .mapa-stat .l { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
+
+  .mapa-legend {
+    display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 26px;
+    padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg2); font-size: 11px; color: var(--text2);
+  }
+  .mapa-legend .item { display: flex; align-items: center; gap: 6px; }
+  .mapa-dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .mapa-dot.std { background: var(--accent); }
+  .mapa-dot.ret { background: var(--blue); }
+  .mapa-dot.trb { background: var(--purple); }
+  .mapa-swatch { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+  .mapa-swatch.ok { background: var(--green); }
+  .mapa-swatch.warn { background: var(--mapa-warn); }
+
+  .mapa-root-row { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .mapa-root-node {
+    font-family: var(--mono); font-weight: 700; font-size: 12px; letter-spacing: 0.06em;
+    background: var(--bg3); border: 1px solid var(--border2); color: var(--text);
+    padding: 8px 14px; border-radius: 6px; white-space: nowrap;
+  }
+  .mapa-root-line { height: 1px; flex: 1; background: linear-gradient(to right, var(--border2), transparent); }
+
+  .mapa-familias { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .mapa-fam {
+    border-radius: 8px; transition: box-shadow 0.3s;
+  }
+  .mapa-fam.mapa-fam-focus {
+    box-shadow: 0 0 0 2px var(--accent);
+    background: rgba(232,197,71,0.04);
+  }
+  .mapa-fam-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .mapa-fam-title { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .mapa-fam-count { font-family: var(--mono); font-size: 11px; color: var(--text3); font-variant-numeric: tabular-nums; }
+  .mapa-fam-bar { height: 4px; border-radius: 2px; background: var(--bg3); overflow: hidden; margin-bottom: 14px; }
+  .mapa-fam-bar > i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+
+  .mapa-nodes { display: flex; flex-direction: column; gap: 7px; }
+  .mapa-u {
+    border: 1px solid var(--border); background: var(--bg2); border-radius: 7px;
+    padding: 9px 11px; display: flex; flex-direction: column; gap: 6px;
+    cursor: pointer; transition: border-color 0.15s;
+  }
+  .mapa-u:hover { border-color: var(--accent2); }
+  .mapa-u.empty { border-style: dashed; background: transparent; cursor: default; }
+  .mapa-u.empty:hover { border-color: var(--border); }
+  .mapa-u-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mapa-u-name { font-size: 12px; font-weight: 700; }
+  .mapa-u.empty .mapa-u-name { color: var(--text2); font-weight: 600; }
+  .mapa-u-badge {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 600; padding: 2px 6px;
+    border-radius: 20px; white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .mapa-u-badge.ok { background: rgba(78,201,142,0.12); color: var(--green); }
+  .mapa-u-badge.warn { background: var(--mapa-warn-bg); color: var(--mapa-warn); }
+  .mapa-u-types { display: flex; gap: 5px; flex-wrap: wrap; }
+  .mapa-chip {
+    display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9.5px;
+    color: var(--text2); background: var(--bg3); border: 1px solid var(--border);
+    padding: 2px 6px 2px 5px; border-radius: 20px;
+  }
+  .mapa-footer-note {
+    margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--border);
+    color: var(--text3); font-size: 11px; line-height: 1.6; max-width: 80ch;
+  }
+  @media (max-width: 900px) {
+    .mapa-familias { grid-template-columns: 1fr; }
+  }
+
   /* MINI PLAYER FLUTUANTE (áudio/imagem) */
   .mini-player {
     display: none;
@@ -1391,6 +1538,17 @@
 </style>
 </head>
 <body>
+
+<!-- Aviso persistente de conflito em playlists.json (correcção ao bug
+     estrutural do auto-save, 2026-08-28 — ver DECISIONS.md). Só aparece
+     quando uma escrita AUTOMÁTICA é recusada pelo servidor por o
+     ficheiro ter mudado em disco desde que esta aba carregou os dados.
+     Não desaparece sozinho — só ao recarregar ou ao guardar manualmente
+     com sucesso (af_esconderAvisoConflitoPlaylists). -->
+<div id="aviso-conflito-playlists" style="display:none;position:fixed;top:0;left:0;right:0;z-index:200;background:var(--red);color:#fff;padding:9px 20px;font-family:var(--mono);font-size:11.5px;align-items:center;justify-content:center;gap:16px;box-shadow:0 2px 12px rgba(0,0,0,0.4);">
+  <span>⚠ playlists.json foi alterado fora desta aba — o guardar automático foi cancelado para não perder essas alterações.</span>
+  <button onclick="location.reload()" style="background:#fff;color:var(--red);border:none;padding:4px 12px;border-radius:4px;cursor:pointer;font-weight:700;font-family:var(--mono);font-size:11px;">Recarregar página</button>
+</div>
 
 <!-- HEADER -->
 <header>
@@ -2061,6 +2219,39 @@
   </div>
 </div>
 
+<!-- MAPA DA BIBLIOTECA — Décadas/Géneros/Especiais, ver af_abrirMapaBiblioteca() -->
+<div class="modal-overlay" id="modal-mapa-biblioteca">
+  <div class="modal mapa-modal">
+    <div class="modal-header">
+      <span class="modal-title">🗺 Mapa da Biblioteca</span>
+      <button class="close-btn" onclick="closeModal('modal-mapa-biblioteca')">×</button>
+    </div>
+    <div class="modal-body" id="mapa-biblioteca-body" style="padding:0;"></div>
+  </div>
+</div>
+
+<!-- Confirmação de conflito num "Guardar" MANUAL de playlists.json — ver
+     af_confirmarSubstituirPlaylists()/exportPlaylists(). -->
+<div class="modal-overlay" id="modal-conflito-playlists">
+  <div class="modal" style="width:460px;">
+    <div class="modal-header">
+      <span class="modal-title">⚠ Conflito em playlists.json</span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12.5px;line-height:1.65;color:var(--text2);">
+        O ficheiro <code style="color:var(--accent)">playlists.json</code> foi alterado no disco
+        desde que esta aba carregou os dados (outra aba do Studio, edição directa, ou fusão
+        automática do catálogo). Guardar agora vai substituir essas alterações pelo estado
+        actual desta aba.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" id="btn-conflito-playlists-cancelar">Cancelar</button>
+      <button class="btn" style="background:var(--red);border-color:var(--red);color:#fff;" id="btn-conflito-playlists-substituir">Substituir mesmo assim</button>
+    </div>
+  </div>
+</div>
+
 <!-- MINI PLAYER FLUTUANTE (áudio local + imagem) -->
 <div class="mini-player" id="mini-player">
   <div class="mini-player-header">
@@ -2137,6 +2328,7 @@ async function loadData() {
     CATALOGO = catalogo;
     CATALOGO_BY_ID = new Map(catalogo.map(t => [t.id, t]));
     PLAYLISTS = playlists;
+    AF_VERSAO_PLAYLISTS = await af_lerVersaoPlaylists();
     af_popularFiltrosPlaylist();
     af_popularSelectsModoIA();
     renderAll();
@@ -2301,40 +2493,89 @@ function af_limparFiltrosPlaylist() {
   document.getElementById('pl-search').value = '';
   ['pl-filter-dec', 'pl-filter-genero', 'pl-filter-geo', 'pl-filter-dificuldade', 'pl-filter-tipo', 'pl-filter-estado']
     .forEach(id => { document.getElementById(id).value = ''; });
+  AF_UNIVERSO_FOCO = null;
   renderSidebar();
 }
 
-// ── FAMÍLIAS DE UNIVERSOS (Bíblia 7.10/27.12, actualizada 2026-08-28) ──
-// DÉCADAS / GÉNEROS / ESPECIAIS passam a ser as 3 famílias em pé de
-// igualdade — estrutura de organização primária da sidebar (ver
-// renderSidebar()). Derivada do código estruturado da playlist
-// [TIPO].[GEO].[DEC].[GENERO].[VOL] (ver CODIGOS.md) + do campo `tipo`
-// (retrato é sempre Retrato Sonoro/Logótipos = Especiais, independente de
-// GEO/DEC). Casos verificados contra as 26 playlists reais em
-// playlists.json (2026-08-28) — ver DECISIONS.md.
+// ── FAMÍLIAS/UNIVERSOS CANÓNICOS (Bíblia 7.10/27.12, actualizada 2026-08-28) ──
+// DÉCADAS / GÉNEROS / ESPECIAIS são as 3 famílias em pé de igualdade —
+// usadas nos rótulos da sidebar (abrem o "Mapa da Biblioteca", ver
+// af_abrirMapaBiblioteca) e no motor do jogo (ver musicbox.html,
+// familiaDeChave). af_universoDePlaylist deriva tanto a família como o
+// Universo canónico específico (um dos 28 do Cap. 7.10) a partir do
+// código estruturado da playlist [TIPO].[GEO].[DEC].[GENERO].[VOL] (ver
+// CODIGOS.md) + do campo `tipo` (retrato é sempre Retrato Sonoro,
+// independente de GEO/DEC). Casos verificados contra as 26 playlists
+// reais em playlists.json (2026-08-28) — ver DECISIONS.md.
 const FAMILIA_DECADAS = 'DÉCADAS';
 const FAMILIA_GENEROS = 'GÉNEROS';
 const FAMILIA_ESPECIAIS = 'ESPECIAIS';
-const GENERO_FAMILIA = {
-  ROC: FAMILIA_GENEROS, POP: FAMILIA_GENEROS, MET: FAMILIA_GENEROS, AME: FAMILIA_GENEROS,
-  SYN: FAMILIA_GENEROS, DNC: FAMILIA_GENEROS, GTR: FAMILIA_GENEROS, BAT: FAMILIA_GENEROS,
-  CIN: FAMILIA_ESPECIAIS, TV: FAMILIA_ESPECIAIS, GAM: FAMILIA_ESPECIAIS, NAT: FAMILIA_ESPECIAIS,
-  VOZ: FAMILIA_ESPECIAIS,
+const DECADA_NOME = { '50': 'Anos 50', '60': 'Anos 60', '70': 'Anos 70', '80': 'Anos 80', '90': 'Anos 90', '00': 'Anos 2000', '10': 'Anos 2010', '20': 'Anos 2020' };
+const GENERO_UNIVERSO_GENEROS = { ROC: 'Rock', POP: 'Pop', MET: 'Metal', AME: 'Americana', SYN: 'Dance & Electrónica', DNC: 'Dance & Electrónica', GTR: 'Solistas', BAT: 'Solistas' };
+const GENERO_UNIVERSO_ESPECIAIS = { CIN: 'Cinema', TV: 'Televisão', GAM: 'Videojogos', NAT: 'Ativadores Psicológicos', VOZ: 'Retrato Sonoro' };
+// Lista canónica dos 28 Universos (Bíblia 7.10) — usada pelo Mapa da
+// Biblioteca para mostrar cobertura real, incluindo os "por criar".
+const UNIVERSOS_CANONICOS = {
+  [FAMILIA_DECADAS]: ['Anos 50', 'Anos 60', 'Anos 70', 'Anos 80', 'Anos 90', 'Anos 2000', 'Anos 2010', 'Anos 2020'],
+  [FAMILIA_GENEROS]: ['Rock', 'Pop', 'Jazz', 'Blues', 'Soul & R&B', 'Hip Hop', 'Dance & Electrónica', 'Metal', 'Clássica', 'World Music', 'Latin', 'Americana', 'Solistas'],
+  [FAMILIA_ESPECIAIS]: ['Cinema', 'Televisão', 'Videojogos', 'Retrato Sonoro', 'Ativadores Psicológicos', 'Slot Local', 'Cruzamento'],
 };
-function af_familiaDePlaylist(chave, pl) {
-  if (pl.tipo === 'retrato') return FAMILIA_ESPECIAIS;
+
+function af_universoDePlaylist(chave, pl) {
+  if (pl.tipo === 'retrato') return { familia: FAMILIA_ESPECIAIS, universo: 'Retrato Sonoro' };
   const partes = chave.split('.');
-  if (partes.length < 4) return FAMILIA_GENEROS; // código não estruturado (ex. legado) — fallback seguro
+  if (partes.length < 4) return { familia: FAMILIA_GENEROS, universo: null }; // código não estruturado (legado) — sem universo reconhecido
   const [, geo, dec, genero] = partes;
   if (geo === 'PT') {
     // Solistas portugueses (Bateria Portuguesa) são Género, não Slot
     // Local/Cruzamento — mesma lógica dos Solistas internacionais.
-    if (genero === 'BAT' || genero === 'GTR') return FAMILIA_GENEROS;
-    return FAMILIA_ESPECIAIS; // Slot Local (dec=ALL) ou Cruzamento (dec com valor)
+    if (genero === 'BAT' || genero === 'GTR') return { familia: FAMILIA_GENEROS, universo: 'Solistas' };
+    return { familia: FAMILIA_ESPECIAIS, universo: dec === 'ALL' ? 'Slot Local' : 'Cruzamento' };
   }
-  if (dec !== 'ALL') return FAMILIA_DECADAS;
-  if (genero === 'MIX' && geo === 'INT') return FAMILIA_ESPECIAIS; // Cruzamento/Multi-género
-  return GENERO_FAMILIA[genero] || FAMILIA_GENEROS;
+  if (dec !== 'ALL') return { familia: FAMILIA_DECADAS, universo: DECADA_NOME[dec] || null };
+  if (genero === 'MIX') {
+    return geo === 'INT'
+      ? { familia: FAMILIA_ESPECIAIS, universo: 'Cruzamento' }
+      : { familia: FAMILIA_GENEROS, universo: 'World Music' };
+  }
+  if (GENERO_UNIVERSO_ESPECIAIS[genero]) return { familia: FAMILIA_ESPECIAIS, universo: GENERO_UNIVERSO_ESPECIAIS[genero] };
+  return { familia: FAMILIA_GENEROS, universo: GENERO_UNIVERSO_GENEROS[genero] || null };
+}
+function af_familiaDePlaylist(chave, pl) {
+  return af_universoDePlaylist(chave, pl).familia;
+}
+
+// ── SIDEBAR COLAPSÁVEL (pedido do utilizador 2026-08-28) ──
+// Por omissão a sidebar só mostra os filtros + os 3 rótulos de família
+// (que abrem o Mapa da Biblioteca) — a lista completa de playlists só
+// aparece expandida manualmente. Estado persistido em localStorage.
+let AF_SIDEBAR_PLAYLISTS_EXPANDIDO = false;
+try { AF_SIDEBAR_PLAYLISTS_EXPANDIDO = localStorage.getItem('af_sidebar_playlists_expandido') === '1'; } catch (e) { /* localStorage indisponível — mantém-se colapsada */ }
+function af_toggleSidebarPlaylists() {
+  AF_SIDEBAR_PLAYLISTS_EXPANDIDO = !AF_SIDEBAR_PLAYLISTS_EXPANDIDO;
+  try { localStorage.setItem('af_sidebar_playlists_expandido', AF_SIDEBAR_PLAYLISTS_EXPANDIDO ? '1' : '0'); } catch (e) { /* ok ignorar */ }
+  renderSidebar();
+}
+
+// Foco num Universo específico (activado a partir de um cartão do Mapa
+// da Biblioteca) — restringe a lista da sidebar às playlists desse
+// Universo, por cima dos filtros normais (que continuam a aplicar-se).
+let AF_UNIVERSO_FOCO = null; // { familia, universo, chaves:Set<string> } | null
+function af_focarUniverso(familia, universo) {
+  const chaves = new Set(
+    Object.entries(PLAYLISTS)
+      .filter(([chave, pl]) => af_universoDePlaylist(chave, pl).universo === universo)
+      .map(([chave]) => chave)
+  );
+  AF_UNIVERSO_FOCO = { familia, universo, chaves };
+  AF_SIDEBAR_PLAYLISTS_EXPANDIDO = true;
+  try { localStorage.setItem('af_sidebar_playlists_expandido', '1'); } catch (e) { /* ok ignorar */ }
+  closeModal('modal-mapa-biblioteca');
+  renderSidebar();
+}
+function af_limparFocoUniverso() {
+  AF_UNIVERSO_FOCO = null;
+  renderSidebar();
 }
 
 function renderSidebar() {
@@ -2347,40 +2588,66 @@ function renderSidebar() {
     document.getElementById('pl-filter-geo').value ||
     document.getElementById('pl-filter-dificuldade').value ||
     document.getElementById('pl-filter-tipo').value ||
-    document.getElementById('pl-filter-estado').value
+    document.getElementById('pl-filter-estado').value ||
+    AF_UNIVERSO_FOCO
   );
   document.getElementById('pl-filtros-limpar').style.display = filtrosAtivos ? 'block' : 'none';
 
-  // Agrupamento primário por FAMÍLIA (DÉCADAS/GÉNEROS/ESPECIAIS, ver
-  // af_familiaDePlaylist acima) — Nível 2 dentro de cada família é o TIPO
-  // estrutural (Standard/Retrato/Tributo/Vídeo). Reorganização pedida pelo
-  // utilizador 2026-08-28 (Bíblia 7.10/27.12): as 3 famílias passam a ser a
-  // estrutura primária em todo o sistema, substituindo o agrupamento
-  // anterior por Tipo (Standard/Solo/Retrato/Tributo) com Família só como
-  // sub-agrupamento dentro de Standard. Ver DECISIONS.md 2026-08-28.
   const ORDEM_DECADAS = ['50', '60', '70', '80', '90', '00', '10', '20'];
-  const ORDEM_FAMILIA = [FAMILIA_DECADAS, FAMILIA_GENEROS, FAMILIA_ESPECIAIS];
-  const ORDEM_TIPO = ['standard', 'retrato', 'tributo', 'video'];
-  const LABEL_TIPO = { standard: 'Standard', retrato: 'Retrato', tributo: 'Tributo', video: 'Vídeo' };
+  const LABEL_TIPO = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo' };
 
-  const grupos = {}; // familia -> tipo -> [[chave,pl],...]
-  ORDEM_FAMILIA.forEach(f => { grupos[f] = {}; });
+  // Solo (GTR/BAT) sai de Standard para a sua própria secção — distinção
+  // pelo segmento GENERO da chave estruturada [TIPO].[GEO].[DEC].[GENERO].[VOL]
+  // (ex.: "STD.INT.ALL.GTR.001" -> GENERO="GTR"), não por um campo `genero`
+  // à parte em playlists.json (não existe um). Apanha Solo de Guitarra,
+  // Solo de Bateria e também Bateria Portuguesa (STD.PT.ALL.BAT.001, mesmo
+  // GENERO=BAT).
+  function af_tipoEfetivo(chave, pl) {
+    const genero = chave.split('.')[3];
+    return (genero === 'GTR' || genero === 'BAT') ? 'solo' : pl.tipo;
+  }
+
+  const grupos = { standard: [], solo: [], retrato: [], tributo: [] };
   Object.entries(PLAYLISTS)
-    .filter(([chave, pl]) => af_playlistPassaFiltros(chave, pl))
+    .filter(([chave, pl]) => af_playlistPassaFiltros(chave, pl) && (!AF_UNIVERSO_FOCO || AF_UNIVERSO_FOCO.chaves.has(chave)))
     .forEach(([chave, pl]) => {
-      const familia = af_familiaDePlaylist(chave, pl);
-      const tipo = pl.tipo || 'standard';
-      const porFamilia = grupos[familia] || (grupos[familia] = {});
-      (porFamilia[tipo] || (porFamilia[tipo] = [])).push([chave, pl]);
+      const grupo = af_tipoEfetivo(chave, pl);
+      (grupos[grupo] || (grupos[grupo] = [])).push([chave, pl]);
     });
 
   list.innerHTML = `<li class="sidebar-item ${selectedPlaylistFilter==='ALL'?'active':''}" onclick="selectPlaylistFilter('ALL')" data-id="ALL">
     <span class="dot"></span> Todas <span class="sidebar-count" id="count-ALL">${CATALOGO.length}</span>
   </li>`;
 
-  const totalFiltrado = Object.values(grupos)
-    .reduce((n, porTipo) => n + Object.values(porTipo).reduce((m, entries) => m + entries.length, 0), 0);
-  if (filtrosAtivos && !totalFiltrado) {
+  // Rótulos de família — abrem o Mapa da Biblioteca (ver
+  // af_abrirMapaBiblioteca). Mostrados sempre, independentemente do
+  // estado colapsado/expandido da lista de playlists.
+  [FAMILIA_DECADAS, FAMILIA_GENEROS, FAMILIA_ESPECIAIS].forEach(familia => {
+    list.innerHTML += `<li class="sidebar-familia-link" onclick="af_abrirMapaBiblioteca('${familia}')">
+      <span>${familia}</span><span class="sidebar-familia-arrow">🗺 →</span>
+    </li>`;
+  });
+
+  if (AF_UNIVERSO_FOCO) {
+    list.innerHTML += `<li class="sidebar-foco-universo">
+      <span>Universo: <strong>${AF_UNIVERSO_FOCO.universo}</strong></span>
+      <button type="button" onclick="af_limparFocoUniverso()" title="Limpar foco de Universo">✕</button>
+    </li>`;
+  }
+
+  const totalPlaylists = Object.values(grupos).reduce((n, entries) => n + entries.length, 0);
+  list.innerHTML += `<li class="sidebar-toggle-playlists" onclick="af_toggleSidebarPlaylists()">
+    ${AF_SIDEBAR_PLAYLISTS_EXPANDIDO ? '▴ Ocultar playlists' : `▾ Ver todas as playlists (${totalPlaylists})`}
+  </li>`;
+
+  if (!AF_SIDEBAR_PLAYLISTS_EXPANDIDO && !filtrosAtivos) {
+    // Colapsada e sem filtros/foco activos — não mostra a lista completa,
+    // como pedido. Continua a preencher o select #filter-playlist abaixo.
+    af_popularSelectFiltroPlaylist();
+    return;
+  }
+
+  if (filtrosAtivos && !totalPlaylists) {
     list.innerHTML += `<li style="padding:10px 10px;font-size:11px;color:var(--text3);font-family:var(--mono);">Nenhuma playlist corresponde aos filtros.</li>`;
   }
 
@@ -2395,43 +2662,61 @@ function renderSidebar() {
     </li>`;
   }
 
-  ORDEM_FAMILIA.forEach(familia => {
-    const porTipo = grupos[familia];
-    const totalFamilia = Object.values(porTipo).reduce((n, entries) => n + entries.length, 0);
-    if (!totalFamilia) return;
-    list.innerHTML += `<li class="sidebar-group-label">${familia}</li>`;
+  // Standard — único grupo sub-agrupado por Família (Décadas, mais antiga
+  // primeiro; Géneros Atemporais, ordem alfabética), porque é o único que
+  // corresponde ao painel de categorias do jogo.
+  if (grupos.standard.length) {
+    list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO.standard}</li>`;
 
-    // Tipos na ordem canónica primeiro; qualquer tipo futuro/imprevisto
-    // fica no fim, alfabético, para nunca perder uma playlist por omissão.
-    const tiposPresentes = Object.keys(porTipo).sort((a, b) => {
-      const ia = ORDEM_TIPO.indexOf(a), ib = ORDEM_TIPO.indexOf(b);
+    const porDecada = {};   // "80" -> [[chave,pl],...]
+    const atemporais = [];
+    grupos.standard.forEach(([chave, pl]) => {
+      const dec = chave.split('.')[2];
+      if (dec === 'ALL') {
+        atemporais.push([chave, pl]);
+      } else {
+        (porDecada[dec] || (porDecada[dec] = [])).push([chave, pl]);
+      }
+    });
+
+    // Décadas fora de ORDEM_DECADAS (código novo/imprevisto) ficam no fim,
+    // ordenadas alfabeticamente, para nunca perder uma playlist por
+    // omissão da lista.
+    const decadasPresentes = Object.keys(porDecada).sort((a, b) => {
+      const ia = ORDEM_DECADAS.indexOf(a), ib = ORDEM_DECADAS.indexOf(b);
       if (ia === -1 && ib === -1) return a.localeCompare(b);
       if (ia === -1) return 1;
       if (ib === -1) return -1;
       return ia - ib;
     });
-
-    tiposPresentes.forEach(tipo => {
-      list.innerHTML += `<li class="sidebar-subgroup-label">${LABEL_TIPO[tipo] || tipo}</li>`;
-      const entradas = porTipo[tipo].slice();
-      if (familia === FAMILIA_DECADAS) {
-        // Ordem cronológica pelo segmento DEC do código.
-        entradas.sort((a, b) => {
-          const da = a[0].split('.')[2], db = b[0].split('.')[2];
-          const ia = ORDEM_DECADAS.indexOf(da), ib = ORDEM_DECADAS.indexOf(db);
-          if (ia === -1 && ib === -1) return da.localeCompare(db);
-          if (ia === -1) return 1;
-          if (ib === -1) return -1;
-          return ia - ib;
-        });
-      } else {
-        entradas.sort((a, b) => (a[1].nome || a[0]).localeCompare(b[1].nome || b[0]));
-      }
-      entradas.forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
+    decadasPresentes.forEach(dec => {
+      list.innerHTML += `<li class="sidebar-subgroup-label">${DECADA_NOME[dec] || `Anos ${dec}`}</li>`;
+      porDecada[dec].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
     });
+
+    if (atemporais.length) {
+      list.innerHTML += `<li class="sidebar-subgroup-label">Géneros Atemporais</li>`;
+      atemporais
+        .slice()
+        .sort((a, b) => (a[1].nome || a[0]).localeCompare(b[1].nome || b[0]))
+        .forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
+    }
+  }
+
+  // Solo / Retrato / Tributo — secções de Tipo simples, sem sub-
+  // agrupamento por família (mecânicas de ronda diferentes, não aparecem
+  // no painel de categorias Standard). Ordem = a de playlists.json,
+  // como antes.
+  ['solo', 'retrato', 'tributo'].forEach(tipo => {
+    if (!grupos[tipo].length) return;
+    list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO[tipo]}</li>`;
+    grupos[tipo].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
   });
 
-  // Filtro de playlist na Biblioteca
+  af_popularSelectFiltroPlaylist();
+}
+
+function af_popularSelectFiltroPlaylist() {
   const sel = document.getElementById('filter-playlist');
   const prev = sel.value;
   sel.innerHTML = '<option value="">Todas as playlists</option>';
@@ -2439,6 +2724,123 @@ function renderSidebar() {
     sel.innerHTML += `<option value="${chave}">${pl.nome || chave}</option>`;
   });
   sel.value = prev;
+}
+
+// ── MAPA DA BIBLIOTECA (pedido do utilizador 2026-08-28) ──
+// Calcula, a partir de playlists.json real (não dados fixos), a
+// cobertura dos 28 Universos canónicos (UNIVERSOS_CANONICOS acima) por
+// Família. Cada Universo agrega quantas playlists de cada Tipo
+// (Standard/Retrato/Tributo) já existem.
+function af_calcularMapaBiblioteca() {
+  const porUniverso = {}; // "Rock" -> { standard:0, retrato:0, tributo:0 }
+  const semUniversoReconhecido = [];
+  Object.entries(PLAYLISTS).forEach(([chave, pl]) => {
+    const { universo } = af_universoDePlaylist(chave, pl);
+    if (!universo) { semUniversoReconhecido.push(chave); return; }
+    const bucket = porUniverso[universo] || (porUniverso[universo] = { standard: 0, retrato: 0, tributo: 0 });
+    const tipo = pl.tipo === 'retrato' ? 'retrato' : pl.tipo === 'tributo' ? 'tributo' : 'standard';
+    bucket[tipo]++;
+  });
+  if (semUniversoReconhecido.length) {
+    console.warn('[Mapa da Biblioteca] playlists sem Universo canónico reconhecido (código não estruturado):', semUniversoReconhecido);
+  }
+
+  const familias = {};
+  Object.entries(UNIVERSOS_CANONICOS).forEach(([familia, nomes]) => {
+    familias[familia] = nomes.map(nome => {
+      const bucket = porUniverso[nome] || { standard: 0, retrato: 0, tributo: 0 };
+      const count = bucket.standard + bucket.retrato + bucket.tributo;
+      return { nome, count, standard: bucket.standard, retrato: bucket.retrato, tributo: bucket.tributo };
+    });
+  });
+  return familias;
+}
+
+function af_abrirMapaBiblioteca(familiaFoco) {
+  af_renderMapaBiblioteca(familiaFoco);
+  openModal('modal-mapa-biblioteca');
+}
+
+function af_chipTipo(tipo, n) {
+  const label = { standard: 'Standard', retrato: 'Retrato', tributo: 'Tributo' }[tipo];
+  const dotClasse = { standard: 'std', retrato: 'ret', tributo: 'trb' }[tipo];
+  return `<span class="mapa-chip"><span class="mapa-dot ${dotClasse}"></span>${label}${n > 1 ? ` ×${n}` : ''}</span>`;
+}
+
+function af_renderCartaoUniverso(u, familia) {
+  const covered = u.count > 0;
+  const badge = covered
+    ? `<span class="mapa-u-badge ok">${u.count} playlist${u.count > 1 ? 's' : ''}</span>`
+    : `<span class="mapa-u-badge warn">por criar</span>`;
+  const tipos = ['standard', 'retrato', 'tributo'].filter(t => u[t] > 0).map(t => af_chipTipo(t, u[t])).join('');
+  return `<div class="mapa-u ${covered ? '' : 'empty'}" data-familia="${escapeAttr(familia)}" data-universo="${escapeAttr(u.nome)}" data-covered="${covered ? '1' : '0'}">
+    <div class="mapa-u-top">
+      <span class="mapa-u-name">${escapeHtml(u.nome)}</span>
+      ${badge}
+    </div>
+    ${tipos ? `<div class="mapa-u-types">${tipos}</div>` : ''}
+  </div>`;
+}
+
+function af_renderMapaBiblioteca(familiaFoco) {
+  const dados = af_calcularMapaBiblioteca();
+  const totalUniversos = Object.values(dados).reduce((n, arr) => n + arr.length, 0);
+  const cobertos = Object.values(dados).reduce((n, arr) => n + arr.filter(u => u.count > 0).length, 0);
+
+  const secoes = [FAMILIA_DECADAS, FAMILIA_GENEROS, FAMILIA_ESPECIAIS].map(familia => {
+    const nodes = dados[familia];
+    const cobertosFamilia = nodes.filter(u => u.count > 0).length;
+    const pct = nodes.length ? Math.round((cobertosFamilia / nodes.length) * 1000) / 10 : 0;
+    const focus = familia === familiaFoco ? ' mapa-fam-focus' : '';
+    return `<section class="mapa-fam${focus}" data-familia="${escapeAttr(familia)}">
+      <div class="mapa-fam-head">
+        <span class="mapa-fam-title">${familia}</span>
+        <span class="mapa-fam-count">${cobertosFamilia} / ${nodes.length}</span>
+      </div>
+      <div class="mapa-fam-bar"><i style="width:${pct}%"></i></div>
+      <div class="mapa-nodes">${nodes.map(u => af_renderCartaoUniverso(u, familia)).join('')}</div>
+    </section>`;
+  }).join('');
+
+  const html = `<div class="mapa-wrap">
+    <div class="mapa-header">
+      <div>
+        <div class="mapa-subtitle">Organização por eixo — Décadas, Géneros, Especiais — e por tipo de faixa dentro de cada Universo. Clica num Universo para ver as suas playlists.</div>
+      </div>
+      <div class="mapa-stats">
+        <div class="mapa-stat"><div class="n">${totalUniversos}</div><div class="l">Universos</div></div>
+        <div class="mapa-stat"><div class="n">${cobertos}</div><div class="l">Com playlist</div></div>
+        <div class="mapa-stat"><div class="n">${totalUniversos - cobertos}</div><div class="l">Por criar</div></div>
+      </div>
+    </div>
+    <div class="mapa-legend">
+      <span class="item"><span class="mapa-dot std"></span>Standard</span>
+      <span class="item"><span class="mapa-dot ret"></span>Retrato</span>
+      <span class="item"><span class="mapa-dot trb"></span>Tributo</span>
+      <span class="item"><span class="mapa-swatch ok"></span>Com playlist</span>
+      <span class="item"><span class="mapa-swatch warn"></span>Por criar</span>
+    </div>
+    <div class="mapa-root-row">
+      <div class="mapa-root-node">MUSIC BOX — BIBLIOTECA</div>
+      <div class="mapa-root-line"></div>
+    </div>
+    <div class="mapa-familias">${secoes}</div>
+    <div class="mapa-footer-note">Dados calculados em tempo real a partir de playlists.json (${Object.keys(PLAYLISTS).length} playlists). Clicar num Universo com playlist(s) abre a lista correspondente na sidebar, com os filtros do Studio (Década, Género, Geo, Dificuldade, Tipo, Estado) disponíveis por cima.</div>
+  </div>`;
+
+  document.getElementById('mapa-biblioteca-body').innerHTML = html;
+
+  document.querySelectorAll('#mapa-biblioteca-body .mapa-u').forEach(el => {
+    el.addEventListener('click', () => {
+      if (el.dataset.covered !== '1') return; // "por criar" — nada para abrir
+      af_focarUniverso(el.dataset.familia, el.dataset.universo);
+    });
+  });
+
+  if (familiaFoco) {
+    const alvo = document.querySelector(`#mapa-biblioteca-body .mapa-fam[data-familia="${familiaFoco}"]`);
+    if (alvo) alvo.scrollIntoView({ block: 'nearest' });
+  }
 }
 
 function selectPlaylistFilter(chave) {
@@ -6640,13 +7042,108 @@ function downloadBlob(nome, conteudo) {
   URL.revokeObjectURL(url);
 }
 
-async function exportPlaylists() {
+// ── VERSÃO DE playlists.json EM DISCO (correcção ao bug estrutural do
+// auto-save, pedido do utilizador 2026-08-28) ──
+// AF_VERSAO_PLAYLISTS guarda o mtime que playlists.json tinha em disco
+// quando esta aba o carregou (loadData()) ou da última escrita bem
+// sucedida. Antes de qualquer escrita AUTOMÁTICA (setInterval 60s), o
+// servidor recusa com 409 se o mtime actual já não bater certo (ver
+// POST /escrever?...&esperado_mtime=... em _servidor_escrita.py) — nesse
+// caso não sobrescrevemos às cegas: mostramos um aviso persistente e
+// paramos até a página ser recarregada. Numa escrita MANUAL, o
+// utilizador pode confirmar substituir mesmo assim (modal
+// #modal-conflito-playlists). Ver DECISIONS.md 2026-08-28.
+let AF_VERSAO_PLAYLISTS = null;
+
+async function af_lerVersaoPlaylists() {
+  try {
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/versao?ficheiro=playlists.json`, { cache: 'no-cache' });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return j.existe ? j.mtime : null;
+  } catch (e) {
+    return null; // servidor de escrita não está a correr — sem verificação possível
+  }
+}
+
+// Devolve 'ok' | 'conflito' | 'indisponivel' (servidor não corre —
+// quem chamar cai para o fallback File System API/Blob, como sempre).
+async function af_escreverPlaylistsViaServidor(conteudo, { forcar = false } = {}) {
+  let url = `${SERVIDOR_ESCRITA_URL}/escrever?ficheiro=${encodeURIComponent('playlists.json')}`;
+  if (!forcar && AF_VERSAO_PLAYLISTS != null) {
+    url += `&esperado_mtime=${encodeURIComponent(AF_VERSAO_PLAYLISTS)}`;
+  }
+  let r;
+  try {
+    r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: conteudo });
+  } catch (e) {
+    return 'indisponivel';
+  }
+  if (r.status === 409) return 'conflito';
+  if (!r.ok) {
+    console.error('[af_escreverPlaylistsViaServidor]', r.status, await r.text().catch(() => ''));
+    return 'indisponivel';
+  }
+  const j = await r.json().catch(() => null);
+  if (j && typeof j.mtime === 'number') AF_VERSAO_PLAYLISTS = j.mtime;
+  return 'ok';
+}
+
+function af_mostrarAvisoConflitoPlaylists() {
+  const el = document.getElementById('aviso-conflito-playlists');
+  if (el) el.style.display = 'flex';
+  console.error('[auto-guardar] conflito detectado em playlists.json — escrita automática cancelada para não perder dados. Recarrega a página para continuar em segurança.');
+}
+function af_esconderAvisoConflitoPlaylists() {
+  const el = document.getElementById('aviso-conflito-playlists');
+  if (el) el.style.display = 'none';
+}
+
+function af_confirmarSubstituirPlaylists() {
+  return new Promise(resolve => {
+    const modal = document.getElementById('modal-conflito-playlists');
+    const btnCancelar = document.getElementById('btn-conflito-playlists-cancelar');
+    const btnSubstituir = document.getElementById('btn-conflito-playlists-substituir');
+    const limpar = (resultado) => {
+      modal.classList.remove('open');
+      btnCancelar.onclick = null;
+      btnSubstituir.onclick = null;
+      resolve(resultado);
+    };
+    btnCancelar.onclick = () => limpar(false);
+    btnSubstituir.onclick = () => limpar(true);
+    modal.classList.add('open');
+  });
+}
+
+async function exportPlaylists(opcoes = {}) {
+  const automatico = !!opcoes.automatico;
   const json = JSON.stringify(PLAYLISTS, null, 2);
-  const escritoDirectamente = await escreverFicheiro('playlists.json', json);
-  if (!escritoDirectamente) downloadBlob('playlists.json', json);
+
+  let resultadoServidor = await af_escreverPlaylistsViaServidor(json);
+
+  if (resultadoServidor === 'conflito') {
+    if (automatico) {
+      af_mostrarAvisoConflitoPlaylists();
+      return false; // não escreve nada — nem servidor, nem File System API, nem Blob
+    }
+    const substituir = await af_confirmarSubstituirPlaylists();
+    if (!substituir) {
+      notify('Guardar cancelado — recarrega a página para obteres a versão mais recente antes de tentares de novo.', 'err');
+      return false;
+    }
+    resultadoServidor = await af_escreverPlaylistsViaServidor(json, { forcar: true });
+  }
+
+  let escritoDirectamente = resultadoServidor === 'ok';
+  if (resultadoServidor === 'indisponivel') {
+    escritoDirectamente = await escreverViaFileSystemAPI('playlists.json', json);
+  }
+  if (!escritoDirectamente && resultadoServidor !== 'ok') downloadBlob('playlists.json', json);
 
   dirty = false;
   document.getElementById('dirty-dot').classList.remove('show');
+  af_esconderAvisoConflitoPlaylists();
 
   if (CATALOGO_PATCH.size > 0) {
     const patchEscritoDirectamente = await exportCatalogoPatch();
@@ -7108,8 +7605,11 @@ async function afAdicionarAoCatalogo() {
 // manual. Nada a mostrar quando não há alterações pendentes no ciclo.
 setInterval(async () => {
   if (!dirty && CATALOGO_PATCH.size === 0) return;
-  await exportPlaylists();
-  notify('Guardado automaticamente', 'ok');
+  const guardou = await exportPlaylists({ automatico: true });
+  // guardou === false quando o servidor recusou por conflito de versão
+  // (ver af_mostrarAvisoConflitoPlaylists) — nesse caso NÃO mostra
+  // "Guardado automaticamente", que seria enganoso: nada foi escrito.
+  if (guardou !== false) notify('Guardado automaticamente', 'ok');
 }, 60000);
 
 // ─── INIT ───────────────────────────────────────────────────

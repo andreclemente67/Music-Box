@@ -1094,3 +1094,48 @@ Estado) mantidos, agora a filtrar por cima da nova estrutura.
 escolha de família passa a mostrar sempre 3 opções.
 
 **Parte 3**: corrigir `playlistCodigo` em falta em `playlists.json`.
+
+## 2026-08-28 (correcção) — Reorganização Família→Tipo da sidebar ANULADA
+A instrução de reorganizar a sidebar do Studio com Família (Décadas/
+Géneros/Especiais) como agrupamento primário e Tipo como secundário
+(registada acima) foi explicitamente anulada pelo utilizador no mesmo
+dia. Substituída por: sidebar colapsável (lista completa de playlists
+atrás de um toggle, oculta por omissão) + um "Mapa da Biblioteca"
+separado (modal, aberto a partir de rótulos de Família na sidebar) para
+a visão por Família/Universo. Ver entrada seguinte e STATUS.md.
+
+## 2026-08-28 — Sidebar colapsável + Mapa da Biblioteca
+Decisão de arquitectura registada por afectar a estrutura de navegação
+do Studio (CLAUDE.md regra 8). Resumo (detalhe completo em STATUS.md):
+- Sidebar volta ao agrupamento por Tipo→Década (o que já existia antes
+  da tentativa de reorganização por Família), mas colapsada por omissão
+  atrás de um toggle "Ver todas as playlists", persistido em
+  localStorage. Filtros existentes inalterados.
+- 3 rótulos de Família (Décadas/Géneros/Especiais) ficam sempre visíveis
+  na sidebar, mesmo colapsada — abrem o novo "Mapa da Biblioteca".
+- Mapa da Biblioteca: visão em fluxograma dos 28 Universos canónicos
+  (Cap. 7.10 da Bíblia), cobertura calculada dinamicamente a partir de
+  playlists.json real. Clicar num Universo coberto filtra a sidebar a
+  essas playlists específicas (`AF_UNIVERSO_FOCO`), sem substituir os
+  filtros existentes do Studio — ambos aplicam-se em conjunto.
+- `af_universoDePlaylist(chave, pl)` (musicbox_studio.html) é a extensão
+  de `af_familiaDePlaylist` (Parte 1, revogada como agrupamento mas
+  mantida/generalizada como utilitário) — deriva tanto a Família como o
+  Universo canónico específico a partir do código estruturado da
+  playlist + do campo `tipo`.
+
+## 2026-08-28 — Correcção estrutural ao bug do auto-save
+Decisão registada por alterar o comportamento de escrita em disco do
+Studio (CLAUDE.md regra 8), pedida explicitamente pelo utilizador como
+bloqueante antes de continuar a criar playlists. Detalhe completo em
+STATUS.md — resumo: `_servidor_escrita.py` ganha verificação de versão
+(mtime) opcional em `POST /escrever`, comparada atomicamente do lado do
+servidor contra o mtime que a aba tinha ao carregar; escritas
+automáticas em conflito são recusadas e avisadas (nunca sobrescrevem às
+cegas); escritas manuais em conflito pedem confirmação explícita ao
+utilizador antes de prosseguir. Ficheiros que não passam por este
+mecanismo (concorrentes.json, apresentador.json, catalogo_patch.json,
+catalogo_adicionar.json, propostas_chaves.md) mantêm o comportamento
+antigo, sem alteração — âmbito desta correcção é especificamente
+playlists.json, o ficheiro documentadamente afectado pela corrida do
+auto-save de 60s.

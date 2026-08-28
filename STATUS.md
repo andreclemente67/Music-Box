@@ -3,6 +3,84 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Correcção estrutural ao bug do auto-save (verificação de versão antes de escrever)
+Pedido do utilizador, bloqueante para a criação das 12 playlists em
+falta para cobertura total de Décadas/Géneros. Antes: a cada 60s,
+`exportPlaylists()` sobrescrevia `playlists.json` incondicionalmente com
+o estado em memória da aba, mesmo que o ficheiro em disco tivesse
+mudado entretanto (outra aba, edição directa, fusão automática) — causa
+de perdas de dados já documentadas nesta sessão (LOGO-001, imagens da
+"Never Sleep Again").
+
+Agora: `_servidor_escrita.py` ganha `GET /versao?ficheiro=X` (devolve o
+`mtime` actual em disco) e `POST /escrever?...&esperado_mtime=...`
+(recusa com 409 se o mtime actual não bater com o esperado — comparação
+atómica do lado do servidor, sem janela de corrida entre um GET e um
+POST separados). `musicbox_studio.html` guarda o mtime em
+`AF_VERSAO_PLAYLISTS` ao carregar (`loadData()`) e a cada escrita bem
+sucedida. Numa escrita AUTOMÁTICA em conflito: cancela, mostra um aviso
+persistente no topo da página (não desaparece sozinho — só ao recarregar
+ou ao guardar manualmente com sucesso) e não sobrescreve nada, nem
+sequer os fallbacks (File System API/Blob). Numa escrita MANUAL
+("↓ Guardar playlists.json") em conflito: mostra um modal a pedir
+confirmação explícita ("Substituir mesmo assim") antes de prosseguir.
+
+Validado: `python3 -m py_compile _servidor_escrita.py` e `deno check`
+sobre o `<script>` de `musicbox_studio.html` (exit 0); teste real em
+Chrome via puppeteer-core (`_teste_conflito_autosave.js`, scratchpad) —
+simulou uma alteração externa real ao ficheiro em disco (mtime + conteúdo
+diferentes) e confirmou: (1) escrita automática recusada, aviso
+persistente visível, ficheiro no disco continua com a versão externa
+(não sobrescrito às cegas); (2) escrita manual abre o modal de
+confirmação; (3) "Cancelar" mantém o ficheiro intacto; (4) "Substituir
+mesmo assim" escreve com sucesso e sincroniza `AF_VERSAO_PLAYLISTS` com o
+novo mtime. `playlists.json` reposto ao estado original no fim do teste
+(`git diff` confirma zero alterações residuais).
+
+## 2026-08-28 — Sidebar do Studio colapsável + Mapa da Biblioteca (substitui a reorganização Família→Tipo anterior)
+Instrução anterior (agrupar a sidebar por Família→Tipo como estrutura
+primária) foi **anulada** pelo utilizador. Reposta a estrutura anterior
+(Tipo→Década, ex. "Standard > Anos 70 > Anos 70 — Rock", commit
+`7fb6f40~1`) para a lista completa de playlists, agora atrás de um
+toggle colapsável (`AF_SIDEBAR_PLAYLISTS_EXPANDIDO`, persistido em
+`localStorage['af_sidebar_playlists_expandido']`). Por omissão a
+sidebar só mostra os filtros existentes (inalterados) + os 3 rótulos de
+Família (DÉCADAS/GÉNEROS/ESPECIAIS) + o toggle "▾ Ver todas as
+playlists (N)" — sem a lista completa visível, como pedido. Se houver
+filtros/pesquisa activos, a lista aparece automaticamente mesmo
+colapsada (para os filtros nunca ficarem "invisíveis").
+
+Novo "Mapa da Biblioteca" (modal `#modal-mapa-biblioteca`, aberto ao
+clicar num rótulo de Família): fluxograma raiz "MUSIC BOX — BIBLIOTECA"
+→ 3 colunas (Décadas/Géneros/Especiais), cada uma com barra de
+progresso e um cartão por Universo canónico (lista fixa dos 28 do Cap.
+7.10 — `UNIVERSOS_CANONICOS`), calculado dinamicamente a partir de
+`playlists.json` real via `af_universoDePlaylist()` (mesma lógica de
+derivação de código estruturado das Partes 1/2 anteriores, agora também
+devolvendo o Universo específico, não só a Família). Cartão com
+playlist(s): selo dourado/verde com a contagem + chips por Tipo
+(Standard/Retrato/Tributo); sem nenhuma: selo tracejado "por criar".
+Clicar num cartão coberto chama `af_focarUniverso()` — fecha o modal,
+expande a sidebar e restringe a lista às playlists desse Universo
+(`AF_UNIVERSO_FOCO`), com os filtros existentes do Studio continuando a
+aplicar-se por cima (chip "Universo: X ✕" para limpar o foco; "Limpar
+filtros" também o remove). Estética reaproveitada das variáveis CSS já
+existentes do Studio (`--bg`/`--bg2`/`--bg3`, `--accent` dourado,
+`--mono`), não copiadas do protótipo de referência fornecido pelo
+utilizador (usado só para orientação de layout).
+
+Números reais calculados nesta sessão (2026-08-28): Décadas 4/8, Géneros
+7/13, Especiais 7/7 — total 18/28 Universos cobertos, 26 playlists.
+Validado: `deno check` (exit 0); teste real em Chrome via puppeteer-core
+(`_teste_sidebar_colapsavel.js` + `_teste_persistencia.js`, scratchpad)
+— confirma o estado colapsado por omissão, a expansão manual mostrando
+exactamente "Standard > Anos 70 > Anos 70 — Rock", persistência via
+localStorage sobrevivendo a um reload real da página, abertura do Mapa
+com os números acima, e o fluxo completo de foco num Universo (cartão
+"Rock" → sidebar restringe a `STD.INT.ALL.ROC.001` +
+`TRB.UK.ALL.ROC.001`, as 2 playlists reais desse Universo). Screenshot em
+scratchpad/mapa_biblioteca.png.
+
 ## 2026-08-28 — Parte 3: playlistCodigo em falta corrigido (5 playlists)
 Varrimento completo de `playlists.json` encontrou 5 playlists sem o
 campo `playlistCodigo` (causa do "(undefined)" no ecrã "Testar uma
