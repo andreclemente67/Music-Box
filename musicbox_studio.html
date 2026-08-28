@@ -1324,6 +1324,7 @@
   .mapa-u-badge.ok { background: rgba(78,201,142,0.12); color: var(--green); }
   .mapa-u-badge.warn { background: var(--mapa-warn-bg); color: var(--mapa-warn); }
   .mapa-u-types { display: flex; gap: 5px; flex-wrap: wrap; }
+  .mapa-u-ref { font-size: 10px; color: var(--text3); font-style: italic; }
   .mapa-chip {
     display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 9.5px;
     color: var(--text2); background: var(--bg3); border: 1px solid var(--border);
@@ -2461,18 +2462,25 @@ function af_popularFiltrosPlaylist() {
 // [TIPO].[GEO].[DEC].[GENERO].[VOL]; Tipo e Dificuldade são campos directos
 // da playlist; Estado é derivado via af_playlistEstado(); a pesquisa
 // compara com pl.nome (ou a chave, se a playlist não tiver nome).
+// Década/Género consideram também `universos_secundarios` (Bíblia
+// §27.14b, 2026-08-28) — etiquetas internas só para pesquisa/filtro do
+// Studio, nunca visíveis no ecrã de escolha do jogo (esse usa sempre só
+// a etiqueta dominante, derivada da própria chave). Uma playlist entra
+// no resultado se QUALQUER uma das suas etiquetas (dominante OU
+// secundária) bater com o filtro escolhido.
 function af_playlistPassaFiltros(chave, pl) {
   const partes = chave.split('.'); // [TIPO, GEO, DEC, GENERO, VOL]
   const [, geoChave, decChave, generoChave] = partes;
+  const secundarios = pl.universos_secundarios || [];
 
   const q = (document.getElementById('pl-search').value || '').trim().toLowerCase();
   if (q && !(pl.nome || chave).toLowerCase().includes(q)) return false;
 
   const decF = document.getElementById('pl-filter-dec').value;
-  if (decF && decChave !== decF) return false;
+  if (decF && decChave !== decF && !secundarios.some(nome => DEC_CODIGO_DO_NOME[nome] === decF)) return false;
 
   const generoF = document.getElementById('pl-filter-genero').value;
-  if (generoF && generoChave !== generoF) return false;
+  if (generoF && generoChave !== generoF && !secundarios.some(nome => GENERO_CODIGO_DO_NOME[nome] === generoF)) return false;
 
   const geoF = document.getElementById('pl-filter-geo').value;
   if (geoF && geoChave !== geoF) return false;
@@ -2520,6 +2528,23 @@ const UNIVERSOS_CANONICOS = {
   [FAMILIA_GENEROS]: ['Rock', 'Pop', 'Jazz', 'Blues', 'Soul & R&B', 'Hip Hop', 'Dance & Electrónica', 'Metal', 'Clássica', 'World Music', 'Latin', 'Americana', 'Solistas'],
   [FAMILIA_ESPECIAIS]: ['Cinema', 'Televisão', 'Videojogos', 'Retrato Sonoro', 'Ativadores Psicológicos', 'Slot Local', 'Cruzamento'],
 };
+
+// Nome de Universo canónico -> código curto DEC/GENERO — inverso de
+// DECADA_NOME/GENERO_UNIVERSO_GENEROS/GENERO_UNIVERSO_ESPECIAIS. Usado
+// só para comparar `universos_secundarios` (nomes canónicos, Bíblia
+// §27.14b) aos filtros de Década/Género da sidebar, que trabalham por
+// código curto — a etiqueta dominante já é comparada assim (ver
+// af_playlistPassaFiltros). Não confundir com os códigos reservados em
+// OPCOES_GENERO (usados só no modal "Propor Nova Chave"): 4 dos géneros
+// criados em 2026-08-28 (Jazz/Soul & R&B/Hip Hop/Clássica) usam
+// GENERO=JAZ/SOU/HIP/CLA nas suas chaves reais, não JZZ/SOL/HHP/CLX
+// como ali reservado — divergência pré-existente, fora do âmbito desta
+// funcionalidade (ver aviso em DECISIONS.md 2026-08-28).
+const DEC_CODIGO_DO_NOME = Object.fromEntries(Object.entries(DECADA_NOME).map(([c, n]) => [n, c]));
+const GENERO_CODIGO_DO_NOME = Object.fromEntries([
+  ...Object.entries(GENERO_UNIVERSO_GENEROS),
+  ...Object.entries(GENERO_UNIVERSO_ESPECIAIS),
+].map(([c, n]) => [n, c]));
 
 function af_universoDePlaylist(chave, pl) {
   if (pl.tipo === 'retrato') return { familia: FAMILIA_ESPECIAIS, universo: 'Retrato Sonoro' };
@@ -2760,13 +2785,23 @@ function af_popularSelectFiltroPlaylist() {
 // (Standard/Retrato/Tributo) já existem.
 function af_calcularMapaBiblioteca() {
   const porUniverso = {}; // "Rock" -> { standard:0, retrato:0, tributo:0 }
+  const secundariaPorUniverso = {}; // "Jazz" -> Set(chaves) — só referência, ver af_renderCartaoUniverso
   const semUniversoReconhecido = [];
   Object.entries(PLAYLISTS).forEach(([chave, pl]) => {
     const { universo } = af_universoDePlaylist(chave, pl);
-    if (!universo) { semUniversoReconhecido.push(chave); return; }
-    const bucket = porUniverso[universo] || (porUniverso[universo] = { standard: 0, retrato: 0, tributo: 0 });
-    const tipo = pl.tipo === 'retrato' ? 'retrato' : pl.tipo === 'tributo' ? 'tributo' : 'standard';
-    bucket[tipo]++;
+    if (!universo) { semUniversoReconhecido.push(chave); }
+    else {
+      const bucket = porUniverso[universo] || (porUniverso[universo] = { standard: 0, retrato: 0, tributo: 0 });
+      const tipo = pl.tipo === 'retrato' ? 'retrato' : pl.tipo === 'tributo' ? 'tributo' : 'standard';
+      bucket[tipo]++;
+    }
+    // universos_secundarios (Bíblia §27.14b) — nunca conta para a
+    // cobertura (X/N), só fica disponível para a referência visual do
+    // cartão "por criar" (ver af_renderCartaoUniverso).
+    (pl.universos_secundarios || []).forEach(nomeSec => {
+      if (nomeSec === universo) return; // já é a dominante desta playlist, não duplicar
+      (secundariaPorUniverso[nomeSec] || (secundariaPorUniverso[nomeSec] = new Set())).add(chave);
+    });
   });
   if (semUniversoReconhecido.length) {
     console.warn('[Mapa da Biblioteca] playlists sem Universo canónico reconhecido (código não estruturado):', semUniversoReconhecido);
@@ -2777,7 +2812,8 @@ function af_calcularMapaBiblioteca() {
     familias[familia] = nomes.map(nome => {
       const bucket = porUniverso[nome] || { standard: 0, retrato: 0, tributo: 0 };
       const count = bucket.standard + bucket.retrato + bucket.tributo;
-      return { nome, count, standard: bucket.standard, retrato: bucket.retrato, tributo: bucket.tributo };
+      const secundarias = secundariaPorUniverso[nome] ? secundariaPorUniverso[nome].size : 0;
+      return { nome, count, standard: bucket.standard, retrato: bucket.retrato, tributo: bucket.tributo, secundarias };
     });
   });
   return familias;
@@ -2800,12 +2836,19 @@ function af_renderCartaoUniverso(u, familia) {
     ? `<span class="mapa-u-badge ok">${u.count} playlist${u.count > 1 ? 's' : ''}</span>`
     : `<span class="mapa-u-badge warn">por criar</span>`;
   const tipos = ['standard', 'retrato', 'tributo'].filter(t => u[t] > 0).map(t => af_chipTipo(t, u[t])).join('');
+  // Referência de universos_secundarios (Bíblia §27.14b) — só em cartões
+  // "por criar", nunca conta para o X/N de cobertura. Indicador subtil,
+  // não é um selo de "coberto".
+  const refSecundaria = (!covered && u.secundarias > 0)
+    ? `<div class="mapa-u-ref">↳ ${u.secundarias} playlist${u.secundarias > 1 ? 's' : ''} com esta etiqueta secundária</div>`
+    : '';
   return `<div class="mapa-u ${covered ? '' : 'empty'}" data-familia="${escapeAttr(familia)}" data-universo="${escapeAttr(u.nome)}" data-covered="${covered ? '1' : '0'}">
     <div class="mapa-u-top">
       <span class="mapa-u-name">${escapeHtml(u.nome)}</span>
       ${badge}
     </div>
     ${tipos ? `<div class="mapa-u-types">${tipos}</div>` : ''}
+    ${refSecundaria}
   </div>`;
 }
 

@@ -3,6 +3,54 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Etiquetas secundárias de Universo (Bíblia §27.14b)
+Novo campo opcional `universos_secundarios` (array de nomes canónicos de
+Universo, ex. `["Rock", "Anos 80"]`) em playlists.json — vazio/ausente
+por omissão, sem preenchimento retroactivo das playlists existentes.
+Só para uso interno no Studio; a etiqueta dominante (derivada do código
+estruturado da playlist, como sempre) continua a ser a única mostrada
+no ecrã de escolha do jogo.
+
+- **Filtros do Studio**: `af_playlistPassaFiltros()` (Década/Género)
+  passa a considerar também `universos_secundarios` — uma playlist
+  aparece se QUALQUER etiqueta (dominante ou secundária) bater com o
+  filtro. Novo `DEC_CODIGO_DO_NOME`/`GENERO_CODIGO_DO_NOME` (inverso de
+  `DECADA_NOME`/`GENERO_UNIVERSO_*`) converte o nome canónico guardado
+  em `universos_secundarios` para o código curto que os filtros usam.
+- **Mapa da Biblioteca**: `af_calcularMapaBiblioteca()` agora também
+  agrega referências secundárias por Universo; cartões "por criar" com
+  pelo menos 1 referência secundária mostram uma nota subtil
+  ("↳ N playlist(s) com esta etiqueta secundária"), sem contar para o
+  X/N de cobertura, que continua baseado só na etiqueta dominante.
+- **Jogo (musicbox.html)**: confirmado — o loader de `COLLECTIONS` só
+  copia `nome, descritivo, playlistCodigo, universo, temBonus,
+  dificuldade, musicas, mosaico` de cada playlist; `universos_secundarios`
+  nunca é copiado, logo estruturalmente não pode chegar ao ecrã de
+  escolha mesmo que esteja presente. Nenhuma alteração necessária ali.
+
+**Aviso separado, não relacionado com esta funcionalidade**: ao
+implementar a conversão nome→código, descobri que os 4 géneros criados
+em 2026-08-28 (Jazz, Soul & R&B, Hip Hop, Clássica) usam nos seus
+códigos reais `GENERO=JAZ/SOU/HIP/CLA`, que **não coincidem** com os
+códigos reservados nas opções do filtro/modal "Propor Nova Chave"
+(`JZZ`/`SOL`/`HHP`/`CLX`, ver `OPCOES_GENERO`). Isto significa que
+filtrar a sidebar por Género "JZZ — Jazz" (por exemplo) não encontra
+`STD.INT.ALL.JAZ.001` pela etiqueta dominante — só passa a aparecer via
+`universos_secundarios` se alguém lhe atribuir explicitamente essa
+etiqueta. Pré-existente a esta sessão de trabalho, não corrigido aqui
+(decisão estrutural — renomear os códigos das 4 playlists reais
+afectaria ids/ficheiros já publicados — fica para confirmação do
+utilizador, ver DECISIONS.md).
+
+Validado: `deno check` (exit 0) em ambos os ficheiros; teste real em
+Chrome via puppeteer-core (`_teste_universos_secundarios2.js`,
+scratchpad, tudo em memória — nada gravado em disco) — filtro Género=ROC
+passou a incluir `STD.INT.90.DNC.001` com `universos_secundarios:
+["Rock"]`; filtro Década=80 passou a incluir `STD.INT.ALL.HIP.001` com
+`universos_secundarios: ["Anos 80"]`; cartão "Slot Local" simulado como
+"por criar" com 1 referência secundária mostra correctamente a nota
+"↳ 1 playlist com esta etiqueta secundária" sem contar como coberto.
+
 ## 2026-08-28 — 10 playlists novas: cobertura total dos 28 Universos (4 Décadas + 6 Géneros)
 Confirmado primeiro, via Mapa da Biblioteca + `playlists.json` directo,
 que só faltavam 4 Décadas (Anos 50/60/2000/2020 — "Anos 70" já estava

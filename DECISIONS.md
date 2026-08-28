@@ -1139,3 +1139,37 @@ catalogo_adicionar.json, propostas_chaves.md) mantêm o comportamento
 antigo, sem alteração — âmbito desta correcção é especificamente
 playlists.json, o ficheiro documentadamente afectado pela corrida do
 auto-save de 60s.
+
+## 2026-08-28 — Aviso: 4 códigos de género reais não coincidem com OPCOES_GENERO
+Descoberto ao implementar `universos_secundarios` (§27.14b), não
+relacionado com essa funcionalidade — regista-se aqui por afectar dados
+já publicados (CLAUDE.md regra 8, decisão a confirmar, não tomada
+silenciosamente).
+
+As 4 playlists de género criadas em 2026-08-28 usam `GENERO=JAZ` (Jazz),
+`SOU` (Soul & R&B), `HIP` (Hip Hop), `CLA` (Clássica) nas suas chaves
+estruturadas reais (`STD.INT.ALL.JAZ.001` etc.). A lista de códigos já
+reservados no Studio (`OPCOES_GENERO`, usada no filtro de Género da
+sidebar e no modal "Propor Nova Chave") tem, para os mesmos géneros,
+`JZZ`, `SOL`, `HHP`, `CLX` — códigos diferentes, nunca coordenados
+antes de criar as playlists (não existe um `CODIGOS.md` no repositório;
+`OPCOES_GENERO` é a única lista de referência real).
+
+Consequência prática: filtrar a sidebar por "JZZ — Jazz" (ou SOL/HHP/CLX)
+não encontra as playlists reais correspondentes pela etiqueta
+dominante — só passam a aparecer se alguém lhes atribuir explicitamente
+essa etiqueta como `universos_secundarios`. A família/Universo no Mapa
+da Biblioteca e no jogo continuam correctos (derivados directamente do
+código real da chave, não de `OPCOES_GENERO`).
+
+**Não corrigido nesta sessão** — duas opções para decidir:
+1. Renomear as 4 chaves das playlists (`STD.INT.ALL.JAZ.001` →
+   `...JZZ...`, etc.) + os ids das faixas/ficheiros de áudio associados
+   — alinha com `OPCOES_GENERO`, mas é uma alteração disruptiva a dados
+   e ficheiros já publicados (contraria CLAUDE.md regra 5, "não alterar
+   IDs... sem necessidade explícita").
+2. Actualizar `OPCOES_GENERO` para usar JAZ/SOU/HIP/CLA em vez de
+   JZZ/SOL/HHP/CLX — mais simples e não toca em dados publicados, mas
+   muda o que está "reservado" para futuras playlists.
+Recomendação: opção 2, mas fica para confirmação do utilizador antes de
+qualquer alteração.
