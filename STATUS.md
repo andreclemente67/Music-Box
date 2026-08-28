@@ -3,6 +3,22 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Parte 3: playlistCodigo em falta corrigido (5 playlists)
+Varrimento completo de `playlists.json` encontrou 5 playlists sem o
+campo `playlistCodigo` (causa do "(undefined)" no ecrã "Testar uma
+Playlist"): `STD.INT.ALL.MIX.001` (Ambient & Introspectivo),
+`STD.INT.10.SYN.001`/`STD.INT.10.SYN.002` (Anos 2010 — Synth/Synth II,
+os dois casos "Anos 2010 — Synth" reportados), `STD.INT.70.ROC.001`
+(Anos 70 — Rock, reportado), e `STD.INT.90.DNC.001` (Never Sleep Again:
+A Club Anthem Odyssey, o caso original que motivou a Parte 3). Corrigido
+em todas com `playlistCodigo` = a própria chave do objecto — mesma
+convenção usada nas outras 21 playlists já correctas. Validado: JSON
+continua válido (`python3 -m json.tool`); teste real em Chrome via
+puppeteer-core (`_teste_playlistcodigo.js`, scratchpad) — 0 botões com
+"undefined" no ecrã "Testar uma Playlist" (antes eram pelo menos os 4
+reportados pelo utilizador), e as 4 playlists reportadas mostram agora o
+código correcto.
+
 ## 2026-08-28 — Parte 2: removida restrição de Ronda para a família ESPECIAIS
 `musicbox.html`: removida a regra "Especiais só a partir da Ronda 2"
 (bíblia 3.2.1, já revogada pela Bíblia actualizada — 7.10/27.12). O ecrã
