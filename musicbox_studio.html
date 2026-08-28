@@ -2561,21 +2561,42 @@ function af_toggleSidebarPlaylists() {
 // da Biblioteca) — restringe a lista da sidebar às playlists desse
 // Universo, por cima dos filtros normais (que continuam a aplicar-se).
 let AF_UNIVERSO_FOCO = null; // { familia, universo, chaves:Set<string> } | null
+// Destino final de qualquer caminho a partir do Mapa da Biblioteca é
+// sempre a Mesa de Montagem de uma playlist específica — nunca deve
+// ficar preso num ecrã intermédio (pedido do utilizador 2026-08-28).
+// Com exactamente 1 playlist no Universo, salta directo para lá (poupa
+// um clique); com 2+, mostra a lista filtrada na sidebar (comportamento
+// anterior) para o utilizador escolher qual editar.
 function af_focarUniverso(familia, universo) {
-  const chaves = new Set(
-    Object.entries(PLAYLISTS)
-      .filter(([chave, pl]) => af_universoDePlaylist(chave, pl).universo === universo)
-      .map(([chave]) => chave)
-  );
-  AF_UNIVERSO_FOCO = { familia, universo, chaves };
+  const chaves = Object.entries(PLAYLISTS)
+    .filter(([chave, pl]) => af_universoDePlaylist(chave, pl).universo === universo)
+    .map(([chave]) => chave);
+
+  closeModal('modal-mapa-biblioteca');
+
+  if (chaves.length === 1) {
+    af_abrirNaMontagem(chaves[0]);
+    return;
+  }
+
+  AF_UNIVERSO_FOCO = { familia, universo, chaves: new Set(chaves) };
   AF_SIDEBAR_PLAYLISTS_EXPANDIDO = true;
   try { localStorage.setItem('af_sidebar_playlists_expandido', '1'); } catch (e) { /* ok ignorar */ }
-  closeModal('modal-mapa-biblioteca');
   renderSidebar();
 }
 function af_limparFocoUniverso() {
   AF_UNIVERSO_FOCO = null;
   renderSidebar();
+}
+
+// Muda para a Mesa de Montagem e abre lá a playlist indicada — usado
+// pelo atalho de Universo com 1 só playlist e pelos itens da lista
+// filtrada por Universo (ver af_renderItemPlaylist), para que qualquer
+// caminho a partir do Mapa da Biblioteca termine sempre na Mesa de
+// Montagem, nunca preso num ecrã intermédio.
+function af_abrirNaMontagem(chave) {
+  switchTabProgrammatic('montagem');
+  selectPlaylistFilter(chave);
 }
 
 function renderSidebar() {
@@ -2654,7 +2675,13 @@ function renderSidebar() {
   function af_renderItemPlaylist(chave, pl) {
     const count = (pl.musicas || pl.posicoes || []).length;
     const active = selectedPlaylistFilter === chave ? 'active' : '';
-    list.innerHTML += `<li class="sidebar-item ${active}" onclick="selectPlaylistFilter('${chave}')" data-id="${chave}">
+    // Itens da lista filtrada por Universo (a partir do Mapa da
+    // Biblioteca) vão sempre direitos à Mesa de Montagem — mesmo
+    // objectivo do atalho de 1-playlist em af_focarUniverso, aqui para
+    // o caso de 2+. Fora desse foco, mantém o comportamento normal da
+    // sidebar (selectPlaylistFilter, só filtra a Biblioteca).
+    const acao = AF_UNIVERSO_FOCO ? `af_abrirNaMontagem('${chave}')` : `selectPlaylistFilter('${chave}')`;
+    list.innerHTML += `<li class="sidebar-item ${active}" onclick="${acao}" data-id="${chave}">
       <span class="dot"></span>
       <span>${pl.nome || chave}</span>
       <span class="sidebar-count">${count}</span>

@@ -435,3 +435,31 @@ Dois novos botões na mesa de montagem, abaixo da posição 01 quando esta tem f
 - [x] Botão "Preencher com este artista" (Retrato) na mesa de montagem (2026-08-10)
 - [x] Botão "Preencher automaticamente" (qualquer tipo) na mesa de montagem (2026-08-10)
 - [x] `auto_fusao.sh` + `iniciar_studio.command` — fusão automática de catalogo_adicionar.json (2026-08-10)
+
+## 2026-08-28 — Mapa da Biblioteca: navegação termina sempre na Mesa de Montagem
+Pedido explícito do utilizador: qualquer caminho de cliques a partir do
+Mapa da Biblioteca deve terminar na Mesa de Montagem de uma playlist
+específica, nunca preso num ecrã intermédio.
+
+`af_focarUniverso()` agora bifurca por contagem: Universo com
+exactamente 1 playlist → `af_abrirNaMontagem()` (nova função:
+`switchTabProgrammatic('montagem')` + `selectPlaylistFilter()`) salta
+directo para lá, sem passar pela lista filtrada. Universo com 2+
+mantém a lista filtrada na sidebar como antes, mas os itens dessa lista
+(`af_renderItemPlaylist`, só quando `AF_UNIVERSO_FOCO` está activo)
+passam a usar `af_abrirNaMontagem()` em vez de `selectPlaylistFilter()`
+simples — antes só abria a Mesa de Montagem se essa view já estivesse
+activa, o que falhava a partir da Biblioteca (o ponto de entrada normal
+do Mapa). Fora do foco de Universo, o clique normal na sidebar mantém
+o comportamento antigo (só filtra a tabela da Biblioteca), inalterado.
+
+Validado: `deno check` (exit 0); teste real em Chrome via
+puppeteer-core (`_teste_mapa_navegacao.js`, scratchpad) — Caso 1
+("Ativadores Psicológicos", 1 playlist): clique no cartão leva direito
+à Mesa de Montagem com `STD.INT.ALL.NAT.001` aberta, modal fechado, sem
+ecrã intermédio. Caso 2 ("Retrato Sonoro", 3 playlists): clique no
+cartão mostra a lista filtrada (3 playlists, chip "Universo: Retrato
+Sonoro"), continua na Biblioteca; clicar numa dessas 3 (2ª da lista)
+abre a Mesa de Montagem com essa playlist específica
+(`RET.PT.90.VOZ.001`). Screenshot em
+scratchpad/mapa_navegacao_caso2.png.
