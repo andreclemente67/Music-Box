@@ -1,7 +1,40 @@
 # Music Box — Status
 
 ## Última actualização
-2026-08-28
+2026-08-29
+
+## 2026-08-29 — Revisão da Fototeca: faixas com imagem via fallback iTunes
+Pedido do utilizador referia "10 faixas" — **discrepância encontrada e
+reportada**: uma varrimento completo de `catalogo.json` (por
+`imagem_fonte` a conter "itunes" E por URL em `mzstatic.com`/
+`itunes.apple.com`) só encontra **4** faixas realmente marcadas via
+iTunes: `pt80_04`, `pt80_06`, `bra001_mosaico`, `ptbat_mosaico`. Não há
+registo de uma lista de 10 em nenhum ficheiro do projecto
+(`TASKS.md`/`DECISIONS.md`/`STATUS.md`) — pode ser uma contagem antiga
+de outra fonte não documentada aqui. Revistas as 4 encontradas:
+
+- **`pt80_04`** (Trovante) e **`pt80_06`** (Fernando Tordo): imagem
+  antiga era capa de álbum iTunes (`imagem_credito` já dizia
+  explicitamente "não retrato do artista"), substituída por foto real
+  via pesquisa web (`GET /buscar-imagens-cascata`, revista manualmente
+  antes de aplicar) — Trovante: foto da banda (Diário de Coimbra, "50
+  anos"); Fernando Tordo: retrato (Revista Rua).
+- **`bra001_mosaico`** (Elis Regina & Adoniran Barbosa, dueto): mesma
+  situação — substituída pelo retrato real de Elis Regina via
+  TheAudioDB. Não foi encontrada nenhuma foto conjunta dos dois — fica
+  documentado explicitamente no `imagem_credito` que só um dos dois
+  artistas está representado.
+- **`ptbat_mosaico`** (Alexandre Frazão): **imagem NÃO substituída** —
+  já é uma foto real (baterista com t-shirt Zildjian, consistente com o
+  seu patrocínio confirmado por pesquisa), só o `imagem_fonte` estava
+  errado (dizia `itunes_artist`, mas `imagem_credito` já indicava
+  upload manual) — corrigido para `manual`, `imagem_url_origem` posto a
+  `null` (fonte original do ficheiro não está registada em lado
+  nenhum).
+
+Nenhuma das 4 estava marcada `imagem_licenca_estado: "livre"` — regra
+de protecção respeitada, nada bloqueado. Todos os novos URLs
+confirmados a carregar (HTTP 200) antes de aplicar.
 
 ## 2026-08-28 — Correcção de 2 gaps concretos da auditoria total (decadas vazio + imagem em falta)
 Fora da lista de 10 pendências já enviada — pedido isolado sobre 2
