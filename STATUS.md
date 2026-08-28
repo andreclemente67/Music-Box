@@ -3,6 +3,45 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — 10 playlists novas: cobertura total dos 28 Universos (4 Décadas + 6 Géneros)
+Confirmado primeiro, via Mapa da Biblioteca + `playlists.json` directo,
+que só faltavam 4 Décadas (Anos 50/60/2000/2020 — "Anos 70" já estava
+coberta por `STD.INT.70.ROC.001`) e 6 Géneros (Jazz, Blues, Soul & R&B,
+Hip Hop, Clássica, Latin) = 10 playlists, não 12.
+
+Criadas as 10 via pipeline real (`/gerar-faixa` + iTunes,
+`/buscar-imagem-artista`), mesmo padrão de 27 Ago: 7 faixas + Mosaico
+contínuo de 30s por playlist, `duracao_estimada` preenchida, verificação
+prévia da regra 27.8b (máx. 3 playlists/artista) contra a Biblioteca
+real antes de escolher as faixas. **100% de sucesso em 80/80 faixas**
+(áudio + imagem), zero falhas, zero violações da regra 27.8b (Eagles,
+Michael Jackson e agora também Taylor Swift ficam exactamente no limite
+de 3 — dentro da regra). Commit + push individual por playlist, `0 0`
+confirmado 10 vezes:
+- `13dfd98` Anos 50 — As Origens do Rock
+- `250bb0f` Anos 60 — Revolução Sonora
+- `065eb31` Anos 2000 — Viragem do Milénio
+- `5c76396` Anos 2020 — A Geração Streaming
+- `38ba68d` Jazz — Standards Essenciais
+- `fcb96a1` Blues — Raízes do Delta
+- `99ae16f` Soul & R&B — A Voz da Alma
+- `8bc383e` Hip Hop — Do Bronx ao Mundo
+- `4c7bdd5` Clássica — Grandes Compositores
+- `e10c10b` Latin — Ritmos do Mundo Latino
+
+**Bug encontrado e corrigido no fim (`0d720c4`)**: `af_universoDePlaylist()`
+em `musicbox_studio.html` não conhecia os 6 novos códigos de género
+(JAZ/BLU/SOU/HIP/CLA/LAT) — devolvia `universo: null` para essas
+playlists, fazendo o Mapa da Biblioteca mostrar Géneros 7/13 em vez de
+13/13 (a Família continuava correta, só faltava o mapeamento ao
+Universo específico). `GENERO_FAMILIA` em `musicbox.html` já tinha
+fallback seguro (sempre GÉNEROS por omissão), mas os códigos foram
+adicionados lá também por consistência. Confirmado após a correcção,
+via puppeteer-core em Chrome real: **Mapa da Biblioteca mostra 28/28
+Universos cobertos** (Décadas 8/8, Géneros 13/13, Especiais 7/7); jogo
+real confirma as 10 playlists carregadas via auto-discovery com família
+correta. `deno check` (exit 0) em ambos os ficheiros no fim de tudo.
+
 ## 2026-08-28 — Correcção estrutural ao bug do auto-save (verificação de versão antes de escrever)
 Pedido do utilizador, bloqueante para a criação das 12 playlists em
 falta para cobertura total de Décadas/Géneros. Antes: a cada 60s,
