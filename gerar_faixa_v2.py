@@ -33,12 +33,34 @@ class GeradorFaixaV2:
             print(f"❌ Erro ao abrir {path}: {e}")
             return {}
 
+    def _colisao_case_insensitive(self, faixa_id):
+        """Devolve outro id do catálogo que resultaria no mesmo nome de
+        ficheiro num sistema de ficheiros case-insensitive (macOS/APFS
+        por omissão) — sem esta verificação, dois ids que só diferem em
+        maiúsculas/minúsculas (ex. "Abc_01" e "abc_01") sobrescrever-
+        se-iam silenciosamente em disco: o segundo gerar_faixa() apagaria
+        os trechos do primeiro sem erro nenhum, e o mp3_index.json
+        ficaria com as duas entradas a apontar (incorrectamente) para o
+        mesmo ficheiro físico. Devolve None se não houver colisão."""
+        alvo = faixa_id.lower()
+        for outro_id in self.catalogo:
+            if outro_id != faixa_id and outro_id.lower() == alvo:
+                return outro_id
+        return None
+
     def gerar_faixa(self, faixa_id, verbose=True):
         """Gera trechos A e B para uma faixa"""
         faixa = self.catalogo.get(faixa_id)
         if not faixa:
             if verbose:
                 print(f"❌ Faixa {faixa_id} não encontrada no catálogo")
+            self.faixas_falhadas += 1
+            return False
+
+        colisao = self._colisao_case_insensitive(faixa_id)
+        if colisao:
+            if verbose:
+                print(f"❌ Colisão case-insensitive: '{faixa_id}' e '{colisao}' gerariam o mesmo ficheiro num sistema de ficheiros case-insensitive (ex. macOS) — a abortar para não sobrescrever '{colisao}' silenciosamente.")
             self.faixas_falhadas += 1
             return False
 
