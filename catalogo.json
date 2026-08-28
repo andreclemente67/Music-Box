@@ -5904,19 +5904,15 @@
     "universal": false,
     "nivel": 2,
     "trecho_a": {
-      "ficheiro": "arcade_fire_my_body_is_a_cage_a.mp3",
+      "ficheiro": "arcade_fire_my_body_is_a_cage_full.mp3",
       "inicio": null,
       "fim": null
     },
-    "trecho_b": {
-      "ficheiro": "arcade_fire_my_body_is_a_cage_b.mp3",
-      "inicio": null,
-      "fim": null
-    },
-    "full": null,
-    "elegivel_mosaico": false,
+    "trecho_b": null,
+    "full": "arcade_fire_my_body_is_a_cage_full.mp3",
+    "elegivel_mosaico": true,
     "estado": "ativo",
-    "curador": "",
+    "curador": "André Clemente",
     "data": "2026-08-26",
     "video": null,
     "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xrpsws1524506703.jpg",

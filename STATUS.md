@@ -3,6 +3,43 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — "Anos 2010 — Synth II": discrepância encontrada + 2 bugs reais corrigidos
+Pedido do utilizador dizia "faltam 6 faixas + mosaico" em
+`STD.INT.10.SYN.002` — **não confirmado**: as 7 músicas e o Mosaico já
+estavam todos completos em `playlists.json`/`catalogo.json`, com áudio
+e imagem reais (confirmado local + carregamento real no jogo via
+`COLLECTIONS['STD.INT.10.SYN.002']`, 7/7 faixas com Trecho A/B). Não
+sei a origem da contagem "6 faltam" — nada no repositório a
+documentava.
+
+Ao verificar, encontrados e corrigidos **dois bugs reais** que nada
+tinham a ver com a contagem de faixas:
+1. **Mosaico (`arcade_fire_my_body_is_a_cage`) em formato errado** —
+   tinha `trecho_a`/`trecho_b` separados (12s+10s) em vez de um único
+   ficheiro contínuo de ~30s (regra 27.7, mesmo bug já visto e corrigido
+   nas 6 playlists de 27 Ago) — `elegivel_mosaico` também estava
+   `false`, inconsistente com ser mesmo usado como Mosaico. Regenerado
+   como `arcade_fire_my_body_is_a_cage_full.mp3` (confirmado ~30s via
+   `afinfo`), campos actualizados, ficheiros antigos removidos.
+2. **Mosaico com "pessoa" errada** — `pessoa: "Samuel T. Herring"`
+   (vocalista dos Future Islands) associado à faixa "My Body Is a
+   Cage", que é dos **Arcade Fire**, sem ligação nenhuma a Herring —
+   parece cópia do Mosaico de `STD.INT.10.SYN.001` (esse sim, uma
+   faixa real dos Future Islands) sem actualizar o nome ao mudar de
+   faixa. Corrigido para `"Win Butler"` (vocalista/compositor dos
+   Arcade Fire, confirmado por pesquisa antes de aplicar).
+
+Também adicionado `duracao_estimada` (estava ausente, tal como no seu
+par `STD.INT.10.SYN.001`, não tocado — fora do âmbito deste pedido).
+
+Nota independente já registada em `TASKS.md`: "My Body Is a Cage" é de
+2007, usada numa playlist "Anos 2010" — décadas divergente, não
+corrigida (decisão editorial, não um bug técnico).
+
+Validado: JSON válido; `deno check` (exit 0, nenhum ficheiro `.html`
+alterado); teste real em Chrome confirma a playlist completa (7/7 +
+Mosaico) e o par pessoa/faixa do Mosaico agora coerente.
+
 ## 2026-08-29 — Revisão da Fototeca: faixas com imagem via fallback iTunes
 Pedido do utilizador referia "10 faixas" — **discrepância encontrada e
 reportada**: uma varrimento completo de `catalogo.json` (por
