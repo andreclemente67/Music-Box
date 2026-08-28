@@ -960,5 +960,35 @@
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
+  },
+  "STD.INT.ALL.LAT.001": {
+    "tipo": "standard",
+    "nome": "Latin",
+    "descritivo": "Ritmos do Mundo Latino",
+    "playlistCodigo": "STD.INT.ALL.LAT.001",
+    "universo": "Latin",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "lat_01",
+      "lat_02",
+      "lat_03",
+      "lat_04",
+      "lat_05",
+      "lat_06",
+      "lat_07"
+    ],
+    "mosaico": {
+      "categoria": "Grupo",
+      "pessoa": "Los Del Río",
+      "id": "lat_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330.0,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
   }
 }
