@@ -3,6 +3,49 @@
 ## Última actualização
 2026-08-28
 
+## 2026-08-28 — Parte 3: 4º tipo de Playlist "Vídeo" (Bíblia §29.2)
+`STD.INT.ALL.CIN.001` ("Cinema & Música") reclassificada de
+`tipo: "standard"` para `tipo: "video"` em `playlists.json` — só o
+campo `tipo`, código/chave/id inalterados (não pedido). Correcção
+associada em `catalogo.json`: `cinema_mosaico` ("The Godfather Theme",
+Nino Rota) não tinha `video`/`clip`/`filme`/`compositor` nenhum (achado
+na auditoria da Parte 1) — preenchido com
+`https://www.youtube.com/watch?v=e2A27akHfAM` (vídeo oficial do tema,
+confirmado por pesquisa), `filme: "The Godfather"`,
+`compositor: "Nino Rota"`, igualando o padrão das outras 7 faixas da
+playlist. Todas as 8 posições (7 + Mosaico) têm agora `video`.
+
+`musicbox_studio.html`:
+- Filtro de Tipo ganha a 4ª opção "Vídeo" (`<option value="video">`).
+- `renderSidebar()`: nova secção "Vídeo" (grupo/render loop/
+  `LABEL_TIPO`, ao lado de Solo/Retrato/Tributo).
+- `expectedCount('video')` → 7 (mesma forma do Standard: 7 músicas +
+  Mosaico), para a validação "N/7 posições" continuar a funcionar.
+- Badge de tipo na Mesa de Montagem ganha estilo próprio
+  (`.tipo-video`, vermelho) em vez de cair no estilo genérico "audio".
+- Mapa da Biblioteca: `af_calcularMapaBiblioteca()`/`af_chipTipo()`/
+  `af_renderCartaoUniverso()` passam a contar e mostrar chips "Vídeo"
+  (dot vermelho, `.mapa-dot.vid`), incluídos também na legenda.
+- Player/link de vídeo na Mesa de Montagem: **já existia** — cada
+  posição com `t.video` preenchido mostra um botão "▶ YouTube"
+  (`trackMetaHtml()`), não gated por tipo — funciona automaticamente
+  para todas as 8 posições de Cinema & Música agora que têm o campo.
+
+`musicbox.html`: nenhuma alteração necessária — `UNIVERSOS_EXTERNOS`
+(onde Cinema está registada) é agnóstico a `tipo`, e a derivação de
+Família/Universo já não dependia deste campo para playlists não-
+Retrato. Confirmado que `COLLECTIONS.CINEMA` continua a carregar
+normalmente (7 músicas + Mosaico, Família ESPECIAIS/Universo Cinema).
+
+Validado: `deno check` (exit 0) em ambos os ficheiros; teste real em
+Chrome via puppeteer-core (`_teste_tipo_video.js`, scratchpad) —
+filtro Tipo=Vídeo devolve só `STD.INT.ALL.CIN.001`; secção "Vídeo" na
+sidebar; cartão "Cinema" no Mapa mostra `1 playlist` + chip Vídeo;
+Mesa de Montagem mostra badge "Video" (vermelho) e 8 botões
+"▶ YouTube" (uma por posição); jogo real confirma `COLLECTIONS.CINEMA`
+inalterado (7 músicas, Mosaico, Família ESPECIAIS). Screenshot em
+scratchpad/tipo_video_montagem.png.
+
 ## 2026-08-28 — Parte 2: Escolha única por Ronda + Pontuação plana (Bíblia §10.10/§11.2)
 `musicbox.html` — duas alterações às regras do motor:
 

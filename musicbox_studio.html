@@ -747,6 +747,7 @@
   .tipo-foto { background: rgba(85,153,238,0.08); color: #88bbee; }
   .tipo-logo { background: rgba(153,102,204,0.08); color: #bb99ee; }
   .tipo-capa { background: rgba(78,201,142,0.08); color: #77ddaa; }
+  .tipo-video { background: rgba(224,85,85,0.10); color: var(--red); }
   .tipo-mosaico { background: rgba(232,197,71,0.14); color: var(--accent); }
 
   .posicao-thumb {
@@ -1279,6 +1280,7 @@
   .mapa-dot.std { background: var(--accent); }
   .mapa-dot.ret { background: var(--blue); }
   .mapa-dot.trb { background: var(--purple); }
+  .mapa-dot.vid { background: var(--red); }
   .mapa-swatch { width: 9px; height: 9px; border-radius: 2px; flex: none; }
   .mapa-swatch.ok { background: var(--green); }
   .mapa-swatch.warn { background: var(--mapa-warn); }
@@ -1604,6 +1606,7 @@
           <option value="standard">Standard</option>
           <option value="retrato">Retrato</option>
           <option value="tributo">Tributo</option>
+          <option value="video">Vídeo</option>
         </select>
         <select class="filter-select" id="pl-filter-estado" onchange="renderSidebar()">
           <option value="">Estado (todos)</option>
@@ -2404,6 +2407,7 @@ function playlistsUsing(id) {
 function expectedCount(tipo) {
   if (tipo === 'standard') return 7;
   if (tipo === 'retrato') return 8;
+  if (tipo === 'video') return 7; // mesma forma do Standard (7 músicas + Mosaico), só reclassificado (Bíblia §29.2)
   return null; // tributo: sem contagem fixa
 }
 
@@ -2635,7 +2639,7 @@ function renderSidebar() {
   document.getElementById('pl-filtros-limpar').style.display = filtrosAtivos ? 'block' : 'none';
 
   const ORDEM_DECADAS = ['50', '60', '70', '80', '90', '00', '10', '20'];
-  const LABEL_TIPO = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo' };
+  const LABEL_TIPO = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo', video: 'Vídeo' };
 
   // Solo (GTR/BAT) sai de Standard para a sua própria secção — distinção
   // pelo segmento GENERO da chave estruturada [TIPO].[GEO].[DEC].[GENERO].[VOL]
@@ -2648,7 +2652,7 @@ function renderSidebar() {
     return (genero === 'GTR' || genero === 'BAT') ? 'solo' : pl.tipo;
   }
 
-  const grupos = { standard: [], solo: [], retrato: [], tributo: [] };
+  const grupos = { standard: [], solo: [], retrato: [], tributo: [], video: [] };
   Object.entries(PLAYLISTS)
     .filter(([chave, pl]) => af_playlistPassaFiltros(chave, pl) && (!AF_UNIVERSO_FOCO || AF_UNIVERSO_FOCO.chaves.has(chave)))
     .forEach(([chave, pl]) => {
@@ -2750,11 +2754,11 @@ function renderSidebar() {
     }
   }
 
-  // Solo / Retrato / Tributo — secções de Tipo simples, sem sub-
+  // Solo / Retrato / Tributo / Vídeo — secções de Tipo simples, sem sub-
   // agrupamento por família (mecânicas de ronda diferentes, não aparecem
   // no painel de categorias Standard). Ordem = a de playlists.json,
   // como antes.
-  ['solo', 'retrato', 'tributo'].forEach(tipo => {
+  ['solo', 'retrato', 'tributo', 'video'].forEach(tipo => {
     if (!grupos[tipo].length) return;
     list.innerHTML += `<li class="sidebar-group-label">${LABEL_TIPO[tipo]}</li>`;
     grupos[tipo].forEach(([chave, pl]) => af_renderItemPlaylist(chave, pl));
@@ -2779,15 +2783,15 @@ function af_popularSelectFiltroPlaylist() {
 // Família. Cada Universo agrega quantas playlists de cada Tipo
 // (Standard/Retrato/Tributo) já existem.
 function af_calcularMapaBiblioteca() {
-  const porUniverso = {}; // "Rock" -> { standard:0, retrato:0, tributo:0 }
+  const porUniverso = {}; // "Rock" -> { standard:0, retrato:0, tributo:0, video:0 }
   const secundariaPorUniverso = {}; // "Jazz" -> Set(chaves) — só referência, ver af_renderCartaoUniverso
   const semUniversoReconhecido = [];
   Object.entries(PLAYLISTS).forEach(([chave, pl]) => {
     const { universo } = af_universoDePlaylist(chave, pl);
     if (!universo) { semUniversoReconhecido.push(chave); }
     else {
-      const bucket = porUniverso[universo] || (porUniverso[universo] = { standard: 0, retrato: 0, tributo: 0 });
-      const tipo = pl.tipo === 'retrato' ? 'retrato' : pl.tipo === 'tributo' ? 'tributo' : 'standard';
+      const bucket = porUniverso[universo] || (porUniverso[universo] = { standard: 0, retrato: 0, tributo: 0, video: 0 });
+      const tipo = pl.tipo === 'retrato' ? 'retrato' : pl.tipo === 'tributo' ? 'tributo' : pl.tipo === 'video' ? 'video' : 'standard';
       bucket[tipo]++;
     }
     // universos_secundarios (Bíblia §27.14b) — nunca conta para a
@@ -2805,10 +2809,10 @@ function af_calcularMapaBiblioteca() {
   const familias = {};
   Object.entries(UNIVERSOS_CANONICOS).forEach(([familia, nomes]) => {
     familias[familia] = nomes.map(nome => {
-      const bucket = porUniverso[nome] || { standard: 0, retrato: 0, tributo: 0 };
-      const count = bucket.standard + bucket.retrato + bucket.tributo;
+      const bucket = porUniverso[nome] || { standard: 0, retrato: 0, tributo: 0, video: 0 };
+      const count = bucket.standard + bucket.retrato + bucket.tributo + bucket.video;
       const secundarias = secundariaPorUniverso[nome] ? secundariaPorUniverso[nome].size : 0;
-      return { nome, count, standard: bucket.standard, retrato: bucket.retrato, tributo: bucket.tributo, secundarias };
+      return { nome, count, standard: bucket.standard, retrato: bucket.retrato, tributo: bucket.tributo, video: bucket.video, secundarias };
     });
   });
   return familias;
@@ -2820,8 +2824,8 @@ function af_abrirMapaBiblioteca(familiaFoco) {
 }
 
 function af_chipTipo(tipo, n) {
-  const label = { standard: 'Standard', retrato: 'Retrato', tributo: 'Tributo' }[tipo];
-  const dotClasse = { standard: 'std', retrato: 'ret', tributo: 'trb' }[tipo];
+  const label = { standard: 'Standard', retrato: 'Retrato', tributo: 'Tributo', video: 'Vídeo' }[tipo];
+  const dotClasse = { standard: 'std', retrato: 'ret', tributo: 'trb', video: 'vid' }[tipo];
   return `<span class="mapa-chip"><span class="mapa-dot ${dotClasse}"></span>${label}${n > 1 ? ` ×${n}` : ''}</span>`;
 }
 
@@ -2830,7 +2834,7 @@ function af_renderCartaoUniverso(u, familia) {
   const badge = covered
     ? `<span class="mapa-u-badge ok">${u.count} playlist${u.count > 1 ? 's' : ''}</span>`
     : `<span class="mapa-u-badge warn">por criar</span>`;
-  const tipos = ['standard', 'retrato', 'tributo'].filter(t => u[t] > 0).map(t => af_chipTipo(t, u[t])).join('');
+  const tipos = ['standard', 'retrato', 'tributo', 'video'].filter(t => u[t] > 0).map(t => af_chipTipo(t, u[t])).join('');
   // Referência de universos_secundarios (Bíblia §27.14b) — só em cartões
   // "por criar", nunca conta para o X/N de cobertura. Indicador subtil,
   // não é um selo de "coberto".
@@ -2882,6 +2886,7 @@ function af_renderMapaBiblioteca(familiaFoco) {
       <span class="item"><span class="mapa-dot std"></span>Standard</span>
       <span class="item"><span class="mapa-dot ret"></span>Retrato</span>
       <span class="item"><span class="mapa-dot trb"></span>Tributo</span>
+      <span class="item"><span class="mapa-dot vid"></span>Vídeo</span>
       <span class="item"><span class="mapa-swatch ok"></span>Com playlist</span>
       <span class="item"><span class="mapa-swatch warn"></span>Por criar</span>
     </div>
@@ -3436,7 +3441,7 @@ function renderMontagem() {
     <div class="playlist-header">
       <div class="playlist-name">${escapeHtml(pl.nome || currentPlaylistKey)}</div>
       <div class="playlist-meta">
-        <span class="posicao-tipo-badge tipo-${pl.tipo === 'tributo' ? 'trivia' : 'audio'}" style="text-transform:capitalize">${pl.tipo}</span>
+        <span class="posicao-tipo-badge tipo-${pl.tipo === 'tributo' ? 'trivia' : pl.tipo === 'video' ? 'video' : 'audio'}" style="text-transform:capitalize">${pl.tipo}</span>
         <span>${currentPlaylistKey}</span>
         <span>${pl.universo || '—'}</span>
         <span>dificuldade ${pl.dificuldade ?? '—'}</span>

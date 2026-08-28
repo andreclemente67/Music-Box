@@ -184,7 +184,7 @@
     }
   },
   "STD.INT.ALL.CIN.001": {
-    "tipo": "standard",
+    "tipo": "video",
     "nome": "Cinema & Música",
     "descritivo": "Edição Especial",
     "playlistCodigo": "STD.INT.ALL.CIN.001",
