@@ -4807,6 +4807,17 @@ async function af_gerarTrechoCore(id, url) {
   t.trecho_a = { ficheiro: dados.ficheiro_a, inicio: null, fim: null };
   t.trecho_b = { ficheiro: dados.ficheiro_b, inicio: null, fim: null };
   CATALOGO_PATCH.set(t.id, t);
+
+  // Auto-cascata de imagem (pedido do utilizador, 2026-08-28): faixas
+  // novas adicionadas por URL só tinham áudio tratado aqui, a imagem
+  // ficava sempre à espera de um clique manual em "Trocar imagem". Só
+  // dispara quando a faixa ainda não tem `imagem` nenhuma — nunca
+  // substitui uma escolha já feita (manual ou desta mesma chamada, se
+  // af_gerarTrechoCore for chamada duas vezes por engano). O botão
+  // "Trocar imagem" continua disponível à mesma para rever/trocar depois.
+  if (!t.imagem) {
+    await af_aplicarMelhorImagemArtista(t.id).catch(e => console.error('[af_gerarTrechoCore] auto-imagem falhou', id, e));
+  }
   return { ok: true };
 }
 

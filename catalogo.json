@@ -8291,5 +8291,357 @@
     "imagem_url_origem": "https://www.theaudiodb.com/artist/111521",
     "imagem_data_captura": "2026-08-27",
     "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "dancenation_faithless_insomnia_forev",
+    "titulo": "Faithless- Insomnia (Forever Faithless)",
+    "artista": [
+      "Faithless"
+    ],
+    "decadas": [],
+    "generos": [],
+    "geografia": "",
+    "estilo": "",
+    "instrumento": [],
+    "tags": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dancenation_faithless_insomnia_forev_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "dancenation_faithless_insomnia_forev_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rvuyrq1347968105.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB — pesquisado por \"Faithless\" (artista real da faixa; campo artista=\"DanceNation\" parece incorreto, não alterado)",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111573",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "underworld_born_slippy_nuxx",
+    "titulo": "Born Slippy .NUXX",
+    "artista": [
+      "Underworld"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Electronic"
+    ],
+    "geografia": "UK",
+    "estilo": "electronic/rave anthem com build épico",
+    "instrumento": [],
+    "tags": [
+      "rave",
+      "anos 90",
+      "dancefloor"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "underworld_born_slippy_nuxx_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "underworld_born_slippy_nuxx_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wyuypq1348417406.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111244",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "darude_sandstorm",
+    "titulo": "Sandstorm",
+    "artista": [
+      "Darude"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Trance"
+    ],
+    "geografia": "FI",
+    "estilo": "eurodance/trance eufórico",
+    "instrumento": [],
+    "tags": [
+      "trance",
+      "eufórico",
+      "anos 90"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "darude_sandstorm_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "darude_sandstorm_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/yxppuy1340225179.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111701",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "robert_miles_children",
+    "titulo": "Children",
+    "artista": [
+      "Robert Miles"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Dream Trance"
+    ],
+    "geografia": "IT",
+    "estilo": "dream trance melódico e atmosférico",
+    "instrumento": [],
+    "tags": [
+      "melódico",
+      "trance",
+      "anos 90"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "robert_miles_children_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "robert_miles_children_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/miles-robert-4fdec3c25f74b.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/114465",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "snap_rhythm_is_a_dancer",
+    "titulo": "Rhythm Is a Dancer",
+    "artista": [
+      "Snap!"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Eurodance"
+    ],
+    "geografia": "DE",
+    "estilo": "eurodance energético com rap e vocais poderosos",
+    "instrumento": [],
+    "tags": [
+      "eurodance",
+      "anos 90",
+      "dancefloor"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "snap_rhythm_is_a_dancer_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "snap_rhythm_is_a_dancer_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/uptuqv1422303421.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/112260",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "the_prodigy_no_good_start_the_dance",
+    "titulo": "No Good (Start the Dance)",
+    "artista": [
+      "The Prodigy"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Breakbeat"
+    ],
+    "geografia": "UK",
+    "estilo": "breakbeat/rave de alta energia",
+    "instrumento": [],
+    "tags": [
+      "rave",
+      "breakbeat",
+      "intenso"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "the_prodigy_no_good_start_the_dance_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "the_prodigy_no_good_start_the_dance_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/gqxcvn1705844274.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/112131",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "alice_deejay_better_off_alone",
+    "titulo": "Better Off Alone",
+    "artista": [
+      "Alice Deejay"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Trance Pop"
+    ],
+    "geografia": "NL",
+    "estilo": "trance pop dançável e radiofónico",
+    "instrumento": [],
+    "tags": [
+      "pop",
+      "trance",
+      "anos 90"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "alice_deejay_better_off_alone_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "alice_deejay_better_off_alone_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qvwxqs1341304832.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111634",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "donna_summer_i_feel_love",
+    "titulo": "I Feel Love",
+    "artista": [
+      "Donna Summer"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Electronic Disco"
+    ],
+    "geografia": "US",
+    "estilo": "electronic disco pioneering com sintetizadores sequenciados",
+    "instrumento": [],
+    "tags": [
+      "disco",
+      "sintetizador",
+      "pioneiro"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "donna_summer_i_feel_love_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "donna_summer_i_feel_love_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-27",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qk7vd91761606896.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/114241",
+    "imagem_data_captura": "2026-08-28",
+    "imagem_licenca_estado": "confirmar"
   }
 ]

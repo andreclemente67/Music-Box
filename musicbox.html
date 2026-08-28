@@ -25,7 +25,8 @@
   }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font-family:Arial, sans-serif; }
-  .topo { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; border-bottom:1px solid var(--border); }
+  .topo { display:flex; justify-content:space-between; align-items:center; padding:14px 24px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:100; background:var(--bg); }
   .topo h1 { font-size:14px; letter-spacing:3px; margin:0; color:#8a8a86; font-weight:400; }
   .badge { background:#241d12; color:var(--accent); padding:4px 12px; border-radius:4px; font-size:12px; font-weight:700; letter-spacing:1px; }
   .progresso-faixas { display:flex; gap:4px; padding:8px 24px 0; justify-content:center; }
@@ -144,7 +145,13 @@
   .log { max-width:700px; margin:6px auto 20px; font-size:11px; color:#6a6a66; text-align:center; min-height:16px; }
   audio { display:none; }
 
-  #start-overlay { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:16px; overflow-y:auto; padding:24px 0; box-sizing:border-box; }
+  /* justify-content:flex-start (não center) é obrigatório aqui — center
+     num flex column com overflow-y:auto quebra position:sticky dos
+     filhos (ex.: a barra de filtros de #teste-lista) sempre que o
+     conteúdo excede a altura do ecrã; com listas curtas isso fica
+     escondido (nunca há scroll a sério), só se nota com listas longas.
+     Ver DECISIONS.md 2026-08-28. */
+  #start-overlay { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:flex-start; z-index:999; flex-direction:column; gap:16px; overflow-y:auto; padding:24px 0; box-sizing:border-box; }
   #start-overlay button { background:var(--accent); color:#1a1508; border:none; border-radius:8px; padding:18px 40px; font-size:18px; font-weight:900; letter-spacing:2px; cursor:pointer; }
   #start-overlay p { color:#8a8a86; font-size:12px; max-width:320px; text-align:center; }
   #start-overlay .btn-secundario { background:var(--bg3); color:var(--text); font-size:13px; padding:10px 24px; }
@@ -2700,7 +2707,14 @@ async function mostrarTesteLista(categoria) {
   // utilizador, 2026-08-13). "Todas" mostra tudo, sem alterar a ordem
   // original de CHAVES_COLLECTIONS.
   const filtros = document.createElement('div');
-  filtros.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;justify-content:center;';
+  // Sticky relativo a #start-overlay (o próprio contentor com scroll —
+  // overflow-y:auto), não à página — este ecrã vive todo dentro do
+  // overlay, nunca por baixo da barra .topo (essa só existe depois do
+  // jogo arrancar, cobertos por este overlay a z-index:999 enquanto
+  // visível). z-index baixo chega, só precisa de ficar acima dos botões
+  // de playlist da grelha, que são o único conteúdo a passar por baixo.
+  filtros.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;justify-content:center;'
+    + 'position:sticky;top:0;z-index:10;background:var(--bg);padding:6px 0 10px;';
   CATEGORIAS_TESTE.forEach(cat => {
     const btnFiltro = document.createElement('button');
     btnFiltro.textContent = cat;
