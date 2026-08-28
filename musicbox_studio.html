@@ -2676,7 +2676,7 @@ function renderSidebar() {
   // af_abrirMapaBiblioteca). Mostrados sempre, independentemente do
   // estado colapsado/expandido da lista de playlists.
   [FAMILIA_DECADAS, FAMILIA_GENEROS, FAMILIA_ESPECIAIS].forEach(familia => {
-    list.innerHTML += `<li class="sidebar-familia-link" onclick="af_abrirMapaBiblioteca('${familia}')">
+    list.innerHTML += `<li class="sidebar-familia-link" title="Abre o Mapa da Biblioteca — vista geral dos 28 Universos e quais já têm playlist, agrupados por Família." onclick="af_abrirMapaBiblioteca('${familia}')">
       <span>${familia}</span><span class="sidebar-familia-arrow">🗺 →</span>
     </li>`;
   });
@@ -4940,9 +4940,9 @@ function renderSlotsSimples(pl) {
     html += slotCardHtml('musica', i, id, 'tipo-audio', String(i+1).padStart(2,'0'));
     if (i === 0 && id) {
       if (pl.tipo === 'retrato') {
-        html += `<button class="fill-artista-btn" onclick="preencherComArtista()">Preencher com este artista</button>`;
+        html += `<button class="fill-artista-btn" title="Só Retrato: procura no catálogo outras faixas do mesmo artista/banda da posição 01 e preenche as posições 02-08 com elas, ordenadas por década. Nunca mexe na posição 01." onclick="preencherComArtista()">Preencher com este artista</button>`;
       }
-      html += `<button class="fill-auto-btn" onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
+      html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist (ex. STD.PT.80.ROC.001) e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
       html += `<button class="fill-auto-btn" title="Gera trechos A/B (áudio) para todas as faixas desta playlist que ainda não têm nenhum — por artista+título, sem precisar de URL. Tenta primeiro a iTunes Search API (preview de 30s, corte 0-12s/18-30s), cai para pesquisa no YouTube se não houver preview. Corre faixa a faixa, pode demorar — progresso ao vivo aparece nesta mesma página." onclick="af_gerarTrechosEmFalta()">🎧 Gerar trechos em falta</button>`;
       html += `<button class="fill-auto-btn" title="${isCinemaPlaylist() ? "Ponto de partida para todas as faixas sem excerto definido — 0-30s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário." : "Ponto de partida para todas as faixas sem início definido — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário."}" onclick="autoDefinirTrechosTodos()">⚡ Auto em toda a playlist</button>`;
       html += `<button class="fill-auto-btn" title="Associa ficheiros .mp3 já existentes em app/ às posições sem trecho_a — por nome exacto, a partir de mp3_index.json. Depois define A/B automaticamente para o que encontrar (⚡ Auto)." onclick="autoMatchMp3()">🔗 Auto-match MP3</button>`;
@@ -5012,7 +5012,7 @@ function renderPosicoesTributo(pl) {
       ${t ? timingEditorHtml('posicao', i, p.id) : ''}
     </div>`;
     if (i === 0 && p.id) {
-      html += `<button class="fill-auto-btn" onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
+      html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
     }
   });
   html += `</div><button class="add-posicao-btn" onclick="addPosicaoTributo()">+ Adicionar posição</button>`;

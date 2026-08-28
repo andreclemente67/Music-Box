@@ -3,6 +3,17 @@
 ## Última actualização
 2026-08-29
 
+## 2026-08-29 — Tooltips em controlos não óbvios (UX, item de baixa prioridade)
+Passagem leve, não exaustiva ("sem pressa" — pedido de baixa
+prioridade): a maioria dos botões de preenchimento automático já tinha
+`title` detalhado (Auto em toda a playlist, Auto-match MP3, Gerar
+trechos em falta) — adicionados os 3 que faltavam mesmo nesse grupo
+("Preencher com este artista", "Preencher automaticamente" ×2, uma
+ocorrência por cada formato de playlist) + os 3 rótulos de Família na
+sidebar (explicam que abrem o Mapa da Biblioteca, não óbvio só pelo
+ícone 🗺). Resto da UI deixado como está — cobertura exaustiva não fazia
+parte do pedido.
+
 ## 2026-08-29 — Exportar créditos de imagem
 Nova função `af_exportarCreditosImagem()` (botão "↓ Descarregar
 créditos_imagem.md" na tab Exportar) — gera uma tabela Markdown com
