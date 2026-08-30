@@ -61,6 +61,33 @@ TMP_DIR = os.path.join(APP_DIR, 'tmp_dl')
 DURACAO_TRECHO = 15
 ID_REGEX = re.compile(r'^[A-Za-z0-9_]+$')
 
+# Salvaguarda do modo YouTube (regeneração 2026-08-30, ver TASKS.md): se
+# sugerir_trechos.py sugerir um Trecho A tardio (introdução/build-up longo,
+# ex. pad ambiente prolongado abaixo do threshold de -45dB por muito
+# tempo), cortar às cegas trocaria "falta a introdução" (o problema do modo
+# --itunes) por "salta a introdução/build-up genuíno" — o mesmo tipo de
+# erro, causa diferente. Acima deste limite, gerar_faixa() não corta:
+# guarda o download completo para revisão manual e sinaliza.
+LIMITE_TEMPO_A_SUSPEITO = 20  # segundos
+REVISAO_MANUAL_DIR = os.path.join(APP_DIR, '_para_revisao_manual')
+
+
+class TempoASuspeitoError(Exception):
+    """tempo_a sugerido por sugerir_trechos.py > LIMITE_TEMPO_A_SUSPEITO —
+    não cortado automaticamente. self.tempo_a/tempo_b e self.ficheiro_completo
+    (caminho do download completo preservado em REVISAO_MANUAL_DIR, para
+    ouvir sem repetir o download) ficam disponíveis para quem apanhar a
+    excepção decidir manualmente."""
+    def __init__(self, id_faixa, tempo_a, tempo_b, ficheiro_completo):
+        self.id_faixa = id_faixa
+        self.tempo_a = tempo_a
+        self.tempo_b = tempo_b
+        self.ficheiro_completo = ficheiro_completo
+        super().__init__(
+            f'{id_faixa}: Trecho A sugerido em {tempo_a}s (> {LIMITE_TEMPO_A_SUSPEITO}s) — '
+            f'não cortado automaticamente, guardado para revisão em {ficheiro_completo}'
+        )
+
 # ── Modo iTunes ───────────────────────────────────────────────────────────
 ITUNES_SEARCH_URL = 'https://itunes.apple.com/search'
 ITUNES_TIMEOUT = 15  # segundos — pesquisa + download do preview (ficheiro pequeno, ~500KB-1MB)
@@ -230,10 +257,18 @@ def gerar_faixa(url: str, id_faixa: str, force: bool = False, cookies_from_brows
     mp3_completo = descarregar_mp3_completo(url, id_faixa, cookies_from_browser)
     print(f'      ✓ {os.path.basename(mp3_completo)}')
 
+    guardado_para_revisao = None
     try:
         print('[2/3] A analisar volume para sugerir Trecho A e B (sugerir_trechos.py) ...')
         tempo_a, tempo_b = sugerir_trechos.sugerir_trechos(mp3_completo, DURACAO_TRECHO)
         print(f'      ✓ Trecho A → {tempo_a}s · Trecho B → {tempo_b}s')
+
+        if tempo_a > LIMITE_TEMPO_A_SUSPEITO:
+            os.makedirs(REVISAO_MANUAL_DIR, exist_ok=True)
+            guardado_para_revisao = os.path.join(REVISAO_MANUAL_DIR, f'{id_faixa}_completo.mp3')
+            shutil.copy2(mp3_completo, guardado_para_revisao)
+            print(f'      ⚠ Trecho A ({tempo_a}s) > {LIMITE_TEMPO_A_SUSPEITO}s — não cortado, guardado para revisão manual')
+            raise TempoASuspeitoError(id_faixa, tempo_a, tempo_b, guardado_para_revisao)
 
         print('[3/3] A cortar os trechos com ffmpeg ...')
         cortar_trecho(mp3_completo, tempo_a, destino_a)
@@ -243,6 +278,8 @@ def gerar_faixa(url: str, id_faixa: str, force: bool = False, cookies_from_brows
     finally:
         # O download completo só serve para a análise + corte — não fica
         # em app/ (ao contrário de destino_a/destino_b, que são o resultado).
+        # Já copiado para REVISAO_MANUAL_DIR acima se sinalizado — seguro
+        # apagar o temporário em qualquer dos casos.
         shutil.rmtree(TMP_DIR, ignore_errors=True)
 
     print(f'CONCLUÍDO — {id_faixa}_a.mp3 e {id_faixa}_b.mp3 em {APP_DIR}')

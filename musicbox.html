@@ -161,6 +161,25 @@
   #teste-lista button:hover { background:#1e2229; }
   #teste-lista .voltar { text-align:center; color:#8a8a86; background:none; border:none; }
 
+  /* Secções "Todas as playlists" agrupadas por família (Décadas/Géneros/
+     Especiais — mesma taxonomia de familiaDeChave(), já usada na escolha
+     real de Universo em jogo), estilo Netflix: título de secção + carrossel
+     horizontal por baixo, uma secção a seguir à outra. Substitui a grelha
+     de 2 colunas + filtro Standard/Retrato/Tributo (eixo diferente, que
+     misturava tudo numa lista só). Ver mostrarTesteLista().*/
+  .categoria-secao { margin-bottom: 22px; width:100%; min-width:0; }
+  .categoria-titulo { font-size:12px; font-weight:700; letter-spacing:1.5px; color:var(--accent); padding:4px 2px 10px; }
+  .categoria-carrossel { display:flex; gap:10px; overflow-x:auto; padding:2px 2px 8px; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; width:100%; min-width:0; }
+  .categoria-carrossel::-webkit-scrollbar { height:6px; }
+  .categoria-carrossel::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+  .playlist-card { flex:0 0 168px; scroll-snap-align:start; background:var(--bg2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:12px; text-align:left; cursor:pointer; display:flex; flex-direction:column; gap:4px; }
+  .playlist-card:hover { border-color:var(--accent); }
+  .playlist-card-tipo { font-size:9px; letter-spacing:1px; color:#8a8a86; text-transform:uppercase; }
+  .playlist-card-nome { font-size:13px; line-height:1.3; }
+  .playlist-card-subtitulo { font-size:11px; color:var(--text2); line-height:1.25; margin-top:-2px; }
+  .playlist-card-meta { font-size:10px; color:var(--text2); line-height:1.4; }
+  .playlist-card-codigo { font-size:9px; color:var(--text3); }
+
   /* Cinema (STD.INT.ALL.CIN.001): tapa o título/canal e o logo que o
      YouTube sobrepõe no iframe — ver carregarTrecho() em musicbox.html,
      dava spoiler do título do filme antes da resposta. */
@@ -2764,10 +2783,31 @@ function categoriaDe(col) {
   return 'Standard';
 }
 
-const CATEGORIAS_TESTE = ['Todas', 'Standard', 'Retrato', 'Tributo'];
-let categoriaFiltroActual = 'Todas';
+// Secções "Todas as playlists", agrupadas por família (Décadas/Géneros/
+// Especiais — familiaDeChave(), a mesma taxonomia já usada na escolha real
+// de Universo em jogo, ver iniciarEscolhaCollection()), estilo Netflix:
+// título de secção + carrossel horizontal por baixo, uma secção a seguir à
+// outra. Substitui a antiga grelha de 2 colunas + filtro Standard/Retrato/
+// Tributo — esse é um eixo diferente (quase tudo é "Standard"), por isso
+// passa a aparecer só como etiqueta pequena em cada cartão (categoriaDe()),
+// não como secção própria. Pedido do utilizador, 2026-08-30.
+const FAMILIAS_TESTE_ORDEM = [
+  { familia: FAMILIA_DECADAS, emoji: '▤' },
+  { familia: FAMILIA_GENEROS, emoji: '♪' },
+  { familia: FAMILIA_ESPECIAIS, emoji: '★' },
+];
 
-async function mostrarTesteLista(categoria) {
+// Separa "categoria genérica — detalhe" em título/subtítulo no cartão de
+// playlist (pedido do utilizador, 2026-08-30) — ex. "Anos 2010 — Synth"
+// vira título "Anos 2010" + subtítulo "Synth". Nomes sem "—" (ex.
+// "Americana", "Anos 2010+") ficam inteiros no título, sem subtítulo.
+function splitNomeCartao(nome) {
+  const idx = nome.indexOf(' — ');
+  if (idx === -1) return { titulo: nome, subtitulo: null };
+  return { titulo: nome.slice(0, idx), subtitulo: nome.slice(idx + 3) };
+}
+
+async function mostrarTesteLista() {
   // CHAVES_COLLECTIONS só fica completo depois de catalogoPronto resolver
   // (playlists standard/retrato descobertas automaticamente de
   // playlists.json, além das de UNIVERSOS_EXTERNOS) — ver DECISIONS.md
@@ -2776,66 +2816,54 @@ async function mostrarTesteLista(categoria) {
   // wrapper que já esperasse, ao contrário de arrancar()/
   // testarPlaylistWrapper()), podia ler a lista ainda incompleta se o
   // fetch a catalogo.json/playlists.json não tivesse terminado. Se
-  // catalogoPronto já resolveu (caso comum — filtros, "voltar", etc.),
-  // este await é instantâneo.
+  // catalogoPronto já resolveu (caso comum — "voltar", etc.), este await
+  // é instantâneo.
   await catalogoPronto;
-  if (categoria) categoriaFiltroActual = categoria;
   const lista = document.getElementById('teste-lista');
   lista.innerHTML = '';
-  lista.style.cssText = 'flex-direction:column;gap:8px;max-width:680px;';
+  lista.style.cssText = 'flex-direction:column;gap:0;width:100%;max-width:820px;min-width:0;';
 
-  // Filtro por categoria — útil quando há muitas playlists (ver pedido do
-  // utilizador, 2026-08-13). "Todas" mostra tudo, sem alterar a ordem
-  // original de CHAVES_COLLECTIONS.
-  const filtros = document.createElement('div');
-  // Sticky relativo a #start-overlay (o próprio contentor com scroll —
-  // overflow-y:auto), não à página — este ecrã vive todo dentro do
-  // overlay, nunca por baixo da barra .topo (essa só existe depois do
-  // jogo arrancar, cobertos por este overlay a z-index:999 enquanto
-  // visível). z-index baixo chega, só precisa de ficar acima dos botões
-  // de playlist da grelha, que são o único conteúdo a passar por baixo.
-  filtros.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;justify-content:center;'
-    + 'position:sticky;top:0;z-index:10;background:var(--bg);padding:6px 0 10px;';
-  CATEGORIAS_TESTE.forEach(cat => {
-    const btnFiltro = document.createElement('button');
-    btnFiltro.textContent = cat;
-    const activo = cat === categoriaFiltroActual;
-    btnFiltro.style.cssText = 'padding:6px 12px;font-size:11px;border-radius:14px;cursor:pointer;'
-      + (activo
-        ? 'background:var(--accent);color:#1a1508;border:1px solid var(--accent);font-weight:700;'
-        : 'background:var(--bg2);color:var(--text2);border:1px solid var(--border);');
-    btnFiltro.onclick = () => mostrarTesteLista(cat);
-    filtros.appendChild(btnFiltro);
-  });
-  lista.appendChild(filtros);
+  FAMILIAS_TESTE_ORDEM.forEach(({ familia, emoji }) => {
+    const chaves = CHAVES_COLLECTIONS.filter(chave => familiaDeChave(chave) === familia);
+    if (!chaves.length) return;
 
-  // Grid de duas colunas
-  const grid = document.createElement('div');
-  grid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;';
+    const secao = document.createElement('div');
+    secao.className = 'categoria-secao';
 
-  CHAVES_COLLECTIONS
-    .filter(chave => categoriaFiltroActual === 'Todas' || categoriaDe(COLLECTIONS[chave]) === categoriaFiltroActual)
-    .forEach(chave => {
+    const titulo = document.createElement('div');
+    titulo.className = 'categoria-titulo';
+    titulo.textContent = emoji + ' ' + familia + ' (' + chaves.length + ')';
+    secao.appendChild(titulo);
+
+    const carrossel = document.createElement('div');
+    carrossel.className = 'categoria-carrossel';
+
+    chaves.forEach(chave => {
       const col = COLLECTIONS[chave];
       const dif = col.dificuldade || 3;
-      const familia = familiaDeChave(chave);
-      const btn = document.createElement('button');
-      btn.style.cssText = 'background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:12px;text-align:left;cursor:pointer;line-height:1.5;';
-      btn.innerHTML = '<span style="color:#8a8a86;font-size:10px;letter-spacing:1px;">' + familia + ' ›</span><br><strong>' + col.nome + '</strong><br><span style="color:#6a6a66;font-size:10px;">Dif. ' + dif + '/5 · ' + col.descritivo + ' <span style="color:#5a5a56">(' + col.playlistCodigo + ')</span></span>';
-      btn.onmouseover = () => btn.style.borderColor = 'var(--accent)';
-      btn.onmouseout = () => btn.style.borderColor = 'var(--border)';
-      btn.onclick = () => { garantirAudioCtx(); mostrarFaixasPlaylist(chave); };
-      grid.appendChild(btn);
+      const tipo = categoriaDe(col);
+      const { titulo: nomeTitulo, subtitulo: nomeSub } = splitNomeCartao(col.nome);
+      const card = document.createElement('button');
+      card.className = 'playlist-card';
+      card.innerHTML = '<span class="playlist-card-tipo">' + tipo + '</span>'
+        + '<strong class="playlist-card-nome">' + nomeTitulo + '</strong>'
+        + (nomeSub ? '<span class="playlist-card-subtitulo">' + nomeSub + '</span>' : '')
+        + '<span class="playlist-card-meta">Dif. ' + dif + '/5 · ' + col.descritivo + '</span>'
+        + '<span class="playlist-card-codigo">' + col.playlistCodigo + '</span>';
+      card.onclick = () => { garantirAudioCtx(); mostrarFaixasPlaylist(chave); };
+      carrossel.appendChild(card);
     });
 
-  if (!grid.children.length) {
-    const vazio = document.createElement('div');
-    vazio.style.cssText = 'grid-column:1/-1;color:#8a8a86;font-size:12px;text-align:center;padding:12px;';
-    vazio.textContent = 'Nenhuma playlist nesta categoria.';
-    grid.appendChild(vazio);
-  }
+    secao.appendChild(carrossel);
+    lista.appendChild(secao);
+  });
 
-  lista.appendChild(grid);
+  if (!lista.children.length) {
+    const vazio = document.createElement('div');
+    vazio.style.cssText = 'color:#8a8a86;font-size:12px;text-align:center;padding:12px;';
+    vazio.textContent = 'Nenhuma playlist disponível.';
+    lista.appendChild(vazio);
+  }
 
   const voltar = document.createElement('button');
   voltar.className = 'voltar';
