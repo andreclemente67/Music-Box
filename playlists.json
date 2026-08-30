@@ -21,6 +21,13 @@
       "pessoa": "Mark Knopfler",
       "id": "80_mosaico"
     },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
     "universos_secundarios": [
       "Reino Unido",
       "Synth"
@@ -47,6 +54,13 @@
       "categoria": "Intérprete",
       "pessoa": "Taylor Swift",
       "id": "a10_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "STD.US.ALL.AME.001": {
@@ -70,6 +84,13 @@
       "categoria": "Intérprete",
       "pessoa": "Johnny Cash",
       "id": "ame_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
     "universos_secundarios": [
       "Country/Folk",
@@ -98,6 +119,13 @@
       "pessoa": "Kavinsky",
       "id": "syn001_mosaico"
     },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
     "universos_secundarios": [
       "França"
     ]
@@ -123,6 +151,13 @@
       "categoria": "Dupla",
       "pessoa": "Elis Regina & Adoniran Barbosa",
       "id": "bra001_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "STD.INT.ALL.GTR.001": {
@@ -146,6 +181,13 @@
       "categoria": "Intérprete",
       "pessoa": "Carlos Santana",
       "id": "solo_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "STD.INT.ALL.BAT.001": {
@@ -169,6 +211,13 @@
       "categoria": "Baterista",
       "pessoa": "Dave Grohl",
       "id": "bat_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
     "universos_secundarios": [
       "Reino Unido"
@@ -195,6 +244,13 @@
       "categoria": "Intérprete",
       "pessoa": "Sétima Legião",
       "id": "pt_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "STD.INT.ALL.CIN.001": {
@@ -218,6 +274,13 @@
       "categoria": "Compositor",
       "pessoa": "Nino Rota",
       "id": "cinema_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 240,
+      "pura_formatada": "4m 0s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×30s (TrechoA 0-15s + TrechoB ~15s, dados reais em catalogo.json — arquitectura própria do tipo 'vídeo', NÃO segue o padrão Standard 7×22s) + 30s Mosaico contínuo (regra 27.7) = 240s. Ajustada = mantida a referência Bíblia 26.1 (~5-6min) por convenção — não recalculada especificamente para este tipo, confirmar se aplicável."
     },
     "universos_secundarios": [
       "Instrumental"
@@ -244,6 +307,13 @@
       "categoria": "Intérprete",
       "pessoa": "UHF",
       "id": "pt80_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "STD.PT.ALL.BAT.001": {
@@ -267,6 +337,13 @@
       "categoria": "Baterista",
       "pessoa": "Alexandre Frazão",
       "id": "ptbat_mosaico"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "RET.INT.ALL.VOZ.001": {
@@ -287,7 +364,14 @@
       "ret_07",
       "ret_08"
     ],
-    "mosaico": null
+    "mosaico": null,
+    "duracao_estimada": {
+      "pura_segundos": 120,
+      "pura_formatada": "2m 0s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 8×15s (TIMING_DURACAO_FIXA — excerto único por faixa, sem par TrechoA/TrechoB 'por desenho' no universo Retrato Sonoro) = 120s. Sem Mosaico (tipo retrato não tem). NÃO segue o padrão Standard (7×22s+30s). Ajustada = mantida a referência Bíblia 26.1 (~5-6min) por convenção — não recalculada especificamente para este tipo, confirmar se aplicável."
+    }
   },
   "TRB.UK.ALL.ROC.001": {
     "tipo": "tributo",
@@ -369,6 +453,13 @@
       "categoria": "album",
       "pessoa": "Abbey Road — The Beatles (1969)",
       "id": "beatles_recap"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 177,
+      "pura_formatada": "2m 57s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 8 posições mistas (confirmado em catalogo.json + fallback COLLECTIONS.TRIBUTO de musicbox.html): 6×22s (posições com par TrechoA+TrechoB completo — pos 1,2,3,5,6,8) + 1×15s (pos 4 'foto', ficheiro áudio único sem par A/B — TIMING_DURACAO_FIXA) + 1×0s (pos 7 'capa', sem áudio, só imagem/texto) + 30s Mosaico contínuo (regra 27.7) = 177s. NÃO segue o padrão Standard (7×22s+30s). Ajustada = mantida a referência Bíblia 26.1 (~5-6min) por convenção — não recalculada especificamente para este tipo, confirmar se aplicável."
     }
   },
   "RET.PT.90.VOZ.001": {
@@ -389,7 +480,14 @@
       "rui_veloso_porto_sentido",
       "gnr_independanca"
     ],
-    "mosaico": null
+    "mosaico": null,
+    "duracao_estimada": {
+      "pura_segundos": 120,
+      "pura_formatada": "2m 0s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 8×15s (TIMING_DURACAO_FIXA — excerto único por faixa, sem par TrechoA/TrechoB 'por desenho' no universo Retrato Sonoro) = 120s. Sem Mosaico (tipo retrato não tem). NÃO segue o padrão Standard (7×22s+30s). Ajustada = mantida a referência Bíblia 26.1 (~5-6min) por convenção — não recalculada especificamente para este tipo, confirmar se aplicável."
+    }
   },
   "STD.INT.ALL.MIX.001": {
     "tipo": "standard",
@@ -412,6 +510,13 @@
       "categoria": "Intérprete",
       "pessoa": "Vini Reilly",
       "id": "the_durutti_column_for_belgian_friends"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
     "universos_secundarios": [
       "Ambient",
@@ -439,6 +544,13 @@
       "categoria": "Intérprete",
       "pessoa": "Samuel T. Herring",
       "id": "future_islands_ran"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
     "universos_secundarios": [
       "Reino Unido",
@@ -499,6 +611,13 @@
       "categoria": "Baterista",
       "pessoa": "Rush",
       "id": "rush_tom_sawyer"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "LOGO-001": {
@@ -520,6 +639,13 @@
       "logo_08"
     ],
     "mosaico": null,
+    "duracao_estimada": {
+      "pura_segundos": 120,
+      "pura_formatada": "2m 0s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 8×15s (TIMING_DURACAO_FIXA — excerto único por faixa, sem par TrechoA/TrechoB 'por desenho' no universo Retrato Sonoro) = 120s. Sem Mosaico (tipo retrato não tem). NÃO segue o padrão Standard (7×22s+30s). Ajustada = mantida a referência Bíblia 26.1 (~5-6min) por convenção — não recalculada especificamente para este tipo, confirmar se aplicável."
+    },
     "estado": "piloto_protótipo",
     "nota_curadoria": "NÃO APROVADA PARA EMISSÃO REAL. Imagens são logótipos/emblemas oficiais de marcas registadas (Nirvana, Guns N' Roses, Aerosmith, Iron Maiden, Motörhead, Grateful Dead, Pink Floyd, Rolling Stones) — direitos de marca não confirmados, ao contrário de fotos de artista (só \"confirmar\"/\"livre\"). Só para testes internos do mecanismo de Retrato Logótipo (temLogo). Ver Bíblia 27.15.",
     "universos_secundarios": [
@@ -739,6 +865,13 @@
       "categoria": "Compositor",
       "pessoa": "Giorgio Moroder",
       "id": "donna_summer_i_feel_love"
+    },
+    "duracao_estimada": {
+      "pura_segundos": 184,
+      "pura_formatada": "3m 4s",
+      "ajustada_segundos": 330,
+      "ajustada_formatada": "5m 30s",
+      "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
   },
   "STD.INT.50.MIX.001": {
