@@ -1478,6 +1478,54 @@
     color: var(--text3);
     margin-top: -2px;
   }
+
+  /* Lightbox da Fototeca — pedido do utilizador 2026-08-28: clicar numa
+     miniatura abre a foto em tamanho grande para inspecção de qualidade/
+     licença. Overlay próprio (não o .mini-player, que é um painel fixo de
+     300px pensado para preview rápido, não para inspeção detalhada). */
+  .fototeca-thumb-clickable { cursor: zoom-in; }
+  .lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    padding: 40px;
+  }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+  }
+  .lightbox-caption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+    font-size: 13px;
+    text-align: center;
+  }
+  .lightbox-caption .sub { color: var(--text3); font-size: 11px; }
+  .lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 28px;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 201;
+  }
+  .lightbox-close:hover { color: var(--accent); }
   .asset-row-check { display:flex; align-items:center; gap:8px; padding:3px 14px; }
   .asset-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
   .asset-dot.ok       { background:var(--green); }
@@ -2278,6 +2326,16 @@
   </div>
   <div class="mini-player-footer">
     <span class="mini-player-url" id="mini-player-url"></span>
+  </div>
+</div>
+
+<!-- LIGHTBOX DA FOTOTECA — inspeção em tamanho grande de uma foto -->
+<div class="lightbox-overlay" id="fototeca-lightbox" onclick="if(event.target===this) af_fecharFototecaLightbox()">
+  <button class="lightbox-close" title="Fechar (Esc)" onclick="af_fecharFototecaLightbox()">×</button>
+  <img class="lightbox-img" id="fototeca-lightbox-img" src="" alt="">
+  <div class="lightbox-caption">
+    <span id="fototeca-lightbox-artista"></span>
+    <span class="sub" id="fototeca-lightbox-titulo"></span>
   </div>
 </div>
 
@@ -7446,7 +7504,7 @@ function renderFototeca() {
   grid.innerHTML = faixas.map(t => {
     const hasImg = !!t.imagem;
     const thumb = hasImg
-      ? `<img class="posicao-thumb" style="width:100px;height:100px;" src="${escapeAttr(t.imagem)}" alt="" loading="lazy">`
+      ? `<img class="posicao-thumb fototeca-thumb-clickable" style="width:100px;height:100px;" src="${escapeAttr(t.imagem)}" alt="" loading="lazy" title="Clica para ver em tamanho grande" onclick="af_abrirFototecaLightbox('${escapeAttr(t.imagem)}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">`
       : `<div class="posicao-thumb-placeholder" style="width:100px;height:100px;font-size:32px;" title="Sem imagem">🖼</div>`;
     const aviso = t.imagem_licenca_estado === 'confirmar'
       ? `<span style="color:#e0a030;font-size:13px;" title="Imagem colada manualmente — confirmar licença de uso antes de lançamento público">⚠️</span>`
@@ -7461,6 +7519,27 @@ function renderFototeca() {
 
   document.getElementById('fototeca-summary').textContent = `${faixas.length} de ${CATALOGO.length} faixas`;
 }
+
+// Lightbox da Fototeca — pedido do utilizador 2026-08-28: clicar numa
+// miniatura abre a foto em tamanho grande (fundo escurecido, centrada),
+// para avaliar qualidade/adequação da imagem, incluindo as marcadas com
+// imagem_licenca_estado:"confirmar". Fecha por clique fora, Esc ou X
+// (ver keydown global mais abaixo e onclick no próprio overlay).
+function af_abrirFototecaLightbox(src, artista, titulo) {
+  document.getElementById('fototeca-lightbox-img').src = src;
+  document.getElementById('fototeca-lightbox-artista').textContent = artista || '';
+  document.getElementById('fototeca-lightbox-titulo').textContent = titulo || '';
+  document.getElementById('fototeca-lightbox').classList.add('open');
+}
+function af_fecharFototecaLightbox() {
+  document.getElementById('fototeca-lightbox').classList.remove('open');
+  document.getElementById('fototeca-lightbox-img').src = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('fototeca-lightbox')?.classList.contains('open')) {
+    af_fecharFototecaLightbox();
+  }
+});
 
 // ─── VÍDEO INLINE (embed directo no painel de detalhe, sem modal) ──
 function toggleVideoEmbed(url) {
