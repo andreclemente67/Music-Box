@@ -1453,6 +1453,37 @@
     padding: 20px;
     overflow-y: auto;
   }
+  /* Ecrã de Revisão YouTube (2026-08-30) — ver renderRevisao() */
+  .revisao-playlist-item { display:flex; flex-direction:column; gap:2px; padding:8px 10px; border-radius:6px; cursor:pointer; margin-bottom:2px; }
+  .revisao-playlist-item:hover { background:var(--bg3); }
+  .revisao-playlist-item.activa { background:var(--accent); }
+  .revisao-playlist-item.activa .revisao-playlist-nome,
+  .revisao-playlist-item.activa .revisao-playlist-progresso { color:#1a1508; }
+  .revisao-playlist-item.completa .revisao-playlist-nome { color:var(--green); }
+  .revisao-playlist-nome { font-size:12px; font-weight:600; }
+  .revisao-playlist-progresso { font-size:10px; color:var(--text3); font-family:var(--mono); }
+  .revisao-card { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:14px 16px; }
+  .revisao-card.aprovado { border-color:var(--green); }
+  .revisao-card.rejeitado { border-color:var(--red); opacity:0.6; }
+  .revisao-card-header { display:flex; align-items:baseline; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .revisao-card-titulo { font-size:14px; font-weight:700; }
+  .revisao-card-artista { font-size:12px; color:var(--text2); }
+  .revisao-card-meta { font-size:10px; color:var(--text3); font-family:var(--mono); margin-left:auto; }
+  .revisao-versoes { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .revisao-versao { background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:10px 12px; }
+  .revisao-versao-label { font-size:10px; letter-spacing:1px; color:var(--text3); text-transform:uppercase; margin-bottom:6px; }
+  .revisao-versao audio { width:100%; height:32px; margin-top:4px; }
+  .revisao-video-info { font-size:11px; color:var(--text2); line-height:1.5; word-break:break-word; }
+  .revisao-suspeito { color:var(--orange); font-size:11px; margin-top:4px; }
+  .revisao-acoes { display:flex; gap:8px; margin-top:12px; align-items:center; flex-wrap:wrap; }
+  .revisao-url-manual { display:flex; gap:6px; margin-top:8px; }
+  .revisao-url-manual input { flex:1; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:11px; }
+  .revisao-banner { margin:16px 20px 0; padding:14px 18px; border-radius:8px; font-size:12px; }
+  .revisao-banner-acao { background:rgba(232,197,71,0.1); border:1px solid var(--accent); }
+  .revisao-banner-feita { background:rgba(78,201,142,0.1); border:1px solid var(--green); color:var(--green); }
+  .revisao-banner-erro { background:rgba(224,85,85,0.1); border:1px solid var(--red); }
+  .revisao-banner-titulo { font-weight:700; margin-bottom:8px; }
+  .revisao-banner ul { margin:6px 0 0; padding-left:18px; font-size:11px; color:var(--text2); }
   .fototeca-card {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -1612,6 +1643,7 @@
     <button class="tab" onclick="switchTab('exportar')">Exportar</button>
     <button class="tab" onclick="switchTab('concorrentes')">Concorrentes</button>
     <button class="tab" onclick="switchTab('fototeca')">🖼 Fototeca</button>
+    <button class="tab" onclick="switchTab('revisao')">▶ Revisão YouTube</button>
   </div>
   <div class="header-actions">
     <button class="btn" onclick="importPlaylists()">↑ Importar playlists.json</button>
@@ -1929,6 +1961,30 @@
           <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="fototeca-summary"></span>
         </div>
         <div class="fototeca-grid" id="fototeca-grid"></div>
+      </div>
+    </div>
+
+    <div class="view" id="view-revisao">
+      <div style="display:flex;flex:1;overflow:hidden;">
+        <div style="width:260px;flex-shrink:0;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:12px;">
+          <div style="font-size:12px;font-weight:700;padding:4px 6px 10px;">Playlists a rever</div>
+          <div id="revisao-playlists"></div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+          <div style="padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-shrink:0;flex-wrap:wrap;">
+            <span style="font-size:13px;font-weight:700;" id="revisao-titulo-playlist">Selecciona uma playlist à esquerda</span>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text3);" id="revisao-resumo"></span>
+            <div style="flex:1;"></div>
+            <select id="revisao-filtro" onchange="renderRevisaoCards()" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;">
+              <option value="pendente">Por rever</option>
+              <option value="aprovado">Aprovadas</option>
+              <option value="rejeitado">Rejeitadas</option>
+              <option value="todas">Todas</option>
+            </select>
+          </div>
+          <div id="revisao-banner-regeneracao"></div>
+          <div id="revisao-lista" style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;"></div>
+        </div>
       </div>
     </div>
 
@@ -3163,6 +3219,7 @@ function switchTab(name) {
   if (name === 'exportar') refreshExportPreview();
   if (name === 'concorrentes') { renderConcorrentes(); renderApresentadorCampo(); }
   if (name === 'fototeca') renderFototeca();
+  if (name === 'revisao') renderRevisao();
 }
 
 function switchTabProgrammatic(name) {
@@ -7540,6 +7597,369 @@ document.addEventListener('keydown', e => {
     af_fecharFototecaLightbox();
   }
 });
+
+// ─── REVISÃO YOUTUBE (2026-08-30) ──────────────────────────────
+// Ecrã de revisão faixa a faixa da regeneração via YouTube (corrige as
+// faixas cujo Trecho A veio do preview de 30s da iTunes, que por vezes
+// começa a meio da música — ver STATUS.md/TASKS.md 2026-08-30). Lê/escreve
+// _revisao_regeneracao.json (whitelisted em FICHEIROS_PERMITIDOS,
+// _servidor_escrita.py). Trabalha-se uma playlist de cada vez (sidebar à
+// esquerda, com progresso "X/Y revistas") — ao seleccionar uma playlist,
+// a pré-audição da PROPOSTA de todas as suas faixas ainda por gerar é
+// disparada logo em background (concorrência limitada, ver
+// REVISAO_CONCORRENCIA), via POST /gerar-preview-revisao, que nunca
+// escreve em <id>_a.mp3/<id>_b.mp3 de produção, só em _preview_revisao/
+// (ver _gerar_preview_revisao.py) — o backup real + regeneração
+// definitiva só acontece depois de todas as faixas terem Aprovar/Rejeitar
+// decidido aqui, num passo à parte.
+let REVISAO_DADOS = null;
+let REVISAO_A_GERAR = new Set(); // ids com pré-audição em curso — evita duplo-clique
+let REVISAO_PLAYLIST_ACTUAL = null; // playlistCodigo seleccionado na sidebar — trabalha-se uma playlist de cada vez
+let REVISAO_BULK_DISPARADO = new Set(); // playlistCodigos cuja geração em massa já foi disparada nesta sessão — dispara uma única vez por playlist, mesmo ao voltar a ela
+const REVISAO_CONCORRENCIA = 2; // downloads yt-dlp em paralelo na geração em massa por playlist — não sobrecarregar rede/CPU
+
+async function carregarRevisao() {
+  if (REVISAO_DADOS) return REVISAO_DADOS;
+  try {
+    const r = await fetch('_revisao_regeneracao.json?v=' + Date.now());
+    if (!r.ok) { REVISAO_DADOS = {}; return REVISAO_DADOS; }
+    REVISAO_DADOS = await r.json();
+  } catch (e) {
+    REVISAO_DADOS = {};
+  }
+  return REVISAO_DADOS;
+}
+
+async function revisaoGuardar() {
+  await escreverFicheiro('_revisao_regeneracao.json', JSON.stringify(REVISAO_DADOS, null, 2));
+}
+
+// Agrupa as faixas por playlistCodigo, com nome (de PLAYLISTS, já carregado
+// pelo resto do Studio) e progresso (revistas = estado aprovado/rejeitado).
+function revisaoPlaylistsAgrupadas(entradas) {
+  const porPlaylist = new Map();
+  entradas.forEach(e => {
+    if (!porPlaylist.has(e.playlistCodigo)) {
+      porPlaylist.set(e.playlistCodigo, {
+        codigo: e.playlistCodigo,
+        nome: (PLAYLISTS[e.playlistCodigo] && PLAYLISTS[e.playlistCodigo].nome) || e.playlistCodigo,
+        faixas: [],
+      });
+    }
+    porPlaylist.get(e.playlistCodigo).faixas.push(e);
+  });
+  return [...porPlaylist.values()].map(p => {
+    const revistas = p.faixas.filter(f => (f.estado || 'pendente') !== 'pendente').length;
+    return { ...p, revistas, total: p.faixas.length, completa: revistas === p.faixas.length };
+  }).sort((a, b) => a.nome.localeCompare(b.nome));
+}
+
+// Só a sidebar (barato, sem elementos <audio> — seguro re-renderizar a
+// qualquer momento, mesmo a meio da geração em massa, sem interromper
+// pré-audições a tocar noutros cartões da lista principal).
+function revisaoRenderSidebar(entradas) {
+  const grupos = revisaoPlaylistsAgrupadas(entradas);
+  if (!REVISAO_PLAYLIST_ACTUAL || !grupos.some(g => g.codigo === REVISAO_PLAYLIST_ACTUAL)) {
+    // Por omissão, primeira playlist ainda não 100% revista (ou a primeira, se todas já estiverem).
+    REVISAO_PLAYLIST_ACTUAL = (grupos.find(g => !g.completa) || grupos[0]).codigo;
+  }
+  document.getElementById('revisao-playlists').innerHTML = grupos.map(g => `
+    <div class="revisao-playlist-item ${g.codigo === REVISAO_PLAYLIST_ACTUAL ? 'activa' : ''} ${g.completa ? 'completa' : ''}"
+         onclick="revisaoSelecionarPlaylist('${g.codigo}')">
+      <span class="revisao-playlist-nome">${g.completa ? '✓ ' : ''}${escapeAttr(g.nome)}</span>
+      <span class="revisao-playlist-progresso">${g.revistas}/${g.total} revistas · ${g.codigo}</span>
+    </div>`).join('');
+  return grupos;
+}
+
+async function renderRevisao() {
+  const dados = await carregarRevisao();
+  const entradas = Object.values(dados).filter(e => e.pesquisa_ok !== false);
+
+  if (!entradas.length) {
+    document.getElementById('revisao-playlists').innerHTML = '<div style="color:var(--text3);font-size:11px;padding:8px;">Sem dados — falta gerar _revisao_regeneracao.json.</div>';
+    document.getElementById('revisao-lista').innerHTML = '';
+    return;
+  }
+
+  revisaoRenderSidebar(entradas);
+  await renderRevisaoCards();
+
+  // Dispara a geração em massa uma única vez por playlist (inclui a
+  // selecção automática ao abrir a aba, não só cliques manuais na
+  // sidebar) — pedido do utilizador: "quando eu abrir/seleccionar uma
+  // playlist... gera logo as pré-audições de todas as faixas".
+  if (REVISAO_PLAYLIST_ACTUAL && !REVISAO_BULK_DISPARADO.has(REVISAO_PLAYLIST_ACTUAL)) {
+    REVISAO_BULK_DISPARADO.add(REVISAO_PLAYLIST_ACTUAL);
+    revisaoGerarPreviewsEmMassa(REVISAO_PLAYLIST_ACTUAL);
+  }
+}
+
+// Actualização "leve" depois de uma faixa gerar pré-audição ou mudar de
+// estado (Aprovar/Rejeitar): actualiza a sidebar (progresso) e só o
+// cartão dessa faixa (via outerHTML), sem tocar nos outros cartões — para
+// não interromper áudio a tocar noutra faixa da mesma playlist durante a
+// geração em massa em background. Pedido do utilizador, 2026-08-31.
+function revisaoAtualizarLeve(id) {
+  const dados = REVISAO_DADOS || {};
+  const entradas = Object.values(dados).filter(e => e.pesquisa_ok !== false);
+  revisaoRenderSidebar(entradas);
+
+  const entradasPlaylist = entradas.filter(e => e.playlistCodigo === REVISAO_PLAYLIST_ACTUAL);
+  const n = { pendente: 0, aprovado: 0, rejeitado: 0 };
+  entradasPlaylist.forEach(e => { n[e.estado || 'pendente'] = (n[e.estado || 'pendente'] || 0) + 1; });
+  const resumoEl = document.getElementById('revisao-resumo');
+  if (resumoEl) resumoEl.textContent = entradasPlaylist.length
+    ? `${entradasPlaylist.length} faixas nesta playlist · ${n.pendente || 0} por rever · ${n.aprovado || 0} aprovadas · ${n.rejeitado || 0} rejeitadas`
+    : '';
+
+  const e = dados[id];
+  const cardEl = document.getElementById('revisao-card-' + id);
+  if (e && cardEl && e.playlistCodigo === REVISAO_PLAYLIST_ACTUAL) {
+    const filtro = document.getElementById('revisao-filtro').value;
+    const aindaVisivel = filtro === 'todas' || (e.estado || 'pendente') === filtro;
+    if (aindaVisivel) {
+      cardEl.outerHTML = revisaoCardHtml(e);
+    } else {
+      cardEl.remove(); // já não pertence ao filtro activo (ex.: acabou de ser Aprovada e o filtro é "Por rever")
+    }
+  }
+}
+
+async function revisaoSelecionarPlaylist(codigo) {
+  REVISAO_PLAYLIST_ACTUAL = codigo;
+  await renderRevisao();
+}
+
+async function renderRevisaoCards() {
+  const lista = document.getElementById('revisao-lista');
+  const dados = REVISAO_DADOS || {};
+  const entradas = Object.values(dados).filter(e => e.pesquisa_ok !== false && e.playlistCodigo === REVISAO_PLAYLIST_ACTUAL);
+  const nomePlaylist = (PLAYLISTS[REVISAO_PLAYLIST_ACTUAL] && PLAYLISTS[REVISAO_PLAYLIST_ACTUAL].nome) || REVISAO_PLAYLIST_ACTUAL || '';
+
+  const n = { pendente: 0, aprovado: 0, rejeitado: 0, regenerado: 0 };
+  entradas.forEach(e => { n[e.estado || 'pendente'] = (n[e.estado || 'pendente'] || 0) + 1; });
+  document.getElementById('revisao-titulo-playlist').textContent = nomePlaylist ? `${nomePlaylist} (${REVISAO_PLAYLIST_ACTUAL})` : 'Selecciona uma playlist à esquerda';
+  document.getElementById('revisao-resumo').textContent = entradas.length
+    ? `${entradas.length} faixas nesta playlist · ${n.pendente || 0} por rever · ${n.aprovado || 0} aprovadas · ${n.rejeitado || 0} rejeitadas · ${n.regenerado || 0} regeneradas`
+    : '';
+
+  revisaoRenderBanner(entradas, n);
+
+  const filtro = document.getElementById('revisao-filtro').value;
+  const visiveis = entradas.filter(e => filtro === 'todas' || (e.estado || 'pendente') === filtro);
+
+  if (!entradas.length) {
+    lista.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;text-align:center;">Selecciona uma playlist à esquerda.</div>';
+    return;
+  }
+  if (!visiveis.length) {
+    lista.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;text-align:center;">Nenhuma faixa neste filtro, nesta playlist.</div>';
+    return;
+  }
+
+  lista.innerHTML = visiveis.map(e => revisaoCardHtml(e)).join('');
+}
+
+// Banner de autorização/resumo da regeneração definitiva — pedido do
+// utilizador, 2026-08-31: nunca corre automaticamente ao chegar a X/Y, só
+// mostra o prompt; a regeneração só acontece ao clicar "Confirmar" (via
+// window.confirm nativo, revisaoConfirmarRegeneracao()).
+let REVISAO_ULTIMO_RESULTADO = null; // { codigo, html } — mostra o resumo detalhado depois de confirmar, em vez do banner genérico recalculado pelo refresh seguinte
+
+function revisaoRenderBanner(entradas, n) {
+  const banner = document.getElementById('revisao-banner-regeneracao');
+  if (!entradas.length) { banner.innerHTML = ''; return; }
+  if (REVISAO_ULTIMO_RESULTADO && REVISAO_ULTIMO_RESULTADO.codigo === REVISAO_PLAYLIST_ACTUAL) {
+    banner.innerHTML = REVISAO_ULTIMO_RESULTADO.html;
+    return;
+  }
+  const completa = (n.pendente || 0) === 0;
+  const nomePlaylist = (PLAYLISTS[REVISAO_PLAYLIST_ACTUAL] && PLAYLISTS[REVISAO_PLAYLIST_ACTUAL].nome) || REVISAO_PLAYLIST_ACTUAL;
+
+  if (!completa) {
+    banner.innerHTML = '';
+    return;
+  }
+  if ((n.aprovado || 0) > 0) {
+    banner.innerHTML = `<div class="revisao-banner revisao-banner-acao">
+      <div class="revisao-banner-titulo">✅ ${escapeAttr(nomePlaylist)}: ${entradas.length}/${entradas.length} revistas.</div>
+      ${n.aprovado} aprovada(s) por regenerar em definitivo, ${n.rejeitado || 0} rejeitada(s) (ficam como estão)${n.regenerado ? `, ${n.regenerado} já regenerada(s) antes` : ''}.
+      <div style="margin-top:10px;">
+        <button class="btn btn-primary" onclick="revisaoConfirmarRegeneracao('${REVISAO_PLAYLIST_ACTUAL}')">🔒 Autorizar backup + regeneração definitiva desta playlist</button>
+      </div>
+    </div>`;
+    return;
+  }
+  if ((n.regenerado || 0) > 0) {
+    banner.innerHTML = `<div class="revisao-banner revisao-banner-feita">✓ ${escapeAttr(nomePlaylist)} já regenerada — ${n.regenerado} faixa(s) actualizada(s), ${n.rejeitado || 0} rejeitada(s) mantida(s). Nada por autorizar aqui. Commit continua manual.</div>`;
+    return;
+  }
+  // Completa mas 0 aprovadas (tudo rejeitado) — nada para regenerar.
+  banner.innerHTML = `<div class="revisao-banner revisao-banner-feita">✓ ${escapeAttr(nomePlaylist)} revista — todas as faixas foram rejeitadas, nada por regenerar.</div>`;
+}
+
+async function revisaoConfirmarRegeneracao(codigo) {
+  const nomePlaylist = (PLAYLISTS[codigo] && PLAYLISTS[codigo].nome) || codigo;
+  const confirmado = window.confirm(
+    `${nomePlaylist}: revisão completa.\n\n` +
+    `Autorizar backup + regeneração definitiva desta playlist?\n\n` +
+    `Isto move os ficheiros _a/_b actuais das faixas aprovadas para _backup_pre_regeneracao/ ` +
+    `(nunca apaga) e substitui-os pelas versões já ouvidas e aprovadas. As rejeitadas não são tocadas. ` +
+    `Não faz commit nenhum.`
+  );
+  if (!confirmado) return;
+
+  const banner = document.getElementById('revisao-banner-regeneracao');
+  banner.innerHTML = '<div class="revisao-banner revisao-banner-acao">⏳ A aplicar backup + regeneração…</div>';
+
+  try {
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/aplicar-regeneracao-playlist`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playlistCodigo: codigo }),
+    });
+    const corpo = await r.json();
+    if (!r.ok || !corpo.ok) {
+      banner.innerHTML = `<div class="revisao-banner revisao-banner-erro">✗ Falhou: ${escapeAttr(corpo.erro || String(r.status))}</div>`;
+      notify('Falhou a regeneração da playlist', 'erro');
+      return;
+    }
+
+    const nomesDe = ids => ids.map(id => (REVISAO_DADOS[id] && REVISAO_DADOS[id].titulo) || id);
+    const htmlResultado = `<div class="revisao-banner revisao-banner-feita">
+      <div class="revisao-banner-titulo">✓ Regeneração aplicada a "${escapeAttr(nomePlaylist)}" — confirma o resultado antes de pedires commit.</div>
+      ${corpo.regeneradas.length} faixa(s) regenerada(s):
+      <ul>${nomesDe(corpo.regeneradas).map(n => `<li>${escapeAttr(n)}</li>`).join('') || '<li>nenhuma</li>'}</ul>
+      ${corpo.rejeitadas.length} faixa(s) rejeitada(s), mantidas sem alteração:
+      <ul>${nomesDe(corpo.rejeitadas).map(n => `<li>${escapeAttr(n)}</li>`).join('') || '<li>nenhuma</li>'}</ul>
+      ${corpo.pendentes.length ? `⚠ ${corpo.pendentes.length} faixa(s) ainda pendente(s) (inesperado): <ul>${nomesDe(corpo.pendentes).map(n => `<li>${escapeAttr(n)}</li>`).join('')}</ul>` : ''}
+      ${corpo.erros.length ? `<div style="color:var(--red);margin-top:8px;">⚠ ${corpo.erros.length} erro(s):</div><ul>${corpo.erros.map(er => `<li>${escapeAttr(er.id)}: ${escapeAttr(er.erro)}</li>`).join('')}</ul>` : ''}
+    </div>`;
+    banner.innerHTML = htmlResultado;
+    REVISAO_ULTIMO_RESULTADO = { codigo, html: htmlResultado };
+    notify(`Regeneração aplicada: ${corpo.regeneradas.length} faixa(s)`, 'ok');
+  } catch (err) {
+    banner.innerHTML = `<div class="revisao-banner revisao-banner-erro">✗ Erro de rede: ${escapeAttr(err.message)}</div>`;
+  } finally {
+    REVISAO_DADOS = null; // força reler o manifesto do disco (estados "regenerado" acabados de escrever pelo servidor)
+    await renderRevisao();
+  }
+}
+
+// Geração em massa: ao seleccionar uma playlist, dispara logo a pré-audição
+// de todas as faixas ainda sem proposta gerada (tempo_a == null), com um
+// limite de concorrência — mesma lógica de download+corte+apagar de
+// revisaoGerarPreview(), só disparada para o conjunto da playlist em vez de
+// à espera de um clique por faixa. Pedido do utilizador, 2026-08-31.
+async function revisaoGerarPreviewsEmMassa(codigo) {
+  const pendentes = Object.values(REVISAO_DADOS)
+    .filter(e => e.playlistCodigo === codigo && e.pesquisa_ok !== false && e.tempo_a == null && !REVISAO_A_GERAR.has(e.id));
+  if (!pendentes.length) return;
+  notify(`A gerar ${pendentes.length} pré-audições em background para esta playlist…`, 'ok');
+
+  let indice = 0;
+  async function trabalhador() {
+    while (indice < pendentes.length) {
+      const e = pendentes[indice++];
+      await revisaoGerarPreview(e.id);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(REVISAO_CONCORRENCIA, pendentes.length) }, trabalhador));
+}
+
+function revisaoCardHtml(e) {
+  const estado = e.estado || 'pendente';
+  const temProposta = e.tempo_a != null;
+  const suspeitoHtml = e.suspeito_tempo_a
+    ? `<div class="revisao-suspeito">⚠ Trecho A sugerido em ${e.tempo_a}s (>20s) — pode estar a saltar um build-up genuíno, ouve com atenção antes de aprovar.</div>`
+    : '';
+  const propostaAudio = temProposta
+    ? `<div class="revisao-video-info">${escapeAttr(e.video_titulo || '')}<br><span style="color:var(--text3)">${escapeAttr(e.video_canal || '')} · ${e.video_duracao_s ? Math.round(e.video_duracao_s / 60) + 'm' + (e.video_duracao_s % 60) + 's' : '?'}</span></div>
+       <audio controls src="${escapeAttr(e.ficheiro_proposta_a)}?v=${Date.now()}"></audio>
+       <audio controls src="${escapeAttr(e.ficheiro_proposta_b)}?v=${Date.now()}" style="margin-top:4px;"></audio>
+       ${suspeitoHtml}`
+    : `<div class="revisao-video-info">${escapeAttr(e.video_titulo || '')}<br><span style="color:var(--text3)">${escapeAttr(e.video_canal || '')}</span></div>
+       <button class="btn" style="margin-top:8px;font-size:11px;" onclick="revisaoGerarPreview('${e.id}')" id="revisao-gerar-${e.id}">${REVISAO_A_GERAR.has(e.id) ? '⏳ a gerar…' : '▶ Gerar pré-audição'}</button>`;
+
+  return `<div class="revisao-card ${estado}" id="revisao-card-${e.id}">
+    <div class="revisao-card-header">
+      <span class="revisao-card-titulo">${escapeAttr(e.titulo)}</span>
+      <span class="revisao-card-artista">${escapeAttr(e.artista)}</span>
+      <span class="revisao-card-meta">${e.playlistCodigo} · estado: ${estado}</span>
+    </div>
+    <div class="revisao-versoes">
+      <div class="revisao-versao">
+        <div class="revisao-versao-label">Actual (jogo hoje)</div>
+        <audio controls src="${escapeAttr(e.ficheiro_a)}"></audio>
+        <audio controls src="${escapeAttr(e.ficheiro_b)}" style="margin-top:4px;"></audio>
+      </div>
+      <div class="revisao-versao">
+        <div class="revisao-versao-label">Proposta (YouTube)</div>
+        ${propostaAudio}
+      </div>
+    </div>
+    <div class="revisao-acoes">
+      <button class="btn btn-primary" style="font-size:11px;" onclick="revisaoDefinirEstado('${e.id}','aprovado')" ${temProposta ? '' : 'disabled title="gera a pré-audição primeiro"'}>✓ Aprovar</button>
+      <button class="btn" style="font-size:11px;" onclick="revisaoDefinirEstado('${e.id}','rejeitado')">✗ Rejeitar</button>
+      <button class="btn" style="font-size:11px;" onclick="revisaoToggleUrlManual('${e.id}')">✎ Corrigir URL manualmente</button>
+    </div>
+    <div class="revisao-url-manual" id="revisao-url-manual-${e.id}" style="display:none;">
+      <input type="text" placeholder="https://www.youtube.com/watch?v=..." id="revisao-url-input-${e.id}">
+      <button class="btn" style="font-size:11px;" onclick="revisaoAplicarUrlManual('${e.id}')">Gerar pré-audição desta URL</button>
+    </div>
+  </div>`;
+}
+
+function revisaoToggleUrlManual(id) {
+  const el = document.getElementById('revisao-url-manual-' + id);
+  el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function revisaoAplicarUrlManual(id) {
+  const input = document.getElementById('revisao-url-input-' + id);
+  const url = (input.value || '').trim();
+  if (!url) return;
+  REVISAO_DADOS[id].url_manual = url;
+  await revisaoGerarPreview(id, url);
+}
+
+async function revisaoGerarPreview(id, urlOverride) {
+  if (REVISAO_A_GERAR.has(id)) return;
+  const e = REVISAO_DADOS[id];
+  const url = urlOverride || e.url_manual || e.url;
+  if (!url) { notify('Sem URL para esta faixa', 'erro'); return; }
+  REVISAO_A_GERAR.add(id);
+  const btn = document.getElementById('revisao-gerar-' + id);
+  if (btn) { btn.textContent = '⏳ a gerar… (pode demorar até alguns minutos)'; btn.disabled = true; }
+  try {
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-preview-revisao`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, id }),
+    });
+    const corpo = await r.json();
+    if (!r.ok || !corpo.ok) {
+      notify(`Falhou a pré-audição de "${e.titulo}": ${corpo.erro || r.status}`, 'erro');
+      return;
+    }
+    Object.assign(e, corpo);
+    e.estado = e.estado || 'pendente';
+    await revisaoGuardar();
+    notify(`Pré-audição gerada para "${e.titulo}"`, 'ok');
+  } catch (err) {
+    notify(`Erro de rede a gerar pré-audição: ${err.message}`, 'erro');
+  } finally {
+    REVISAO_A_GERAR.delete(id);
+    revisaoAtualizarLeve(id);
+  }
+}
+
+async function revisaoDefinirEstado(id, estado) {
+  REVISAO_DADOS[id].estado = estado;
+  await revisaoGuardar();
+  revisaoAtualizarLeve(id);
+}
 
 // ─── VÍDEO INLINE (embed directo no painel de detalhe, sem modal) ──
 function toggleVideoEmbed(url) {

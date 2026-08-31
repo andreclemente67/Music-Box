@@ -225,6 +225,7 @@ def gerar_faixa_itunes(artista: str, titulo: str, id_faixa: str, force: bool = F
     preview_url = procurar_preview_itunes(artista, titulo)
     print(f'      ✓ preview encontrado')
 
+    preview_local = None
     try:
         print('[2/3] A descarregar o excerto de 30s ...')
         preview_local = descarregar_preview_itunes(preview_url, id_faixa)
@@ -236,7 +237,14 @@ def gerar_faixa_itunes(artista: str, titulo: str, id_faixa: str, force: bool = F
         cortar_trecho_itunes(preview_local, *ITUNES_TRECHO_B, destino_b)
         print(f'      ✓ {os.path.basename(destino_b)}')
     finally:
-        shutil.rmtree(TMP_DIR, ignore_errors=True)
+        # Apaga só o ficheiro desta faixa, nunca a pasta TMP_DIR inteira —
+        # é partilhada entre chamadas concorrentes (ecrã de Revisão
+        # YouTube gera várias pré-audições em paralelo, ver
+        # REVISAO_CONCORRENCIA em musicbox_studio.html); um rmtree(TMP_DIR)
+        # apagava o download de outra faixa ainda a meio. Bug real
+        # encontrado e corrigido em 2026-08-31.
+        if preview_local and os.path.exists(preview_local):
+            os.remove(preview_local)
 
     print(f'CONCLUÍDO — {id_faixa}_a.mp3 e {id_faixa}_b.mp3 em {APP_DIR} (fonte: iTunes preview)')
 
@@ -279,8 +287,12 @@ def gerar_faixa(url: str, id_faixa: str, force: bool = False, cookies_from_brows
         # O download completo só serve para a análise + corte — não fica
         # em app/ (ao contrário de destino_a/destino_b, que são o resultado).
         # Já copiado para REVISAO_MANUAL_DIR acima se sinalizado — seguro
-        # apagar o temporário em qualquer dos casos.
-        shutil.rmtree(TMP_DIR, ignore_errors=True)
+        # apagar o temporário em qualquer dos casos. Apaga só este
+        # ficheiro, nunca TMP_DIR inteira — partilhada entre chamadas
+        # concorrentes (ver nota em gerar_faixa_itunes()); bug real
+        # encontrado e corrigido em 2026-08-31.
+        if os.path.exists(mp3_completo):
+            os.remove(mp3_completo)
 
     print(f'CONCLUÍDO — {id_faixa}_a.mp3 e {id_faixa}_b.mp3 em {APP_DIR}')
 
@@ -311,7 +323,16 @@ def main():
             gerar_faixa(args.url, args.id_faixa, force=args.force, cookies_from_browser=args.cookies_from_browser)
     except Exception as e:
         print(f'FALHOU: {e}', file=sys.stderr)
-        shutil.rmtree(TMP_DIR, ignore_errors=True)
+        # Último recurso (ex.: falha antes do try/finally de
+        # gerar_faixa()/gerar_faixa_itunes() sequer arrancar) — apaga só
+        # os ficheiros temporários desta faixa, nunca TMP_DIR inteira
+        # (partilhada entre chamadas concorrentes, ver nota em
+        # gerar_faixa_itunes()).
+        for ficheiro in glob.glob(os.path.join(TMP_DIR, f'{args.id_faixa}_*')):
+            try:
+                os.remove(ficheiro)
+            except OSError:
+                pass
         sys.exit(1)
 
 

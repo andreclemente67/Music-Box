@@ -16,3 +16,10 @@ __pycache__/
 
 # backups locais (catalogo.json.bak, playlists.json.bak, etc.)
 *.bak
+
+# ecrã de revisão da regeneração YouTube (2026-08-30) — pré-audições
+# temporárias e o manifesto de decisões, gerados/actualizados localmente
+# durante a revisão faixa a faixa; nada aqui é definitivo até à aprovação
+# + regeneração real, que copia para os caminhos de produção normais
+_preview_revisao/
+_revisao_regeneracao.json

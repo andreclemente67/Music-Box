@@ -13383,5 +13383,995 @@
       "imagem": "theaudiodb",
       "data_recolha": "2026-08-28"
     }
+  },
+  {
+    "id": "jose_mario_branco_topic_inquietacao",
+    "titulo": "Inquietação",
+    "artista": [
+      "José Mário Branco - Topic"
+    ],
+    "decadas": [],
+    "generos": [],
+    "geografia": "",
+    "estilo": "",
+    "instrumento": [],
+    "tags": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "jose_mario_branco_topic_inquietacao_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "jose_mario_branco_topic_inquietacao_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/bc/1f/b5/bc1fb58b-2ebd-d714-fb2f-c068563443ca/5099901770452.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/inquieta%C3%A7%C3%A3o/690501597?i=690501606&uo=4",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "zeca_afonso_grandola_vila_morena",
+    "titulo": "Grândola, Vila Morena",
+    "artista": [
+      "Zeca Afonso"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk/Intervenção"
+    ],
+    "geografia": "PT",
+    "estilo": "Canção de intervenção portuguesa, hino da Revolução dos Cravos",
+    "instrumento": [],
+    "tags": [
+      "revolução",
+      "política",
+      "anos 70"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "zeca_afonso_grandola_vila_morena_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "zeca_afonso_grandola_vila_morena_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music/v4/8f/9d/4c/8f9d4c4f-6783-f79d-e810-abefcabfee60/5099901734959.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/zeca-carta-a-jos%C3%A9-afonso/692413357?i=692413781&uo=4",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "adriano_correia_de_olive_trova_do_vento_que_passa",
+    "titulo": "Trova do Vento que Passa",
+    "artista": [
+      "Adriano Correia de Oliveira"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk/Intervenção"
+    ],
+    "geografia": "PT",
+    "estilo": "Canção de protesto portuguesa com poesia de Manuel Alegre",
+    "instrumento": [],
+    "tags": [
+      "poesia",
+      "intervenção",
+      "voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "adriano_correia_de_olive_trova_do_vento_que_passa_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "adriano_correia_de_olive_trova_do_vento_que_passa_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/gww4891649773285.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/170372",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "boris_vian_le_deserteur",
+    "titulo": "Le Déserteur",
+    "artista": [
+      "Boris Vian"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Chanson"
+    ],
+    "geografia": "FR",
+    "estilo": "Canção anti-guerra francesa, clássico de protesto",
+    "instrumento": [],
+    "tags": [
+      "anti-guerra",
+      "protesto",
+      "chanson"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "boris_vian_le_deserteur_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "boris_vian_le_deserteur_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/trryqu1384793494.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/125150",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "quilapayun_el_pueblo_unido_jamas_se",
+    "titulo": "El Pueblo Unido Jamás Será Vencido",
+    "artista": [
+      "Quilapayún"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Nueva Canción"
+    ],
+    "geografia": "CL",
+    "estilo": "Canção de resistência chilena do movimento Nueva Canción",
+    "instrumento": [],
+    "tags": [
+      "resistência",
+      "Chile",
+      "política"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "quilapayun_el_pueblo_unido_jamas_se_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "quilapayun_el_pueblo_unido_jamas_se_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/ttqrsu1584127297.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/159385",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "sergio_godinho_venham_mais_cinco",
+    "titulo": "Venham Mais Cinco",
+    "artista": [
+      "Sérgio Godinho"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk/Intervenção"
+    ],
+    "geografia": "PT",
+    "estilo": "Canção de intervenção portuguesa com humor crítico",
+    "instrumento": [],
+    "tags": [
+      "humor",
+      "crítica social",
+      "anos 70"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "sergio_godinho_venham_mais_cinco_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "sergio_godinho_venham_mais_cinco_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wtprrx1454758812.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/141403",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "fausto_a_luta_e_alegria",
+    "titulo": "A Luta É Alegria",
+    "artista": [
+      "Fausto"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk/Intervenção"
+    ],
+    "geografia": "PT",
+    "estilo": "Canção de intervenção portuguesa pós-25 de Abril",
+    "instrumento": [],
+    "tags": [
+      "pós-revolução",
+      "alegria",
+      "luta"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "fausto_a_luta_e_alegria_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "fausto_a_luta_e_alegria_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qstvst1454532073.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/141358",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "mercedes_sosa_te_recuerdo_amanda",
+    "titulo": "Te Recuerdo Amanda",
+    "artista": [
+      "Mercedes Sosa"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Nueva Canción"
+    ],
+    "geografia": "AR",
+    "estilo": "Canção latina de protesto interpretada pela grande voz argentina",
+    "instrumento": [],
+    "tags": [
+      "Víctor Jara",
+      "Mercedes Sosa",
+      "resistência"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "mercedes_sosa_te_recuerdo_amanda_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "mercedes_sosa_te_recuerdo_amanda_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/qppqsw1376491663.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/122373",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "fausto_topic_lembra_me_um_sonho_lindo",
+    "titulo": "Lembra-Me Um Sonho Lindo",
+    "artista": [
+      "Fausto - Topic"
+    ],
+    "decadas": [],
+    "generos": [],
+    "geografia": "",
+    "estilo": "",
+    "instrumento": [],
+    "tags": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "fausto_topic_lembra_me_um_sonho_lindo_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "fausto_topic_lembra_me_um_sonho_lindo_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
+  },
+  {
+    "id": "amalia_rodrigues_estranha_forma_de_vida",
+    "titulo": "Estranha Forma de Vida",
+    "artista": [
+      "Amália Rodrigues"
+    ],
+    "decadas": [
+      "1950s"
+    ],
+    "generos": [
+      "Fado"
+    ],
+    "geografia": "PT",
+    "estilo": "Fado clássico, voz poderosa e emotiva",
+    "instrumento": [],
+    "tags": [
+      "fado",
+      "voz feminina",
+      "clássico"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "amalia_rodrigues_estranha_forma_de_vida_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "amalia_rodrigues_estranha_forma_de_vida_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rpuvss1375485671.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/122542",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "sergio_godinho_gaivota",
+    "titulo": "Gaivota",
+    "artista": [
+      "Sérgio Godinho"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk/Intervenção"
+    ],
+    "geografia": "PT",
+    "estilo": "Canção de intervenção, melodia suave e introspectiva",
+    "instrumento": [],
+    "tags": [
+      "intervenção",
+      "Portugal",
+      "anos 70"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "sergio_godinho_gaivota_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "sergio_godinho_gaivota_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wtprrx1454758812.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/141403",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "jose_afonso_primavera",
+    "titulo": "Primavera",
+    "artista": [
+      "José Afonso"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk"
+    ],
+    "geografia": "PT",
+    "estilo": "Folk português, canto coral, mensagem política",
+    "instrumento": [],
+    "tags": [
+      "Zeca Afonso",
+      "folk",
+      "revolução"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "jose_afonso_primavera_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "jose_afonso_primavera_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xrprvs1366388620.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/118744",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "madredeus_povo_que_lavas_no_rio",
+    "titulo": "Povo Que Lavas no Rio",
+    "artista": [
+      "Madredeus"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Folk/World"
+    ],
+    "geografia": "PT",
+    "estilo": "Folk contemporâneo com guitarra portuguesa e voz etérea",
+    "instrumento": [],
+    "tags": [
+      "guitarra portuguesa",
+      "voz feminina",
+      "poesia"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
+  },
+  {
+    "id": "rui_veloso_electrico_28",
+    "titulo": "Eléctrico 28",
+    "artista": [
+      "Rui Veloso"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "PT",
+    "estilo": "Rock português com influência blues",
+    "instrumento": [],
+    "tags": [
+      "rock português",
+      "anos 80",
+      "Lisboa"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
+  },
+  {
+    "id": "dulce_pontes_cancao_do_mar",
+    "titulo": "Canção do Mar",
+    "artista": [
+      "Dulce Pontes"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Fado"
+    ],
+    "geografia": "PT",
+    "estilo": "Fado moderno com arranjos orquestrais grandiosos",
+    "instrumento": [],
+    "tags": [
+      "fado",
+      "orquestra",
+      "voz dramática"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "dulce_pontes_cancao_do_mar_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "dulce_pontes_cancao_do_mar_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/vqwuvu1398599403.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/128654",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "carlos_do_carmo_estranha_forma_de_vida",
+    "titulo": "Estranha Forma de Vida",
+    "artista": [
+      "Carlos do Carmo"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Fado"
+    ],
+    "geografia": "PT",
+    "estilo": "Fado clássico interpretado por uma das maiores vozes masculinas do género",
+    "instrumento": [],
+    "tags": [
+      "fado",
+      "voz masculina",
+      "compositor francês"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "carlos_do_carmo_estranha_forma_de_vida_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "carlos_do_carmo_estranha_forma_de_vida_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/usxysq1473947253.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/144178",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "zeca_afonso_cancao_de_embalar",
+    "titulo": "Canção de Embalar",
+    "artista": [
+      "Zeca Afonso"
+    ],
+    "decadas": [],
+    "generos": [],
+    "geografia": "",
+    "estilo": "",
+    "instrumento": [],
+    "tags": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "zeca_afonso_cancao_de_embalar_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "zeca_afonso_cancao_de_embalar_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music/v4/8f/9d/4c/8f9d4c4f-6783-f79d-e810-abefcabfee60/5099901734959.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/zeca-carta-a-jos%C3%A9-afonso/692413357?i=692413781&uo=4",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "adriano_correia_de_olive_trova_do_vento_que_passa_2",
+    "titulo": "Trova do Vento que Passa",
+    "artista": [
+      "Adriano Correia de Oliveira"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Folk de intervenção"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Canção de protesto, poesia musicada",
+    "instrumento": [],
+    "tags": [
+      "poesia",
+      "protesto",
+      "voz"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "adriano_correia_de_olive_trova_do_vento_que_passa_2_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "adriano_correia_de_olive_trova_do_vento_que_passa_2_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/gww4891649773285.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/170372",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "amalia_rodrigues_estranha_forma_de_vida_2",
+    "titulo": "Estranha Forma de Vida",
+    "artista": [
+      "Amália Rodrigues"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Fado"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Fado clássico, voz e guitarra portuguesa",
+    "instrumento": [],
+    "tags": [
+      "fado",
+      "guitarra portuguesa",
+      "emoção"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "amalia_rodrigues_estranha_forma_de_vida_2_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "amalia_rodrigues_estranha_forma_de_vida_2_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/rpuvss1375485671.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/122542",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "sergio_godinho_rosa_rezada",
+    "titulo": "Rosa Rezada",
+    "artista": [
+      "Sérgio Godinho"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Canção de Autor"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Canção de autor, melodia suave e lírica",
+    "instrumento": [],
+    "tags": [
+      "canção de autor",
+      "lírica",
+      "anos 70"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
+  },
+  {
+    "id": "jose_afonso_senhor_meu_jesus_cristo",
+    "titulo": "Senhor Meu Jesus Cristo",
+    "artista": [
+      "José Afonso"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Folk sacro, coro e instrumentos tradicionais",
+    "instrumento": [],
+    "tags": [
+      "religioso",
+      "coro",
+      "tradição"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "jose_afonso_senhor_meu_jesus_cristo_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "jose_afonso_senhor_meu_jesus_cristo_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/xrprvs1366388620.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/118744",
+    "imagem_data_captura": "2026-08-31",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "peret_al_alba",
+    "titulo": "Al Alba",
+    "artista": [
+      "Peret"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rumba"
+    ],
+    "geografia": "Espanha",
+    "estilo": "Rumba catalana, voz e percussão",
+    "instrumento": [],
+    "tags": [
+      "espanhol",
+      "rumba",
+      "tradição"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
+  },
+  {
+    "id": "francisco_fanhais_menino_do_bairro_negro",
+    "titulo": "Menino do Bairro Negro",
+    "artista": [
+      "Francisco Fanhais"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk de intervenção"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Canção de intervenção, voz e guitarra",
+    "instrumento": [],
+    "tags": [
+      "intervenção",
+      "bairro",
+      "Portugal"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
+  },
+  {
+    "id": "luis_cilia_trova_do_vento_que_passa",
+    "titulo": "Trova do Vento que Passa",
+    "artista": [
+      "Luís Cília"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Folk de intervenção"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Canção de intervenção baseada em poema de resistência",
+    "instrumento": [],
+    "tags": [
+      "poesia",
+      "resistência",
+      "Portugal"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-08-31",
+    "video": null
   }
 ]

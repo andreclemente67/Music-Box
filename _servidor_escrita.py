@@ -168,6 +168,9 @@ GERAR_FAIXAS_TIMEOUT = 60        # segundos — geração de texto pode demorar
 
 # ── Gerar trechos A/B a partir do YouTube (gerar_faixa.py) ──────────────
 GERAR_FAIXA_SCRIPT = os.path.join(APP_DIR, 'gerar_faixa.py')
+GERAR_PREVIEW_REVISAO_SCRIPT = os.path.join(APP_DIR, '_gerar_preview_revisao.py')
+APLICAR_REGENERACAO_SCRIPT = os.path.join(APP_DIR, '_aplicar_regeneracao_playlist.py')
+APLICAR_REGENERACAO_TIMEOUT = 30  # segundos — só move ficheiros já em disco, nada de rede/ffmpeg
 GERAR_FAIXA_TIMEOUT = 600  # segundos (10min) — download + análise + corte; músicas longas (ex. "Weightless", Marconi Union) podem demorar mais
 YT_SEARCH_TIMEOUT = 60  # segundos — yt-dlp --get-url só resolve o URL, não descarrega áudio
 GERAR_FAIXA_ITUNES_TIMEOUT = 60  # segundos — pesquisa + download do preview de 30s + corte ffmpeg (ficheiro pequeno, bem mais rápido que o modo YouTube)
@@ -202,6 +205,7 @@ FICHEIROS_PERMITIDOS = {
     'propostas_chaves.md',
     'concorrentes.json',
     'apresentador.json',
+    '_revisao_regeneracao.json',
 }
 
 NOME_UPLOAD_REGEX = re.compile(r'^(concorrente_[1-4]|apresentador|artista_[a-z0-9_]+)\.(jpg|jpeg|png)$')
@@ -804,10 +808,14 @@ class Handler(BaseHTTPRequestHandler):
             self._gerar_faixas_ia()
         elif parsed.path == '/gerar-faixa':
             self._gerar_faixa()
+        elif parsed.path == '/gerar-preview-revisao':
+            self._gerar_preview_revisao()
+        elif parsed.path == '/aplicar-regeneracao-playlist':
+            self._aplicar_regeneracao_playlist()
         elif parsed.path == '/listar-playlist-youtube':
             self._listar_playlist_youtube()
         else:
-            self._enviar_json(404, {"erro": "endpoint desconhecido — usa POST /escrever?ficheiro=..., POST /upload?ficheiro=..., POST /gerar-faixas, POST /gerar-faixa ou POST /listar-playlist-youtube"})
+            self._enviar_json(404, {"erro": "endpoint desconhecido — usa POST /escrever?ficheiro=..., POST /upload?ficheiro=..., POST /gerar-faixas, POST /gerar-faixa, POST /gerar-preview-revisao, POST /aplicar-regeneracao-playlist ou POST /listar-playlist-youtube"})
 
     def _escrever_texto(self, parsed):
         params = parse_qs(parsed.query)
@@ -1094,6 +1102,97 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         self._enviar_json(200, {"ok": True, "ficheiro_a": ficheiro_a, "ficheiro_b": ficheiro_b, "fonte": "youtube"})
+
+    def _gerar_preview_revisao(self):
+        """POST /gerar-preview-revisao — corpo {"url":..., "id":...}. Gera uma
+        pré-audição TEMPORÁRIA em _preview_revisao/ (nunca em <id>_a.mp3/
+        <id>_b.mp3 de produção) — ver _gerar_preview_revisao.py. Usado pelo
+        ecrã de revisão do Studio (faixa a faixa, antes de qualquer
+        aprovação/regeneração real). Ver DECISIONS.md 2026-08-30."""
+        tamanho = int(self.headers.get('Content-Length') or 0)
+        if tamanho <= 0 or tamanho > 2000:
+            self._enviar_json(400, {"erro": "corpo vazio ou demasiado grande"})
+            return
+        try:
+            pedido = json.loads(self.rfile.read(tamanho).decode('utf-8'))
+        except json.JSONDecodeError as e:
+            self._enviar_json(400, {"erro": f"JSON inválido no corpo do pedido: {e}"})
+            return
+
+        url = (pedido.get('url') or '').strip()
+        id_faixa = (pedido.get('id') or '').strip()
+        if not id_faixa or not ID_FAIXA_REGEX.match(id_faixa):
+            self._enviar_json(400, {"erro": f"id inválido: {id_faixa!r}"})
+            return
+        if not url or not YOUTUBE_URL_REGEX.match(url):
+            self._enviar_json(400, {"erro": f"url inválido ou em falta: {url!r}"})
+            return
+
+        try:
+            resultado = subprocess.run(
+                [sys.executable, GERAR_PREVIEW_REVISAO_SCRIPT, url, id_faixa],
+                cwd=APP_DIR, capture_output=True, text=True, timeout=GERAR_FAIXA_TIMEOUT,
+            )
+        except subprocess.TimeoutExpired:
+            self._enviar_json(504, {"erro": f"pré-audição excedeu {GERAR_FAIXA_TIMEOUT}s — download/corte demorou demasiado"})
+            return
+        except Exception as e:
+            self._enviar_json(500, {"erro": f"falha a correr _gerar_preview_revisao.py: {e}"})
+            return
+
+        try:
+            corpo = json.loads((resultado.stdout or '').strip().splitlines()[-1])
+        except (json.JSONDecodeError, IndexError):
+            detalhe = (resultado.stderr or resultado.stdout or '').strip()
+            self._enviar_json(500, {"erro": f"_gerar_preview_revisao.py devolveu saída inesperada: {detalhe[-800:]}"})
+            return
+
+        self._enviar_json(200 if corpo.get('ok') else 500, corpo)
+
+    def _aplicar_regeneracao_playlist(self):
+        """POST /aplicar-regeneracao-playlist — corpo {"playlistCodigo":...}.
+        Só chamado depois de o utilizador confirmar explicitamente o prompt
+        no ecrã de Revisão YouTube do Studio (playlist 100% revista +
+        "Autorizar backup + regeneração definitiva?"). Move (nunca apaga)
+        os ficheiros de produção das faixas "aprovado" para
+        _backup_pre_regeneracao/ e promove as pré-audições já revistas a
+        produção — ver _aplicar_regeneracao_playlist.py. NUNCA faz commit.
+        Ver DECISIONS.md 2026-08-31."""
+        tamanho = int(self.headers.get('Content-Length') or 0)
+        if tamanho <= 0 or tamanho > 500:
+            self._enviar_json(400, {"erro": "corpo vazio ou demasiado grande"})
+            return
+        try:
+            pedido = json.loads(self.rfile.read(tamanho).decode('utf-8'))
+        except json.JSONDecodeError as e:
+            self._enviar_json(400, {"erro": f"JSON inválido no corpo do pedido: {e}"})
+            return
+
+        playlist_codigo = (pedido.get('playlistCodigo') or '').strip()
+        if not playlist_codigo or not re.match(r'^[A-Za-z0-9.\-]+$', playlist_codigo):
+            self._enviar_json(400, {"erro": f"playlistCodigo inválido: {playlist_codigo!r}"})
+            return
+
+        try:
+            resultado = subprocess.run(
+                [sys.executable, APLICAR_REGENERACAO_SCRIPT, playlist_codigo],
+                cwd=APP_DIR, capture_output=True, text=True, timeout=APLICAR_REGENERACAO_TIMEOUT,
+            )
+        except subprocess.TimeoutExpired:
+            self._enviar_json(504, {"erro": f"excedeu {APLICAR_REGENERACAO_TIMEOUT}s"})
+            return
+        except Exception as e:
+            self._enviar_json(500, {"erro": f"falha a correr _aplicar_regeneracao_playlist.py: {e}"})
+            return
+
+        try:
+            corpo = json.loads((resultado.stdout or '').strip().splitlines()[-1])
+        except (json.JSONDecodeError, IndexError):
+            detalhe = (resultado.stderr or resultado.stdout or '').strip()
+            self._enviar_json(500, {"erro": f"_aplicar_regeneracao_playlist.py devolveu saída inesperada: {detalhe[-800:]}"})
+            return
+
+        self._enviar_json(200 if corpo.get('ok') else 500, corpo)
 
     def _listar_playlist_youtube(self):
         tamanho = int(self.headers.get('Content-Length') or 0)

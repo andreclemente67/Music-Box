@@ -899,7 +899,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -932,7 +932,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -965,7 +965,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -998,7 +998,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -1031,7 +1031,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -1064,7 +1064,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -1097,7 +1097,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -1131,7 +1131,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
@@ -1164,7 +1164,7 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     }
@@ -1194,9 +1194,105 @@
     "duracao_estimada": {
       "pura_segundos": 184,
       "pura_formatada": "3m 4s",
-      "ajustada_segundos": 330.0,
+      "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    }
+  },
+  "STD.PT.70.WLD.001": {
+    "tipo": "standard",
+    "nome": "Vozes da Resistência — Canção Política Ibérica e Latina",
+    "descritivo": "",
+    "universo": "Portugal — Anos 70 — World Music",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "jose_mario_branco_topic_inquietacao",
+      "zeca_afonso_grandola_vila_morena",
+      "adriano_correia_de_olive_trova_do_vento_que_passa",
+      "boris_vian_le_deserteur",
+      "quilapayun_el_pueblo_unido_jamas_se",
+      "sergio_godinho_venham_mais_cinco",
+      "fausto_a_luta_e_alegria"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Víctor Jara",
+      "id": "mercedes_sosa_te_recuerdo_amanda"
+    }
+  },
+  "STD.INT.ALL.MIX.002": {
+    "tipo": "standard",
+    "nome": "https://www.youtube.com/watch?v=IZESfP1xQdQ&list=RDIZESfP1xQdQ&start_radio=1",
+    "descritivo": "",
+    "universo": "Multi-género / décadas",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [],
+    "mosaico": null
+  },
+  "STD.INT.ALL.MIX.003": {
+    "tipo": "standard",
+    "nome": "STD.INT.ALL.MIX.003",
+    "descritivo": "",
+    "universo": "Multi-género / décadas",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [],
+    "mosaico": null
+  },
+  "STD.PT.ALL.FAD.001": {
+    "tipo": "standard",
+    "nome": "Viagens pelo Cancioneiro Português",
+    "descritivo": "",
+    "universo": "Portugal — Fado",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "fausto_topic_lembra_me_um_sonho_lindo",
+      "amalia_rodrigues_estranha_forma_de_vida",
+      "sergio_godinho_gaivota",
+      "jose_afonso_primavera",
+      "madredeus_povo_que_lavas_no_rio",
+      "rui_veloso_electrico_28",
+      "dulce_pontes_cancao_do_mar"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Alain Oulman",
+      "id": "carlos_do_carmo_estranha_forma_de_vida"
+    }
+  },
+  "STD.PT.ALL.FAD.002": {
+    "tipo": "standard",
+    "nome": "Viagens pelo Cancioneiro Português",
+    "descritivo": "",
+    "universo": "Portugal — Fado",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [],
+    "mosaico": null
+  },
+  "STD.PT.ALL.WLD.001": {
+    "tipo": "standard",
+    "nome": "Vozes da Terra — Folk e Tradição Ibérica",
+    "descritivo": "",
+    "universo": "Portugal — World Music",
+    "temBonus": false,
+    "dificuldade": 4,
+    "musicas": [
+      "zeca_afonso_cancao_de_embalar",
+      "adriano_correia_de_olive_trova_do_vento_que_passa_2",
+      "amalia_rodrigues_estranha_forma_de_vida_2",
+      "sergio_godinho_rosa_rezada",
+      "jose_afonso_senhor_meu_jesus_cristo",
+      "peret_al_alba",
+      "francisco_fanhais_menino_do_bairro_negro"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Manuel Alegre",
+      "id": "luis_cilia_trova_do_vento_que_passa"
     }
   }
 }
