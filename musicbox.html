@@ -2163,7 +2163,18 @@ function terminarFaixaSemVencedor() {
 function acertouFaixa(i) {
   if (mutados[i] || faseGeral !== 'faixa') return;
   clearInterval(timerInterval);
-  audio.pause();
+  // Continuidade Sonora Pós-Acerto (Bíblia §5.4b, 2026-09-01): NÃO parar o
+  // áudio corrente aqui — continua a tocar a partir do ponto exacto onde
+  // ia (Trecho A ou B, com ou sem BONUS_MODE a seguir) até ao NEW_SLOT da
+  // Faixa seguinte (carregarTrecho() troca audio.src, o que já corta a
+  // reprodução corrente sozinho — ver iniciarFaixa()). O clearInterval()
+  // acima já impede o corte automático por timeout (fastForward()/
+  // terminarFaixaSemVencedor() só disparam a partir de tick()); sem essa
+  // faixa de tempo a decorrer, o Trecho corrente também não avança
+  // sozinho para o B — deixa de ser preciso, já não há "duração fixa" a
+  // vigiar para quem acertou. tocarSireneBonus() (Faixas com BONUS_MODE)
+  // usa Web Audio API à parte, não mexe em `audio` — a música de fundo
+  // convive com a sirene/pergunta sem precisar de nenhuma alteração aqui.
   document.getElementById('chave-resposta').style.display = '';
   revelarRetrato();
   vencedorFaixa = i;
