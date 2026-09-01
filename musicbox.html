@@ -361,6 +361,13 @@
 
 <div class="rodape">
   <button onclick="alternarPausa()" id="btn-pausa">⏸ Pausar</button>
+  <!-- MANUAL_ADVANCE (Bíblia §19.1, 2026-09-01) — atalho de régie, só na
+       app de jogo (nunca no Studio de edição): força o mesmo NEW_SLOT que
+       hoje dispara sozinho por timeout/todos-mudos, a qualquer momento da
+       janela de audição activa. Visibilidade sincronizada com faseGeral
+       por manualAdvanceSync() (setInterval) — ver nota aí sobre porquê de
+       não ser um toggle explícito como o do Apresentador. -->
+  <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;">⏭ Avançar Faixa</button>
   <!-- Apresentador: um único toggle manual pelo operador — ver
        alternarApresentador()/renderApresentador(). Escondido quando não há
        foto configurada (apresentador.json, Studio → tab "Concorrentes"). -->
@@ -2159,6 +2166,30 @@ function terminarFaixaSemVencedor() {
   log(`Faixa ${faixaAtual} terminado sem vencedor.`);
   avancarParaProximaFaixaOuMosaico();
 }
+
+// MANUAL_ADVANCE (Bíblia §19.1) — atalho de régie: chama exactamente a
+// mesma função que hoje corre quando a Faixa termina sozinha (timeout ou
+// todos mudos), só que a pedido em vez de por tick(). Não toca em
+// pontuação nem MUTE — terminarFaixaSemVencedor()/terminarFaixaR4SemVencedor()
+// já não tocam (o MUTE prolongado em curso é recalculado por iniciarFaixa()/
+// iniciarFaixaR4() a partir de mutadoAteFaixa, tal como num NEW_SLOT normal).
+// Só activo durante 'faixa' (Rondas 1-3) e 'ronda4_faixa' — fora da janela
+// de audição activa (escolha de Universo, Bónus, Escada de Memória,
+// Mosaico, etc.) o botão fica escondido, ver manualAdvanceSync() abaixo.
+function manualAdvance() {
+  if (faseGeral === 'faixa') terminarFaixaSemVencedor();
+  else if (faseGeral === 'ronda4_faixa') terminarFaixaR4SemVencedor();
+}
+
+// Sincroniza a visibilidade do botão com faseGeral. Um setInterval em vez
+// de chamadas explícitas em cada função que muda faseGeral — são demasiados
+// sítios (iniciarFaixa, acertouFaixa, errouFaixa, terminarFaixaSemVencedor,
+// resolverBonus, resolverEscada, iniciarFaixaR4, terminarEpisodio, etc.) e
+// o custo de um poll de 300ms neste toggle simples é irrelevante.
+setInterval(() => {
+  const btn = document.getElementById('btn-avancar');
+  if (btn) btn.style.display = (faseGeral === 'faixa' || faseGeral === 'ronda4_faixa') ? '' : 'none';
+}, 300);
 
 function acertouFaixa(i) {
   if (mutados[i] || faseGeral !== 'faixa') return;
