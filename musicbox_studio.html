@@ -3946,7 +3946,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
       <span class="posicao-num">${extraLabel}</span>
       <span class="posicao-tipo-badge ${tipoBadge}">${kind==='mosaico'?'mosaico':'audio'}</span>
       <span class="posicao-thumb-wrap">${hasImg
-        ? `<img class="posicao-thumb" src="${escapeAttr(t.imagem)}" alt="" loading="lazy">`
+        ? `<img class="posicao-thumb fototeca-thumb-clickable" src="${escapeAttr(t.imagem)}" alt="" loading="lazy" title="Clica para ver em tamanho grande" onclick="event.stopPropagation();af_abrirFototecaLightbox('${escapeAttr(t.imagem)}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">`
         : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
       <div class="posicao-info">
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
@@ -5156,7 +5156,7 @@ function renderPosicoesTributo(pl) {
         <span class="posicao-num">${String(p.pos).padStart(2,'0')}</span>
         <span class="posicao-tipo-badge tipo-${p.tipo}">${p.tipo}</span>
         <span class="posicao-thumb-wrap">${hasImg
-          ? `<img class="posicao-thumb" src="${escapeAttr(imgUrl)}" alt="" loading="lazy">`
+          ? `<img class="posicao-thumb fototeca-thumb-clickable" src="${escapeAttr(imgUrl)}" alt="" loading="lazy" title="Clica para ver em tamanho grande" onclick="event.stopPropagation();af_abrirFototecaLightbox('${escapeAttr(imgUrl)}','${escapeAttr(artista)}','${escapeAttr(titulo)}')">`
           : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
         <div class="posicao-info">
           <div class="posicao-titulo">${escapeHtml(titulo)}</div>
