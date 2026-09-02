@@ -368,6 +368,14 @@
        por manualAdvanceSync() (setInterval) — ver nota aí sobre porquê de
        não ser um toggle explícito como o do Apresentador. -->
   <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;">⏭ Avançar Faixa</button>
+  <!-- Pausa de entrada de Playlist (2026-09-02) — ao entrar numa Playlist
+       nova (Blind Draw/Motor/Escolha, Rondas 1-3 ou Ronda 4), o motor
+       revela título+universo e espera este clique antes de carregar a
+       Faixa 1 — ver confirmarCollection()/iniciarPlaylistManual(). Não se
+       aplica ao NEW_SLOT entre Faixas dentro da mesma Playlist, que
+       continua automático. Visibilidade sincronizada com faseGeral, mesmo
+       poll de manualAdvanceSync() (ver abaixo). -->
+  <button onclick="iniciarPlaylistManual()" id="btn-iniciar-playlist" title="Carrega e arranca o áudio da Faixa 1 desta Playlist — o motor fica à espera deste clique desde que a Playlist foi seleccionada" style="display:none;">▶ Iniciar Playlist</button>
   <!-- Apresentador: um único toggle manual pelo operador — ver
        alternarApresentador()/renderApresentador(). Escondido quando não há
        foto configurada (apresentador.json, Studio → tab "Concorrentes"). -->
@@ -938,7 +946,7 @@ let collectionActual = null;
 let musicasActuais = [];
 let quadradosGanhos = [];
 let trechoAtual = 1;
-let faseGeral = 'collection'; // 'collection' | 'faixa' | 'bonus' | 'mosaico_revelando' | 'mosaico_mortesubita' | 'eliminacao' | 'fim'
+let faseGeral = 'collection'; // 'collection' | 'aguardando_inicio_playlist' | 'faixa' | 'ronda4_faixa' | 'bonus' | 'escada' | 'mosaico_revelando' | 'mosaico_mortesubita' | 'eliminacao' | 'fim'
 let vencedorFaixa = null;
 let vencedorMosaico = null;
 let tempoRestante = JANELA_TRECHO;
@@ -1514,13 +1522,24 @@ function confirmarCollection(chave, foiAleatorio) {
   document.getElementById('collection-resultado').textContent =
     (foiAleatorio ? '⚄ Sorteada: ' : '✓ Escolhida: ') + COLLECTIONS[chave].nome;
   log(`Playlist desta posição: ${COLLECTIONS[chave].nome} (Universo: ${COLLECTIONS[chave].universo})`);
-  setTimeout(() => {
-    if (rondaAtual <= 3) {
-      iniciarPlaylistRegular();
-    } else {
-      iniciarRonda4();
-    }
-  }, 1000);
+  // Pausa de entrada de Playlist (2026-09-02): título+universo já
+  // revelados acima — fica à espera de "▶ Iniciar Playlist" em vez de
+  // arrancar sozinha ao fim de 1s (comportamento antigo). Aplica-se às
+  // Rondas 1-3 e à Ronda 4 da mesma forma; NÃO se aplica ao NEW_SLOT
+  // entre Faixas dentro desta Playlist — esse continua automático,
+  // despachado só a partir de iniciarPlaylistManual() aqui, uma vez por
+  // Playlist. Ver iniciarPlaylistManual() e o poll de visibilidade do
+  // botão junto de manualAdvance().
+  faseGeral = 'aguardando_inicio_playlist';
+}
+
+function iniciarPlaylistManual() {
+  if (faseGeral !== 'aguardando_inicio_playlist') return;
+  if (rondaAtual <= 3) {
+    iniciarPlaylistRegular();
+  } else {
+    iniciarRonda4();
+  }
 }
 
 // ── PLAYLIST REGULAR (7 Faixas + Mosaico) ──
@@ -2189,6 +2208,8 @@ function manualAdvance() {
 setInterval(() => {
   const btn = document.getElementById('btn-avancar');
   if (btn) btn.style.display = (faseGeral === 'faixa' || faseGeral === 'ronda4_faixa') ? '' : 'none';
+  const btnIniciar = document.getElementById('btn-iniciar-playlist');
+  if (btnIniciar) btnIniciar.style.display = (faseGeral === 'aguardando_inicio_playlist') ? '' : 'none';
 }, 300);
 
 function acertouFaixa(i) {
