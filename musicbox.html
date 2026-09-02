@@ -365,6 +365,14 @@
 
 <div class="rodape">
   <button onclick="alternarPausa()" id="btn-pausa">⏸ Pausar</button>
+  <!-- RETROCEDER_FAIXA (pedido do utilizador, 2026-09-02, simétrico ao
+       MANUAL_ADVANCE §19.1) — corrige avanços indevidos da régie: volta à
+       Faixa anterior da mesma Playlist. Só nas Rondas 1-3 (faseGeral
+       'faixa'; Ronda 4/Solo Final tem mecânica diferente — sem MUTE,
+       faixaR4Erros[] em vez de historico — fora de âmbito por agora) e só
+       com faixaAtual > 1 (não há Faixa anterior na Faixa 1). Visibilidade
+       sincronizada no mesmo poll de manualAdvanceSync() (ver abaixo). -->
+  <button onclick="retrocederFaixa()" id="btn-retroceder" title="RETROCEDER_FAIXA — volta à Faixa anterior desta Playlist, reiniciando essa posição (Trecho A, cronómetro, histórico/respostas dessa Faixa); não mexe em pontos/dinheiro" style="display:none;">⏮ Retroceder Faixa</button>
   <!-- MANUAL_ADVANCE (Bíblia §19.1, 2026-09-01) — atalho de régie, só na
        app de jogo (nunca no Studio de edição): força o mesmo NEW_SLOT que
        hoje dispara sozinho por timeout/todos-mudos, a qualquer momento da
@@ -2250,14 +2258,61 @@ function manualAdvance() {
   else if (faseGeral === 'ronda4_faixa') terminarFaixaR4SemVencedor();
 }
 
-// Sincroniza a visibilidade do botão com faseGeral. Um setInterval em vez
-// de chamadas explícitas em cada função que muda faseGeral — são demasiados
-// sítios (iniciarFaixa, acertouFaixa, errouFaixa, terminarFaixaSemVencedor,
-// resolverBonus, resolverEscada, iniciarFaixaR4, terminarEpisodio, etc.) e
-// o custo de um poll de 300ms neste toggle simples é irrelevante.
+// RETROCEDER_FAIXA (pedido do utilizador, 2026-09-02) — simétrico ao
+// MANUAL_ADVANCE acima, mas para trás: corrige um avanço indevido da
+// régie (ex.: clique em "Avançar Faixa" a mais). Reinicia a POSIÇÃO da
+// Faixa-alvo exactamente como iniciarFaixa() já faz ao entrar em
+// qualquer Faixa (Trecho A, cronómetro, vencedorFaixa, painel — inclui
+// renderCabines()/renderProgresso(), a mesma repintura já corrigida para
+// o arranque de Playlist, por isso não há chamada extra a fazer aqui).
+// Antes de chamar iniciarFaixa(), limpa especificamente o que essa
+// função NUNCA precisa de limpar ao avançar (uma Faixa nova nunca tem
+// registos prévios, uma Faixa-alvo ao retroceder pode ter):
+//   - quadradosGanhos[] dessa posição — volta a "por decidir".
+//   - historico[] de todos os concorrentes PARA ESSA FAIXA — evita um
+//     resultado "fantasma" de uma tentativa anterior ao lado de uma
+//     Faixa prestes a ser repetida.
+//   - respostaFoto[]/respostaFotoPendenteLimpar — reposição imediata,
+//     sem o adiamento de avancarRespostaFoto() (esse adiamento existe
+//     para o fluxo para a frente, não faz sentido a recuar).
+//   - mutadoAteFaixa[] só para quem tinha errado NESTA MESMA Faixa (o
+//     próprio errouFaixa() já grava mutadoAteFaixa[i]=faixaAtual+1 nesse
+//     momento — repõe a 0, não a faixaAtual-1: errouFaixa() SUBSTITUI o
+//     valor anterior, nunca o acumula, por isso o valor antes desta
+//     marcação já era < faixaAtual mas não é recuperável — 0 ("nunca
+//     mutado") é o único valor seguro em retrocederFaixa()s sucessivos;
+//     faixaAtual-1 ficava "mute fantasma" se se recuasse outra vez).
+// Não mexe em pontos[]/dinheiro[] — tal como avançar nunca reverte
+// pontuação, retroceder também não (simetria pedida pelo utilizador).
+// Só Rondas 1-3 (faseGeral 'faixa') — Ronda 4/Solo Final usa mecânica
+// diferente (sem MUTE, faixaR4Erros[] em vez de historico,
+// renderCabinesR4() em vez de renderCabines()) e ficou fora de âmbito.
+function retrocederFaixa() {
+  if (faseGeral !== 'faixa' || faixaAtual <= 1) return;
+  faixaAtual--;
+  quadradosGanhos[faixaAtual - 1] = false;
+  for (let i = 0; i < 4; i++) {
+    const teveErroNestaFaixa = historico[i].some(h => h.faixa === faixaAtual && h.tipo === 'erro');
+    if (teveErroNestaFaixa && mutadoAteFaixa[i] === faixaAtual + 1) mutadoAteFaixa[i] = 0;
+  }
+  historico = historico.map(arr => arr.filter(h => h.faixa !== faixaAtual));
+  respostaFoto = [null, null, null, null];
+  respostaFotoPendenteLimpar = false;
+  log(`⏮ Retroceder Faixa — volta à Faixa ${faixaAtual}/${totalFaixasPlaylist}`);
+  iniciarFaixa();
+}
+
+// Sincroniza a visibilidade dos botões com faseGeral/faixaAtual. Um
+// setInterval em vez de chamadas explícitas em cada função que muda
+// faseGeral — são demasiados sítios (iniciarFaixa, acertouFaixa,
+// errouFaixa, terminarFaixaSemVencedor, resolverBonus, resolverEscada,
+// iniciarFaixaR4, terminarEpisodio, etc.) e o custo de um poll de 300ms
+// neste toggle simples é irrelevante.
 setInterval(() => {
   const btn = document.getElementById('btn-avancar');
   if (btn) btn.style.display = (faseGeral === 'faixa' || faseGeral === 'ronda4_faixa') ? '' : 'none';
+  const btnRetroceder = document.getElementById('btn-retroceder');
+  if (btnRetroceder) btnRetroceder.style.display = (faseGeral === 'faixa' && faixaAtual > 1) ? '' : 'none';
   const btnIniciar = document.getElementById('btn-iniciar-playlist');
   if (btnIniciar) btnIniciar.style.display = (faseGeral === 'aguardando_inicio_playlist') ? '' : 'none';
 }, 300);
