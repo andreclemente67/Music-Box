@@ -1197,11 +1197,16 @@ function renderCabines() {
     const bloqueadoBonus = (faseGeral === 'bonus' && vencedorFaixa !== i);
 
     let botoesHtml = '<button class="btn" disabled>—</button>';
+    // vencedorFaixa !== null && !== i (2026-09-02f): desde §5.4b revisto,
+    // faseGeral fica 'faixa' enquanto se espera o fim do Trecho B (ver
+    // aguardarFimTrechoBAposAcerto()) — sem isto, os botões dos outros
+    // concorrentes ficavam clicáveis com a Faixa já decidida.
+    const faixaJaDecidida = vencedorFaixa !== null && vencedorFaixa !== i;
     if (faseGeral === 'faixa') {
       botoesHtml = `
         <button class="btn btn-mic" ${mutados[i] ? 'disabled' : ''} onclick="ouvirConcorrente(${i})">● Ouvir</button>
-        <button class="btn btn-correcto" ${mutados[i] ? 'disabled' : ''} onclick="acertouFaixa(${i})">✓ Correcto</button>
-        <button class="btn btn-erro" ${mutados[i] ? 'disabled' : ''} onclick="errouFaixa(${i})">✗ Erro</button>`;
+        <button class="btn btn-correcto" ${(mutados[i] || faixaJaDecidida) ? 'disabled' : ''} onclick="acertouFaixa(${i})">✓ Correcto</button>
+        <button class="btn btn-erro" ${(mutados[i] || faixaJaDecidida) ? 'disabled' : ''} onclick="errouFaixa(${i})">✗ Erro</button>`;
     } else if (faseGeral === 'mosaico_revelando' || faseGeral === 'mosaico_mortesubita') {
       // Antes era um único botão "▦ Respondeu!" a abrir confirm() nativo
       // (OK/Cancelar para "Acertou?") — ambíguo sob pressão: clicar
@@ -2208,7 +2213,14 @@ function tocarSomFF() {
   } catch (e) {}
 }
 
-function fastForward() {
+// aposCarregar (opcional, 2026-09-02f): callback disparado mesmo depois de
+// carregarTrecho() recarregar o Trecho B — usado por
+// aguardarFimTrechoBAposAcerto() para só anexar o seu próprio
+// audio.onended depois de carregarTrecho() ter feito o seu próprio reset
+// (audio.onended = null, ver aí) a esse handler; sem isto o handler novo
+// era imediatamente apagado. O fluxo normal (tick(), sem acerto) não passa
+// nenhum argumento — comportamento inalterado.
+function fastForward(aposCarregar) {
   log('⏩ Fast Forward automático');
   audio.pause();
   // corte imediato do Trecho A — sem isto, em alguns browsers a reprodução
@@ -2225,6 +2237,7 @@ function fastForward() {
   setTimeout(() => {
     carregarTrecho();
     atualizarTimerUI();
+    if (aposCarregar) aposCarregar();
   }, 400);
 }
 
@@ -2250,8 +2263,54 @@ function terminarFaixaSemVencedor() {
   audio.loop = false;
   clearInterval(retratoTimerReveal);
   document.getElementById('chave-resposta').style.display = ''; // ninguém acertou — revela na mesma
-  log(`Faixa ${faixaAtual} terminado sem vencedor.`);
+  // Log interno (2026-09-02g, pedido do utilizador): esta função também é
+  // chamada por manualAdvance() enquanto se espera o fim natural do Trecho
+  // B pós-acerto (ver aguardarFimTrechoBAposAcerto()) — nesse caso já HÁ
+  // vencedor, "terminado sem vencedor" ficava enganador no log interno.
+  // Sob o fluxo antigo (timeout natural em tick()) isto nunca acontecia —
+  // vencedorFaixa só fica definido depois de acertouFaixa(), que já pára
+  // o timer antes de tick() voltar a correr — por isso este if cobre
+  // exactamente o caso novo, sem afectar o antigo. Só o texto do log
+  // muda; pontuação e o ecrã do público (chave-resposta acima) ficam
+  // exactamente iguais nos dois casos.
+  log(vencedorFaixa !== null
+    ? `Faixa ${faixaAtual} avançada manualmente (vencedor já definido: ${NOMES[vencedorFaixa]}).`
+    : `Faixa ${faixaAtual} terminado sem vencedor.`);
   avancarParaProximaFaixaOuMosaico();
+}
+
+// §5.4b revisto — sincronismo visual pós-acerto (2026-09-02f, pedido do
+// utilizador): antes, um setTimeout fixo (pausaAposAcerto, tipicamente
+// MOMENTO_RESPOSTA_MS=2000ms) avançava a Faixa inteira pouco depois do
+// acerto, mesmo que o Trecho B ainda nem tivesse começado a tocar — as
+// fotos do concorrente/artista (mostrarMomentoResposta) desapareciam
+// junto, muito antes do fim real do Trecho B, e faseGeral saía de 'faixa'
+// na hora, escondendo "Avançar Faixa" assim que se marcava Correcto.
+// Chamada só para faixas Standard com Trecho A/B real (ver acertouFaixa())
+// — temImagem/temLogo/temExcertoUnico/temTributo não têm essa estrutura e
+// mantêm o pausaAposAcerto fixo, inalterado.
+//
+// Agora: faseGeral MANTÉM-SE 'faixa' — "Avançar Faixa"
+// (manualAdvance()→terminarFaixaSemVencedor(), que já chama
+// avancarParaProximaFaixaOuMosaico() na mesma) continua sempre disponível
+// ao operador. Se o acerto aconteceu ainda no Trecho A, força a mesma
+// transição que fastForward() já faz sozinho por timeout — reaproveitada
+// tal e qual, com o mesmo som/flash "⏩ FF" — para o Trecho B. Só depois
+// do Trecho B estar mesmo a carregar é que se liga audio.onended (nunca
+// antes: carregarTrecho() começa sempre por o repor a null, ver aí — por
+// isso o callback aposCarregar de fastForward()). No fim natural do
+// áudio, avança sozinho — o que vier primeiro, fim natural ou clique
+// manual.
+function aguardarFimTrechoBAposAcerto() {
+  const avancarUmaVez = () => {
+    audio.onended = null;
+    if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
+  };
+  if (trechoAtual === 1) {
+    fastForward(() => { audio.onended = avancarUmaVez; });
+  } else {
+    audio.onended = avancarUmaVez;
+  }
 }
 
 // MANUAL_ADVANCE (Bíblia §19.1) — atalho de régie: chama exactamente a
@@ -2328,7 +2387,14 @@ setInterval(() => {
 }, 300);
 
 function acertouFaixa(i) {
-  if (mutados[i] || faseGeral !== 'faixa') return;
+  // vencedorFaixa !== null (2026-09-02f): desde que §5.4b revisto passou a
+  // manter faseGeral='faixa' enquanto se espera o fim do Trecho B (ver
+  // aguardarFimTrechoBAposAcerto()), esse guard sozinho já não chega —
+  // sem isto, outro concorrente podia clicar "Correcto" DEPOIS de já
+  // haver vencedor nesta Faixa, sobrepondo vencedorFaixa e somando
+  // pontos[i] outra vez. Antes disto nunca acontecia na prática porque
+  // faseGeral saía de 'faixa' de imediato.
+  if (mutados[i] || faseGeral !== 'faixa' || vencedorFaixa !== null) return;
   clearInterval(timerInterval);
   // Continuidade Sonora Pós-Acerto (Bíblia §5.4b, 2026-09-01): NÃO parar o
   // áudio corrente aqui — continua a tocar a partir do ponto exacto onde
@@ -2381,15 +2447,31 @@ function acertouFaixa(i) {
     log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — Universo musical: arranca a Escada de Memória.`);
     setTimeout(() => iniciarEscada(i), pausaAposAcerto);
   } else {
-    faseGeral = 'fim';
-    log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — mosaico a revelar…`);
-    if (COLLECTIONS[collectionActual].temTributo) dispararAudioProximaPosicao();
-    setTimeout(() => avancarParaProximaFaixaOuMosaico(), pausaAposAcerto);
+    const col = COLLECTIONS[collectionActual];
+    // §5.4b revisto (2026-09-02f, pedido do utilizador): só faixas
+    // Standard com Trecho A/B real passam a aguardar o fim natural do
+    // Trecho B — ver aguardarFimTrechoBAposAcerto(). temImagem (Retrato
+    // Sonoro)/temLogo/temExcertoUnico (excerto único) não têm essa
+    // estrutura, e Tributo tem a sua própria (posições mistas,
+    // dispararAudioProximaPosicao()) — todos mantêm o comportamento
+    // anterior (pausaAposAcerto fixo), inalterado.
+    if (!temImagem && !col.temLogo && !col.temExcertoUnico && !col.temTributo) {
+      log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — a aguardar o fim do Trecho B…`);
+      aguardarFimTrechoBAposAcerto();
+    } else {
+      faseGeral = 'fim';
+      log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — mosaico a revelar…`);
+      if (col.temTributo) dispararAudioProximaPosicao();
+      setTimeout(() => avancarParaProximaFaixaOuMosaico(), pausaAposAcerto);
+    }
   }
 }
 
 function errouFaixa(i) {
-  if (mutados[i] || faseGeral !== 'faixa') return;
+  // vencedorFaixa !== null: mesmo motivo do guard em acertouFaixa() — a
+  // Faixa já está decidida, ninguém mais deve poder registar resposta
+  // (certa ou errada) enquanto se espera o fim do Trecho B.
+  if (mutados[i] || faseGeral !== 'faixa' || vencedorFaixa !== null) return;
   mutados[i] = true;
   mutadoAteFaixa[i] = faixaAtual + 1;
   respostaFoto[i] = 'erro';
