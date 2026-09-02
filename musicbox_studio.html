@@ -3533,6 +3533,31 @@ function af_abrirApp() {
   window.open(url, '_blank');
 }
 
+// Descritivo do Apresentador (Bíblia §18.7/§30.5, 2026-09-01) — texto-base
+// do anúncio breve do apresentador antes de cada Music Box, editável no
+// cabeçalho da Mesa de Montagem (nunca junto às faixas individuais).
+// Obrigatório ao guardar — ver exportPlaylists().
+function af_editarDescritivoApresentador(valor) {
+  if (!currentPlaylistKey || !PLAYLISTS[currentPlaylistKey]) return;
+  PLAYLISTS[currentPlaylistKey].descritivo_apresentador = valor;
+  markDirty();
+  const aviso = document.getElementById('descritivo-apresentador-aviso');
+  if (aviso) aviso.innerHTML = valor.trim() ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>';
+}
+
+// Nota de Curadoria (Bíblia §30.5, 2026-09-02) — explicação formal/técnica
+// da lógica editorial da playlist (Memory Triggers, critério de
+// curadoria), distinta do descritivo_apresentador (tom de show, exposto
+// na app) — só para consulta interna da equipa no Studio. Mesmo
+// comportamento/local que o campo acima.
+function af_editarNotaCuradoria(valor) {
+  if (!currentPlaylistKey || !PLAYLISTS[currentPlaylistKey]) return;
+  PLAYLISTS[currentPlaylistKey].nota_curadoria = valor;
+  markDirty();
+  const aviso = document.getElementById('nota-curadoria-aviso');
+  if (aviso) aviso.innerHTML = valor.trim() ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>';
+}
+
 function renderMontagem() {
   const el = document.getElementById('montagem-content');
   if (!currentPlaylistKey || !PLAYLISTS[currentPlaylistKey]) {
@@ -3585,6 +3610,18 @@ function renderMontagem() {
         <span class="shape-badge ${shapeOk?'ok':'warn'}"><span class="dot"></span>${exp===null ? current+' posições' : current+'/'+exp+' posições'}</span>
         ${avisoCompletudeHtml}
         ${progressoTrechosHtml}
+      </div>
+      <div class="detail-field" style="margin-top:10px;">
+        <label>Descritivo do Apresentador <span id="descritivo-apresentador-aviso">${pl.descritivo_apresentador ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>'}</span></label>
+        <textarea class="detail-input" id="descritivo-apresentador-input" rows="3"
+          placeholder="Texto-base do anúncio breve do apresentador antes desta Music Box começar — estilo dominante, característica do Universo, uma curiosidade/gancho (Bíblia §18.7, tom entusiasmado, nunca técnico — §18.6)."
+          onchange="af_editarDescritivoApresentador(this.value)">${escapeHtml(pl.descritivo_apresentador || '')}</textarea>
+      </div>
+      <div class="detail-field" style="margin-top:10px;">
+        <label>Nota de Curadoria <span id="nota-curadoria-aviso">${pl.nota_curadoria ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>'}</span></label>
+        <textarea class="detail-input" id="nota-curadoria-input" rows="3"
+          placeholder="Explicação formal/técnica da lógica editorial desta playlist — porque foi construída assim, que Memory Triggers usa, que critério de curadoria a define. Só para consulta interna da equipa no Studio, nunca exposto na app de jogo (§30.5)."
+          onchange="af_editarNotaCuradoria(this.value)">${escapeHtml(pl.nota_curadoria || '')}</textarea>
       </div>
     </div>`;
 
@@ -6201,6 +6238,8 @@ function createPlaylist() {
     tipo,
     nome:       document.getElementById('np-nome').value.trim() || chave,
     descritivo: '',
+    descritivo_apresentador: '', // obrigatório antes de guardar — ver exportPlaylists() e af_editarDescritivoApresentador() na Mesa de Montagem
+    nota_curadoria: '', // idem — ver af_editarNotaCuradoria() na Mesa de Montagem
     universo:   document.getElementById('np-universo').value.trim(),
     temBonus:   false,
     dificuldade: parseInt(document.getElementById('np-dificuldade').value) || 3,
@@ -7338,8 +7377,40 @@ function af_confirmarSubstituirPlaylists() {
   });
 }
 
+// Playlists-rascunho quebradas (0 faixas, nome inválido) encontradas
+// 2026-09-01 — excluídas deliberadamente da obrigatoriedade de
+// descritivo_apresentador/nota_curadoria, tal como o utilizador confirmou
+// ("qualquer playlist activa"). Não usa um filtro genérico por nº de
+// faixas porque uma playlist NOVA legítima (via createPlaylist()) também
+// começa com 0 faixas e deve continuar sujeita à validação.
+const PLAYLISTS_QUEBRADAS_SEM_VALIDACAO = new Set([
+  'STD.INT.ALL.MIX.002', 'STD.INT.ALL.MIX.003', 'STD.PT.ALL.FAD.002',
+]);
+
+// Bíblia §18.7/§30.5 — descritivo_apresentador E nota_curadoria
+// obrigatórios ao guardar/publicar, para qualquer playlist activa. Ligada
+// a exportPlaylists() — ver aí.
+function af_playlistsSemDescritivoApresentador() {
+  return Object.entries(PLAYLISTS)
+    .filter(([chave]) => !PLAYLISTS_QUEBRADAS_SEM_VALIDACAO.has(chave))
+    .filter(([, pl]) => (!pl.descritivo_apresentador || !pl.descritivo_apresentador.trim())
+                      || (!pl.nota_curadoria || !pl.nota_curadoria.trim()))
+    .map(([chave, pl]) => `${pl.nome || chave} (${chave})`);
+}
+
 async function exportPlaylists(opcoes = {}) {
   const automatico = !!opcoes.automatico;
+
+  // Bíblia §18.7/§30.5, obrigatório desde 2026-09-02: bloqueia a escrita
+  // (manual ou automática) enquanto qualquer playlist activa não tiver
+  // descritivo_apresentador e nota_curadoria — ver
+  // af_playlistsSemDescritivoApresentador() e PLAYLISTS_QUEBRADAS_SEM_VALIDACAO.
+  const emFalta = af_playlistsSemDescritivoApresentador();
+  if (emFalta.length) {
+    notify(`Guardar bloqueado — falta descritivo_apresentador e/ou nota_curadoria em ${emFalta.length} playlist(s): ${emFalta.slice(0, 5).join(', ')}${emFalta.length > 5 ? '…' : ''}`, 'err');
+    return false;
+  }
+
   const json = JSON.stringify(PLAYLISTS, null, 2);
 
   let resultadoServidor = await af_escreverPlaylistsViaServidor(json);
