@@ -235,7 +235,7 @@
   <button class="btn-secundario" onclick="mostrarTesteLista()">◎ Testar uma Playlist</button>
   <!-- Atalho discreto para o Studio (curação de catálogo/playlists) — abre
        numa nova aba, não interfere com o jogo em curso nesta aba. -->
-  <button class="btn-secundario" onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" style="font-size:11px;opacity:0.7;">⚙️ Studio</button>
+  <button class="btn-secundario" onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" style="font-size:11px;opacity:0.7;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.26 7.26 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.14.24.42.32.6.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.24.1.5 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7z"/></svg> Studio</button>
   <p>Clica para autorizar o som (obrigatório uma vez, por causa das regras dos browsers).</p>
   <div id="teste-lista"></div>
 </div>
@@ -257,7 +257,7 @@
          no DOM — ver nota acima do "← Playlists") para ficar acessível a
          partir de qualquer ecrã principal, não só do arranque. -->
     <button onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" title="Abre o Studio numa nova aba"
-      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;">⚙️ Studio</button>
+      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.26 7.26 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.14.24.42.32.6.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.24.1.5 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7z"/></svg> Studio</button>
   </div>
 </div>
 <!-- BUILD 2026-07-30-P13 — CINEMA corrigido · temBonus off · Lawrence of Arabia -->
@@ -356,7 +356,7 @@
   <button id="mosaico-revelar-btn" onclick="revelarInfoMosaico()" style="display:none;margin-top:4px;padding:6px 14px;border-radius:6px;border:1px solid var(--border2);background:var(--bg2);color:var(--accent);font-size:12px;cursor:pointer;">◉ Revelar</button>
   <div id="mosaico-revelar-painel" style="display:none;margin-top:8px;padding:10px 14px;border-radius:6px;background:var(--bg2);border:1px solid var(--border2);font-size:13px;line-height:1.6;"></div>
   <div class="mosaico-acoes">
-    <button id="btn-revelacao" onclick="avancarRevelacao()">⏭ Revelação terminada → Morte Súbita</button>
+    <button id="btn-revelacao" onclick="avancarRevelacao()"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg> Revelação terminada → Morte Súbita</button>
     <button onclick="revelarMosaicoCompleto()" title="Mostra a imagem toda de imediato — controlo manual do operador, independente da revelação automática por acertos">▦ Revelar Mosaico Completo</button>
   </div>
 </div>
@@ -364,7 +364,7 @@
 <div class="cabines" id="cabines"></div>
 
 <div class="rodape">
-  <button onclick="alternarPausa()" id="btn-pausa">⏸ Pausar</button>
+  <button onclick="alternarPausa()" id="btn-pausa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar</button>
   <!-- RETROCEDER_FAIXA (pedido do utilizador, 2026-09-02, simétrico ao
        MANUAL_ADVANCE §19.1) — corrige avanços indevidos da régie: volta à
        Faixa anterior da mesma Playlist. Só nas Rondas 1-3 (faseGeral
@@ -372,14 +372,14 @@
        faixaR4Erros[] em vez de historico — fora de âmbito por agora) e só
        com faixaAtual > 1 (não há Faixa anterior na Faixa 1). Visibilidade
        sincronizada no mesmo poll de manualAdvanceSync() (ver abaixo). -->
-  <button onclick="retrocederFaixa()" id="btn-retroceder" title="RETROCEDER_FAIXA — volta à Faixa anterior desta Playlist, reiniciando essa posição (Trecho A, cronómetro, histórico/respostas dessa Faixa); não mexe em pontos/dinheiro" style="display:none;">⏮ Retroceder Faixa</button>
+  <button onclick="retrocederFaixa()" id="btn-retroceder" title="RETROCEDER_FAIXA — volta à Faixa anterior desta Playlist, reiniciando essa posição (Trecho A, cronómetro, histórico/respostas dessa Faixa); não mexe em pontos/dinheiro" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M11 19V5l-9 7 9 7z"/><path d="M21 19V5l-9 7 9 7z"/></svg> Retroceder Faixa</button>
   <!-- MANUAL_ADVANCE (Bíblia §19.1, 2026-09-01) — atalho de régie, só na
        app de jogo (nunca no Studio de edição): força o mesmo NEW_SLOT que
        hoje dispara sozinho por timeout/todos-mudos, a qualquer momento da
        janela de audição activa. Visibilidade sincronizada com faseGeral
        por manualAdvanceSync() (setInterval) — ver nota aí sobre porquê de
        não ser um toggle explícito como o do Apresentador. -->
-  <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;">⏭ Avançar Faixa</button>
+  <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg> Avançar Faixa</button>
   <!-- Pausa de entrada de Playlist (2026-09-02) — ao entrar numa Playlist
        nova (Blind Draw/Motor/Escolha, Rondas 1-3 ou Ronda 4), o motor
        revela título+universo e espera este clique antes de carregar a
@@ -1066,9 +1066,10 @@ function haEmpateTecnico() {
 function atualizarBotaoRevelacao() {
   const btn = document.getElementById('btn-revelacao');
   if (!btn) return;
-  btn.textContent = haEmpateTecnico()
-    ? '⏭ Revelação terminada → Morte Súbita'
-    : '⏭ Terminar revelação (sem empate)';
+  const iconeFF = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg>';
+  btn.innerHTML = iconeFF + (haEmpateTecnico()
+    ? ' Revelação terminada → Morte Súbita'
+    : ' Terminar revelação (sem empate)');
 }
 
 // ── RENDER ──
@@ -2892,7 +2893,9 @@ function alternarPausa() {
     audio.play().catch(() => {});
     enviarComandoYoutube('playVideo');
   }
-  document.getElementById('btn-pausa').textContent = pausado ? '▶ Retomar' : '⏸ Pausar';
+  document.getElementById('btn-pausa').innerHTML = pausado
+    ? '▶ Retomar'
+    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar';
 }
 
 // Repõe o estado de pausa sempre que uma nova faixa/fase arranca (mesmo
@@ -2903,7 +2906,7 @@ function alternarPausa() {
 function reporPausa() {
   pausado = false;
   const btn = document.getElementById('btn-pausa');
-  if (btn) btn.textContent = '⏸ Pausar';
+  if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar';
 }
 
 // Apresentador: um único botão-toggle junto a "⏸ Pausar" — mostra/esconde
@@ -3188,7 +3191,7 @@ function renderVerificacao() {
   document.getElementById('cabines').innerHTML = `
     <button onclick="responderVerificacao(true)" style="background:#1e3a26;color:#8fc95a;border:2px solid #5aa06a;border-radius:8px;padding:16px 32px;font-size:18px;font-weight:900;cursor:pointer;">✓ S — OK</button>
     <button onclick="responderVerificacao(false)" style="background:#3a1e1e;color:#e08a87;border:2px solid #c0453f;border-radius:8px;padding:16px 32px;font-size:18px;font-weight:900;cursor:pointer;">✗ N — Problema</button>
-    <button onclick="saltarVerificacao()" style="background:var(--bg3);color:#8a8a86;border:1px solid var(--border);border-radius:8px;padding:16px 20px;font-size:14px;cursor:pointer;">⏭ Saltar</button>`;
+    <button onclick="saltarVerificacao()" style="background:var(--bg3);color:#8a8a86;border:1px solid var(--border);border-radius:8px;padding:16px 20px;font-size:14px;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg> Saltar</button>`;
 }
 
 function responderVerificacao(ok) {
