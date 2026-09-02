@@ -1072,6 +1072,19 @@ function fotoConcorrenteHtml(i) {
 const MOMENTO_RESPOSTA_MS = 2000;
 let momentoRespostaTimer = null;
 
+// Esconde o overlay de acerto (foto do concorrente + artista/banda) no
+// NEW_SLOT real — ver nota em abrirOverlay() dentro de
+// mostrarMomentoResposta(). Chamado no topo de
+// avancarParaProximaFaixaOuMosaico()/avancarFaixaR4(), antes de qualquer
+// dos seus ramos (faixa seguinte, Mosaico, fim de playlist/episódio) —
+// seguro chamar mesmo quando o overlay já está escondido (ex.: ninguém
+// acertou, terminarFaixaSemVencedor()).
+function esconderMomentoResposta() {
+  clearTimeout(momentoRespostaTimer);
+  const overlay = document.getElementById('momento-resposta');
+  if (overlay) overlay.style.display = 'none';
+}
+
 // Destaque temporário e ampliado (ver #momento-resposta) no instante em que
 // o operador marca "Correcto"/"Erro" — sem foto configurada para este
 // concorrente, não faz nada (o resto da interface já assinala o acerto/erro
@@ -1103,7 +1116,22 @@ function mostrarMomentoResposta(i, tipo) {
   const abrirOverlay = () => {
     overlay.style.display = 'flex';
     clearTimeout(momentoRespostaTimer);
-    momentoRespostaTimer = setTimeout(() => { overlay.style.display = 'none'; }, MOMENTO_RESPOSTA_MS);
+    // Sincronismo visual pós-acerto (sequência §5.4b, 2026-09-02): em
+    // 'correcto', o overlay NÃO se esconde sozinho por timer — fica
+    // visível até ao NEW_SLOT real (esconderMomentoResposta(), chamado no
+    // topo de avancarParaProximaFaixaOuMosaico()/avancarFaixaR4(), que
+    // cobre todos os caminhos a partir daí: faixa seguinte, Mosaico, fim
+    // de playlist/episódio, Bónus, Escada de Memória). Antes disto, um
+    // setTimeout fixo de MOMENTO_RESPOSTA_MS (2000ms) escondia as imagens
+    // sempre à mesma hora, independente do áudio — em BONUS_MODE isso
+    // significava desaparecerem ~2s depois do acerto, muito antes de a
+    // Pergunta Bónus (e o áudio, que agora continua a tocar por baixo)
+    // terminar. Em 'erro' mantém-se o auto-esconder — é só um flash
+    // rápido, o jogo continua para os outros concorrentes, não há
+    // NEW_SLOT nenhum para esperar.
+    if (tipo === 'erro') {
+      momentoRespostaTimer = setTimeout(() => { overlay.style.display = 'none'; }, MOMENTO_RESPOSTA_MS);
+    }
   };
 
   // Só em acerto — em erro esconde-se mesmo que haja imagem disponível.
@@ -2358,6 +2386,7 @@ function resolverEscada(conseguiu) {
 }
 
 function avancarParaProximaFaixaOuMosaico() {
+  esconderMomentoResposta();
   const col = COLLECTIONS[collectionActual];
   if (col.temTributo) { avancarParaProximaFaixaTributo(); return; }
   if (faixaAtual < musicasActuais.length) { faixaAtual++; iniciarFaixa(); }
@@ -2740,6 +2769,7 @@ function terminarFaixaR4SemVencedor() {
 }
 
 function avancarFaixaR4() {
+  esconderMomentoResposta();
   if (faixaAtual < 9) { faixaAtual++; iniciarFaixaR4(); }
   else terminarEpisodio();
 }
