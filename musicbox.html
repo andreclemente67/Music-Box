@@ -89,7 +89,7 @@
   .collection-btn:hover { border-color:var(--accent); }
   .collection-btn:disabled { opacity:0.25; cursor:not-allowed; }
   .collection-resultado { font-size:14px; color:var(--green); text-align:center; min-height:20px; }
-  .collection-nota-curadoria { font-size:12px; color:var(--text2); text-align:center; max-width:560px; line-height:1.5; margin-top:-4px; padding:0 12px; }
+  .collection-descritivo-apresentador { font-size:12px; color:var(--text2); text-align:center; max-width:560px; line-height:1.5; margin-top:-4px; padding:0 12px; }
 
   .eliminacao-painel { display:none; flex-direction:column; align-items:center; padding:30px 20px; gap:16px; }
   .eliminacao-painel.activo { display:flex; }
@@ -272,13 +272,14 @@
   <div class="collection-sub" id="collection-sub">—</div>
   <div class="collection-lista" id="collection-lista"></div>
   <div class="collection-resultado" id="collection-resultado"></div>
-  <!-- Nota de Curadoria (2026-09-02h, pedido do utilizador): texto interno
-       para o operador, não para o público — contexto de bastidores sobre a
-       escolha das faixas desta Playlist. Nunca confundir com
-       descritivo_apresentador (esse é lido ao público, noutro sítio da UI).
-       Escondida por defeito — só aparece com conteúdo, ver
+  <!-- Descritivo do Apresentador (2026-09-02i, pedido do utilizador):
+       substitui a Nota de Curadoria aqui (2026-09-02h) — este texto É para
+       ler ao público, ao contrário da nota_curadoria (essa fica só na Mesa
+       de Montagem do Studio, nunca aparece no jogo). Dá ao apresentador o
+       texto certo para ler em voz alta antes de clicar "▶ Iniciar
+       Playlist". Escondida por defeito — só aparece com conteúdo, ver
        confirmarCollection(). -->
-  <div class="collection-nota-curadoria" id="collection-nota-curadoria" style="display:none;"></div>
+  <div class="collection-descritivo-apresentador" id="collection-descritivo-apresentador" style="display:none;"></div>
 </div>
 
 <div class="eliminacao-painel" id="eliminacao-painel">
@@ -801,7 +802,7 @@ const catalogoPronto = (async () => {
           ...COLLECTIONS[chaveCollections],
           nome: def.nome, descritivo: def.descritivo, playlistCodigo: def.playlistCodigo,
           universo: def.universo, temBonus: def.temBonus, dificuldade: def.dificuldade,
-          nota_curadoria: def.nota_curadoria,
+          nota_curadoria: def.nota_curadoria, descritivo_apresentador: def.descritivo_apresentador,
           musicas, mosaico
         };
         log(`Universo "${chaveCollections}" carregado a partir de catalogo.json/playlists.json (chave ${chavePlaylists})`);
@@ -850,7 +851,7 @@ const catalogoPronto = (async () => {
           ...COLLECTIONS[codigo],
           nome: def.nome, descritivo: def.descritivo, playlistCodigo: def.playlistCodigo,
           universo: def.universo, temBonus: def.temBonus, dificuldade: def.dificuldade,
-          nota_curadoria: def.nota_curadoria,
+          nota_curadoria: def.nota_curadoria, descritivo_apresentador: def.descritivo_apresentador,
           musicas, mosaico
         };
         log(`Universo "${codigo}" carregado automaticamente a partir de playlists.json (tipo ${def.tipo})`);
@@ -1588,18 +1589,20 @@ function confirmarCollection(chave, foiAleatorio) {
   respostaFotoPendenteLimpar = false;
   document.getElementById('collection-resultado').textContent =
     (foiAleatorio ? '⚄ Sorteada: ' : '✓ Escolhida: ') + COLLECTIONS[chave].nome;
-  // Nota de Curadoria (2026-09-02h, pedido do utilizador): texto interno
-  // para o operador (nunca o público) — só aparece se a playlist tiver o
-  // campo preenchido (playlists.json → nota_curadoria); Tributo, por
-  // exemplo, não passa por UNIVERSOS_EXTERNOS/descoberta automática e
-  // fica sem este campo, por isso o esconder por defeito acima.
-  const notaCuradoriaEl = document.getElementById('collection-nota-curadoria');
-  if (COLLECTIONS[chave].nota_curadoria) {
-    notaCuradoriaEl.textContent = COLLECTIONS[chave].nota_curadoria;
-    notaCuradoriaEl.style.display = '';
+  // Descritivo do Apresentador (2026-09-02i, pedido do utilizador):
+  // substitui a Nota de Curadoria aqui — este texto é para o apresentador
+  // ler ao público antes de clicar "▶ Iniciar Playlist", ao contrário da
+  // nota_curadoria (interna, nunca lida em voz alta). Só aparece se a
+  // playlist tiver o campo preenchido; Tributo, por exemplo, não passa por
+  // UNIVERSOS_EXTERNOS/descoberta automática e fica sem este campo, por
+  // isso o esconder por defeito acima.
+  const descritivoApresentadorEl = document.getElementById('collection-descritivo-apresentador');
+  if (COLLECTIONS[chave].descritivo_apresentador) {
+    descritivoApresentadorEl.textContent = COLLECTIONS[chave].descritivo_apresentador;
+    descritivoApresentadorEl.style.display = '';
   } else {
-    notaCuradoriaEl.textContent = '';
-    notaCuradoriaEl.style.display = 'none';
+    descritivoApresentadorEl.textContent = '';
+    descritivoApresentadorEl.style.display = 'none';
   }
   log(`Playlist desta posição: ${COLLECTIONS[chave].nome} (Universo: ${COLLECTIONS[chave].universo})`);
   // Pausa de entrada de Playlist (2026-09-02): título+universo já
