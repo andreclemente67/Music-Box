@@ -963,7 +963,12 @@ let collectionsUsadas = [];
 let collectionActual = null;
 let musicasActuais = [];
 let quadradosGanhos = [];
-let trechoAtual = 1;
+// Normalização Trecho 1/2 → 'A'/'B' (2026-09-02h, pedido do utilizador):
+// antes era numérico (1/2) só neste ficheiro — o Studio já usava letras
+// minúsculas ('a'/'b') internamente, sem relação directa com esta
+// variável. Mantido em maiúsculas para bater certo com o texto já
+// mostrado ao operador ("TRECHO A"/"TRECHO B").
+let trechoAtual = 'A';
 let faseGeral = 'collection'; // 'collection' | 'aguardando_inicio_playlist' | 'faixa' | 'ronda4_faixa' | 'bonus' | 'escada' | 'mosaico_revelando' | 'mosaico_mortesubita' | 'eliminacao' | 'fim'
 let vencedorFaixa = null;
 let vencedorMosaico = null;
@@ -1840,10 +1845,10 @@ function iniciarFaixaTributo() {
 
   } else {
     // audio | solo | cover | riff | bateria — reconhecimento auditivo normal
-    trechoAtual = 1;
+    trechoAtual = 'A';
     tempoRestante = JANELA_TRECHO;
     document.getElementById('m-titulo').textContent = pos.pergunta || 'Identifica a música';
-    definirTrechoLabel('TRECHO A', 1);
+    definirTrechoLabel('TRECHO A', 'A');
     document.getElementById('chave-resposta').textContent = `◆ Resposta: "${pos.chave}"${pos.dica ? ' — ' + pos.dica : ''}`;
     audio.src = pos.a + "?v=" + Date.now();
     audio.play().catch(() => {});
@@ -1963,7 +1968,7 @@ let cinemaClipFadeTimer = null;
 function definirTrechoLabel(texto, trecho) {
   const el = document.getElementById('trecho-label');
   el.textContent = texto;
-  el.style.color = trecho === 1 ? 'var(--accent)' : trecho === 2 ? 'var(--red)' : '';
+  el.style.color = trecho === 'A' ? 'var(--accent)' : trecho === 'B' ? 'var(--red)' : '';
 }
 
 function carregarTrecho() {
@@ -1973,7 +1978,7 @@ function carregarTrecho() {
   document.getElementById('m-titulo').textContent = '';
   document.getElementById('m-artista').textContent = '';
   definirTrechoLabel(
-    temImagem ? 'REVELAÇÃO EM CURSO' : temExcertoUnico ? 'EXCERTO (30s)' : 'TRECHO ' + (trechoAtual === 1 ? 'A' : 'B'),
+    temImagem ? 'REVELAÇÃO EM CURSO' : temExcertoUnico ? 'EXCERTO (30s)' : 'TRECHO ' + trechoAtual,
     (!temImagem && !temExcertoUnico) ? trechoAtual : undefined
   );
   const respostaEsperadaEl = document.getElementById('resposta-esperada');
@@ -2050,7 +2055,7 @@ function carregarTrecho() {
     clipWrap.style.display = 'block';
     clipIframe.src = `https://www.youtube.com/embed/${embedCinema.id}?start=${embedCinema.inicio}&autoplay=1&mute=1&enablejsapi=1`;
     cinemaClipFadeTimer = setTimeout(() => { clipWrap.style.opacity = '1'; }, 4000);
-    audio.src = (trechoAtual === 1 ? m.a : m.b) + "?v=" + Date.now();
+    audio.src = (trechoAtual === 'A' ? m.a : m.b) + "?v=" + Date.now();
     audio.play().catch(() => {});
   } else if (temImagem) {
     // Retrato Sonoro: áudio imediato
@@ -2069,7 +2074,7 @@ function carregarTrecho() {
     }, LOGO_AUDIO_OFFSET * 1000);
   } else {
     // Faixa normal (inclui Cinema sem `clip` — fallback para áudio): Trecho A ou B
-    audio.src = (trechoAtual === 1 ? m.a : m.b) + "?v=" + Date.now();
+    audio.src = (trechoAtual === 'A' ? m.a : m.b) + "?v=" + Date.now();
     audio.play().catch(() => {});
   }
 }
@@ -2135,7 +2140,7 @@ function revelarRetrato() {
 function iniciarFaixa() {
   faseGeral = 'faixa';
   reporPausa();
-  trechoAtual = 1;
+  trechoAtual = 'A';
   vencedorFaixa = null;
   mutados = mutadoAteFaixa.map((ateFaixa, i) => !eliminado[i] && faixaAtual <= ateFaixa);
   avancarRespostaFoto();
@@ -2167,11 +2172,11 @@ function tick() {
     if (faseGeral === 'faixa' && col.temTributo) {
       const pos = musicasActuais[faixaAtual - 1];
       if (['trivia','foto','logo'].includes(pos.tipo)) { terminarFaixaSemVencedor(); }
-      else if (trechoAtual === 1) { fastForwardTributo(); }
+      else if (trechoAtual === 'A') { fastForwardTributo(); }
       else { terminarFaixaSemVencedor(); }
     } else if (faseGeral === 'faixa' && (col.temImagem || col.temLogo || col.temExcertoUnico)) terminarFaixaSemVencedor();
-    else if (faseGeral === 'faixa' && trechoAtual === 1) fastForward();
-    else if (faseGeral === 'faixa' && trechoAtual === 2) terminarFaixaSemVencedor();
+    else if (faseGeral === 'faixa' && trechoAtual === 'A') fastForward();
+    else if (faseGeral === 'faixa' && trechoAtual === 'B') terminarFaixaSemVencedor();
     else if (faseGeral === 'mosaico_mortesubita') terminarPlaylistSemVencedorM8();
     else if (faseGeral === 'ronda4_faixa') terminarFaixaR4SemVencedor();
   }
@@ -2227,11 +2232,11 @@ function fastForward(aposCarregar) {
   // ainda "sangra" por um instante enquanto o FF toca por cima. Em
   // try/catch porque, consoante o estado de buffering do <audio>, isto pode
   // lançar (ex.: InvalidStateError) — sem apanhar isso, a excepção parava a
-  // função aqui e trechoAtual nunca avançava para 2 (bug confirmado: "The
+  // função aqui e trechoAtual nunca avançava para 'B' (bug confirmado: "The
   // Final Countdown" nunca transitava para o Trecho B).
   try { audio.currentTime = 0; } catch (e) {}
   tocarSomFF();
-  trechoAtual = 2;
+  trechoAtual = 'B';
   tempoRestante = JANELA_TRECHO;
   // Pequeno delay para o som do FF acabar antes do Trecho B começar
   setTimeout(() => {
@@ -2246,11 +2251,11 @@ function fastForwardTributo() {
   audio.pause();
   try { audio.currentTime = 0; } catch (e) {}
   tocarSomFF();
-  trechoAtual = 2;
+  trechoAtual = 'B';
   tempoRestante = JANELA_TRECHO;
   const pos = musicasActuais[faixaAtual - 1];
   setTimeout(() => {
-    definirTrechoLabel('TRECHO B', 2);
+    definirTrechoLabel('TRECHO B', 'B');
     audio.src = pos.b + "?v=" + Date.now();
     audio.play().catch(() => {});
     atualizarTimerUI();
@@ -2306,7 +2311,7 @@ function aguardarFimTrechoBAposAcerto() {
     audio.onended = null;
     if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
   };
-  if (trechoAtual === 1) {
+  if (trechoAtual === 'A') {
     fastForward(() => { audio.onended = avancarUmaVez; });
   } else {
     audio.onended = avancarUmaVez;
@@ -2856,7 +2861,7 @@ function iniciarRonda4() {
 function iniciarFaixaR4() {
   faseGeral = 'ronda4_faixa';
   reporPausa();
-  trechoAtual = 1;
+  trechoAtual = 'A';
   tempoRestante = JANELA_TRECHO;
   const finalistaIdx = concorrentesActivos()[0];
   mostrarSoPainel('palco-faixa');
