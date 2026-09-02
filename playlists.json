@@ -1295,26 +1295,6 @@
       "id": "mercedes_sosa_te_recuerdo_amanda"
     }
   },
-  "STD.INT.ALL.MIX.002": {
-    "tipo": "standard",
-    "nome": "https://www.youtube.com/watch?v=IZESfP1xQdQ&list=RDIZESfP1xQdQ&start_radio=1",
-    "descritivo": "",
-    "universo": "Multi-género / décadas",
-    "temBonus": false,
-    "dificuldade": 3,
-    "musicas": [],
-    "mosaico": null
-  },
-  "STD.INT.ALL.MIX.003": {
-    "tipo": "standard",
-    "nome": "STD.INT.ALL.MIX.003",
-    "descritivo": "",
-    "universo": "Multi-género / décadas",
-    "temBonus": false,
-    "dificuldade": 3,
-    "musicas": [],
-    "mosaico": null
-  },
   "STD.PT.ALL.FAD.001": {
     "tipo": "standard",
     "nome": "Viagens pelo Cancioneiro Português",
@@ -1339,16 +1319,6 @@
       "pessoa": "Alain Oulman",
       "id": "carlos_do_carmo_estranha_forma_de_vida"
     }
-  },
-  "STD.PT.ALL.FAD.002": {
-    "tipo": "standard",
-    "nome": "Viagens pelo Cancioneiro Português",
-    "descritivo": "",
-    "universo": "Portugal — Fado",
-    "temBonus": false,
-    "dificuldade": 4,
-    "musicas": [],
-    "mosaico": null
   },
   "STD.PT.ALL.WLD.001": {
     "tipo": "standard",

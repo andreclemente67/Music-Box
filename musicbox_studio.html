@@ -7377,22 +7377,16 @@ function af_confirmarSubstituirPlaylists() {
   });
 }
 
-// Playlists-rascunho quebradas (0 faixas, nome inválido) encontradas
-// 2026-09-01 — excluídas deliberadamente da obrigatoriedade de
-// descritivo_apresentador/nota_curadoria, tal como o utilizador confirmou
-// ("qualquer playlist activa"). Não usa um filtro genérico por nº de
-// faixas porque uma playlist NOVA legítima (via createPlaylist()) também
-// começa com 0 faixas e deve continuar sujeita à validação.
-const PLAYLISTS_QUEBRADAS_SEM_VALIDACAO = new Set([
-  'STD.INT.ALL.MIX.002', 'STD.INT.ALL.MIX.003', 'STD.PT.ALL.FAD.002',
-]);
-
 // Bíblia §18.7/§30.5 — descritivo_apresentador E nota_curadoria
 // obrigatórios ao guardar/publicar, para qualquer playlist activa. Ligada
 // a exportPlaylists() — ver aí.
+//
+// As 3 playlists-rascunho quebradas (0 faixas, nome inválido) que existiam
+// aqui como excepção (PLAYLISTS_QUEBRADAS_SEM_VALIDACAO, 2026-09-01) foram
+// removidas de playlists.json a 2026-09-02 — deixaram de existir, por isso
+// a excepção também foi removida.
 function af_playlistsSemDescritivoApresentador() {
   return Object.entries(PLAYLISTS)
-    .filter(([chave]) => !PLAYLISTS_QUEBRADAS_SEM_VALIDACAO.has(chave))
     .filter(([, pl]) => (!pl.descritivo_apresentador || !pl.descritivo_apresentador.trim())
                       || (!pl.nota_curadoria || !pl.nota_curadoria.trim()))
     .map(([chave, pl]) => `${pl.nome || chave} (${chave})`);
@@ -7404,7 +7398,7 @@ async function exportPlaylists(opcoes = {}) {
   // Bíblia §18.7/§30.5, obrigatório desde 2026-09-02: bloqueia a escrita
   // (manual ou automática) enquanto qualquer playlist activa não tiver
   // descritivo_apresentador e nota_curadoria — ver
-  // af_playlistsSemDescritivoApresentador() e PLAYLISTS_QUEBRADAS_SEM_VALIDACAO.
+  // af_playlistsSemDescritivoApresentador().
   const emFalta = af_playlistsSemDescritivoApresentador();
   if (emFalta.length) {
     notify(`Guardar bloqueado — falta descritivo_apresentador e/ou nota_curadoria em ${emFalta.length} playlist(s): ${emFalta.slice(0, 5).join(', ')}${emFalta.length > 5 ? '…' : ''}`, 'err');
