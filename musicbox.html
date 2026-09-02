@@ -951,6 +951,12 @@ let A_REGISTAR_TEMPO_MOTOR_ESCOLHA = false;
 // actualizarBadge(). Isto é um piloto: "RONDA 1 · PLAYLIST 1/15" nunca fez
 // sentido durante um teste avulso de uma playlist.
 let modoTeste = false;
+// Faixa pedida em testarPlaylist(chave, faixaInicial) — guardada aqui
+// porque, desde 2026-09-02d, o Modo Teste passa pela mesma pausa
+// "▶ Iniciar Playlist" (confirmarCollection()) que o jogo real, e só
+// depois desse clique é que iniciarPlaylistRegular() volta a fixar
+// faixaAtual (normalmente sempre a 1) — ver aí.
+let TESTE_FAIXA_INICIAL = 1;
 let faixaAtual = 1;           // 1-7 (ou 1-9 na Ronda 4)
 let totalFaixasPlaylist = 7;
 let collectionsUsadas = [];
@@ -1690,7 +1696,10 @@ function ouvirConcorrente(i) {
 }
 
 function iniciarPlaylistRegular() {
-  faixaAtual = 1;
+  // Modo Teste (2026-09-02d): respeita a Faixa pedida em testarPlaylist()
+  // — ver TESTE_FAIXA_INICIAL. Jogo real (modoTeste=false) começa sempre
+  // na Faixa 1, como sempre foi.
+  faixaAtual = modoTeste ? TESTE_FAIXA_INICIAL : 1;
   const col = COLLECTIONS[collectionActual];
   // Tributo: usa posicoes[] em vez de musicas[]
   if (col.temTributo) {
@@ -3223,6 +3232,17 @@ function testarMosaico(chave) {
   iniciarMosaico();
 }
 
+// Modo Teste passa pela pausa "▶ Iniciar Playlist" (2026-09-02d, pedido do
+// utilizador): antes ia direto a iniciarFaixa()/iniciarFaixaTributo(), sem
+// nunca mostrar o botão — inofensivo enquanto a Playlist real também
+// arrancava sozinha ao fim de ~1s, mas passou a destoar depois do
+// PLAYLIST_START (§19.1/§30.6) dar controlo manual ao operador no jogo
+// real. Reaproveita confirmarCollection() tal e qual — mesma repintura
+// imediata de cabines/progresso já corrigida aí — só que chamada
+// directamente (sem passar pelo ecrã de escolha de família/Universo, que
+// não faz sentido aqui: a playlist já foi escolhida no menu de teste).
+// O badge "MODO TESTE" mantém-se — actualizarBadge() já lê modoTeste
+// independentemente de faseGeral.
 function testarPlaylist(chave, faixaInicial) {
   faixaInicial = faixaInicial || 1;
   document.getElementById('start-overlay').style.display = 'none';
@@ -3231,25 +3251,26 @@ function testarPlaylist(chave, faixaInicial) {
   dinheiro = [0, 0, 0, 0];
   eliminado = [false, false, false, false];
   mutadoAteFaixa = [0, 0, 0, 0];
-  historico = [[], [], [], []];
-  renderHistoricoPontos();
   escadaVencedor = null;
   escadaEtapa = 0;
   clearInterval(escadaTimerInterval);
   rondaAtual = 1;
   playlistGlobal = 1;
   playlistNaRonda = 1;
-  collectionActual = chave;
-  collectionsUsadas = [chave];
-  const col = COLLECTIONS[chave];
-  const temTributo = col.temTributo;
-  musicasActuais = temTributo ? col.posicoes : col.musicas;
-  faixaAtual = faixaInicial;
-  const temMosaico = col.mosaico !== null;
-  totalFaixasPlaylist = musicasActuais.length + (temMosaico ? 1 : 0);
-  quadradosGanhos = new Array(totalFaixasPlaylist).fill(false);
-  log(`◎ Modo Teste — ${col.nome} · Faixa ${faixaInicial}`);
-  if (temTributo) { iniciarFaixaTributo(); } else { iniciarFaixa(); }
+  collectionsUsadas = [];
+  TESTE_FAIXA_INICIAL = faixaInicial;
+  mostrarSoPainel('collection-painel');
+  document.getElementById('collection-titulo').textContent = 'MODO TESTE';
+  document.getElementById('collection-sub').textContent =
+    faixaInicial > 1 ? `A começar na Faixa ${faixaInicial}.` : '—';
+  document.getElementById('collection-lista').innerHTML = '';
+  confirmarCollection(chave, false);
+  // actualizarBadge() só corre dentro de iniciarFaixa()/iniciarFaixaTributo()
+  // — sem esta chamada aqui, o badge "MODO TESTE · <nome>" só apareceria
+  // depois do clique em "▶ Iniciar Playlist", não durante a pausa (pedido
+  // explícito do utilizador: badge visível já na pausa).
+  actualizarBadge();
+  log(`◎ Modo Teste — ${COLLECTIONS[chave].nome} · Faixa ${faixaInicial} — à espera de "▶ Iniciar Playlist"`);
 }
 
 async function arrancar() {
