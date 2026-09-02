@@ -23,3 +23,10 @@ __pycache__/
 # + regeneração real, que copia para os caminhos de produção normais
 _preview_revisao/
 _revisao_regeneracao.json
+
+# originais pré-regeneração via YouTube (2026-09-02) — cópia local de
+# segurança das faixas substituídas pelo ecrã de Revisão YouTube, nunca
+# apagada, mas mantida fora do repositório a partir daqui. Não se aplica
+# retroactivamente: o commit af9406b ("Anos 2000") já tinha incluído
+# ficheiros desta pasta antes desta regra existir — não mexido.
+_backup_pre_regeneracao/
