@@ -1559,6 +1559,24 @@ function confirmarCollection(chave, foiAleatorio) {
   // Playlist. Ver iniciarPlaylistManual() e o poll de visibilidade do
   // botão junto de manualAdvance().
   faseGeral = 'aguardando_inicio_playlist';
+
+  // Repintura imediata (2026-09-02b): sem isto, as cabines (pontuação,
+  // histórico por Faixa) e a barra de progresso continuavam a mostrar o
+  // último estado pintado da Playlist ANTERIOR durante toda a pausa acima
+  // — com o arranque automático antigo (~1s) essa janela era curta demais
+  // para se notar; com a pausa manual, pode durar o tempo que o operador
+  // quiser. quadradosGanhos/totalFaixasPlaylist só voltavam a ser postos a
+  // zero dentro de iniciarPlaylistRegular()/iniciarRonda4(), ou seja só
+  // depois deste clique — replicamos aqui o mesmo cálculo (Tributo usa
+  // posicoes[], não musicas[]) só para a repintura ficar correcta desde
+  // já; iniciarPlaylistRegular() repete o cálculo, sem problema.
+  const colEscolhida = COLLECTIONS[chave];
+  totalFaixasPlaylist = colEscolhida.temTributo
+    ? colEscolhida.posicoes.length
+    : musicasActuais.length + (colEscolhida.mosaico !== null ? 1 : 0);
+  quadradosGanhos = new Array(totalFaixasPlaylist).fill(false);
+  renderCabines();
+  renderProgresso();
 }
 
 function iniciarPlaylistManual() {
