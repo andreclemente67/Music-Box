@@ -225,6 +225,30 @@
     z-index: 10;
     pointer-events: none;
   }
+
+  /* TESTE TEMPORÁRIO (2026-09-02m/o, pedido do utilizador) — animação de
+     entrada só na imagem do artista/banda (#momento-resposta-artista) em
+     'correcto' — correcção 2026-09-02o: era o #momento-resposta inteiro
+     (concorrente+artista), passou a ser só o bloco do artista; o
+     concorrente fica exactamente como estava. Começa em grande escala
+     (~preenche o ecrã) e encolhe até à posição/tamanho finais de sempre
+     dentro do overlay. Sem translateX aqui (ao contrário da tentativa
+     anterior no #momento-resposta) — este é um filho normal do flex
+     container, não tem posicionamento próprio a preservar, só a escala.
+     Só a entrada muda; resto do comportamento (quando aparece, esconde,
+     posição final) inalterado — ver mostrarMomentoResposta()/
+     abrirOverlay(). NÃO COMMITAR sem confirmação. */
+  @keyframes momentoRespostaEntradaTeste {
+    /* 2026-09-03b, pedido do utilizador: escala inicial aumentada de 6
+       para 10 — começa ainda maior. */
+    0%   { transform: scale(10); opacity: 0; }
+    25%  { opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .momento-resposta-entrada-teste {
+    animation: momentoRespostaEntradaTeste 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    transform-origin: center bottom;
+  }
 </style>
 </head>
 <body>
@@ -968,6 +992,12 @@ let modoTeste = false;
 // depois desse clique é que iniciarPlaylistRegular() volta a fixar
 // faixaAtual (normalmente sempre a 1) — ver aí.
 let TESTE_FAIXA_INICIAL = 1;
+// TESTE TEMPORÁRIO (2026-09-02n, pedido do utilizador) — NÃO COMMITAR:
+// quando true, acertouFaixa() não chama aguardarFimTrechoBAposAcerto() de
+// imediato — fica à espera do 'ended' do som de teste "✓ Correcto" (ver
+// acertouFaixa()). Remover esta variável junto com o resto do bloco de
+// teste do som.
+let TESTE_SOM_CONTROLA_TRECHO_B = false;
 let faixaAtual = 1;           // 1-7 (ou 1-9 na Ronda 4)
 let totalFaixasPlaylist = 7;
 let collectionsUsadas = [];
@@ -1150,6 +1180,28 @@ function mostrarMomentoResposta(i, tipo) {
 
   const abrirOverlay = () => {
     overlay.style.display = 'flex';
+    // TESTE TEMPORÁRIO (2026-09-02m/o, pedido do utilizador) — animação de
+    // entrada só em 'correcto', e só na imagem do artista/banda
+    // (#momento-resposta-artista) — correcção 2026-09-02o: aplicava-se ao
+    // #momento-resposta inteiro (concorrente+artista juntos), devia ser só
+    // o artista. O bloco do concorrente fica exactamente como estava.
+    // blocoArtista.style.display === 'block' só é verdade quando há
+    // imagem de artista a mostrar (ver ramo acima que chama abrirOverlay).
+    // Remove+força reflow+readiciona a classe, senão cliques de "Correcto"
+    // consecutivos não reiniciavam a animação. NÃO COMMITAR sem confirmação.
+    if (tipo === 'correcto' && blocoArtista.style.display === 'block') {
+      blocoArtista.classList.remove('momento-resposta-entrada-teste');
+      void blocoArtista.offsetWidth;
+      blocoArtista.classList.add('momento-resposta-entrada-teste');
+      // TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — NÃO
+      // COMMITAR: dispara a sequência "in the box" → voz do nome →
+      // Trecho B em sincronia com esta mesma animação (mesmo ponto de
+      // entrada). entradaCatalogo.id é o id do catalogo.json (ex.
+      // "dec50_01") — ver testeTocarSequenciaSom().
+      if (TESTE_SOM_CONTROLA_TRECHO_B && entradaCatalogo && entradaCatalogo.id) {
+        testeTocarSequenciaSom(entradaCatalogo.id);
+      }
+    }
     clearTimeout(momentoRespostaTimer);
     // Sincronismo visual pós-acerto (sequência §5.4b, 2026-09-02): em
     // 'correcto', o overlay NÃO se esconde sozinho por timer — fica
@@ -2344,6 +2396,123 @@ function aguardarFimTrechoBAposAcerto() {
   }
 }
 
+// TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — NÃO COMMITAR.
+// Arranca o Trecho B directamente, sem o efeito "⏩ FF"/tocarSomFF() nem
+// o corte de 400ms de fastForward() — o Trecho A já foi cortado bem
+// antes (logo ao clicar Correcto, ver acertouFaixa()), por isso não há
+// nada a "cortar por cima" aqui. Réplica do essencial de fastForward(),
+// sem o som/timing que só faz sentido numa transição a meio da faixa a
+// tocar.
+function testeArrancarTrechoBSemFF() {
+  trechoAtual = 'B';
+  tempoRestante = JANELA_TRECHO;
+  carregarTrecho();
+  atualizarTimerUI();
+  // Pedido do utilizador (17 Set 2026): depois de um acerto (sequência
+  // "in the box" → nome → Trecho B), o Trecho B só toca 7s em vez da
+  // duração completa — o público já sabe a resposta nesta altura, não
+  // faz sentido continuar a tocar tanto tempo. Isto NÃO mexe no Trecho B
+  // do jogo normal (audição sem acerto, Fast Forward a meio da faixa —
+  // ver fastForward()/aguardarFimTrechoBAposAcerto() acima, inalterados)
+  // — só este caminho, só depois de um acerto certo com a sequência de
+  // som de teste activa.
+  const TEMPO_TRECHO_B_APOS_ACERTO_MS = 7000;
+  let avancouTrechoBTeste = false;
+  const avancarUmaVezTeste = () => {
+    if (avancouTrechoBTeste) return;
+    avancouTrechoBTeste = true;
+    audio.onended = null;
+    clearTimeout(timeoutTrechoBTeste);
+    if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
+  };
+  audio.onended = avancarUmaVezTeste;
+  const timeoutTrechoBTeste = setTimeout(avancarUmaVezTeste, TEMPO_TRECHO_B_APOS_ACERTO_MS);
+  console.log('[TESTE SOM] Trecho B arrancado (sem FF) — corta aos 7s ou ao fim natural, o que vier primeiro');
+}
+
+// TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — NÃO COMMITAR.
+// "in the box" (synth+eco) → voz limpa (Alex, sem eco) a dizer o nome do
+// artista/banda da faixa actual → Trecho B, encadeados por 'ended',
+// sem pausas extra. trackId é o id do catalogo.json (ex. "dec50_01") —
+// os ficheiros de voz por nome só existem para a playlist "Anos 50"
+// neste teste (gerados à mão, um por faixa — ver
+// _preview_voz_artista_<id>.wav). Falha em qualquer passo (ficheiro em
+// falta, play() rejeitado) nunca trava o jogo — cai sempre em frente
+// até testeArrancarTrechoBSemFF().
+function testeTocarSequenciaSom(trackId) {
+  const __t0 = performance.now();
+
+  // Pré-carrega a voz do nome já aqui, em paralelo com o "in the box" —
+  // só criar o Audio() no momento de o tocar dava um pequeno atraso
+  // audível (tempo de fetch/descodificação do .wav), mesmo o código a
+  // disparar a chamada com 0-1ms de diferença. Com preload='auto' e
+  // .load() explícito, quando chegar a vez já está pronto a tocar de
+  // imediato (2026-09-17, pedido do utilizador — eliminar silêncio entre
+  // "in the box" e a voz do nome).
+  let vozNome = null;
+  try {
+    vozNome = new Audio('_preview_voz_artista_' + trackId + '.wav');
+    vozNome.preload = 'auto';
+    vozNome.load();
+  } catch (e) { vozNome = null; }
+
+  // Pedido do utilizador (17 Set 2026): quer o nome do artista "colado" ao
+  // "in the box", sem qualquer perceção de silêncio — melhor ainda do que
+  // os 0.4-0.5ms de intervalo já conseguidos com o preload. Solução:
+  // sobrepor ligeiramente — a voz arranca ~100ms ANTES de "in the box"
+  // terminar de todo, em vez de esperar pelo evento 'ended'. Isto soa como
+  // uma frase única e contínua ("...box Elvis"), em vez de duas frases
+  // coladas mas ainda distintas. A deteção usa 'timeupdate' (currentTime
+  // vs duration) com um setTimeout de segurança como rede de proteção,
+  // caso 'timeupdate' não dispare a tempo (ex.: duração desconhecida por
+  // metadata ainda não carregada) — e uma flag de guarda evita disparar a
+  // voz duas vezes.
+  const OVERLAP_MS = 100;
+  let vozIniciada = false;
+
+  const tocarVozNome = () => {
+    if (vozIniciada) return;
+    vozIniciada = true;
+    console.log('[TESTE SOM] voz do nome a começar, t=' + Math.round(performance.now() - __t0) + 'ms');
+    try {
+      if (!vozNome) vozNome = new Audio('_preview_voz_artista_' + trackId + '.wav');
+      vozNome.addEventListener('ended', () => {
+        console.log('[TESTE SOM] voz do nome terminou, t=' + Math.round(performance.now() - __t0) + 'ms — Trecho B a seguir, sem pausa');
+        testeArrancarTrechoBSemFF();
+      });
+      vozNome.play().catch((err) => {
+        console.log('[TESTE SOM] voz do nome play() rejeitado: ' + err.message);
+        testeArrancarTrechoBSemFF();
+      });
+    } catch (e) { testeArrancarTrechoBSemFF(); }
+  };
+  try {
+    const inTheBox = new Audio('_preview_som_correcto_A.wav');
+    inTheBox.addEventListener('timeupdate', () => {
+      if (!vozIniciada && inTheBox.duration && !isNaN(inTheBox.duration) &&
+          (inTheBox.duration - inTheBox.currentTime) * 1000 <= OVERLAP_MS) {
+        console.log('[TESTE SOM] "in the box" quase a acabar (sobreposição), t=' + Math.round(performance.now() - __t0) + 'ms');
+        tocarVozNome();
+      }
+    });
+    inTheBox.addEventListener('ended', () => {
+      console.log('[TESTE SOM] "in the box" terminou, t=' + Math.round(performance.now() - __t0) + 'ms');
+      tocarVozNome();
+    });
+    inTheBox.play().then(() => {
+      console.log('[TESTE SOM] "in the box" a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
+      // Rede de segurança: mesmo sem 'timeupdate' a disparar a tempo (ex.:
+      // duration ainda não disponível), garante a sobreposição usando a
+      // duração conhecida (medida: 2.150000s) menos o overlap.
+      const duracaoConhecidaMs = 2150;
+      setTimeout(tocarVozNome, Math.max(0, duracaoConhecidaMs - OVERLAP_MS));
+    }).catch((err) => {
+      console.log('[TESTE SOM] "in the box" play() rejeitado: ' + err.message);
+      tocarVozNome();
+    });
+  } catch (e) { tocarVozNome(); }
+}
+
 // MANUAL_ADVANCE (Bíblia §19.1) — atalho de régie: chama exactamente a
 // mesma função que hoje corre quando a Faixa termina sozinha (timeout ou
 // todos mudos), só que a pedido em vez de por tick(). Não toca em
@@ -2426,6 +2595,18 @@ function acertouFaixa(i) {
   // pontos[i] outra vez. Antes disto nunca acontecia na prática porque
   // faseGeral saía de 'faixa' de imediato.
   if (mutados[i] || faseGeral !== 'faixa' || vencedorFaixa !== null) return;
+  // TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — redesenho
+  // completo da sequência pós-acerto, substitui o bloco anterior
+  // (2026-09-02k...p, com atraso inicial de 1s e o efeito "⏩ FF" — já
+  // não fazem sentido nesta sequência). NÃO COMMITAR. Sequência: corte
+  // imediato do Trecho A (aqui) → imagem do artista em ecrã inteiro
+  // (animação maior, ver @keyframes) + "in the box" (synth+eco) → voz limpa
+  // a dizer o nome (disparada em sincronia com a animação — ver
+  // abrirOverlay() dentro de mostrarMomentoResposta()) → Trecho B, tudo
+  // encadeado por 'ended', sem pausas artificiais. Ver
+  // testeTocarSequenciaSom()/testeArrancarTrechoBSemFF() mais abaixo.
+  TESTE_SOM_CONTROLA_TRECHO_B = true;
+  audio.pause();
   clearInterval(timerInterval);
   // Continuidade Sonora Pós-Acerto (Bíblia §5.4b, 2026-09-01): NÃO parar o
   // áudio corrente aqui — continua a tocar a partir do ponto exacto onde
@@ -2488,7 +2669,11 @@ function acertouFaixa(i) {
     // anterior (pausaAposAcerto fixo), inalterado.
     if (!temImagem && !col.temLogo && !col.temExcertoUnico && !col.temTributo) {
       log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — a aguardar o fim do Trecho B…`);
-      aguardarFimTrechoBAposAcerto();
+      // TESTE TEMPORÁRIO (2026-09-02n) — NÃO COMMITAR: com
+      // TESTE_SOM_CONTROLA_TRECHO_B, esta chamada fica desactivada aqui —
+      // é feita a partir do 'ended' do som de teste "✓ Correcto" (ver o
+      // bloco TESTE TEMPORÁRIO logo no início desta função).
+      if (!TESTE_SOM_CONTROLA_TRECHO_B) aguardarFimTrechoBAposAcerto();
     } else {
       faseGeral = 'fim';
       log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — mosaico a revelar…`);
