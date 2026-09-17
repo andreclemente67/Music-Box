@@ -642,6 +642,13 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-Type', tipo or 'application/octet-stream')
         self.send_header('Content-Length', str(len(dados)))
+        # Sem cache nenhuma — sem isto o Chrome por vezes fica agarrado a
+        # uma versão antiga do musicbox.html/musicbox_studio.html mesmo
+        # depois de reiniciar este servidor com ficheiro já corrigido no
+        # disco (2026-09-17, bug reportado ao vivo: correcção da ordem
+        # "in the box" não aparecia mesmo depois de reabrir pelo .command).
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+        self.send_header('Pragma', 'no-cache')
         self.end_headers()
         self.wfile.write(dados)
 
