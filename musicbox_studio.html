@@ -820,6 +820,16 @@
     text-overflow: ellipsis;
   }
 
+  /* 2026-09-18, pedido do utilizador: elo_explicacao só em playlists do
+     modo Elo — ver af_playlistCriadaPeloModoElo()/slotCardHtml(). Discreta
+     de propósito (itálico + cor dimmed), nunca aparece no jogo. */
+  .posicao-elo-explicacao {
+    font-size: 10px;
+    color: var(--text3);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
   .posicao-assets {
     display: flex;
     gap: 4px;
@@ -3998,7 +4008,7 @@ async function autoMatchMp3() {
   notify(`${encontrados} ficheiro(s) MP3 associado(s) automaticamente`, 'ok');
 }
 
-function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
+function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
   const t = resolveTrack(id);
   const selected = selectedSlot && selectedSlot.kind === kind && selectedSlot.index === index;
   const dragAttrs = id ? `draggable="true" ondragstart="dragMoveStart(event,'${kind}',${index})"` : '';
@@ -4041,6 +4051,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel) {
       <div class="posicao-info">
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
         <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
+        ${mostrarElo && t.elo_explicacao ? `<div class="posicao-elo-explicacao">↳ ${escapeHtml(t.elo_explicacao)}</div>` : ''}
         <div class="timing-row">
           <button class="timing-btn" title="${cinema ? 'Definir início do Excerto (fim = início + 30s)' : 'Definir início do Trecho A (fim = início + 15s)'}" onclick="toggleTimingEditor('${kind}',${index},'a',event)">⏱ Definir início</button>
           ${precisaAuto ? `<button class="timing-btn auto-btn" title="${cinema ? "Ponto de partida — excerto em 0-30s. Confirma por audição e ajusta com 'Definir início' se necessário." : "Ponto de partida — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' se necessário."}" onclick="autoDefinirTrechos('${kind}',${index},event)">⚡ Auto</button>` : ''}
@@ -5189,12 +5200,26 @@ async function onImagemLocalEscolhida(inputEl) {
   }
 }
 
+// Devolve true se a playlist foi criada pelo modo "Elo" da tab "✦ Gerar
+// com IA" (2026-09-18, pedido do utilizador) — via feedback_id ->
+// FEEDBACK.historico[].modo_geracao, a mesma ligação já usada pelo motor
+// de aprendizagem (af_blocoHistoricoIA()). Usado só para decidir se se
+// mostra elo_explicacao nos cards da Mesa de Montagem — nunca aparece em
+// playlists de outros modos, mesmo que o campo exista por acidente numa
+// faixa (ex. reaproveitada de outro contexto).
+function af_playlistCriadaPeloModoElo(pl) {
+  if (!pl || !pl.feedback_id || !FEEDBACK || !Array.isArray(FEEDBACK.historico)) return false;
+  const registo = FEEDBACK.historico.find(r => r.id === pl.feedback_id);
+  return !!registo && registo.modo_geracao === 'elo';
+}
+
 function renderSlotsSimples(pl) {
   const exp = expectedCount(pl.tipo);
   const musicas = pl.musicas || [];
+  const mostrarElo = af_playlistCriadaPeloModoElo(pl);
   let html = `<div class="detail-label">Posições (${musicas.length}${exp?'/'+exp:''})</div><div id="posicoes-list">`;
   musicas.forEach((id, i) => {
-    html += slotCardHtml('musica', i, id, 'tipo-audio', String(i+1).padStart(2,'0'));
+    html += slotCardHtml('musica', i, id, 'tipo-audio', String(i+1).padStart(2,'0'), mostrarElo);
     if (i === 0 && id) {
       if (pl.tipo === 'retrato') {
         html += `<button class="fill-artista-btn" title="Só Retrato: procura no catálogo outras faixas do mesmo artista/banda da posição 01 e preenche as posições 02-08 com elas, ordenadas por década. Nunca mexe na posição 01." onclick="preencherComArtista()">Preencher com este artista</button>`;
@@ -5218,7 +5243,7 @@ function renderSlotsSimples(pl) {
       <div class="posicao-info"><div class="posicao-titulo" style="color:var(--text3)">Retrato Sonoro não usa mosaico (regra da fonte)</div></div></div>
     </div>`;
   } else {
-    html += slotCardHtml('mosaico', 0, pl.mosaico ? pl.mosaico.id : null, 'tipo-mosaico', '🧩');
+    html += slotCardHtml('mosaico', 0, pl.mosaico ? pl.mosaico.id : null, 'tipo-mosaico', '🧩', mostrarElo);
   }
   return html;
 }
@@ -7770,6 +7795,13 @@ function criarFaixaRascunhoIA(sugestao) {
     instrumento: [],
     tags: Array.isArray(sugestao.tags) ? sugestao.tags.slice(0, 3) : [],
     universal: !!sugestao.universal,
+    // 2026-09-18, pedido do utilizador: preserva a explicação da ligação ao
+    // elo (só presente quando esta faixa veio do fluxo "✎ Substituir" —
+    // sugestão automática ou validada a partir do texto do curador, ver
+    // af_aplicarSugestaoSubstitutoIA()) para a Mesa de Montagem a poder
+    // mostrar (slotCardHtml/af_playlistCriadaPeloModoElo) — só em
+    // playlists do modo Elo, nunca na app de jogo.
+    elo_explicacao: sugestao.elo_explicacao || null,
     nivel: 2,
     trecho_a: { ficheiro: '', inicio: null, fim: null },
     trecho_b: null,
