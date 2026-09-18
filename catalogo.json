@@ -22,8 +22,8 @@
     "nivel": 1,
     "trecho_a": {
       "ficheiro": "80_01_a.mp3",
-      "inicio": null,
-      "fim": null
+      "inicio": 0,
+      "fim": 12
     },
     "trecho_b": {
       "ficheiro": "80_01_b.mp3",
@@ -8242,8 +8242,8 @@
     "nivel": 1,
     "trecho_a": {
       "ficheiro": "tv_02_a.mp3",
-      "inicio": 0,
-      "fim": 12
+      "inicio": 2.2,
+      "fim": 14.2
     },
     "trecho_b": {
       "ficheiro": "tv_02_b.mp3",
