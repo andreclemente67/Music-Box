@@ -163,7 +163,15 @@ ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 ANTHROPIC_MODEL = 'claude-sonnet-4-6'
 ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages'
 ANTHROPIC_VERSION = '2023-06-01'
-GERAR_FAIXAS_MAX_PROMPT = 4000   # protecção contra corpos disparatados
+GERAR_FAIXAS_MAX_PROMPT = 12000  # protecção contra corpos disparatados — subido de
+# 4000 (2026-09-18): o modo Elo sozinho (contexto mais verboso, +
+# instrução de descritivo_apresentador/nota_curadoria) já passava dos
+# 4000 caracteres, fazendo o Studio cair sempre para o fallback manual
+# (ver GERAR_FAIXAS_MAX_PROMPT abaixo e af_gerarFaixasIAServidor() no
+# Studio) — o bloco de histórico de feedback (montarPromptIA() ->
+# af_blocoHistoricoIA(), até 20 registos) só vai crescer este número.
+# Continua a ser um limite arbitrário de protecção (a API Anthropic
+# aceita muito mais), não um limite técnico real.
 GERAR_FAIXAS_TIMEOUT = 60        # segundos — geração de texto pode demorar
 
 # ── Gerar trechos A/B a partir do YouTube (gerar_faixa.py) ──────────────

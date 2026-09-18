@@ -2119,10 +2119,12 @@
                (artistasProibidosExtra em af_infoModoGeracaoIA()).
            Em qualquer modo, af_gerarFaixasIAServidor() chama directamente
            POST /gerar-faixas em _servidor_escrita.py — sem copiar/colar
-           nada (ver DECISIONS.md 2026-08-13/21; substitui o fluxo manual
-           de copiar o prompt para claude.ai e colar a resposta, que ainda
-           fica disponível como fallback — caixa "Colar resposta JSON" —
-           se o servidor falhar). O prompt pede à IA para sugerir também os
+           nada (ver DECISIONS.md 2026-08-13/21). O fluxo manual antigo
+           (copiar o prompt para claude.ai, colar a resposta) foi removido
+           por completo em 2026-09-18, pedido explícito do utilizador —
+           uma falha (servidor em baixo, ANTHROPIC_API_KEY em falta,
+           prompt demasiado longo, etc.) fica só como erro claro no painel
+           de progresso, sem alternativa manual. O prompt pede à IA para sugerir também os
            metadados da playlist (nome/geo/décadas/género/dificuldade/tipo,
            excepto os fixos em modo Categoria), além das 6 músicas +
            mosaico. O resultado preenche automaticamente a tab "Estrutura"
@@ -2262,19 +2264,6 @@
           </div>
 
           <div id="np-ia-progresso" style="margin-top:6px;"></div>
-
-          <div id="np-ia-prompt-wrap" style="display:none;margin-top:8px;">
-            <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:block;">Prompt — copia e cola no Claude</label>
-            <textarea class="detail-input" id="np-ia-prompt" rows="8" readonly style="font-family:var(--mono);font-size:10px;white-space:pre-wrap;"></textarea>
-            <div style="display:flex;gap:6px;margin-top:4px;">
-              <button class="btn" type="button" onclick="copiarPromptIA()">📋 Copiar prompt</button>
-              <a class="btn" href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-flex;align-items:center;">↗ Abrir Claude</a>
-            </div>
-
-            <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 3px;display:block;">Colar resposta JSON</label>
-            <textarea class="detail-input" id="np-ia-resposta" rows="6" placeholder='{"playlist": {...}, "musicas": [...], "mosaico": {...}}' style="font-family:var(--mono);font-size:10px;"></textarea>
-            <button class="btn" type="button" style="margin-top:4px;" onclick="importarResultadoIA()">Importar</button>
-          </div>
 
           <div id="np-ia-resultado" style="margin-top:10px;"></div>
         </div>
@@ -5726,7 +5715,7 @@ function af_verMontagemAgora() {
 // /gerar-faixa (por artista+título, nunca URL) faixa a faixa. Usado por
 // dois chamadores:
 // (1) createPlaylist(), quando a semente da geração via IA veio de um URL
-//     do YouTube (ver sementeYoutubeUrl em importarResultadoIA) — pedido
+//     do YouTube (ver sementeYoutubeUrl em af_aplicarResultadoIA) — pedido
 //     explícito do utilizador: nesse caso confia-se que a busca por
 //     artista+título no YouTube encontra o vídeo certo para cada faixa
 //     sugerida;
@@ -6429,26 +6418,19 @@ function createPlaylist() {
 }
 
 // ─── ✦ GERAR FAIXAS COM IA (modal Nova Playlist, só TIPO === 'STD') ─────
-// Fluxo manual copiar/colar: "✦ Gerar" só monta o prompt (montarPromptIA)
-// e mostra-o numa caixa de texto para copiar e colar em claude.ai — nada
-// daqui chama nenhuma API. O utilizador cola a resposta JSON de volta no
-// campo "Colar resposta JSON" e clica "Importar". O resultado fica em
-// NP_IA_RESULTADO, editável na UI (renderResultadoIA), até "Criar
-// playlist" o converter em faixas-rascunho via criarFaixaRascunhoIA()
-// (mesmo padrão que colocarFaixaYoutubeNaProximaVaga já usa para
-// resultados do YouTube).
+// "✦ Gerar" chama af_gerarFaixasIAServidor(), que faz POST /gerar-faixas
+// directamente (sem copiar/colar nada — o antigo fluxo manual foi
+// removido em 2026-09-18, ver comentário acima de af_gerarFaixasIAServidor()).
+// O resultado fica em NP_IA_RESULTADO, editável na UI (renderResultadoIA),
+// até "Criar playlist" o converter em faixas-rascunho via
+// criarFaixaRascunhoIA() (mesmo padrão que colocarFaixaYoutubeNaProximaVaga
+// já usa para resultados do YouTube).
 let NP_IA_RESULTADO = null; // { musicas: [{titulo,artista,geografia,decada,estilo}], mosaico: {categoria,pessoa,titulo,artista,geografia,decada,estilo} | null, nFaixasFixas: number — quantas de musicas[0..N-1] são faixas fixas desta geração (semente única, semente múltipla; 0 para tema/categoria/playlist-youtube — ver af_infoModoGeracaoIA/af_aplicarResultadoIA/removerIAMusica), sementeYoutubeUrl: string — só preenchida no modo URL com faixa fixa; usada por createPlaylist() para disparar af_gerarTrechosAutomaticoIA() }
 
 function limparResultadoIA() {
   NP_IA_RESULTADO = null;
   const el = document.getElementById('np-ia-resultado');
   if (el) el.innerHTML = '';
-  const promptWrap = document.getElementById('np-ia-prompt-wrap');
-  if (promptWrap) promptWrap.style.display = 'none';
-  const promptEl = document.getElementById('np-ia-prompt');
-  if (promptEl) promptEl.value = '';
-  const respostaEl = document.getElementById('np-ia-resposta');
-  if (respostaEl) respostaEl.value = '';
   const ytUrlEl = document.getElementById('np-ia-youtube-url');
   if (ytUrlEl) ytUrlEl.value = '';
 
@@ -6659,9 +6641,11 @@ Corrige substituindo APENAS a(s) faixa(s)/mosaico envolvidos por uma alternativa
 // copiar/colar nada. O endpoint chama a API Anthropic do lado do servidor
 // com ANTHROPIC_API_KEY (nunca chega ao browser — ver DECISIONS.md
 // 2026-08-13). Se falhar (servidor não a correr, chave não definida,
-// resposta sem JSON válido, etc.), cai para o fluxo manual antigo —
-// mostra o prompt para copiar e colar em claude.ai à mão (gerarPromptIA)
-// — em vez de deixar o utilizador sem alternativa nenhuma.
+// prompt demasiado longo, resposta sem JSON válido, etc.), mostra um erro
+// claro no painel de progresso — 2026-09-18, pedido explícito do
+// utilizador: o antigo fallback manual (copiar prompt/colar resposta,
+// gerarPromptIA()) foi removido por completo, em todos os modos — nunca
+// deve ser preciso, agora que o endpoint está confirmado a funcionar.
 //
 // Pedido explícito do utilizador: se a resposta tiver artista(s)
 // repetido(s) (incluindo mosaico/pessoa — af_detectarArtistasRepetidos),
@@ -6699,9 +6683,8 @@ async function af_gerarFaixasIAServidor() {
       }
     } catch (e) {
       console.error('[af_gerarFaixasIAServidor]', e);
-      af_definirProgressoIA('Falha a chamar o servidor — a mostrar o prompt para copiares à mão.', 'erro');
-      notify(`Falha a gerar faixas com IA: ${e.message} — a mostrar o prompt para copiares à mão`, 'err');
-      gerarPromptIA();
+      af_definirProgressoIA(`Falha a gerar faixas com IA: ${e.message}`, 'erro');
+      notify(`Falha a gerar faixas com IA: ${e.message}`, 'err');
       return;
     }
 
@@ -7023,38 +7006,6 @@ Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem
 O array "musicas" tem de ter exactamente ${nFaixasIA} objectos.`;
 }
 
-// Monta o prompt (montarPromptIA) e mostra-o na caixa de texto para
-// copiar — não faz nenhum pedido de rede.
-// Só chamado como fallback (ver af_gerarFaixasIAServidor) quando o
-// servidor falha a responder — nunca no caminho feliz, por isso
-// actualiza sempre o painel de progresso para a mensagem de fallback
-// manual, sem verificações condicionais sobre o texto anterior.
-function gerarPromptIA() {
-  const promptWrap = document.getElementById('np-ia-prompt-wrap');
-  const promptEl = document.getElementById('np-ia-prompt');
-  if (!promptWrap || !promptEl) return;
-  promptEl.value = montarPromptIA();
-  promptWrap.style.display = 'block';
-  promptEl.focus();
-  promptEl.select();
-  af_definirProgressoIA('Prompt pronto — copia e cola em claude.ai, depois cola a resposta abaixo.', 'erro');
-}
-
-async function copiarPromptIA() {
-  const promptEl = document.getElementById('np-ia-prompt');
-  if (!promptEl) return;
-  try {
-    await navigator.clipboard.writeText(promptEl.value);
-    notify('Prompt copiado', 'ok');
-  } catch (e) {
-    // Clipboard API pode falhar (permissão, contexto não seguro) — cai
-    // para seleccionar o texto e deixar o utilizador copiar à mão.
-    promptEl.focus();
-    promptEl.select();
-    notify('Não consegui copiar automaticamente — selecciona e copia (Cmd+C)', 'err');
-  }
-}
-
 // Tenta mapear um valor livre vindo da IA (ex.: "Portugal", "pop") para um
 // código válido de uma lista OPCOES_* ({v,label}) — primeiro por código
 // exacto, depois por substring do label. Devolve `fallback` se não
@@ -7215,13 +7166,13 @@ function af_detectarArtistasRepetidos(musicas, mosaico, artistasExternos) {
   return conflitos;
 }
 
-// Núcleo de importação partilhado por importarResultadoIA() (fluxo manual
-// — colar JSON copiado de claude.ai) e af_gerarFaixasIAServidor() (fluxo
-// automático — POST /gerar-faixas devolve o objecto já parseado, ver
-// DECISIONS.md 2026-08-21). Aplica os metadados sugeridos da playlist à
-// tab Estrutura e preenche NP_IA_RESULTADO + a lista editável. `res` já
-// tem de vir como objecto (não texto) — quem lê texto (colado ou de rede)
-// faz o parse antes de chamar isto. Devolve true se importou alguma coisa.
+// Chamado por af_gerarFaixasIAServidor() (POST /gerar-faixas devolve o
+// objecto já parseado, ver DECISIONS.md 2026-08-21 — o antigo fluxo
+// manual de colar JSON copiado de claude.ai foi removido em 2026-09-18).
+// Aplica os metadados sugeridos da playlist à tab Estrutura e preenche
+// NP_IA_RESULTADO + a lista editável. `res` já tem de vir como objecto
+// (não texto) — af_gerarFaixasIAServidor() já faz `r.json()` antes de
+// chamar isto. Devolve true se importou alguma coisa.
 function af_aplicarResultadoIA(res) {
   if (!res || typeof res !== 'object') { notify('A IA não devolveu um resultado válido', 'err'); return false; }
 
@@ -7276,30 +7227,6 @@ function af_aplicarResultadoIA(res) {
   const avisoSemente = nFaixasFixas ? ` (${nFaixasFixas} faixa(s) fixa(s) no início)` : '';
   notify(`${musicas.length} faixa(s) importada(s)${avisoSemente}${NP_IA_RESULTADO.mosaico ? ' + 1 mosaico' : ''}${avisoMeta} — revê na tab Verificação antes de "Criar playlist"`, 'ok');
   return true;
-}
-
-// Lê o JSON colado em "Colar resposta JSON" (fluxo manual, mantido como
-// alternativa — ver af_gerarFaixasIAServidor() para o fluxo automático),
-// tenta parseá-lo (com tolerância a texto extra à volta — ex. o Claude a
-// explicar a resposta) e entrega a af_aplicarResultadoIA().
-function importarResultadoIA() {
-  const respostaEl = document.getElementById('np-ia-resposta');
-  if (!respostaEl) return;
-  const bruto = respostaEl.value.trim();
-  if (!bruto) { notify('Cola primeiro a resposta JSON do Claude', 'err'); return; }
-
-  let res = null;
-  try {
-    res = JSON.parse(bruto);
-  } catch (e) {
-    const inicio = bruto.indexOf('{'), fim = bruto.lastIndexOf('}');
-    if (inicio !== -1 && fim > inicio) {
-      try { res = JSON.parse(bruto.slice(inicio, fim + 1)); } catch (e2) { /* deixa null */ }
-    }
-  }
-  if (!res) { notify('Não consegui interpretar isso como JSON válido', 'err'); return; }
-
-  af_aplicarResultadoIA(res);
 }
 
 // Sistema de feedback (2026-09-18, pedido do utilizador) — índice da
