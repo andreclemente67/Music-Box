@@ -7233,6 +7233,14 @@ function af_aplicarResultadoIA(res) {
 // faixa com a caixa de pesquisa "✎ Substituir" aberta (null = nenhuma).
 // Só uma de cada vez, por simplicidade — abrir noutra fecha a anterior.
 let AF_IA_SUBSTITUIR_INDEX = null;
+// Sugestões da IA para substituir a faixa em AF_IA_SUBSTITUIR_INDEX
+// (2026-09-18, pedido do utilizador) — null enquanto nada foi pedido;
+// {carregando:true} durante o pedido; {sugestoes:[...]} com 1-3
+// alternativas devolvidas; {manual:true} quando se deve mostrar a
+// pesquisa manual no catálogo (erro no pedido, IA sem sugestões, ou o
+// curador rejeitou as 3). Reposto sempre que AF_IA_SUBSTITUIR_INDEX muda —
+// ver af_pedirSubstitutosIA()/af_renderSubstitutosIA().
+let AF_IA_SUBSTITUTOS_ESTADO = null;
 
 const AF_CORES_DECISAO_IA = {
   aceite: 'var(--green, #4ec98e)',
@@ -7243,7 +7251,7 @@ const AF_CORES_DECISAO_IA = {
 function renderResultadoIA() {
   const el = document.getElementById('np-ia-resultado');
   if (!el) return;
-  if (!NP_IA_RESULTADO) { el.innerHTML = ''; AF_IA_SUBSTITUIR_INDEX = null; return; }
+  if (!NP_IA_RESULTADO) { el.innerHTML = ''; AF_IA_SUBSTITUIR_INDEX = null; AF_IA_SUBSTITUTOS_ESTADO = null; return; }
 
   function linhaMusica(m, i) {
     const ehSemente = i < NP_IA_RESULTADO.nFaixasFixas;
@@ -7260,7 +7268,7 @@ function renderResultadoIA() {
       <div style="display:flex;gap:4px;align-items:center;margin-top:3px;padding-left:24px;">
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${m.decisao==='aceite'?'background:'+AF_CORES_DECISAO_IA.aceite+';color:#0a2015;border-color:'+AF_CORES_DECISAO_IA.aceite+';':''}" onclick="af_decidirIAMusica(${i}, 'aceite')" title="Aceitar esta sugestão">✓ Aceitar</button>
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${m.decisao==='rejeitada'?'background:'+AF_CORES_DECISAO_IA.rejeitada+';color:#2a0d0d;border-color:'+AF_CORES_DECISAO_IA.rejeitada+';':''}" onclick="af_decidirIAMusica(${i}, 'rejeitada')" title="Rejeitar esta sugestão">✗ Rejeitar</button>
-        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_abrirSubstituirIAMusica(${i})" title="Procurar uma faixa alternativa no catálogo">✎ Substituir</button>
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_abrirSubstituirIAMusica(${i})" title="Pedir 3 alternativas à IA (ou pesquisar no catálogo, se rejeitares as 3)">✎ Substituir</button>
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_marcarIAMosaico(${i})" title="Marcar esta faixa como o mosaico (posição 8), em vez do sugerido pela IA">★ Mosaico</button>
       </div>`;
     if (m.decisao === 'rejeitada') {
@@ -7272,7 +7280,7 @@ function renderResultadoIA() {
       html += `<div style="padding-left:24px;margin-top:3px;font-size:9px;color:var(--text3);font-family:var(--mono);">substituída — original: "${escapeHtml(m.substituicao_original.titulo)}" — ${escapeHtml(m.substituicao_original.artista)}</div>`;
     }
     if (AF_IA_SUBSTITUIR_INDEX === i) {
-      html += af_renderBuscaSubstitutoIA(i);
+      html += af_renderSubstitutosIA(i);
     }
     html += `</div>`;
     return html;
@@ -7313,8 +7321,190 @@ function af_renderBuscaSubstitutoIA(i) {
   </div>`;
 }
 
+// 2026-09-18, pedido do utilizador: clicar "✎ Substituir" já não abre logo
+// a pesquisa manual — pede primeiro 3 alternativas à IA (af_pedirSubstitutosIA).
+// A pesquisa manual só aparece se a IA falhar/não tiver sugestões ou se o
+// curador rejeitar as 3 (af_rejeitarSugestoesSubstitutoIA).
 function af_abrirSubstituirIAMusica(i) {
-  AF_IA_SUBSTITUIR_INDEX = AF_IA_SUBSTITUIR_INDEX === i ? null : i;
+  const abrir = AF_IA_SUBSTITUIR_INDEX !== i;
+  AF_IA_SUBSTITUIR_INDEX = abrir ? i : null;
+  AF_IA_SUBSTITUTOS_ESTADO = null;
+  renderResultadoIA();
+  if (abrir) af_pedirSubstitutosIA(i);
+}
+
+// Artistas já "em uso" nesta playlist em construção, para o pedido de
+// substituição da faixa i — faixas fixas/proibidas da geração
+// (af_nomesProibidosIA) + as restantes faixas da lista (exclui a própria
+// faixa i, que está a ser substituída) + mosaico (artista e pessoa a
+// adivinhar). Usado tanto no texto do prompt (af_montarPromptSubstituicaoIA)
+// como na validação client-side das sugestões devolvidas
+// (af_filtrarSugestoesArtistaRepetido) — a mesma lista dos dois lados,
+// para o filtro nunca rejeitar algo que o prompt não tinha pedido para
+// evitar.
+function af_artistasNaPlaylistParaSubstituicao(i) {
+  const info = af_infoModoGeracaoIA();
+  const artistasPlaylist = new Set(af_nomesProibidosIA(info).filter(Boolean));
+  NP_IA_RESULTADO.musicas.forEach((outra, j) => {
+    if (j !== i && outra.artista) artistasPlaylist.add(outra.artista);
+  });
+  if (NP_IA_RESULTADO.mosaico) {
+    if (NP_IA_RESULTADO.mosaico.artista) artistasPlaylist.add(NP_IA_RESULTADO.mosaico.artista);
+    if (NP_IA_RESULTADO.mosaico.pessoa) artistasPlaylist.add(NP_IA_RESULTADO.mosaico.pessoa);
+  }
+  return [...artistasPlaylist];
+}
+
+// Constrói o prompt de substituição — mesmo contexto/elo desta geração
+// (af_infoModoGeracaoIA) + a faixa rejeitada (título/artista/motivo) + os
+// artistas já usados nesta playlist em construção
+// (af_artistasNaPlaylistParaSubstituicao), para a IA não repetir nenhum.
+// Pede exactamente 3 alternativas, no mesmo formato de campos usado no
+// resto da lista (titulo/artista/geografia/decada/estilo/genero/tags/
+// universal — ver montarPromptIA()).
+function af_montarPromptSubstituicaoIA(i) {
+  const info = af_infoModoGeracaoIA();
+  const m = NP_IA_RESULTADO.musicas[i];
+  const listaArtistas = af_artistasNaPlaylistParaSubstituicao(i);
+
+  const motivoTxt = m.motivo ? ` Motivo da rejeição: "${m.motivo}".` : '';
+  const artistasTxt = listaArtistas.length
+    ? ` Os seguintes artistas já estão nesta playlist e NÃO podem aparecer em nenhuma das 3 alternativas: ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
+    : '';
+
+  return `Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
+
+Uma das faixas sugeridas foi rejeitada pelo curador: "${m.titulo}" — ${m.artista}.${motivoTxt}${artistasTxt}
+
+Sugere exactamente 3 faixas alternativas REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas ou factos), cada uma com uma ligação clara ao mesmo contexto acima, diferentes entre si e dos artistas já listados. Para cada uma indica: titulo, artista, geografia, decada (formato "AAAAs"), estilo (descrição curta do estilo), genero (texto livre, ex.: "Rock", "Jazz"), tags (array de até 3 tags descritivas curtas), universal (true se a faixa é reconhecida transgeracionalmente).
+
+Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
+{
+  "sugestoes": [
+    {"titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true}
+  ]
+}
+O array "sugestoes" tem de ter exactamente 3 objectos.`;
+}
+
+// Validação client-side (2026-09-18, pedido do utilizador): a IA por
+// vezes ignora a lista de artistas proibidos do prompt (visto num teste
+// real — devolveu "A Horse With No Name — America" com "America" já
+// noutra faixa da mesma playlist). Em vez de confiar só na instrução do
+// prompt, filtra aqui também — compara por af_normalizarArtista() (mesma
+// normalização usada em af_detectarArtistasRepetidos, tolerante a
+// maiúsculas/espaços) contra af_artistasNaPlaylistParaSubstituicao(i), e
+// descarta qualquer sugestão cujo artista já esteja em uso. Corre ANTES
+// de af_renderSubstitutosIA() mostrar seja o que for ao curador.
+function af_filtrarSugestoesArtistaRepetido(sugestoes, i) {
+  const proibidos = new Set(af_artistasNaPlaylistParaSubstituicao(i).map(af_normalizarArtista).filter(Boolean));
+  return sugestoes.filter(s => {
+    const artista = af_normalizarArtista(s.artista);
+    return !artista || !proibidos.has(artista);
+  });
+}
+
+// Chama POST /gerar-faixas (mesmo endpoint genérico de
+// af_gerarFaixasIAServidor(), _servidor_escrita.py não precisa de saber
+// nada sobre "substituição" — só recebe um prompt e devolve o JSON que a
+// IA respondeu) com o prompt de af_montarPromptSubstituicaoIA(), depois
+// filtra a resposta com af_filtrarSugestoesArtistaRepetido() antes de
+// mostrar ao curador. Qualquer falha (servidor em baixo, resposta
+// inválida, sem sugestões válidas após o filtro) cai automaticamente na
+// pesquisa manual — nunca deixa o curador bloqueado sem alternativa
+// nenhuma (mesmo espírito de af_gerarFaixasIAServidor()).
+async function af_pedirSubstitutosIA(i) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.musicas[i]) return;
+  AF_IA_SUBSTITUTOS_ESTADO = { carregando: true };
+  renderResultadoIA();
+
+  try {
+    const prompt = af_montarPromptSubstituicaoIA(i);
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-faixas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+      keepalive: true,
+    });
+    const dados = await r.json().catch(() => null);
+    if (!r.ok || !dados || !dados.ok) throw new Error((dados && dados.erro) || `HTTP ${r.status}`);
+    let sugestoes = Array.isArray(dados.resultado && dados.resultado.sugestoes) ? dados.resultado.sugestoes.slice(0, 3) : [];
+    const nAntesFiltro = sugestoes.length;
+    sugestoes = af_filtrarSugestoesArtistaRepetido(sugestoes, i);
+    if (sugestoes.length < nAntesFiltro) {
+      console.warn('[af_pedirSubstitutosIA] sugestão(ões) descartada(s) — artista já na playlist', nAntesFiltro - sugestoes.length);
+    }
+    if (!sugestoes.length) throw new Error('a IA não devolveu sugestões válidas (sem repetição de artista)');
+    if (AF_IA_SUBSTITUIR_INDEX !== i) return; // curador fechou/mudou de faixa entretanto
+    AF_IA_SUBSTITUTOS_ESTADO = { sugestoes };
+  } catch (e) {
+    console.error('[af_pedirSubstitutosIA]', e);
+    if (AF_IA_SUBSTITUIR_INDEX !== i) return;
+    AF_IA_SUBSTITUTOS_ESTADO = { manual: true };
+    notify(`Falha a pedir sugestões à IA (${e.message}) — pesquisa manual disponível.`, 'err');
+  }
+  renderResultadoIA();
+}
+
+// Bloco inline mostrado sob a faixa com "✎ Substituir" aberto: enquanto
+// carrega, as 3 sugestões da IA (escolher uma ou rejeitar todas), ou a
+// pesquisa manual como fallback (erro/sem sugestões da IA, ou depois de
+// rejeitar as 3) — ver AF_IA_SUBSTITUTOS_ESTADO.
+function af_renderSubstitutosIA(i) {
+  const estado = AF_IA_SUBSTITUTOS_ESTADO;
+  if (!estado || estado.carregando) {
+    return `<div style="padding-left:24px;margin-top:4px;font-size:10px;color:var(--text3);">A pedir sugestões à IA…</div>`;
+  }
+  if (estado.manual) {
+    return af_renderBuscaSubstitutoIA(i);
+  }
+  const sugestoes = estado.sugestoes || [];
+  let html = `<div style="padding-left:24px;margin-top:4px;">
+    <div style="font-size:9px;color:var(--text3);margin-bottom:3px;">Sugestões da IA — escolhe uma ou rejeita todas:</div>`;
+  html += sugestoes.map((s, si) => `
+    <div style="display:flex;gap:4px;align-items:center;padding:3px 6px;margin-bottom:2px;border:1px solid var(--border2);border-radius:4px;">
+      <div style="flex:1;font-size:10px;">${escapeHtml(s.titulo || '')} — ${escapeHtml(s.artista || '')}
+        <span style="color:var(--text3);">(${escapeHtml(s.geografia || '')} · ${escapeHtml(s.decada || '')} · ${escapeHtml(s.genero || '')})</span>
+      </div>
+      <button type="button" class="btn" style="padding:2px 7px;font-size:9px;" onclick="af_aplicarSugestaoSubstitutoIA(${i}, ${si})">✓ Usar esta</button>
+    </div>`).join('');
+  html += `<button type="button" class="btn" style="padding:2px 7px;font-size:9px;margin-top:2px;" onclick="af_rejeitarSugestoesSubstitutoIA(${i})">✗ Rejeitar as 3 — pesquisar no catálogo</button>
+  </div>`;
+  return html;
+}
+
+// Aplica uma das 3 sugestões da IA — mesmo efeito de
+// af_aplicarSubstituicaoIAMusica(), mas a partir de um objecto sugerido
+// pela IA (sem id de catálogo — só passa a existir no catálogo como
+// rascunho em "Criar playlist", via criarFaixaRascunhoIA(), tal como
+// qualquer outra faixa sugerida por IA nesta lista).
+function af_aplicarSugestaoSubstitutoIA(i, si) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.musicas[i]) return;
+  const s = AF_IA_SUBSTITUTOS_ESTADO && AF_IA_SUBSTITUTOS_ESTADO.sugestoes && AF_IA_SUBSTITUTOS_ESTADO.sugestoes[si];
+  if (!s) return;
+  const m = NP_IA_RESULTADO.musicas[i];
+  m.substituicao_original = { titulo: m.titulo || '', artista: m.artista || '' };
+  m.titulo = s.titulo || '';
+  m.artista = s.artista || '';
+  m.geografia = s.geografia || '';
+  m.decada = s.decada || '';
+  m.estilo = s.estilo || '';
+  m.tags = s.tags || [];
+  m.genero = s.genero || '';
+  m.universal = !!s.universal;
+  m.decisao = 'substituida';
+  m.motivo = 'substituída por sugestão da IA';
+  AF_IA_SUBSTITUIR_INDEX = null;
+  AF_IA_SUBSTITUTOS_ESTADO = null;
+  renderResultadoIA();
+}
+
+// Rejeitar as 3 sugestões — abre a pesquisa manual no catálogo como
+// fallback, pedido explícito do utilizador ("se todas forem rejeitadas,
+// aí sim abre a pesquisa manual").
+function af_rejeitarSugestoesSubstitutoIA(i) {
+  if (AF_IA_SUBSTITUIR_INDEX !== i) return;
+  AF_IA_SUBSTITUTOS_ESTADO = { manual: true };
   renderResultadoIA();
 }
 
@@ -7352,6 +7542,7 @@ function af_aplicarSubstituicaoIAMusica(i, idCatalogo) {
   m.decisao = 'substituida';
   m.motivo = 'substituída por outra faixa do catálogo';
   AF_IA_SUBSTITUIR_INDEX = null;
+  AF_IA_SUBSTITUTOS_ESTADO = null;
   renderResultadoIA();
 }
 
@@ -7372,6 +7563,7 @@ function af_marcarIAMosaico(i) {
     decisao: null, motivo: null,
   };
   AF_IA_SUBSTITUIR_INDEX = null;
+  AF_IA_SUBSTITUTOS_ESTADO = null;
   renderResultadoIA();
   notify('Faixa marcada como mosaico (posição 8) — preenche categoria/pessoa no bloco do mosaico.', 'ok');
 }
@@ -7425,6 +7617,7 @@ function af_dropIAMusica(ev, i) {
   // automaticamente aqui.
   AF_IA_DRAG_INDEX = null;
   AF_IA_SUBSTITUIR_INDEX = null;
+  AF_IA_SUBSTITUTOS_ESTADO = null;
   renderResultadoIA();
 }
 
@@ -7441,7 +7634,7 @@ function removerIAMusica(i) {
   // meio das faixas fixas desalinhava a marca das seguintes.
   if (i < NP_IA_RESULTADO.nFaixasFixas) NP_IA_RESULTADO.nFaixasFixas--;
   NP_IA_RESULTADO.musicas.splice(i, 1);
-  if (AF_IA_SUBSTITUIR_INDEX === i) AF_IA_SUBSTITUIR_INDEX = null;
+  if (AF_IA_SUBSTITUIR_INDEX === i) { AF_IA_SUBSTITUIR_INDEX = null; AF_IA_SUBSTITUTOS_ESTADO = null; }
   renderResultadoIA();
 }
 
