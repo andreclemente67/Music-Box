@@ -2085,8 +2085,8 @@
     },
     "trecho_b": {
       "ficheiro": "AME_03_b.mp3",
-      "inicio": null,
-      "fim": null
+      "inicio": 15,
+      "fim": 27
     },
     "full": null,
     "elegivel_mosaico": true,
