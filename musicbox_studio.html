@@ -2138,6 +2138,7 @@
             <button type="button" class="np-modo-tab" data-modo="categoria" onclick="af_switchModoGeracaoIA('categoria')">Categoria</button>
             <button type="button" class="np-modo-tab" data-modo="semente-multipla" onclick="af_switchModoGeracaoIA('semente-multipla')">Semente múltipla</button>
             <button type="button" class="np-modo-tab" data-modo="playlist-youtube" onclick="af_switchModoGeracaoIA('playlist-youtube')">Playlist YouTube</button>
+            <button type="button" class="np-modo-tab" data-modo="elo" onclick="af_switchModoGeracaoIA('elo')">Elo</button>
           </div>
 
           <!-- MODO 1 — URL do YouTube (comportamento original, inalterado). -->
@@ -2231,6 +2232,18 @@
             <div id="np-ia-playlist-lista" style="margin-top:8px;"></div>
           </div>
 
+          <!-- MODO 6 — Elo: uma palavra/frase curta é o elo editorial que
+               liga toda a playlist; a IA explora todas as dimensões
+               possíveis de ligação (nome, título, letra, filme, imaginário,
+               lugar, etc.), navegando livremente pelos tags do catálogo —
+               ver af_infoModoGeracaoIA() caso 'elo' e o parágrafo extra do
+               mosaico em montarPromptIA(). Sem faixas fixas, como Tema. -->
+          <div class="np-modo-content" id="np-modo-elo">
+            <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:block;">Elo</label>
+            <input class="detail-input" type="text" id="np-ia-elo" placeholder="Ex: Deserto, Amor, Anos 60 em Lisboa...">
+            <button class="btn" type="button" style="margin-top:6px;" onclick="af_gerarFaixasIAServidor()">✦ Gerar</button>
+          </div>
+
           <div id="np-ia-progresso" style="margin-top:6px;"></div>
 
           <div id="np-ia-prompt-wrap" style="display:none;margin-top:8px;">
@@ -2273,6 +2286,55 @@
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('modal-playlist')">Cancelar</button>
       <button class="btn btn-primary" onclick="createPlaylist()">Criar playlist</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FEEDBACK DE EPISÓDIO (2026-09-18, pedido do utilizador) — aberto
+     pelo botão "+ Feedback de Episódio" no cabeçalho da Mesa de Montagem
+     (playlist-header) — ver af_abrirFeedbackEpisodio()/
+     af_guardarFeedbackEpisodio(). Grava em feedback_jogo do registo
+     feedback.json associado a esta playlist (pl.feedback_id). -->
+<div class="modal-overlay" id="modal-feedback-episodio">
+  <div class="modal" style="width:560px;">
+    <div class="modal-header">
+      <span class="modal-title">Feedback de Episódio</span>
+      <button class="close-btn" onclick="closeModal('modal-feedback-episodio')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-field">
+        <label>Data do episódio</label>
+        <input class="detail-input" type="date" id="fbep-data">
+      </div>
+      <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin:10px 0 4px;">Por faixa:</div>
+      <div id="fbep-faixas"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+        <div class="detail-field">
+          <label>Ritmo dramático</label>
+          <select class="detail-select" id="fbep-ritmo">
+            <option value="fraco">Fraco</option>
+            <option value="aceitavel">Aceitável</option>
+            <option value="bom">Bom</option>
+            <option value="excelente">Excelente</option>
+          </select>
+        </div>
+        <div class="detail-field">
+          <label>Reacção do público</label>
+          <select class="detail-select" id="fbep-reacao">
+            <option value="baixa">Baixa</option>
+            <option value="media">Média</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+      </div>
+      <div class="detail-field" style="margin-top:10px;">
+        <label>Nota geral</label>
+        <textarea class="detail-input" id="fbep-nota-geral" rows="3" style="resize:vertical;"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-feedback-episodio')">Cancelar</button>
+      <button class="btn btn-primary" onclick="af_guardarFeedbackEpisodio()">Guardar</button>
     </div>
   </div>
 </div>
@@ -2427,6 +2489,16 @@ const YOUTUBE_API_KEY = 'AIzaSyC19-R6szocU-ZJA2jAb8XiGgRppB-ppyA';
 let CATALOGO = [];
 let CATALOGO_BY_ID = new Map();
 let PLAYLISTS = {};
+// Sistema de feedback e aprendizagem (2026-09-18, pedido do utilizador) —
+// historico[] de sessões de decisão do curador (aceitar/rejeitar/
+// substituir faixas sugeridas por "✦ Gerar com IA") + feedback pós-
+// episódio. Carregado em loadData() (feedback.json é opcional, mesmo
+// padrão de concorrentes.json/apresentador.json — pode ainda não existir
+// na primeira execução); escrito de volta por af_registarFeedbackSessao()
+// (createPlaylist()) e af_guardarFeedbackEpisodio() (modal "+ Feedback de
+// Episódio"). Ver montarPromptIA() para onde é lido de volta como
+// contexto para a IA.
+let FEEDBACK = { versao: '1.0', historico: [] };
 
 let FS_DIR_HANDLE = null;             // DirectoryHandle da pasta app/ autorizada via File System Access API (ver pedirPastaApp) — null enquanto não autorizado, ou nos browsers sem suporte
 
@@ -2475,6 +2547,15 @@ async function loadData() {
         if (typeof foto === 'string') FOTO_APRESENTADOR = foto;
       }
     } catch (e) { /* ficheiro ainda não existe — fica em branco */ }
+    // feedback.json — sistema de feedback e aprendizagem (2026-09-18) —
+    // mesmo padrão opcional dos dois acima.
+    try {
+      const r = await fetch('feedback.json', { cache: 'no-cache' });
+      if (r.ok) {
+        const fb = await r.json();
+        if (fb && Array.isArray(fb.historico)) FEEDBACK = fb;
+      }
+    } catch (e) { /* ficheiro ainda não existe — fica em {versao:'1.0',historico:[]} */ }
   } catch (err) {
     document.getElementById('montagem-content').innerHTML = `
       <div class="empty">
@@ -3600,7 +3681,10 @@ function renderMontagem() {
     <div class="playlist-header">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
         <div class="playlist-name">${escapeHtml(pl.nome || currentPlaylistKey)}</div>
-        <button class="btn" style="flex-shrink:0;" title="Abre esta playlist directamente no jogo (musicbox.html), numa aba nova, em modo teste — sem perder o estado desta Mesa de Montagem." onclick="af_abrirApp()">▶ Ver na app</button>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <button class="btn" title="Regista tempo de resposta/% de acerto/ritmo dramático de um episódio já lançado com esta playlist — ver feedback.json." onclick="af_abrirFeedbackEpisodio()">+ Feedback de Episódio</button>
+          <button class="btn" title="Abre esta playlist directamente no jogo (musicbox.html), numa aba nova, em modo teste — sem perder o estado desta Mesa de Montagem." onclick="af_abrirApp()">▶ Ver na app</button>
+        </div>
       </div>
       <div class="playlist-meta">
         <span class="posicao-tipo-badge tipo-${pl.tipo === 'tributo' ? 'trivia' : pl.tipo === 'video' ? 'video' : 'audio'}" style="text-transform:capitalize">${pl.tipo}</span>
@@ -6061,7 +6145,7 @@ function switchNPTab(nome) {
 // para o que cada um significa. Só afecta o QUE entra no prompt; o resto do
 // fluxo (af_gerarFaixasIAServidor, af_aplicarResultadoIA, validação de
 // artistas repetidos) é comum a todos os modos.
-let AF_MODO_GERACAO_IA = 'url'; // 'url' | 'tema' | 'categoria' | 'semente-multipla' | 'playlist-youtube'
+let AF_MODO_GERACAO_IA = 'url'; // 'url' | 'tema' | 'categoria' | 'semente-multipla' | 'playlist-youtube' | 'elo'
 
 // Lista editável de faixas lidas de uma playlist do YouTube (modo
 // "playlist-youtube") — [{titulo, artista, incluir}] — preenchida por
@@ -6240,6 +6324,8 @@ function createPlaylist() {
     descritivo: '',
     descritivo_apresentador: '', // obrigatório antes de guardar — ver exportPlaylists() e af_editarDescritivoApresentador() na Mesa de Montagem
     nota_curadoria: '', // idem — ver af_editarNotaCuradoria() na Mesa de Montagem
+    playlistCodigo: chave,
+    feedback_id: null, // preenchido abaixo por af_registarFeedbackSessao(), só quando há sugestões da IA com decisões a registar
     universo:   document.getElementById('np-universo').value.trim(),
     temBonus:   false,
     dificuldade: parseInt(document.getElementById('np-dificuldade').value) || 3,
@@ -6251,9 +6337,14 @@ function createPlaylist() {
   } else if (NP_IA_RESULTADO && NP_IA_RESULTADO.musicas.length) {
     // Converte as sugestões da IA (ainda editáveis nesse momento) em
     // faixas-rascunho no catálogo — mesmo padrão que
-    // colocarFaixaYoutubeNaProximaVaga() usa para YouTube.
-    pl.musicas = NP_IA_RESULTADO.musicas.map(criarFaixaRascunhoIA);
-    pl.mosaico = NP_IA_RESULTADO.mosaico
+    // colocarFaixaYoutubeNaProximaVaga() usa para YouTube. Faixas
+    // marcadas "✗ Rejeitar" (decisao==='rejeitada') ficam de fora da
+    // playlist final — ✗ é a forma "com motivo" de as excluir, registado
+    // em feedback.json (ver af_registarFeedbackSessao() abaixo); "✕
+    // remover" continua a existir como exclusão rápida sem motivo, mas
+    // essas já não chegam aqui (saem logo de NP_IA_RESULTADO.musicas).
+    pl.musicas = NP_IA_RESULTADO.musicas.filter(m => m.decisao !== 'rejeitada').map(criarFaixaRascunhoIA);
+    pl.mosaico = (NP_IA_RESULTADO.mosaico && NP_IA_RESULTADO.mosaico.decisao !== 'rejeitada')
       ? { categoria: NP_IA_RESULTADO.mosaico.categoria || '', pessoa: NP_IA_RESULTADO.mosaico.pessoa || '', id: criarFaixaRascunhoIA(NP_IA_RESULTADO.mosaico) }
       : null;
   } else {
@@ -6271,6 +6362,18 @@ function createPlaylist() {
   const idsParaGerarTrechos = sementeYoutubeUrl
     ? [...(pl.musicas || []), ...(pl.mosaico ? [pl.mosaico.id] : [])]
     : [];
+
+  // Sistema de feedback e aprendizagem (2026-09-18, pedido do utilizador)
+  // — regista a sessão de decisões (aceite/rejeitada/substituída por
+  // faixa, + mosaico) em feedback.json ANTES de NP_IA_RESULTADO ser
+  // limpo a seguir — precisa dos objectos originais (titulo/artista/
+  // decisao/motivo/posicao_sugerida) zipados com os ids que
+  // criarFaixaRascunhoIA() acabou de atribuir (mesma ordem, .map()
+  // preserva-a). Só corre quando houve de facto sugestões da IA — nada a
+  // registar para tributo/manual.
+  if (tipo !== 'tributo' && NP_IA_RESULTADO && NP_IA_RESULTADO.musicas.length) {
+    pl.feedback_id = af_registarFeedbackSessao(chave, pl);
+  }
 
   PLAYLISTS[chave] = pl;
   NP_IA_RESULTADO = null;
@@ -6611,7 +6714,7 @@ async function af_gerarFaixasIAServidor() {
 // repetidos). Cada modo devolve:
 //   faixasFixas: [{titulo, artista}] — entram sempre como faixas #1..N da
 //     playlist final, antes das sugestões da IA (vazio para tema/
-//     categoria/playlist-youtube, que não fixam faixas nenhumas).
+//     categoria/playlist-youtube/elo, que não fixam faixas nenhumas).
 //   contextoTxt: string — descreve a semente/contexto no prompt.
 //   artistasProibidosExtra: [string] — nomes de artista a proibir nas 6
 //     faixas + mosaico, ALÉM dos que já estão em faixasFixas (só
@@ -6672,6 +6775,17 @@ function af_infoModoGeracaoIA() {
         artistasProibidosExtra: faixas.map(f => f.artista).filter(Boolean),
       };
     }
+    case 'elo': {
+      const elo = document.getElementById('np-ia-elo').value.trim();
+      return {
+        faixasFixas: [],
+        contextoTxt: elo
+          ? `este elo editorial: "${elo}" — a palavra ou frase curta que liga toda a playlist. Explora TODAS as dimensões possíveis de ligação a este elo: nome do artista ou banda, título da música, letra, refrão, filme, série de TV, referência cultural, imaginário, personagem, lugar — navegando livremente pelas décadas, géneros, geografia, estilo, instrumento e nível de reconhecimento do catálogo. Cada faixa tem de ter uma ligação clara e imediata ao elo "${elo}", mas a natureza dessa ligação deve variar de faixa para faixa — não repitas sempre o mesmo tipo de ligação (ex.: não faças as 7 só por título literal)`
+          : 'nenhum elo indicado — sugere algo genérico e diz isso no nome da playlist',
+        artistasProibidosExtra: [],
+        eloMosaicoInstrucao: elo || null,
+      };
+    }
     case 'url':
     default: {
       const semente = document.getElementById('np-ia-semente').value.trim();
@@ -6684,6 +6798,32 @@ function af_infoModoGeracaoIA() {
         artistasProibidosExtra: [],
       };
     }
+  }
+}
+
+// Sistema de feedback e aprendizagem (2026-09-18, pedido do utilizador) —
+// texto curto que identifica "o parâmetro" desta geração, consoante o
+// modo activo — usado para (a) gravar no registo de feedback.json
+// (af_registarFeedbackSessao()) e (b) filtrar o histórico relevante em
+// montarPromptIA(). Deliberadamente mais curto/normalizado que
+// contextoTxt (que é a frase inteira para o prompt) — aqui só a palavra/
+// frase-chave, para comparar entre gerações.
+function af_parametroActualModoIA() {
+  switch (AF_MODO_GERACAO_IA) {
+    case 'tema': return document.getElementById('np-ia-tema').value.trim();
+    case 'categoria': {
+      const dec = document.getElementById('np-ia-cat-dec').value;
+      const geo = document.getElementById('np-ia-cat-geo').value;
+      const genero = document.getElementById('np-ia-cat-genero').value;
+      return `${dec}/${geo}/${genero}`;
+    }
+    case 'semente-multipla': return [1, 2, 3]
+      .map(i => document.getElementById(`np-ia-multi-titulo-${i}`).value.trim())
+      .filter(Boolean).join(' + ');
+    case 'playlist-youtube': return document.getElementById('np-ia-playlist-url').value.trim();
+    case 'elo': return document.getElementById('np-ia-elo').value.trim();
+    case 'url':
+    default: return document.getElementById('np-ia-semente').value.trim();
   }
 }
 
@@ -6703,6 +6843,89 @@ function af_nomesProibidosIA(info) {
 // número fixo, ver nFaixasIA abaixo. A resposta é importada por
 // af_aplicarResultadoIA(), que usa o objecto "playlist" para preencher
 // automaticamente a tab "Estrutura".
+// PARTE 3 do sistema de feedback e aprendizagem (2026-09-18, pedido do
+// utilizador) — bloco de contexto injectado por montarPromptIA() ANTES
+// da instrução principal, com o histórico de decisões do curador
+// relevante para o modo de geração e parâmetro actuais (FEEDBACK,
+// carregado em loadData() — ver PARTE 1/2 acima). Devolve '' (nada
+// injectado) se não houver histórico relevante ainda — evita um
+// cabeçalho "(nenhuma ainda)" inútil na primeira utilização de cada modo.
+//
+// "Relevante" = mesmo modo de geração (AF_MODO_GERACAO_IA) — dentro
+// desse modo, o parâmetro actual só afecta QUAIS faixas contam como
+// "bem recebidas em contexto semelhante" (comparação por substring nos
+// dois sentidos, case-insensitive — "Deserto" e "deserto ao pôr-do-sol"
+// contam como relacionados); faixas rejeitadas, padrões de progressão
+// dramática e feedback de jogo entram sempre que o modo bate certo,
+// mesmo com parâmetro diferente — aprender "isto não funciona"/"isto
+// resultou muito bem" generaliza melhor entre parâmetros do que
+// "isto funcionou para ESTE parâmetro exacto".
+//
+// Limite: só os últimos 20 registos relevantes (do mais recente para o
+// mais antigo, por "data") — pedido explícito do utilizador, para não
+// estourar o context window da API à medida que feedback.json cresce.
+function af_blocoHistoricoIA() {
+  if (!FEEDBACK || !Array.isArray(FEEDBACK.historico) || !FEEDBACK.historico.length) return '';
+
+  const modoActual = AF_MODO_GERACAO_IA;
+  const paramActual = (af_parametroActualModoIA() || '').toLowerCase();
+
+  const relevantes = FEEDBACK.historico
+    .filter(r => r.modo_geracao === modoActual)
+    .slice() // sort() muta — não mexer na ordem de FEEDBACK.historico
+    .sort((a, b) => (b.data || '').localeCompare(a.data || ''))
+    .slice(0, 20);
+  if (!relevantes.length) return '';
+
+  const aceites = [];
+  const rejeitadas = [];
+  const padroesAprovados = [];
+  const dificeis = [];
+  const faceis = [];
+
+  relevantes.forEach(r => {
+    const paramRegisto = (r.parametro || '').toLowerCase();
+    const mesmoContexto = paramActual && paramRegisto &&
+      (paramRegisto.includes(paramActual) || paramActual.includes(paramRegisto));
+
+    (r.faixas || []).forEach(f => {
+      const rotulo = `"${f.titulo}" — ${f.artista}`;
+      if (f.decisao === 'aceite' && mesmoContexto) aceites.push(rotulo);
+      if (f.decisao === 'rejeitada') rejeitadas.push(f.motivo ? `${rotulo} (${f.motivo})` : rotulo);
+    });
+
+    const fj = r.feedback_jogo;
+    if (fj && Array.isArray(fj.faixas)) {
+      fj.faixas.forEach(ft => {
+        const origem = (r.faixas || []).find(f => f.id_faixa === ft.id_faixa);
+        const rotulo = origem ? `"${origem.titulo}" — ${origem.artista}` : ft.id_faixa;
+        if (typeof ft.percentagem_acerto === 'number' && ft.percentagem_acerto < 20) {
+          dificeis.push(`${rotulo} (${ft.percentagem_acerto}% de acerto — demasiado difícil)`);
+        }
+        if (typeof ft.percentagem_acerto === 'number' && ft.percentagem_acerto > 90 &&
+            typeof ft.tempo_resposta_medio === 'number' && ft.tempo_resposta_medio < 3) {
+          faceis.push(`${rotulo} (${ft.percentagem_acerto}% de acerto em ${ft.tempo_resposta_medio}s — demasiado fácil)`);
+        }
+      });
+    }
+    if (fj && fj.ritmo_dramatico === 'excelente' && fj.reacao_publico === 'alta') {
+      padroesAprovados.push(`${r.playlist_codigo} (modo ${r.modo_geracao}: "${r.parametro}")`);
+    }
+  });
+
+  const lista = (arr, max = 10) => arr.length ? arr.slice(0, max).join('; ') : '(nenhuma ainda)';
+
+  return `HISTÓRICO DE DECISÕES DO CURADOR:
+- Faixas bem recebidas em contexto semelhante: ${lista(aceites)}
+- Faixas rejeitadas: ${lista(rejeitadas)}
+- Padrões de progressão dramática aprovados: ${lista(padroesAprovados)}
+- Feedback de jogo: ${lista([...dificeis, ...faceis])}
+
+Com base neste histórico, gera uma playlist para: ${af_parametroActualModoIA() || '(sem parâmetro)'}
+
+`;
+}
+
 function montarPromptIA() {
   const info = af_infoModoGeracaoIA();
   const nomesProibidos = af_nomesProibidosIA(info);
@@ -6731,11 +6954,22 @@ function montarPromptIA() {
     ? ` Os seguintes artistas JÁ estão a ser usados (semente/contexto desta geração) — estão PROIBIDOS de voltar a aparecer em qualquer uma das ${nFaixasIA} faixas ou no mosaico, nem como artista nem como pessoa a adivinhar: ${nomesProibidos.map(n => `"${n}"`).join(', ')}.`
     : '';
 
-  return `Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
+  // Modo Elo (2026-09-18, pedido do utilizador): a escolha do mosaico deve
+  // favorecer alguém cuja imagem real e facilmente encontrável (retrato,
+  // capa, still) torne o elo visual e imediatamente óbvio — não uma
+  // referência subtil. Só se aplica no modo Elo (info.eloMosaicoInstrucao
+  // só existe aí — ver af_infoModoGeracaoIA()).
+  const instrucaoMosaicoElo = info.eloMosaicoInstrucao
+    ? ` Para este mosaico em particular, dá prioridade a uma escolha cuja imagem real e facilmente encontrável (retrato do artista, capa, still) torne o elo "${info.eloMosaicoInstrucao}" visual e imediatamente óbvio — não uma referência subtil ou indirecta, mas a representação mais directa e reconhecível possível do tema (ex.: para o elo "Deserto": alguém fotografado com dunas, calor, horizonte árido, solidão).`
+    : '';
+
+  const blocoHistorico = af_blocoHistoricoIA();
+
+  return `${blocoHistorico}Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
 
 ${instrucaoMetadados}
 
-Depois, com base nesses critérios, sugere exactamente ${nFaixasIA} faixas adicionais REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas ou factos), diferentes entre si e com afinidade ao contexto acima, mais 1 "mosaico": uma faixa cujo intérprete, baterista, compositor ou membro é, ele próprio, a pista que os jogadores têm de adivinhar (ex.: categoria "Intérprete", pessoa "Mark Knopfler", faixa "Sultans of Swing" dos Dire Straits, porque Knopfler é o guitarrista da banda).
+Depois, com base nesses critérios, sugere exactamente ${nFaixasIA} faixas adicionais REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas ou factos), diferentes entre si e com afinidade ao contexto acima, mais 1 "mosaico": uma faixa cujo intérprete, baterista, compositor ou membro é, ele próprio, a pista que os jogadores têm de adivinhar (ex.: categoria "Intérprete", pessoa "Mark Knopfler", faixa "Sultans of Swing" dos Dire Straits, porque Knopfler é o guitarrista da banda).${instrucaoMosaicoElo}
 
 Regras obrigatórias sobre repetição de artistas:
 1) Nenhum artista pode repetir-se em toda a playlist — nem entre as ${nFaixasIA} faixas, nem no mosaico (nem como artista da própria faixa do mosaico, nem como a pessoa a adivinhar).
@@ -6953,6 +7187,15 @@ function af_aplicarResultadoIA(res) {
 
   const mosaico = (res.mosaico && res.mosaico.titulo) ? res.mosaico : null;
 
+  // Sistema de feedback (2026-09-18, pedido do utilizador) — cada faixa
+  // sugerida guarda a posição em que a IA a sugeriu (fixa desde aqui,
+  // nunca muda mesmo com drag-and-drop) e o estado da decisão do
+  // curador (null = ainda por decidir; ✓/✗/✎ em af_decidirIAMusica()/
+  // af_aplicarSubstituicaoIAMusica() — ver renderResultadoIA()). Lido de
+  // volta em af_registarFeedbackSessao() (createPlaylist()).
+  musicas.forEach((m, i) => { m.posicao_sugerida = i + 1; m.decisao = null; m.motivo = null; });
+  if (mosaico) { mosaico.decisao = null; mosaico.motivo = null; }
+
   // Rejeita sempre que haja artista repetido — nunca importa parcialmente
   // (ver af_detectarArtistasRepetidos). No fluxo automático, quem chama
   // isto (af_gerarFaixasIAServidor) já tentou pedir à IA para substituir
@@ -7016,26 +7259,61 @@ function importarResultadoIA() {
   af_aplicarResultadoIA(res);
 }
 
+// Sistema de feedback (2026-09-18, pedido do utilizador) — índice da
+// faixa com a caixa de pesquisa "✎ Substituir" aberta (null = nenhuma).
+// Só uma de cada vez, por simplicidade — abrir noutra fecha a anterior.
+let AF_IA_SUBSTITUIR_INDEX = null;
+
+const AF_CORES_DECISAO_IA = {
+  aceite: 'var(--green, #4ec98e)',
+  rejeitada: 'var(--red, #e05555)',
+  substituida: 'var(--text3)',
+};
+
 function renderResultadoIA() {
   const el = document.getElementById('np-ia-resultado');
   if (!el) return;
-  if (!NP_IA_RESULTADO) { el.innerHTML = ''; return; }
+  if (!NP_IA_RESULTADO) { el.innerHTML = ''; AF_IA_SUBSTITUIR_INDEX = null; return; }
 
   function linhaMusica(m, i) {
     const ehSemente = i < NP_IA_RESULTADO.nFaixasFixas;
-    return `<div style="display:flex;gap:4px;align-items:center;margin-bottom:4px;">
-      <span style="font-size:9px;color:${ehSemente ? 'var(--accent)' : 'var(--text3)'};font-family:var(--mono);width:20px;flex-shrink:0;" title="${ehSemente ? 'Faixa fixa (semente desta geração)' : ''}">#${i+1}${ehSemente ? ' ✦' : ''}</span>
-      <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(m.titulo || '')}" oninput="editarIAMusica(${i}, 'titulo', this.value)" placeholder="Título">
-      <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(m.artista || '')}" oninput="editarIAMusica(${i}, 'artista', this.value)" placeholder="Artista">
-      <button class="btn" type="button" style="padding:2px 6px;font-size:11px;" onclick="removerIAMusica(${i})" title="Remover">✕</button>
-    </div>`;
+    const cor = AF_CORES_DECISAO_IA[m.decisao] || 'var(--border2)';
+    const riscado = m.decisao === 'rejeitada' || m.decisao === 'substituida' ? 'text-decoration:line-through;opacity:0.6;' : '';
+    let html = `<div class="ia-musica-linha" draggable="true" ondragstart="af_dragIAMusicaStart(event, ${i})" ondragover="event.preventDefault()" ondrop="af_dropIAMusica(event, ${i})" style="border:1px solid ${cor};border-radius:5px;padding:4px;margin-bottom:5px;">
+      <div style="display:flex;gap:4px;align-items:center;">
+        <span style="cursor:grab;color:var(--text3);font-size:12px;" title="Arrastar para reordenar (define a posição final)">⠿</span>
+        <span style="font-size:9px;color:${ehSemente ? 'var(--accent)' : 'var(--text3)'};font-family:var(--mono);width:20px;flex-shrink:0;" title="${ehSemente ? 'Faixa fixa (semente desta geração)' : 'Posição sugerida pela IA: ' + m.posicao_sugerida}">#${i+1}${ehSemente ? ' ✦' : ''}</span>
+        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeAttr(m.titulo || '')}" oninput="editarIAMusica(${i}, 'titulo', this.value)" placeholder="Título">
+        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeAttr(m.artista || '')}" oninput="editarIAMusica(${i}, 'artista', this.value)" placeholder="Artista">
+        <button class="btn" type="button" style="padding:2px 6px;font-size:11px;" onclick="removerIAMusica(${i})" title="Remover">✕</button>
+      </div>
+      <div style="display:flex;gap:4px;align-items:center;margin-top:3px;padding-left:24px;">
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${m.decisao==='aceite'?'background:'+AF_CORES_DECISAO_IA.aceite+';color:#0a2015;border-color:'+AF_CORES_DECISAO_IA.aceite+';':''}" onclick="af_decidirIAMusica(${i}, 'aceite')" title="Aceitar esta sugestão">✓ Aceitar</button>
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${m.decisao==='rejeitada'?'background:'+AF_CORES_DECISAO_IA.rejeitada+';color:#2a0d0d;border-color:'+AF_CORES_DECISAO_IA.rejeitada+';':''}" onclick="af_decidirIAMusica(${i}, 'rejeitada')" title="Rejeitar esta sugestão">✗ Rejeitar</button>
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_abrirSubstituirIAMusica(${i})" title="Procurar uma faixa alternativa no catálogo">✎ Substituir</button>
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_marcarIAMosaico(${i})" title="Marcar esta faixa como o mosaico (posição 8), em vez do sugerido pela IA">★ Mosaico</button>
+      </div>`;
+    if (m.decisao === 'rejeitada') {
+      html += `<div style="padding-left:24px;margin-top:3px;">
+        <input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeAttr(m.motivo || '')}" oninput="af_editarMotivoIAMusica(${i}, this.value)" placeholder="Porquê? (opcional)">
+      </div>`;
+    }
+    if (m.decisao === 'substituida' && m.substituicao_original) {
+      html += `<div style="padding-left:24px;margin-top:3px;font-size:9px;color:var(--text3);font-family:var(--mono);">substituída — original: "${escapeHtml(m.substituicao_original.titulo)}" — ${escapeHtml(m.substituicao_original.artista)}</div>`;
+    }
+    if (AF_IA_SUBSTITUIR_INDEX === i) {
+      html += af_renderBuscaSubstitutoIA(i);
+    }
+    html += `</div>`;
+    return html;
   }
 
-  let html = '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">Sugestões — edita ou remove antes de "Criar playlist":</div>';
+  let html = '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">Sugestões — edita, decide (✓/✗/✎/★) ou arrasta (⠿) para reordenar antes de "Criar playlist":</div>';
   html += NP_IA_RESULTADO.musicas.map(linhaMusica).join('');
   if (NP_IA_RESULTADO.mosaico) {
     const mos = NP_IA_RESULTADO.mosaico;
-    html += `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border2);">
+    const corMos = AF_CORES_DECISAO_IA[mos.decisao] || 'var(--border2)';
+    html += `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border2);border:1px solid ${corMos};border-radius:5px;padding:6px;">
       <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">Mosaico — categoria: ${escapeHtml(mos.categoria || '?')} · pessoa a adivinhar:
         <input class="detail-input" style="width:150px;padding:2px 6px;font-size:11px;display:inline-block;" value="${escapeAttr(mos.pessoa || '')}" oninput="editarIAMosaico('pessoa', this.value)">
       </div>
@@ -7044,9 +7322,140 @@ function renderResultadoIA() {
         <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(mos.artista || '')}" oninput="editarIAMosaico('artista', this.value)" placeholder="Artista">
         <button class="btn" type="button" style="padding:2px 6px;font-size:11px;" onclick="removerIAMosaico()" title="Remover">✕</button>
       </div>
+      <div style="display:flex;gap:4px;align-items:center;margin-top:3px;">
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${mos.decisao==='aceite'?'background:'+AF_CORES_DECISAO_IA.aceite+';color:#0a2015;border-color:'+AF_CORES_DECISAO_IA.aceite+';':''}" onclick="af_decidirIAMosaico('aceite')">✓ Aceitar</button>
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${mos.decisao==='rejeitada'?'background:'+AF_CORES_DECISAO_IA.rejeitada+';color:#2a0d0d;border-color:'+AF_CORES_DECISAO_IA.rejeitada+';':''}" onclick="af_decidirIAMosaico('rejeitada')">✗ Rejeitar</button>
+      </div>
+      ${mos.decisao === 'rejeitada' ? `<div style="margin-top:3px;"><input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeAttr(mos.motivo || '')}" oninput="af_editarMotivoIAMosaico(this.value)" placeholder="Porquê? (opcional)"></div>` : ''}
     </div>`;
   }
   el.innerHTML = html;
+}
+
+// Caixa de pesquisa inline do "✎ Substituir" — filtra CATALOGO (já
+// carregado em memória, sem pedido de rede) por título/artista,
+// substring simples, até 8 resultados. Reaproveita CATALOGO/escapeHtml
+// já existentes no resto do Studio.
+function af_renderBuscaSubstitutoIA(i) {
+  return `<div style="padding-left:24px;margin-top:4px;">
+    <input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" oninput="af_filtrarSubstitutoIA(${i}, this.value)" placeholder="Pesquisar faixa alternativa no catálogo (título ou artista)..." autofocus>
+    <div id="ia-substituto-resultados-${i}" style="margin-top:3px;max-height:120px;overflow-y:auto;"></div>
+  </div>`;
+}
+
+function af_abrirSubstituirIAMusica(i) {
+  AF_IA_SUBSTITUIR_INDEX = AF_IA_SUBSTITUIR_INDEX === i ? null : i;
+  renderResultadoIA();
+}
+
+function af_filtrarSubstitutoIA(i, texto) {
+  const el = document.getElementById(`ia-substituto-resultados-${i}`);
+  if (!el) return;
+  const termo = texto.trim().toLowerCase();
+  if (!termo) { el.innerHTML = ''; return; }
+  const resultados = CATALOGO.filter(t =>
+    (t.titulo || '').toLowerCase().includes(termo) ||
+    (t.artista || []).join(' ').toLowerCase().includes(termo)
+  ).slice(0, 8);
+  el.innerHTML = resultados.map(t => `<div class="detail-input" style="cursor:pointer;padding:3px 6px;font-size:10px;margin-bottom:2px;" onclick="af_aplicarSubstituicaoIAMusica(${i}, '${t.id}')">${escapeHtml(t.titulo)} — ${escapeHtml((t.artista||[]).join(' / '))}</div>`).join('')
+    || '<div style="font-size:10px;color:var(--text3);padding:3px 6px;">sem resultados</div>';
+}
+
+// Regista a rejeição da faixa original (com motivo automático) e
+// substitui pelos dados da faixa do catálogo escolhida — fica marcada
+// 'substituida', não 'aceite', para o feedback distinguir uma sugestão
+// da IA aceite tal e qual de uma que precisou de intervenção manual.
+function af_aplicarSubstituicaoIAMusica(i, idCatalogo) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.musicas[i]) return;
+  const t = CATALOGO_BY_ID.get(idCatalogo);
+  if (!t) return;
+  const m = NP_IA_RESULTADO.musicas[i];
+  m.substituicao_original = { titulo: m.titulo || '', artista: m.artista || '' };
+  m.titulo = t.titulo || '';
+  m.artista = (t.artista || []).join(' / ');
+  m.geografia = t.geografia || '';
+  m.decada = (t.decadas || [])[0] || '';
+  m.estilo = t.estilo || '';
+  m.tags = t.tags || [];
+  m.genero = (t.generos || [])[0] || '';
+  m.universal = !!t.universal;
+  m.decisao = 'substituida';
+  m.motivo = 'substituída por outra faixa do catálogo';
+  AF_IA_SUBSTITUIR_INDEX = null;
+  renderResultadoIA();
+}
+
+// Promove uma faixa regular a mosaico (posição 8) — substitui o mosaico
+// actual (se algum), sai da lista de 7 faixas. categoria/pessoa ficam por
+// preencher (o curador edita no bloco do mosaico) — a faixa em si (título/
+// artista/etc.) mantém-se.
+function af_marcarIAMosaico(i) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.musicas[i]) return;
+  const m = NP_IA_RESULTADO.musicas[i];
+  if (i < NP_IA_RESULTADO.nFaixasFixas) NP_IA_RESULTADO.nFaixasFixas--;
+  NP_IA_RESULTADO.musicas.splice(i, 1);
+  NP_IA_RESULTADO.mosaico = {
+    categoria: m.categoria || '', pessoa: m.pessoa || '',
+    titulo: m.titulo || '', artista: m.artista || '',
+    geografia: m.geografia || '', decada: m.decada || '', estilo: m.estilo || '',
+    tags: m.tags || [], genero: m.genero || '', universal: !!m.universal,
+    decisao: null, motivo: null,
+  };
+  AF_IA_SUBSTITUIR_INDEX = null;
+  renderResultadoIA();
+  notify('Faixa marcada como mosaico (posição 8) — preenche categoria/pessoa no bloco do mosaico.', 'ok');
+}
+
+function af_decidirIAMusica(i, decisao) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.musicas[i]) return;
+  const m = NP_IA_RESULTADO.musicas[i];
+  m.decisao = m.decisao === decisao ? null : decisao; // clicar outra vez desfaz
+  if (m.decisao !== 'rejeitada') m.motivo = null;
+  renderResultadoIA();
+}
+
+function af_editarMotivoIAMusica(i, motivo) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.musicas[i]) return;
+  NP_IA_RESULTADO.musicas[i].motivo = motivo;
+}
+
+function af_decidirIAMosaico(decisao) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.mosaico) return;
+  const mos = NP_IA_RESULTADO.mosaico;
+  mos.decisao = mos.decisao === decisao ? null : decisao;
+  if (mos.decisao !== 'rejeitada') mos.motivo = null;
+  renderResultadoIA();
+}
+
+function af_editarMotivoIAMosaico(motivo) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.mosaico) return;
+  NP_IA_RESULTADO.mosaico.motivo = motivo;
+}
+
+// Drag-and-drop de reordenação — mesmo idioma de dragMoveStart/dropOnSlot
+// (Mesa de Montagem), adaptado para a lista de sugestões da IA. Só
+// reordena o array; posicao_sugerida de cada faixa NÃO muda (é histórico
+// — "onde a IA sugeriu"), só a posição no array (== posicao_final,
+// calculada em af_registarFeedbackSessao() no momento de "Criar
+// playlist") é que reflecte o arrasto.
+let AF_IA_DRAG_INDEX = null;
+function af_dragIAMusicaStart(ev, i) {
+  AF_IA_DRAG_INDEX = i;
+  ev.dataTransfer.effectAllowed = 'move';
+}
+function af_dropIAMusica(ev, i) {
+  ev.preventDefault();
+  if (AF_IA_DRAG_INDEX === null || AF_IA_DRAG_INDEX === i || !NP_IA_RESULTADO) return;
+  const arr = NP_IA_RESULTADO.musicas;
+  const [item] = arr.splice(AF_IA_DRAG_INDEX, 1);
+  arr.splice(i, 0, item);
+  // nFaixasFixas continua a contar as primeiras N posições do array —
+  // reordenar para dentro/fora dessa zona é uma escolha deliberada do
+  // curador (ex.: já não quer a semente em 1º), por isso não se ajusta
+  // automaticamente aqui.
+  AF_IA_DRAG_INDEX = null;
+  AF_IA_SUBSTITUIR_INDEX = null;
+  renderResultadoIA();
 }
 
 function editarIAMusica(i, campo, valor) {
@@ -7062,6 +7471,7 @@ function removerIAMusica(i) {
   // meio das faixas fixas desalinhava a marca das seguintes.
   if (i < NP_IA_RESULTADO.nFaixasFixas) NP_IA_RESULTADO.nFaixasFixas--;
   NP_IA_RESULTADO.musicas.splice(i, 1);
+  if (AF_IA_SUBSTITUIR_INDEX === i) AF_IA_SUBSTITUIR_INDEX = null;
   renderResultadoIA();
 }
 
@@ -7111,6 +7521,173 @@ function criarFaixaRascunhoIA(sugestao) {
   CATALOGO_BY_ID.set(id, novaFaixa);
   CATALOGO_PATCH.set(id, novaFaixa);
   return id;
+}
+
+// ─── SISTEMA DE FEEDBACK E APRENDIZAGEM (2026-09-18, pedido do utilizador) ───
+// PARTE 1: schema em feedback.json (FEEDBACK, carregado em loadData()).
+// PARTE 2: esta secção — regista a sessão de decisões do curador ao criar
+// uma playlist, e o feedback pós-episódio (modal "+ Feedback de
+// Episódio"). PARTE 3 (motor de aprendizagem) — ver af_blocoHistoricoIA()
+// dentro de montarPromptIA().
+
+// Chamado por createPlaylist() (ver acima), com NP_IA_RESULTADO e pl.musicas
+// já construídos — regista UMA entrada em FEEDBACK.historico com a
+// decisão tomada para cada faixa sugerida (incluindo as rejeitadas, que
+// ficam sem id_faixa/posicao_final — não entraram no catálogo nem na
+// playlist, mas o MOTIVO continua valioso para a aprendizagem). Devolve o
+// id do registo, para createPlaylist() o guardar em pl.feedback_id.
+function af_registarFeedbackSessao(chave, pl) {
+  const musicasAceites = NP_IA_RESULTADO.musicas.filter(m => m.decisao !== 'rejeitada');
+  const faixas = NP_IA_RESULTADO.musicas.map(m => {
+    const posFinal = m.decisao === 'rejeitada' ? null : musicasAceites.indexOf(m) + 1;
+    return {
+      id_faixa: (posFinal !== null && pl.musicas[posFinal - 1]) ? pl.musicas[posFinal - 1] : null,
+      titulo: m.titulo || '',
+      artista: m.artista || '',
+      // Por decidir (nunca clicou ✓/✗) ao chegar aqui conta como aceite
+      // implícito — é isso que vai para a playlist (só ✗ exclui).
+      decisao: m.decisao || 'aceite',
+      posicao_sugerida: m.posicao_sugerida,
+      posicao_final: posFinal,
+      motivo: m.motivo || null,
+    };
+  });
+
+  let mosaico = null;
+  if (NP_IA_RESULTADO.mosaico) {
+    const mos = NP_IA_RESULTADO.mosaico;
+    mosaico = {
+      id_faixa: (mos.decisao !== 'rejeitada' && pl.mosaico) ? pl.mosaico.id : null,
+      decisao: mos.decisao || 'aceite',
+      motivo: mos.motivo || null,
+    };
+  }
+
+  const fbId = 'fb_' + String(FEEDBACK.historico.length + 1).padStart(3, '0');
+  FEEDBACK.historico.push({
+    id: fbId,
+    data: new Date().toISOString().slice(0, 10),
+    curador: 'André Clemente',
+    modo_geracao: AF_MODO_GERACAO_IA,
+    parametro: af_parametroActualModoIA(),
+    playlist_codigo: chave,
+    faixas,
+    mosaico,
+    playlist_aprovada: true,
+    feedback_jogo: null,
+  });
+  af_guardarFeedbackJson();
+  return fbId;
+}
+
+// Escrita simples (sem controlo de conflito por mtime — ao contrário de
+// playlists.json/af_escreverPlaylistsViaServidor(); feedback.json não tem
+// o mesmo risco de edição concorrente entre abas, é só acrescentado por
+// esta função e por af_guardarFeedbackEpisodio()). Mesmo padrão de
+// exportCatalogoPatch(): escreverFicheiro() tenta o servidor, depois
+// File System Access API, depois download — nunca falha silenciosamente.
+async function af_guardarFeedbackJson() {
+  const json = JSON.stringify(FEEDBACK, null, 2);
+  const ok = await escreverFicheiro('feedback.json', json);
+  notify(ok ? 'feedback.json actualizado.' : 'feedback.json descarregado — substitui o ficheiro na pasta app/ (o servidor de escrita não respondeu).', ok ? 'ok' : 'err');
+  return ok;
+}
+
+// Abre o modal "+ Feedback de Episódio" (botão no cabeçalho da Mesa de
+// Montagem) — monta uma linha por faixa da playlist aberta (musicas +
+// mosaico; posicoes para tributo). Funciona em QUALQUER playlist, não só
+// as criadas via "✦ Gerar com IA" — af_guardarFeedbackEpisodio() cria um
+// registo mínimo em feedback.json na hora, se ainda não existir um.
+function af_abrirFeedbackEpisodio() {
+  if (!currentPlaylistKey) return;
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+
+  const ids = pl.tipo === 'tributo'
+    ? (pl.posicoes || []).map(p => p.id).filter(Boolean)
+    : [...(pl.musicas || []), ...(pl.mosaico ? [pl.mosaico.id] : [])];
+
+  document.getElementById('fbep-data').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('fbep-ritmo').value = 'bom';
+  document.getElementById('fbep-reacao').value = 'media';
+  document.getElementById('fbep-nota-geral').value = '';
+
+  const el = document.getElementById('fbep-faixas');
+  el.innerHTML = ids.map(id => {
+    const t = CATALOGO_BY_ID.get(id);
+    const nome = t ? `${t.titulo} — ${(t.artista || []).join(' / ')}` : id;
+    return `<div class="fbep-linha-faixa" data-id="${escapeAttr(id)}" style="border:1px solid var(--border2);border-radius:5px;padding:6px;margin-bottom:6px;">
+      <div style="font-size:11px;font-weight:600;margin-bottom:4px;">${escapeHtml(nome)}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+        <div>
+          <label style="font-size:9px;color:var(--text3);display:block;">Tempo médio de resposta (s)</label>
+          <input type="number" step="0.1" min="0" class="detail-input fbep-campo" data-campo="tempo_resposta_medio" style="padding:3px 6px;font-size:11px;">
+        </div>
+        <div>
+          <label style="font-size:9px;color:var(--text3);display:block;">% de acerto</label>
+          <input type="number" min="0" max="100" class="detail-input fbep-campo" data-campo="percentagem_acerto" style="padding:3px 6px;font-size:11px;">
+        </div>
+        <div>
+          <label style="font-size:9px;color:var(--text3);display:block;">Momento especial</label>
+          <select class="detail-select fbep-campo" data-campo="momento_especial" style="padding:3px 6px;font-size:11px;">
+            <option value="nao">Não</option>
+            <option value="sim">Sim</option>
+          </select>
+        </div>
+      </div>
+      <input class="detail-input fbep-campo" data-campo="nota" style="margin-top:4px;padding:3px 6px;font-size:11px;width:100%;" placeholder="Nota (opcional)">
+    </div>`;
+  }).join('') || '<div style="font-size:11px;color:var(--text3);">Esta playlist não tem faixas.</div>';
+
+  openModal('modal-feedback-episodio');
+}
+
+// Guarda o formulário no feedback_jogo do registo feedback.json associado
+// a esta playlist (pl.feedback_id) — cria um registo mínimo agora se a
+// playlist ainda não tiver um (nunca passou por "✦ Gerar com IA", ou foi
+// criada antes deste sistema existir).
+async function af_guardarFeedbackEpisodio() {
+  if (!currentPlaylistKey) return;
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+
+  if (!pl.feedback_id) {
+    const fbId = 'fb_' + String(FEEDBACK.historico.length + 1).padStart(3, '0');
+    FEEDBACK.historico.push({
+      id: fbId, data: new Date().toISOString().slice(0, 10), curador: 'André Clemente',
+      modo_geracao: null, parametro: null, playlist_codigo: currentPlaylistKey,
+      faixas: [], mosaico: null, playlist_aprovada: true, feedback_jogo: null,
+    });
+    pl.feedback_id = fbId;
+    markDirty(); // playlists.json também precisa de guardar o novo feedback_id
+  }
+
+  const registo = FEEDBACK.historico.find(r => r.id === pl.feedback_id);
+  if (!registo) { notify('Não foi possível encontrar o registo de feedback desta playlist.', 'err'); return; }
+
+  const faixasFeedback = Array.from(document.querySelectorAll('.fbep-linha-faixa')).map(linha => {
+    const campo = nome => linha.querySelector(`[data-campo="${nome}"]`).value;
+    const tempo = parseFloat(campo('tempo_resposta_medio'));
+    const acerto = parseFloat(campo('percentagem_acerto'));
+    return {
+      id_faixa: linha.dataset.id,
+      tempo_resposta_medio: isNaN(tempo) ? null : tempo,
+      percentagem_acerto: isNaN(acerto) ? null : acerto,
+      momento_especial: campo('momento_especial') === 'sim',
+      nota: campo('nota').trim() || null,
+    };
+  });
+
+  registo.feedback_jogo = {
+    data_episodio: document.getElementById('fbep-data').value || null,
+    faixas: faixasFeedback,
+    ritmo_dramatico: document.getElementById('fbep-ritmo').value,
+    reacao_publico: document.getElementById('fbep-reacao').value,
+    nota_geral: document.getElementById('fbep-nota-geral').value.trim(),
+  };
+
+  const ok = await af_guardarFeedbackJson();
+  if (ok) { closeModal('modal-feedback-episodio'); notify('Feedback de episódio guardado em feedback.json.', 'ok'); }
 }
 
 // ─── PROPOR NOVA CHAVE ────────────────────────────────────────

@@ -206,6 +206,11 @@ FICHEIROS_PERMITIDOS = {
     'concorrentes.json',
     'apresentador.json',
     '_revisao_regeneracao.json',
+    # Sistema de feedback e aprendizagem (2026-09-18) — histórico de
+    # decisões do curador (aceitar/rejeitar/substituir faixas sugeridas
+    # pela IA) e feedback pós-episódio, lido de volta por montarPromptIA()
+    # para orientar gerações futuras. Ver DECISIONS.md.
+    'feedback.json',
 }
 
 NOME_UPLOAD_REGEX = re.compile(r'^(concorrente_[1-4]|apresentador|artista_[a-z0-9_]+)\.(jpg|jpeg|png)$')
