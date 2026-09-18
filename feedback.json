@@ -1,4 +1,3145 @@
 {
   "versao": "1.0",
-  "historico": []
+  "historico": [
+    {
+      "id": "fb_001",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "LOGO-001",
+      "faixas": [
+        {
+          "id_faixa": "logo_01",
+          "titulo": "Smells Like Teen Spirit",
+          "artista": "Nirvana",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_02",
+          "titulo": "Sweet Child O' Mine",
+          "artista": "Guns N' Roses",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_03",
+          "titulo": "Dream On",
+          "artista": "Aerosmith",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_04",
+          "titulo": "The Trooper",
+          "artista": "Iron Maiden",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_05",
+          "titulo": "Ace of Spades",
+          "artista": "Motörhead",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_06",
+          "titulo": "Truckin'",
+          "artista": "Grateful Dead",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_07",
+          "titulo": "Money",
+          "artista": "Pink Floyd",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        },
+        {
+          "id_faixa": "logo_08",
+          "titulo": "(I Can't Get No) Satisfaction",
+          "artista": "The Rolling Stones",
+          "decisao": "aceite",
+          "posicao_sugerida": 8,
+          "posicao_final": 8,
+          "motivo": null
+        }
+      ],
+      "mosaico": null,
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_002",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "RET.INT.ALL.VOZ.001",
+      "faixas": [
+        {
+          "id_faixa": "ret_01",
+          "titulo": "My Way",
+          "artista": "Frank Sinatra",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_02",
+          "titulo": "Can't Help Falling in Love",
+          "artista": "Elvis Presley",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_03",
+          "titulo": "Love of My Life",
+          "artista": "Freddie Mercury",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_04",
+          "titulo": "Billie Jean",
+          "artista": "Michael Jackson",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_05",
+          "titulo": "I Will Always Love You",
+          "artista": "Whitney Houston",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_06",
+          "titulo": "Rocket Man",
+          "artista": "Elton John",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_07",
+          "titulo": "Estou Além",
+          "artista": "António Variações",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ret_08",
+          "titulo": "Let's Dance",
+          "artista": "David Bowie",
+          "decisao": "aceite",
+          "posicao_sugerida": 8,
+          "posicao_final": 8,
+          "motivo": null
+        }
+      ],
+      "mosaico": null,
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_003",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "RET.PT.90.VOZ.001",
+      "faixas": [
+        {
+          "id_faixa": "pedro_abrunhosa_tudo_o_que_eu_te_dou",
+          "titulo": "Tudo O Que Eu Te Dou",
+          "artista": "Pedro Abrunhosa",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_06",
+          "titulo": "Canção do Mar",
+          "artista": "Dulce Pontes",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_mosaico",
+          "titulo": "Sete Mares",
+          "artista": "Sétima Legião",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_07",
+          "titulo": "Re-Tratamento",
+          "artista": "Da Weasel",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_02",
+          "titulo": "À Minha Maneira",
+          "artista": "Kalú",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_04",
+          "titulo": "Capitão Romance",
+          "artista": "Kinörm",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rui_veloso_porto_sentido",
+          "titulo": "Porto Sentido",
+          "artista": "Rui Veloso",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gnr_independanca",
+          "titulo": "Independança",
+          "artista": "GNR",
+          "decisao": "aceite",
+          "posicao_sugerida": 8,
+          "posicao_final": 8,
+          "motivo": null
+        }
+      ],
+      "mosaico": null,
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_004",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.BR.ALL.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "bra001_01",
+          "titulo": "Aquarela do Brasil",
+          "artista": "Gal Costa",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bra001_02",
+          "titulo": "Garota de Ipanema",
+          "artista": "João Gilberto",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bra001_03",
+          "titulo": "País Tropical",
+          "artista": "Jorge Ben",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bra001_04",
+          "titulo": "O Leãozinho",
+          "artista": "Caetano Veloso",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bra001_05",
+          "titulo": "A Banda",
+          "artista": "Chico Buarque",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bra001_06",
+          "titulo": "Mas Que Nada",
+          "artista": "Sérgio Mendes",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bra001_07",
+          "titulo": "Faroeste Caboclo",
+          "artista": "Legião Urbana",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "bra001_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_005",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.00.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "dec00_01",
+          "titulo": "Hey Ya!",
+          "artista": "OutKast",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec00_02",
+          "titulo": "Crazy in Love",
+          "artista": "Beyoncé",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec00_03",
+          "titulo": "Mr. Brightside",
+          "artista": "The Killers",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec00_04",
+          "titulo": "Seven Nation Army",
+          "artista": "The White Stripes",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec00_05",
+          "titulo": "Toxic",
+          "artista": "Britney Spears",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec00_06",
+          "titulo": "In the End",
+          "artista": "Linkin Park",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec00_07",
+          "titulo": "Umbrella",
+          "artista": "Rihanna",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "dec00_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_006",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.10.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "a10_01",
+          "titulo": "Work",
+          "artista": "Rihanna / Drake",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "a10_02",
+          "titulo": "Shape of You",
+          "artista": "Ed Sheeran",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "a10_03",
+          "titulo": "Uptown Funk",
+          "artista": "Mark Ronson / Bruno Mars",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "a10_04",
+          "titulo": "Blinding Lights",
+          "artista": "The Weeknd",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "a10_05",
+          "titulo": "Rolling in the Deep",
+          "artista": "Adele",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "a10_06",
+          "titulo": "Old Town Road",
+          "artista": "Lil Nas X",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "a10_07",
+          "titulo": "Bad Guy",
+          "artista": "Billie Eilish",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "a10_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_007",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.10.SYN.001",
+      "faixas": [
+        {
+          "id_faixa": "future_islands_seasons_waiting_on_you",
+          "titulo": "Seasons (Waiting On You)",
+          "artista": "Future Islands",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "new_order_blue_monday",
+          "titulo": "Blue Monday",
+          "artista": "New Order",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "talk_talk_it_s_my_life",
+          "titulo": "It's My Life",
+          "artista": "Talk Talk",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "james_blake_retrograde",
+          "titulo": "Retrograde",
+          "artista": "James Blake",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hozier_take_me_to_church",
+          "titulo": "Take Me to Church",
+          "artista": "Hozier",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "grimes_flesh_without_blood",
+          "titulo": "Flesh Without Blood",
+          "artista": "Grimes",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "kate_bush_running_up_that_hill",
+          "titulo": "Running Up That Hill",
+          "artista": "Kate Bush",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "future_islands_ran",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_008",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.10.SYN.002",
+      "faixas": [
+        {
+          "id_faixa": "future_islands_seasons_waiting_on_you",
+          "titulo": "Seasons (Waiting On You)",
+          "artista": "Future Islands",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "arctic_monkeys_do_i_wanna_know",
+          "titulo": "Do I Wanna Know?",
+          "artista": "Arctic Monkeys",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "chromatics_tick_of_the_clock",
+          "titulo": "Tick of the Clock",
+          "artista": "Chromatics",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lcd_soundsystem_home",
+          "titulo": "Home",
+          "artista": "LCD Soundsystem",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "grimes_oblivion",
+          "titulo": "Oblivion",
+          "artista": "Grimes",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "disclosure_latch",
+          "titulo": "Latch",
+          "artista": "Disclosure / Sam Smith",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hurts_miracle",
+          "titulo": "Miracle",
+          "artista": "Hurts",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "arcade_fire_my_body_is_a_cage",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_009",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.20.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "dec20_01",
+          "titulo": "Levitating",
+          "artista": "Dua Lipa",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec20_02",
+          "titulo": "drivers license",
+          "artista": "Olivia Rodrigo",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec20_03",
+          "titulo": "As It Was",
+          "artista": "Harry Styles",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec20_04",
+          "titulo": "Anti-Hero",
+          "artista": "Taylor Swift",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec20_05",
+          "titulo": "Flowers",
+          "artista": "Miley Cyrus",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec20_06",
+          "titulo": "Cuff It",
+          "artista": "Beyoncé",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec20_07",
+          "titulo": "Espresso",
+          "artista": "Sabrina Carpenter",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "dec20_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_010",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.50.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "dec50_01",
+          "titulo": "Rock Around the Clock",
+          "artista": "Bill Haley & His Comets",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec50_02",
+          "titulo": "Hound Dog",
+          "artista": "Elvis Presley",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec50_03",
+          "titulo": "Johnny B. Goode",
+          "artista": "Chuck Berry",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec50_04",
+          "titulo": "Great Balls of Fire",
+          "artista": "Jerry Lee Lewis",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec50_05",
+          "titulo": "That'll Be the Day",
+          "artista": "Buddy Holly",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec50_06",
+          "titulo": "Mack the Knife",
+          "artista": "Bobby Darin",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec50_07",
+          "titulo": "Blue Suede Shoes",
+          "artista": "Carl Perkins",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "dec50_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_011",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.60.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "dec60_01",
+          "titulo": "Respect",
+          "artista": "Aretha Franklin",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec60_02",
+          "titulo": "(I Can't Get No) Satisfaction",
+          "artista": "The Rolling Stones",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec60_03",
+          "titulo": "Good Vibrations",
+          "artista": "The Beach Boys",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec60_04",
+          "titulo": "Like a Rolling Stone",
+          "artista": "Bob Dylan",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec60_05",
+          "titulo": "My Girl",
+          "artista": "The Temptations",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec60_06",
+          "titulo": "Purple Haze",
+          "artista": "Jimi Hendrix",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dec60_07",
+          "titulo": "White Rabbit",
+          "artista": "Jefferson Airplane",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "dec60_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_012",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.70.ROC.001",
+      "faixas": [
+        {
+          "id_faixa": "queen_bohemian_rhapsody",
+          "titulo": "Bohemian Rhapsody",
+          "artista": "Queen",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_02",
+          "titulo": "We Will Rock You",
+          "artista": "Roger Taylor",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_06",
+          "titulo": "Layla",
+          "artista": "Eric Clapton",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "led_zeppelin_stairway_to_heaven",
+          "titulo": "Stairway to Heaven",
+          "artista": "Led Zeppelin",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "eagles_hotel_california",
+          "titulo": "Hotel California",
+          "artista": "Eagles",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_04",
+          "titulo": "Have You Ever Seen the Rain",
+          "artista": "Creedence Clearwater Revival",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lynyrd_skynyrd_sweet_home_alabama",
+          "titulo": "Sweet Home Alabama",
+          "artista": "Lynyrd Skynyrd",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "rush_tom_sawyer",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_013",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.80.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "80_01",
+          "titulo": "Take On Me",
+          "artista": "a-ha",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "80_02",
+          "titulo": "Sweet Child O' Mine",
+          "artista": "Guns N' Roses",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "80_03",
+          "titulo": "The Power of Love",
+          "artista": "Frankie Goes to Hollywood",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "80_04",
+          "titulo": "Don't You Want Me",
+          "artista": "The Human League",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "80_05",
+          "titulo": "The Final Countdown",
+          "artista": "Europe",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "80_06",
+          "titulo": "Every Breath You Take",
+          "artista": "The Police",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "80_07",
+          "titulo": "Billie Jean",
+          "artista": "Michael Jackson",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "80_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_014",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.90.DNC.001",
+      "faixas": [
+        {
+          "id_faixa": "dancenation_faithless_insomnia_forev",
+          "titulo": "Faithless- Insomnia (Forever Faithless)",
+          "artista": "Faithless",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "underworld_born_slippy_nuxx",
+          "titulo": "Born Slippy .NUXX",
+          "artista": "Underworld",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "darude_sandstorm",
+          "titulo": "Sandstorm",
+          "artista": "Darude",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "robert_miles_children",
+          "titulo": "Children",
+          "artista": "Robert Miles",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "snap_rhythm_is_a_dancer",
+          "titulo": "Rhythm Is a Dancer",
+          "artista": "Snap!",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "the_prodigy_no_good_start_the_dance",
+          "titulo": "No Good (Start the Dance)",
+          "artista": "The Prodigy",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "alice_deejay_better_off_alone",
+          "titulo": "Better Off Alone",
+          "artista": "Alice Deejay",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "donna_summer_i_feel_love",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_015",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.BAT.001",
+      "faixas": [
+        {
+          "id_faixa": "bat_01",
+          "titulo": "In the Air Tonight",
+          "artista": "Phil Collins",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_02",
+          "titulo": "We Will Rock You",
+          "artista": "Roger Taylor",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_03",
+          "titulo": "Hot For Teacher",
+          "artista": "Alex Van Halen",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_04",
+          "titulo": "Moby Dick",
+          "artista": "John Bonham",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_05",
+          "titulo": "The End",
+          "artista": "Ringo Starr",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_06",
+          "titulo": "Walking on the Moon",
+          "artista": "Stewart Copeland",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "bat_07",
+          "titulo": "Sympathy for the Devil",
+          "artista": "Charlie Watts",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "bat_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_016",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.BLU.001",
+      "faixas": [
+        {
+          "id_faixa": "blues_01",
+          "titulo": "The Thrill Is Gone",
+          "artista": "B.B. King",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "blues_02",
+          "titulo": "Hoochie Coochie Man",
+          "artista": "Muddy Waters",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "blues_03",
+          "titulo": "Boom Boom",
+          "artista": "John Lee Hooker",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "blues_04",
+          "titulo": "Stormy Monday",
+          "artista": "T-Bone Walker",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "blues_05",
+          "titulo": "Born Under a Bad Sign",
+          "artista": "Albert King",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "blues_06",
+          "titulo": "I'd Rather Go Blind",
+          "artista": "Etta James",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "blues_07",
+          "titulo": "Sweet Home Chicago",
+          "artista": "Robert Johnson",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "blues_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_017",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.CIN.001",
+      "faixas": [
+        {
+          "id_faixa": "cinema_01",
+          "titulo": "Blade Runner (Love Theme)",
+          "artista": "Vangelis",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cinema_02",
+          "titulo": "Star Wars",
+          "artista": "John Williams",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cinema_03",
+          "titulo": "The Pink Panther",
+          "artista": "Henry Mancini",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cinema_04",
+          "titulo": "Goldfinger",
+          "artista": "John Barry",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cinema_05",
+          "titulo": "Inception (Time)",
+          "artista": "Hans Zimmer",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cinema_06",
+          "titulo": "The Mission",
+          "artista": "Ennio Morricone",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cinema_07",
+          "titulo": "Lawrence of Arabia",
+          "artista": "Maurice Jarre",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "cinema_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_018",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.CLA.001",
+      "faixas": [
+        {
+          "id_faixa": "cla_01",
+          "titulo": "Eine kleine Nachtmusik",
+          "artista": "Wolfgang Amadeus Mozart",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cla_02",
+          "titulo": "Ode to Joy (Symphony No. 9)",
+          "artista": "Ludwig van Beethoven",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cla_03",
+          "titulo": "The Four Seasons: Spring",
+          "artista": "Antonio Vivaldi",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cla_04",
+          "titulo": "Clair de Lune",
+          "artista": "Claude Debussy",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cla_05",
+          "titulo": "Canon in D",
+          "artista": "Johann Pachelbel",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cla_06",
+          "titulo": "O Fortuna (Carmina Burana)",
+          "artista": "Carl Orff",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "cla_07",
+          "titulo": "Dance of the Sugar Plum Fairy",
+          "artista": "Pyotr Ilyich Tchaikovsky",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "cla_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_019",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.GAM.001",
+      "faixas": [
+        {
+          "id_faixa": "gam_01",
+          "titulo": "The Legend of Zelda — Main Theme",
+          "artista": "Koji Kondo",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gam_02",
+          "titulo": "Halo — Main Theme",
+          "artista": "Martin O'Donnell",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gam_03",
+          "titulo": "One-Winged Angel",
+          "artista": "Nobuo Uematsu",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gam_04",
+          "titulo": "Dragonborn",
+          "artista": "Jeremy Soule",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gam_05",
+          "titulo": "Sweden",
+          "artista": "C418",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gam_06",
+          "titulo": "BFG Division",
+          "artista": "Mick Gordon",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gam_07",
+          "titulo": "World of Warcraft — Main Theme",
+          "artista": "Jason Hayes",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "gam_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_020",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.GTR.001",
+      "faixas": [
+        {
+          "id_faixa": "solo_01",
+          "titulo": "Stairway to Heaven",
+          "artista": "Jimmy Page",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_02",
+          "titulo": "Hotel California",
+          "artista": "Joe Walsh",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_03",
+          "titulo": "Shine On You Crazy Diamond",
+          "artista": "David Gilmour",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_04",
+          "titulo": "Eruption",
+          "artista": "Eddie Van Halen",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_05",
+          "titulo": "Voodoo Child",
+          "artista": "Jimi Hendrix",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_06",
+          "titulo": "Layla",
+          "artista": "Eric Clapton",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "solo_07",
+          "titulo": "Surfing with the Alien",
+          "artista": "Joe Satriani",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "solo_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_021",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.HIP.001",
+      "faixas": [
+        {
+          "id_faixa": "hip_01",
+          "titulo": "Rapper's Delight",
+          "artista": "The Sugarhill Gang",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hip_02",
+          "titulo": "Fight the Power",
+          "artista": "Public Enemy",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hip_03",
+          "titulo": "Juicy",
+          "artista": "The Notorious B.I.G.",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hip_04",
+          "titulo": "In Da Club",
+          "artista": "50 Cent",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hip_05",
+          "titulo": "Lose Yourself",
+          "artista": "Eminem",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hip_06",
+          "titulo": "Sicko Mode",
+          "artista": "Travis Scott",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "hip_07",
+          "titulo": "Alright",
+          "artista": "Kendrick Lamar",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "hip_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_022",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.JAZ.001",
+      "faixas": [
+        {
+          "id_faixa": "jazz_01",
+          "titulo": "Take Five",
+          "artista": "Dave Brubeck",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jazz_02",
+          "titulo": "What a Wonderful World",
+          "artista": "Louis Armstrong",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jazz_03",
+          "titulo": "Fly Me to the Moon",
+          "artista": "Frank Sinatra",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jazz_04",
+          "titulo": "So What",
+          "artista": "Miles Davis",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jazz_05",
+          "titulo": "My Favorite Things",
+          "artista": "John Coltrane",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jazz_06",
+          "titulo": "Feeling Good",
+          "artista": "Nina Simone",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jazz_07",
+          "titulo": "Summertime",
+          "artista": "Ella Fitzgerald",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "jazz_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_023",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.LAT.001",
+      "faixas": [
+        {
+          "id_faixa": "lat_01",
+          "titulo": "Livin' la Vida Loca",
+          "artista": "Ricky Martin",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lat_02",
+          "titulo": "Bailamos",
+          "artista": "Enrique Iglesias",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lat_03",
+          "titulo": "Suavemente",
+          "artista": "Elvis Crespo",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lat_04",
+          "titulo": "Vivir Mi Vida",
+          "artista": "Marc Anthony",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lat_05",
+          "titulo": "Bamboleo",
+          "artista": "Gipsy Kings",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lat_06",
+          "titulo": "Oye Como Va",
+          "artista": "Santana",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "lat_07",
+          "titulo": "Despacito",
+          "artista": "Luis Fonsi",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "lat_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_024",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.MET.001",
+      "faixas": [
+        {
+          "id_faixa": "metal_01",
+          "titulo": "Master of Puppets",
+          "artista": "Metallica",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "metal_02",
+          "titulo": "Paranoid",
+          "artista": "Black Sabbath",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "metal_03",
+          "titulo": "Breaking the Law",
+          "artista": "Judas Priest",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "metal_04",
+          "titulo": "Symphony of Destruction",
+          "artista": "Megadeth",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "metal_05",
+          "titulo": "Raining Blood",
+          "artista": "Slayer",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "metal_06",
+          "titulo": "Walk",
+          "artista": "Pantera",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "metal_07",
+          "titulo": "Duality",
+          "artista": "Slipknot",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "metal_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_025",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "the_durutti_column_sketch_for_summer",
+          "titulo": "Sketch For Summer",
+          "artista": "The Durutti Column",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "marconi_union_weightless",
+          "titulo": "Weightless",
+          "artista": "Marconi Union",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "brian_eno_by_this_river",
+          "titulo": "By This River",
+          "artista": "Brian Eno",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "thelonious_monk_crepuscule_avec_pauline",
+          "titulo": "Crépuscule avec Pauline",
+          "artista": "Thelonious Monk",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "sarah_mclachlan_surfacing",
+          "titulo": "Surfacing",
+          "artista": "Sarah McLachlan",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "brian_eno_on_land",
+          "titulo": "On Land",
+          "artista": "Brian Eno",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "buena_vista_social_club_tres_palabras",
+          "titulo": "Tres Palabras",
+          "artista": "Buena Vista Social Club",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "the_durutti_column_for_belgian_friends",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_026",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.NAT.001",
+      "faixas": [
+        {
+          "id_faixa": "nat_01",
+          "titulo": "All I Want for Christmas Is You",
+          "artista": "Mariah Carey",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nat_02",
+          "titulo": "Last Christmas",
+          "artista": "Wham!",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nat_03",
+          "titulo": "White Christmas",
+          "artista": "Bing Crosby",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nat_04",
+          "titulo": "Rockin' Around the Christmas Tree",
+          "artista": "Brenda Lee",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nat_05",
+          "titulo": "Feliz Navidad",
+          "artista": "José Feliciano",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nat_06",
+          "titulo": "Do They Know It's Christmas?",
+          "artista": "Band Aid",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nat_07",
+          "titulo": "Fairytale of New York",
+          "artista": "The Pogues",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "nat_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_027",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.POP.001",
+      "faixas": [
+        {
+          "id_faixa": "pop_01",
+          "titulo": "Billie Jean",
+          "artista": "Michael Jackson",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pop_02",
+          "titulo": "Like a Prayer",
+          "artista": "Madonna",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pop_03",
+          "titulo": "I Wanna Dance with Somebody (Who Loves Me)",
+          "artista": "Whitney Houston",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pop_04",
+          "titulo": "Dancing Queen",
+          "artista": "ABBA",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pop_05",
+          "titulo": "Rocket Man",
+          "artista": "Elton John",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pop_06",
+          "titulo": "Rolling in the Deep",
+          "artista": "Adele",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pop_07",
+          "titulo": "Uptown Funk",
+          "artista": "Bruno Mars",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "pop_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_028",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.ROC.001",
+      "faixas": [
+        {
+          "id_faixa": "rock_01",
+          "titulo": "Bohemian Rhapsody",
+          "artista": "Queen",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rock_02",
+          "titulo": "Stairway to Heaven",
+          "artista": "Led Zeppelin",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rock_03",
+          "titulo": "Highway to Hell",
+          "artista": "AC/DC",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rock_04",
+          "titulo": "Hotel California",
+          "artista": "Eagles",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rock_05",
+          "titulo": "Smoke on the Water",
+          "artista": "Deep Purple",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rock_06",
+          "titulo": "Baba O'Riley",
+          "artista": "The Who",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rock_07",
+          "titulo": "Don't Stop Believin'",
+          "artista": "Journey",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "rock_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_029",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.SOU.001",
+      "faixas": [
+        {
+          "id_faixa": "soul_01",
+          "titulo": "September",
+          "artista": "Earth, Wind & Fire",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "soul_02",
+          "titulo": "What's Going On",
+          "artista": "Marvin Gaye",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "soul_03",
+          "titulo": "Higher Ground",
+          "artista": "Stevie Wonder",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "soul_04",
+          "titulo": "Lean on Me",
+          "artista": "Bill Withers",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "soul_05",
+          "titulo": "Let's Stay Together",
+          "artista": "Al Green",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "soul_06",
+          "titulo": "It's a Man's Man's Man's World",
+          "artista": "James Brown",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "soul_07",
+          "titulo": "Try a Little Tenderness",
+          "artista": "Otis Redding",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "soul_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_030",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.SYN.001",
+      "faixas": [
+        {
+          "id_faixa": "syn001_01",
+          "titulo": "Midnight City",
+          "artista": "M83",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "syn001_02",
+          "titulo": "A Real Hero",
+          "artista": "College / Electric Youth",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "syn001_03",
+          "titulo": "Turbo Killer",
+          "artista": "Carpenter Brut",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "syn001_04",
+          "titulo": "Sunset",
+          "artista": "The Midnight",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "syn001_05",
+          "titulo": "Resonance",
+          "artista": "HOME",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "syn001_06",
+          "titulo": "She Is Young, She Is Beautiful, She Is Next",
+          "artista": "Perturbator",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "syn001_07",
+          "titulo": "Overdrive",
+          "artista": "Lazerhawk",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "syn001_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_031",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.INT.ALL.TV.001",
+      "faixas": [
+        {
+          "id_faixa": "tv_01",
+          "titulo": "Game of Thrones — Main Title",
+          "artista": "Ramin Djawadi",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tv_02",
+          "titulo": "Stranger Things — Main Theme",
+          "artista": "Kyle Dixon & Michael Stein",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tv_03",
+          "titulo": "The X-Files — Theme",
+          "artista": "Mark Snow",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tv_04",
+          "titulo": "I'll Be There for You",
+          "artista": "The Rembrandts",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tv_05",
+          "titulo": "The Simpsons Theme",
+          "artista": "Danny Elfman",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tv_06",
+          "titulo": "Doctor Who Theme",
+          "artista": "Murray Gold",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tv_07",
+          "titulo": "Mission: Impossible Theme",
+          "artista": "Lalo Schifrin",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "tv_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_032",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.PT.70.WLD.001",
+      "faixas": [
+        {
+          "id_faixa": "jose_mario_branco_topic_inquietacao",
+          "titulo": "Inquietação",
+          "artista": "José Mário Branco - Topic",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "zeca_afonso_grandola_vila_morena",
+          "titulo": "Grândola, Vila Morena",
+          "artista": "Zeca Afonso",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "adriano_correia_de_olive_trova_do_vento_que_passa",
+          "titulo": "Trova do Vento que Passa",
+          "artista": "Adriano Correia de Oliveira",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "boris_vian_le_deserteur",
+          "titulo": "Le Déserteur",
+          "artista": "Boris Vian",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "quilapayun_el_pueblo_unido_jamas_se",
+          "titulo": "El Pueblo Unido Jamás Será Vencido",
+          "artista": "Quilapayún",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "sergio_godinho_venham_mais_cinco",
+          "titulo": "Venham Mais Cinco",
+          "artista": "Sérgio Godinho",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "fausto_a_luta_e_alegria",
+          "titulo": "A Luta É Alegria",
+          "artista": "Fausto",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "mercedes_sosa_te_recuerdo_amanda",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_033",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.PT.80.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "pt80_01",
+          "titulo": "Porto Sentido",
+          "artista": "Rui Veloso",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt80_02",
+          "titulo": "Playback",
+          "artista": "Carlos Paião",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt80_03",
+          "titulo": "Paixão",
+          "artista": "Heróis do Mar",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt80_04",
+          "titulo": "Estrada da Luz",
+          "artista": "Trovante",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt80_05",
+          "titulo": "A Minha Casinha",
+          "artista": "Xutos & Pontapés",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt80_06",
+          "titulo": "Um Grande, Grande Amor",
+          "artista": "Fernando Tordo",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt80_07",
+          "titulo": "Chiclete",
+          "artista": "Táxi",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "pt80_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_034",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.PT.ALL.BAT.001",
+      "faixas": [
+        {
+          "id_faixa": "ptbat_01",
+          "titulo": "Cavalos de Corrida",
+          "artista": "Zé Carvalho",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_02",
+          "titulo": "À Minha Maneira",
+          "artista": "Kalú",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_03",
+          "titulo": "Sangue Oculto",
+          "artista": "Tóli César Machado",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_04",
+          "titulo": "Capitão Romance",
+          "artista": "Kinörm",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_05",
+          "titulo": "Last Child",
+          "artista": "Paulo",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_06",
+          "titulo": "Cão",
+          "artista": "Hélio Morais",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ptbat_07",
+          "titulo": "Miúda",
+          "artista": "Salvador Seabra",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "ptbat_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_035",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.PT.ALL.FAD.001",
+      "faixas": [
+        {
+          "id_faixa": "fausto_topic_lembra_me_um_sonho_lindo",
+          "titulo": "Lembra-Me Um Sonho Lindo",
+          "artista": "Fausto - Topic",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "amalia_rodrigues_estranha_forma_de_vida",
+          "titulo": "Estranha Forma de Vida",
+          "artista": "Amália Rodrigues",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "sergio_godinho_gaivota",
+          "titulo": "Gaivota",
+          "artista": "Sérgio Godinho",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jose_afonso_primavera",
+          "titulo": "Primavera",
+          "artista": "José Afonso",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "madredeus_povo_que_lavas_no_rio",
+          "titulo": "Povo Que Lavas no Rio",
+          "artista": "Madredeus",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "rui_veloso_electrico_28",
+          "titulo": "Eléctrico 28",
+          "artista": "Rui Veloso",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "dulce_pontes_cancao_do_mar",
+          "titulo": "Canção do Mar",
+          "artista": "Dulce Pontes",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "carlos_do_carmo_estranha_forma_de_vida",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_036",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.PT.ALL.MIX.001",
+      "faixas": [
+        {
+          "id_faixa": "pt_01",
+          "titulo": "Grândola, Vila Morena",
+          "artista": "José Afonso",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_02",
+          "titulo": "Não Sou O Único",
+          "artista": "Xutos & Pontapés",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_03",
+          "titulo": "Cantiga d'Amor (Mesmo Assim)",
+          "artista": "Rádio Macau",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_04",
+          "titulo": "Pronúncia do Norte",
+          "artista": "GNR",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_05",
+          "titulo": "Amor de Água Fresca",
+          "artista": "Dina",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_06",
+          "titulo": "Canção do Mar",
+          "artista": "Dulce Pontes",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "pt_07",
+          "titulo": "Re-Tratamento",
+          "artista": "Da Weasel",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "pt_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_037",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.PT.ALL.WLD.001",
+      "faixas": [
+        {
+          "id_faixa": "zeca_afonso_cancao_de_embalar",
+          "titulo": "Canção de Embalar",
+          "artista": "Zeca Afonso",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "adriano_correia_de_olive_trova_do_vento_que_passa_2",
+          "titulo": "Trova do Vento que Passa",
+          "artista": "Adriano Correia de Oliveira",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "amalia_rodrigues_estranha_forma_de_vida_2",
+          "titulo": "Estranha Forma de Vida",
+          "artista": "Amália Rodrigues",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "sergio_godinho_rosa_rezada",
+          "titulo": "Rosa Rezada",
+          "artista": "Sérgio Godinho",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jose_afonso_senhor_meu_jesus_cristo",
+          "titulo": "Senhor Meu Jesus Cristo",
+          "artista": "José Afonso",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "peret_al_alba",
+          "titulo": "Al Alba",
+          "artista": "Peret",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "francisco_fanhais_menino_do_bairro_negro",
+          "titulo": "Menino do Bairro Negro",
+          "artista": "Francisco Fanhais",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "luis_cilia_trova_do_vento_que_passa",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_038",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "STD.US.ALL.AME.001",
+      "faixas": [
+        {
+          "id_faixa": "ame_01",
+          "titulo": "Take Me Home, Country Roads",
+          "artista": "John Denver",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_02",
+          "titulo": "Heart of Gold",
+          "artista": "Neil Young",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_03",
+          "titulo": "Mr. Tambourine Man",
+          "artista": "Bob Dylan",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_04",
+          "titulo": "Have You Ever Seen the Rain",
+          "artista": "Creedence Clearwater Revival",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_05",
+          "titulo": "Take It Easy",
+          "artista": "Eagles",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_06",
+          "titulo": "A Horse With No Name",
+          "artista": "America",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ame_07",
+          "titulo": "Free Fallin'",
+          "artista": "Tom Petty",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "ame_mosaico",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_039",
+      "data": "2026-09-18",
+      "curador": "andre",
+      "modo_geracao": "manual",
+      "parametro": null,
+      "playlist_codigo": "TRB.UK.ALL.ROC.001",
+      "faixas": [
+        {
+          "id_faixa": "beatles_01",
+          "titulo": "Come Together",
+          "artista": "The Beatles",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "beatles_02",
+          "titulo": "Back in the U.S.S.R.",
+          "artista": "The Beatles",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "beatles_03",
+          "titulo": "The End (Trocas de Solo de Guitarra)",
+          "artista": "The Beatles",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "beatles_04",
+          "titulo": "Don't Let Me Down",
+          "artista": "The Beatles / Billy Preston",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "beatles_05",
+          "titulo": "Something (cover)",
+          "artista": "Outro artista (cover) / The Beatles / George Harrison (compositor original)",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "beatles_06",
+          "titulo": "A Hard Day's Night",
+          "artista": "The Beatles",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": null,
+          "titulo": "Revolver",
+          "artista": "",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        },
+        {
+          "id_faixa": "beatles_08",
+          "titulo": "The End (Solo de Bateria)",
+          "artista": "Ringo Starr",
+          "decisao": "aceite",
+          "posicao_sugerida": 8,
+          "posicao_final": 8,
+          "motivo": null
+        }
+      ],
+      "mosaico": null,
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    }
+  ]
 }
