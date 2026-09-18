@@ -4864,7 +4864,7 @@
     "nivel": 3,
     "trecho_a": {
       "ficheiro": "BEATLES_05_a.mp3",
-      "inicio": null,
+      "inicio": 1.09,
       "fim": null
     },
     "trecho_b": {
@@ -5004,7 +5004,7 @@
     "nivel": 1,
     "trecho_a": {
       "ficheiro": "BEATLES_recap.mp3",
-      "inicio": null,
+      "inicio": 1.68,
       "fim": null
     },
     "trecho_b": null,
