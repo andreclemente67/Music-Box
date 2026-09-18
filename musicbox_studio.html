@@ -2064,6 +2064,23 @@
           <label>Dificuldade (1–5)</label>
           <input class="detail-input" type="number" min="1" max="5" id="np-dificuldade" value="3">
         </div>
+        <!-- 2026-09-18, pedido do utilizador: preenchidos automaticamente
+             pela IA (playlist.descritivo_apresentador/nota_curadoria — ver
+             aplicarMetadadosPlaylistIA()/montarPromptIA()), mas sempre
+             editáveis aqui antes de "Criar playlist" — mesmo padrão dos
+             outros campos desta tab (nome/geo/dec/etc.). Ficam vazios em
+             playlists criadas sem IA (manual/tributo), tal como antes —
+             continuam obrigatórios antes de exportPlaylists() (ver
+             af_playlistsSemDescritivoApresentador()), preenchíveis depois
+             na Mesa de Montagem se não vierem daqui. -->
+        <div class="detail-field">
+          <label>Descritivo do Apresentador (preenchido pela IA, editável)</label>
+          <textarea class="detail-input" id="np-descritivo-apresentador" rows="2" style="resize:vertical;" placeholder="Frase curta e entusiasmada para o apresentador ler em directo — preenchida ao gerar com IA"></textarea>
+        </div>
+        <div class="detail-field">
+          <label>Nota de Curadoria (preenchida pela IA, editável)</label>
+          <textarea class="detail-input" id="np-nota-curadoria" rows="2" style="resize:vertical;" placeholder="Explicação editorial interna (nunca aparece no jogo) — preenchida ao gerar com IA"></textarea>
+        </div>
         <div class="detail-field" id="np-banda-wrap" style="display:none;">
           <label>Banda / Artista (só Tributo)</label>
           <input class="detail-input" type="text" id="np-banda" placeholder="Ex: Pink Floyd">
@@ -6295,7 +6312,7 @@ function verificarTudoIA() {
 
 function openNewPlaylistModal() {
   populateModalSelectors();
-  ['nome','descritivo','universo','banda','ia-semente','ia-artista'].forEach(f => {
+  ['nome','descritivo','universo','banda','ia-semente','ia-artista','descritivo-apresentador','nota-curadoria'].forEach(f => {
     const el = document.getElementById('np-'+f);
     if (el) { el.value = ''; delete el.dataset.manualEdit; }
   });
@@ -6322,8 +6339,14 @@ function createPlaylist() {
     tipo,
     nome:       document.getElementById('np-nome').value.trim() || chave,
     descritivo: '',
-    descritivo_apresentador: '', // obrigatório antes de guardar — ver exportPlaylists() e af_editarDescritivoApresentador() na Mesa de Montagem
-    nota_curadoria: '', // idem — ver af_editarNotaCuradoria() na Mesa de Montagem
+    // 2026-09-18, pedido do utilizador: lidos dos campos da tab Estrutura
+    // (preenchidos automaticamente pela IA, ver aplicarMetadadosPlaylistIA()
+    // — mas sempre editáveis, por isso lidos daqui e não directamente de
+    // NP_IA_RESULTADO). Continuam obrigatórios antes de exportPlaylists()
+    // — se ficarem vazios (playlist manual/tributo, ou a IA não os deu),
+    // editáveis depois na Mesa de Montagem, como já era.
+    descritivo_apresentador: document.getElementById('np-descritivo-apresentador').value.trim(),
+    nota_curadoria: document.getElementById('np-nota-curadoria').value.trim(),
     playlistCodigo: chave,
     feedback_id: null, // preenchido abaixo por af_registarFeedbackSessao(), só quando há sugestões da IA com decisões a registar
     universo:   document.getElementById('np-universo').value.trim(),
@@ -6937,18 +6960,27 @@ function montarPromptIA() {
   // Categoria e Tema, com 0 faixasFixas, geravam sempre 6, nunca 7.
   const nFaixasIA = 7 - info.faixasFixas.length;
 
+  // 2026-09-18, pedido do utilizador: descritivo_apresentador/
+  // nota_curadoria pedidos em todos os modos, com o texto exacto pedido —
+  // ver aplicarMetadadosPlaylistIA()/createPlaylist() do lado do Studio,
+  // que os lê de volta para os campos da tab Estrutura.
+  const instrucaoDescritivos = `- descritivo_apresentador: "frase curta para o apresentador dizer em directo antes da playlist começar — tom entusiasmado, nunca técnico (máx 2 linhas, Bíblia §18.7)"
+- nota_curadoria: "explicação editorial interna — porquê desta playlist, critério de curadoria usado, para consulta interna no Studio (nunca exposta na app de jogo, §30.5)"`;
+
   const instrucaoMetadados = info.criteriosFixos
     ? `Os critérios geo/decadas/genero da playlist já estão FIXOS — usa exactamente estes valores no JSON "playlist": geo="${info.criteriosFixos.geo}", decadas="${info.criteriosFixos.dec}", genero="${info.criteriosFixos.genero}". Só precisas de sugerir:
 - nome: um título editorial apelativo para a playlist
 - dificuldade: um número de 1 (muito fácil) a 5 (muito difícil)
-- tipo: normalmente "STD" (Standard, áudio puro)`
+- tipo: normalmente "STD" (Standard, áudio puro)
+${instrucaoDescritivos}`
     : `Primeiro sugere os metadados da playlist, com base no contexto:
 - nome: um título editorial apelativo para a playlist
 - geo: um destes códigos — INT (internacional), PT, BR, ES, FR, UK, US
 - decadas: um destes códigos — 50, 60, 70, 80, 90, 00, 10, 20, ou ALL (atemporal/multi-década)
 - genero: um destes códigos — MIX, ROC, POP, JAZ, BLU, SOU, HIP, DNC, SYN, MET, CLA, WLD, LAT, AME, CIN, TV, GAM, VOZ, GTR, BAT, FAD, NAT, EUR
 - dificuldade: um número de 1 (muito fácil) a 5 (muito difícil)
-- tipo: normalmente "STD" (Standard, áudio puro)`;
+- tipo: normalmente "STD" (Standard, áudio puro)
+${instrucaoDescritivos}`;
 
   const avisoProibidos = nomesProibidos.length
     ? ` Os seguintes artistas JÁ estão a ser usados (semente/contexto desta geração) — estão PROIBIDOS de voltar a aparecer em qualquer uma das ${nFaixasIA} faixas ou no mosaico, nem como artista nem como pessoa a adivinhar: ${nomesProibidos.map(n => `"${n}"`).join(', ')}.`
@@ -6982,7 +7014,7 @@ Para cada uma dessas faixas (incluindo o mosaico), indica também:
 
 Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
 {
-  "playlist": {"nome": "...", "geo": "INT", "decadas": "80", "genero": "POP", "dificuldade": 3, "tipo": "STD"},
+  "playlist": {"nome": "...", "geo": "INT", "decadas": "80", "genero": "POP", "dificuldade": 3, "tipo": "STD", "descritivo_apresentador": "frase curta para o apresentador dizer em directo antes da playlist começar — tom entusiasmado, nunca técnico (máx 2 linhas, Bíblia §18.7)", "nota_curadoria": "explicação editorial interna — porquê desta playlist, critério de curadoria usado, para consulta interna no Studio (nunca exposta na app de jogo, §30.5)"},
   "musicas": [
     {"titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "descrição curta do estilo", "genero": "...", "tags": ["...", "...", "..."], "universal": true}
   ],
@@ -7084,6 +7116,17 @@ function aplicarMetadadosPlaylistIA(playlist) {
   if (dificuldade >= 1 && dificuldade <= 5) { document.getElementById('np-dificuldade').value = dificuldade; alterou = true; }
   const tipo = mapearOpcaoIA(playlist.tipo, OPCOES_TIPO, null);
   if (tipo === 'STD') { document.getElementById('np-tipo-cod').value = tipo; alterou = true; }
+
+  // 2026-09-18, pedido do utilizador — ver montarPromptIA() (pede estes
+  // dois campos à IA) e createPlaylist() (lê estes inputs para pl.*).
+  if (playlist.descritivo_apresentador) {
+    document.getElementById('np-descritivo-apresentador').value = String(playlist.descritivo_apresentador).trim();
+    alterou = true;
+  }
+  if (playlist.nota_curadoria) {
+    document.getElementById('np-nota-curadoria').value = String(playlist.nota_curadoria).trim();
+    alterou = true;
+  }
 
   if (alterou) {
     document.getElementById('np-universo').dataset.manualEdit = ''; // deixa o universo auto-preencher-se com os novos geo/dec/género
