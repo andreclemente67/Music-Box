@@ -7267,6 +7267,13 @@ let AF_IA_SUBSTITUIR_INDEX = null;
 // ver af_pedirSubstitutosIA()/af_renderSubstitutosIA().
 let AF_IA_SUBSTITUTOS_ESTADO = null;
 
+// Mesmo par de estados que AF_IA_SUBSTITUIR_INDEX/AF_IA_SUBSTITUTOS_ESTADO,
+// mas para o mosaico (2026-09-18, pedido do utilizador — reaproveita o
+// fluxo de "✎ Substituir" das faixas, ver 8f318ce/0b449a6). Só existe um
+// mosaico de cada vez, por isso não precisa de índice — só um booleano.
+let AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
+let AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
+
 const AF_CORES_DECISAO_IA = {
   aceite: 'var(--green, #4ec98e)',
   rejeitada: 'var(--red, #e05555)',
@@ -7276,7 +7283,14 @@ const AF_CORES_DECISAO_IA = {
 function renderResultadoIA() {
   const el = document.getElementById('np-ia-resultado');
   if (!el) return;
-  if (!NP_IA_RESULTADO) { el.innerHTML = ''; AF_IA_SUBSTITUIR_INDEX = null; AF_IA_SUBSTITUTOS_ESTADO = null; return; }
+  if (!NP_IA_RESULTADO) {
+    el.innerHTML = '';
+    AF_IA_SUBSTITUIR_INDEX = null;
+    AF_IA_SUBSTITUTOS_ESTADO = null;
+    AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
+    AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
+    return;
+  }
 
   function linhaMusica(m, i) {
     const ehSemente = i < NP_IA_RESULTADO.nFaixasFixas;
@@ -7331,8 +7345,11 @@ function renderResultadoIA() {
       <div style="display:flex;gap:4px;align-items:center;margin-top:3px;">
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${mos.decisao==='aceite'?'background:'+AF_CORES_DECISAO_IA.aceite+';color:#0a2015;border-color:'+AF_CORES_DECISAO_IA.aceite+';':''}" onclick="af_decidirIAMosaico('aceite')">✓ Aceitar</button>
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${mos.decisao==='rejeitada'?'background:'+AF_CORES_DECISAO_IA.rejeitada+';color:#2a0d0d;border-color:'+AF_CORES_DECISAO_IA.rejeitada+';':''}" onclick="af_decidirIAMosaico('rejeitada')">✗ Rejeitar</button>
+        <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_abrirSubstituirIAMosaico()" title="Pedir 2-3 alternativas de mosaico à IA (ou pesquisar no catálogo, se rejeitares todas)">✎ Substituir</button>
       </div>
       ${mos.decisao === 'rejeitada' ? `<div style="margin-top:3px;"><input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeAttr(mos.motivo || '')}" oninput="af_editarMotivoIAMosaico(this.value)" placeholder="Porquê? (opcional)"></div>` : ''}
+      ${mos.decisao === 'substituida' && mos.elo_explicacao ? `<div style="margin-top:3px;font-size:9px;color:var(--text3);font-style:italic;">ligação ao elo: ${escapeHtml(mos.elo_explicacao)}</div>` : ''}
+      ${AF_IA_SUBSTITUIR_MOSAICO_ABERTO ? af_renderSubstitutosMosaicoIA() : ''}
     </div>`;
   }
   el.innerHTML = html;
@@ -7633,6 +7650,280 @@ function af_rejeitarSugestoesSubstitutoIA(i) {
   renderResultadoIA();
 }
 
+// ─── SUBSTITUIR MOSAICO (2026-09-18, pedido do utilizador) ───────────────
+// Mesmo fluxo de "✎ Substituir" já implementado para as faixas normais
+// (8f318ce/0b449a6/8f318ce) — reaproveitado aqui para o mosaico, com as
+// especificidades próprias dele: pede categoria+pessoa além de
+// título+artista, e a pessoa a adivinhar entra também na verificação de
+// artista repetido (não pode ser membro/colaborador de nenhum artista já
+// na playlist). Só um mosaico por playlist, por isso sem índice — ver
+// AF_IA_SUBSTITUIR_MOSAICO_ABERTO/AF_IA_SUBSTITUTOS_MOSAICO_ESTADO.
+
+// Artistas já "em uso" nesta playlist em construção, para o pedido de
+// substituição do mosaico — faixas fixas/proibidas da geração + todas as
+// faixas da lista (o mosaico não faz parte de NP_IA_RESULTADO.musicas,
+// por isso não há índice a excluir, ao contrário de
+// af_artistasNaPlaylistParaSubstituicao()).
+function af_artistasNaPlaylistParaSubstituicaoMosaico() {
+  const info = af_infoModoGeracaoIA();
+  const artistasPlaylist = new Set(af_nomesProibidosIA(info).filter(Boolean));
+  NP_IA_RESULTADO.musicas.forEach(m => { if (m.artista) artistasPlaylist.add(m.artista); });
+  return [...artistasPlaylist];
+}
+
+// Filtra sugestões de mosaico cujo artista OU pessoa a adivinhar já esteja
+// na playlist — mesma rede de segurança de af_filtrarSugestoesArtistaRepetido,
+// mas verifica os dois campos (a IA por vezes ignora a instrução do
+// prompt, ver o mesmo problema real com "America" nas faixas).
+function af_filtrarSugestoesArtistaRepetidoMosaico(sugestoes) {
+  const proibidos = new Set(af_artistasNaPlaylistParaSubstituicaoMosaico().map(af_normalizarArtista).filter(Boolean));
+  return sugestoes.filter(s => {
+    const artista = af_normalizarArtista(s.artista);
+    const pessoa = af_normalizarArtista(s.pessoa);
+    if (artista && proibidos.has(artista)) return false;
+    if (pessoa && proibidos.has(pessoa)) return false;
+    return true;
+  });
+}
+
+function af_montarPromptSubstituicaoMosaicoIA() {
+  const info = af_infoModoGeracaoIA();
+  const mos = NP_IA_RESULTADO.mosaico;
+  const listaArtistas = af_artistasNaPlaylistParaSubstituicaoMosaico();
+
+  const motivoTxt = mos.motivo ? ` Motivo da rejeição: "${mos.motivo}".` : '';
+  const artistasTxt = listaArtistas.length
+    ? ` Os seguintes artistas já estão nesta playlist — NÃO podem ser o artista da faixa do mosaico, nem a pessoa a adivinhar pode ser membro (passado ou presente), compositor ou colaborador conhecido de nenhum deles: ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
+    : '';
+
+  return `Estás a curar o mosaico (a faixa-charada final) de uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
+
+O mosaico anterior foi rejeitado pelo curador: categoria "${mos.categoria || '?'}", pessoa a adivinhar "${mos.pessoa || '?'}", faixa "${mos.titulo || '?'}" — ${mos.artista || '?'}.${motivoTxt}${artistasTxt}
+
+Sugere 2 a 3 alternativas REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas, pessoas ou factos): uma faixa cujo intérprete, baterista, compositor ou membro é, ele próprio, a pista que os jogadores têm de adivinhar (ex.: categoria "Intérprete", pessoa "Mark Knopfler", faixa "Sultans of Swing" dos Dire Straits, porque Knopfler é o guitarrista da banda). Cada alternativa tem de ter uma ligação clara ao contexto acima. A pessoa a adivinhar tem de ter uma imagem real e facilmente encontrável (retrato, foto de imprensa, still), suficientemente reconhecível para funcionar visualmente no jogo — mas evita alguém cuja imagem esteja tão directamente ligada ao contexto acima que entregue o tema secreto da playlist ao jogador só de ver a foto, antes do momento certo de o revelar.
+
+Para cada alternativa indica: categoria (Artista|Baterista|Compositor|Dupla|Intérprete), pessoa (nome a adivinhar), titulo (da faixa), artista (da faixa), geografia, decada (formato "AAAAs"), estilo (descrição curta do estilo), genero (texto livre, ex.: "Rock", "Jazz"), tags (array de até 3 tags descritivas curtas), universal (true se a faixa é reconhecida transgeracionalmente), elo_explicacao (explicação curta da ligação ao contexto acima).
+
+Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
+{
+  "sugestoes": [
+    {"categoria": "...", "pessoa": "...", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true, "elo_explicacao": "..."}
+  ]
+}
+O array "sugestoes" tem de ter 2 ou 3 objectos.`;
+}
+
+async function af_pedirSubstitutosMosaicoIA() {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.mosaico) return;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { carregando: true };
+  renderResultadoIA();
+
+  try {
+    const prompt = af_montarPromptSubstituicaoMosaicoIA();
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-faixas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+      keepalive: true,
+    });
+    const dados = await r.json().catch(() => null);
+    if (!r.ok || !dados || !dados.ok) throw new Error((dados && dados.erro) || `HTTP ${r.status}`);
+    let sugestoes = Array.isArray(dados.resultado && dados.resultado.sugestoes) ? dados.resultado.sugestoes.slice(0, 3) : [];
+    const nAntesFiltro = sugestoes.length;
+    sugestoes = af_filtrarSugestoesArtistaRepetidoMosaico(sugestoes);
+    if (sugestoes.length < nAntesFiltro) {
+      console.warn('[af_pedirSubstitutosMosaicoIA] sugestão(ões) descartada(s) — artista/pessoa já na playlist', nAntesFiltro - sugestoes.length);
+    }
+    if (!sugestoes.length) throw new Error('a IA não devolveu sugestões válidas (sem repetição de artista)');
+    if (!AF_IA_SUBSTITUIR_MOSAICO_ABERTO) return; // curador fechou entretanto
+    AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { sugestoes };
+  } catch (e) {
+    console.error('[af_pedirSubstitutosMosaicoIA]', e);
+    if (!AF_IA_SUBSTITUIR_MOSAICO_ABERTO) return;
+    AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { manual: true };
+    notify(`Falha a pedir sugestões de mosaico à IA (${e.message}) — pesquisa manual disponível.`, 'err');
+  }
+  renderResultadoIA();
+}
+
+function af_abrirSubstituirIAMosaico() {
+  const abrir = !AF_IA_SUBSTITUIR_MOSAICO_ABERTO;
+  AF_IA_SUBSTITUIR_MOSAICO_ABERTO = abrir;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
+  renderResultadoIA();
+  if (abrir) af_pedirSubstitutosMosaicoIA();
+}
+
+function af_renderCampoSugestaoCuradorMosaico() {
+  return `<div style="margin-top:4px;margin-bottom:4px;display:flex;gap:4px;">
+    <input class="detail-input" id="ia-sugestao-curador-mosaico" style="flex:1;padding:3px 6px;font-size:10px;" placeholder="Tens uma sugestão? Escreve título + artista (ou categoria/pessoa) e a IA confirma a ligação ao elo" onkeydown="if(event.key==='Enter'){event.preventDefault();af_usarSugestaoCuradorMosaico();}">
+    <button type="button" class="btn" style="padding:2px 7px;font-size:10px;white-space:nowrap;" onclick="af_usarSugestaoCuradorMosaico()">✦ Usar a minha sugestão</button>
+  </div>`;
+}
+
+function af_montarPromptValidacaoSugestaoCuradorMosaico(texto) {
+  const info = af_infoModoGeracaoIA();
+  const listaArtistas = af_artistasNaPlaylistParaSubstituicaoMosaico();
+  const artistasTxt = listaArtistas.length
+    ? ` Os seguintes artistas já estão nesta playlist: ${listaArtistas.map(n => `"${n}"`).join(', ')} — se a sugestão do curador usar um destes artistas (como artista da faixa OU como a pessoa a adivinhar, incluindo se for membro/colaborador conhecido de algum deles), sinaliza isso claramente em elo_explicacao.`
+    : '';
+
+  return `Estás a curar o mosaico (a faixa-charada final) de uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
+
+O curador sugeriu esta ideia de mosaico: "${texto}".${artistasTxt}
+
+Identifica a faixa real correspondente e a pessoa a adivinhar (categoria: Artista|Baterista|Compositor|Dupla|Intérprete — corrige a grafia se necessário, nunca inventes) e confirma/explica em elo_explicacao a ligação ao contexto acima. A pessoa a adivinhar tem de ter uma imagem real e facilmente encontrável, reconhecível o suficiente para funcionar visualmente no jogo — mas sinaliza em elo_explicacao se a imagem for tão directamente ligada ao contexto acima que entregaria o tema secreto da playlist antes do momento certo. Se não conseguires identificar uma correspondência real, ou não encontrares nenhuma ligação plausível, diz isso com honestidade em elo_explicacao — não inventes uma ligação forçada. Indica também: geografia, decada (formato "AAAAs"), estilo (descrição curta do estilo), genero (texto livre, ex.: "Rock", "Jazz"), tags (array de até 3 tags descritivas curtas), universal (true se reconhecida transgeracionalmente).
+
+Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
+{
+  "faixa": {"categoria": "...", "pessoa": "...", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true, "elo_explicacao": "explicação curta e honesta da ligação ao contexto — ou da falta dela"}
+}`;
+}
+
+async function af_usarSugestaoCuradorMosaico() {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.mosaico) return;
+  const input = document.getElementById('ia-sugestao-curador-mosaico');
+  const texto = input ? input.value.trim() : '';
+  if (!texto) { notify('Escreve a tua ideia de mosaico antes de a usar.', 'err'); return; }
+
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { validando: true };
+  renderResultadoIA();
+
+  try {
+    const prompt = af_montarPromptValidacaoSugestaoCuradorMosaico(texto);
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-faixas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+      keepalive: true,
+    });
+    const dados = await r.json().catch(() => null);
+    if (!r.ok || !dados || !dados.ok) throw new Error((dados && dados.erro) || `HTTP ${r.status}`);
+    const faixa = dados.resultado && dados.resultado.faixa;
+    if (!faixa || !faixa.titulo) throw new Error('a IA não devolveu o mosaico validado');
+    const filtradas = af_filtrarSugestoesArtistaRepetidoMosaico([faixa]);
+    if (!filtradas.length) throw new Error(`artista/pessoa "${faixa.artista || faixa.pessoa}" já está nesta playlist`);
+    if (!AF_IA_SUBSTITUIR_MOSAICO_ABERTO) return;
+    AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { sugestoes: filtradas, curadorSugeriu: true };
+  } catch (e) {
+    console.error('[af_usarSugestaoCuradorMosaico]', e);
+    if (!AF_IA_SUBSTITUIR_MOSAICO_ABERTO) return;
+    AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { manual: true };
+    notify(`Falha a validar a sugestão (${e.message}) — pesquisa manual disponível.`, 'err');
+  }
+  renderResultadoIA();
+}
+
+// Bloco inline mostrado sob o mosaico com "✎ Substituir" aberto — mesma
+// estrutura de af_renderSubstitutosIA() (campo do curador + carregando/
+// validando/sugestões/manual), adaptado ao formato do mosaico
+// (categoria+pessoa, sem índice de faixa).
+function af_renderSubstitutosMosaicoIA() {
+  const estado = AF_IA_SUBSTITUTOS_MOSAICO_ESTADO;
+  let html = `<div style="margin-top:4px;">` + af_renderCampoSugestaoCuradorMosaico();
+
+  if (!estado || estado.carregando) {
+    return html + `<div style="font-size:10px;color:var(--text3);">A pedir sugestões de mosaico à IA…</div></div>`;
+  }
+  if (estado.validando) {
+    return html + `<div style="font-size:10px;color:var(--text3);">A validar a ligação ao elo…</div></div>`;
+  }
+  if (estado.manual) {
+    return html + af_renderBuscaSubstitutoMosaicoIA() + `</div>`;
+  }
+  const sugestoes = estado.sugestoes || [];
+  html += `<div style="font-size:9px;color:var(--text3);margin-bottom:3px;">${estado.curadorSugeriu ? 'Sugestão validada pela IA:' : 'Sugestões da IA — escolhe uma ou rejeita todas:'}</div>`;
+  html += sugestoes.map((s, si) => `
+    <div style="display:flex;gap:4px;align-items:center;padding:3px 6px;margin-bottom:2px;border:1px solid var(--border2);border-radius:4px;">
+      <div style="flex:1;font-size:10px;">${escapeHtml(s.categoria || '?')} · ${escapeHtml(s.pessoa || '?')} — ${escapeHtml(s.titulo || '')} — ${escapeHtml(s.artista || '')}
+        <span style="color:var(--text3);">(${escapeHtml(s.geografia || '')} · ${escapeHtml(s.decada || '')} · ${escapeHtml(s.genero || '')})</span>
+        ${s.elo_explicacao ? `<div style="color:var(--text3);font-style:italic;margin-top:2px;">${escapeHtml(s.elo_explicacao)}</div>` : ''}
+      </div>
+      <button type="button" class="btn" style="padding:2px 7px;font-size:9px;" onclick="af_aplicarSugestaoSubstitutoMosaicoIA(${si})">✓ Usar esta</button>
+    </div>`).join('');
+  html += `<button type="button" class="btn" style="padding:2px 7px;font-size:9px;margin-top:2px;" onclick="af_rejeitarSugestoesSubstitutoMosaicoIA()">✗ ${sugestoes.length > 1 ? 'Rejeitar as sugestões' : 'Rejeitar'} — pesquisar no catálogo</button>`;
+  html += `</div>`;
+  return html;
+}
+
+function af_renderBuscaSubstitutoMosaicoIA() {
+  return `<div style="margin-top:4px;">
+    <input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" oninput="af_filtrarSubstitutoMosaicoIA(this.value)" placeholder="Pesquisar faixa alternativa no catálogo (título ou artista)..." autofocus>
+    <div id="ia-substituto-mosaico-resultados" style="margin-top:3px;max-height:120px;overflow-y:auto;"></div>
+  </div>`;
+}
+
+function af_filtrarSubstitutoMosaicoIA(texto) {
+  const el = document.getElementById('ia-substituto-mosaico-resultados');
+  if (!el) return;
+  const termo = texto.trim().toLowerCase();
+  if (!termo) { el.innerHTML = ''; return; }
+  const resultados = CATALOGO.filter(t =>
+    (t.titulo || '').toLowerCase().includes(termo) ||
+    (t.artista || []).join(' ').toLowerCase().includes(termo)
+  ).slice(0, 8);
+  el.innerHTML = resultados.map(t => `<div class="detail-input" style="cursor:pointer;padding:3px 6px;font-size:10px;margin-bottom:2px;" onclick="af_aplicarSubstituicaoMosaicoCatalogoIA('${t.id}')">${escapeHtml(t.titulo)} — ${escapeHtml((t.artista||[]).join(' / '))}</div>`).join('')
+    || '<div style="font-size:10px;color:var(--text3);padding:3px 6px;">sem resultados</div>';
+}
+
+// Aplica uma faixa do catálogo ao mosaico (fallback manual) — categoria/
+// pessoa ficam por preencher (o curador edita no bloco do mosaico), mesmo
+// padrão de af_marcarIAMosaico().
+function af_aplicarSubstituicaoMosaicoCatalogoIA(idCatalogo) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.mosaico) return;
+  const t = CATALOGO_BY_ID.get(idCatalogo);
+  if (!t) return;
+  const mos = NP_IA_RESULTADO.mosaico;
+  mos.titulo = t.titulo || '';
+  mos.artista = (t.artista || []).join(' / ');
+  mos.geografia = t.geografia || '';
+  mos.decada = (t.decadas || [])[0] || '';
+  mos.estilo = t.estilo || '';
+  mos.tags = t.tags || [];
+  mos.genero = (t.generos || [])[0] || '';
+  mos.universal = !!t.universal;
+  mos.elo_explicacao = null;
+  mos.decisao = 'substituida';
+  mos.motivo = 'substituída por outra faixa do catálogo';
+  AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
+  renderResultadoIA();
+  notify('Mosaico substituído a partir do catálogo — preenche categoria/pessoa no bloco do mosaico.', 'ok');
+}
+
+// Aplica uma sugestão (automática ou validada a partir do texto do
+// curador) ao mosaico — mesmo efeito de af_aplicarSugestaoSubstitutoIA(),
+// adaptado ao formato do mosaico (inclui categoria/pessoa).
+function af_aplicarSugestaoSubstitutoMosaicoIA(si) {
+  if (!NP_IA_RESULTADO || !NP_IA_RESULTADO.mosaico) return;
+  const estado = AF_IA_SUBSTITUTOS_MOSAICO_ESTADO;
+  const s = estado && estado.sugestoes && estado.sugestoes[si];
+  if (!s) return;
+  const mos = NP_IA_RESULTADO.mosaico;
+  mos.categoria = s.categoria || '';
+  mos.pessoa = s.pessoa || '';
+  mos.titulo = s.titulo || '';
+  mos.artista = s.artista || '';
+  mos.geografia = s.geografia || '';
+  mos.decada = s.decada || '';
+  mos.estilo = s.estilo || '';
+  mos.tags = s.tags || [];
+  mos.genero = s.genero || '';
+  mos.universal = !!s.universal;
+  mos.elo_explicacao = s.elo_explicacao || null;
+  mos.decisao = 'substituida';
+  mos.motivo = estado.curadorSugeriu ? 'substituída por sugestão do curador (validada pela IA)' : 'substituída por sugestão da IA';
+  AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
+  renderResultadoIA();
+}
+
+function af_rejeitarSugestoesSubstitutoMosaicoIA() {
+  if (!AF_IA_SUBSTITUIR_MOSAICO_ABERTO) return;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = { manual: true };
+  renderResultadoIA();
+}
+
 function af_filtrarSubstitutoIA(i, texto) {
   const el = document.getElementById(`ia-substituto-resultados-${i}`);
   if (!el) return;
@@ -7689,6 +7980,8 @@ function af_marcarIAMosaico(i) {
   };
   AF_IA_SUBSTITUIR_INDEX = null;
   AF_IA_SUBSTITUTOS_ESTADO = null;
+  AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
   renderResultadoIA();
   notify('Faixa marcada como mosaico (posição 8) — preenche categoria/pessoa no bloco do mosaico.', 'ok');
 }
@@ -7771,6 +8064,8 @@ function editarIAMosaico(campo, valor) {
 function removerIAMosaico() {
   if (!NP_IA_RESULTADO) return;
   NP_IA_RESULTADO.mosaico = null;
+  AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
+  AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
   renderResultadoIA();
 }
 
