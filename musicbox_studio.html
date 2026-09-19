@@ -6994,13 +6994,17 @@ ${instrucaoDescritivos}`;
     ? ` Os seguintes artistas JÁ estão a ser usados (semente/contexto desta geração) — estão PROIBIDOS de voltar a aparecer em qualquer uma das ${nFaixasIA} faixas ou no mosaico, nem como artista nem como pessoa a adivinhar: ${nomesProibidos.map(n => `"${n}"`).join(', ')}.`
     : '';
 
-  // Modo Elo (2026-09-18, pedido do utilizador): a escolha do mosaico deve
-  // favorecer alguém cuja imagem real e facilmente encontrável (retrato,
-  // capa, still) torne o elo visual e imediatamente óbvio — não uma
-  // referência subtil. Só se aplica no modo Elo (info.eloMosaicoInstrucao
-  // só existe aí — ver af_infoModoGeracaoIA()).
+  // Modo Elo (2026-09-19, revisto — pedido do utilizador): a escolha do
+  // mosaico deve ter ligação real mas preferencialmente INDIRECTA ao elo —
+  // o oposto da instrução original (2026-09-18), que pedia a representação
+  // mais directa e óbvia possível. A ligação directa entrega o tema secreto
+  // ao jogador antes da revelação (ex. Hans Zimmer/Dune para o elo
+  // "Deserto" é demasiado óbvio); a charada deve funcionar por si só
+  // (imagem reconhecível), só ficando "satisfatória" depois de revelada. Só
+  // se aplica no modo Elo (info.eloMosaicoInstrucao só existe aí — ver
+  // af_infoModoGeracaoIA()).
   const instrucaoMosaicoElo = info.eloMosaicoInstrucao
-    ? ` Para este mosaico em particular, dá prioridade a uma escolha cuja imagem real e facilmente encontrável (retrato do artista, capa, still) torne o elo "${info.eloMosaicoInstrucao}" visual e imediatamente óbvio — não uma referência subtil ou indirecta, mas a representação mais directa e reconhecível possível do tema (ex.: para o elo "Deserto": alguém fotografado com dunas, calor, horizonte árido, solidão).`
+    ? ` Para este mosaico em particular, escolhe uma pessoa/elemento com ligação real ao elo "${info.eloMosaicoInstrucao}", mas preferencialmente indirecta — a imagem deve ser reconhecível e fazer uma boa charada por si só, sem que o título, o nome ou a associação praticamente entregue o tema secreto. A ligação ao elo deve ser satisfatória depois da revelação, não antes. Exemplo a evitar para o elo "Deserto": Hans Zimmer / Dune (demasiado directo). Prefere alguém cuja ligação ao deserto existe mas não é imediata.`
     : '';
 
   const blocoHistorico = af_blocoHistoricoIA();
