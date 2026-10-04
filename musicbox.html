@@ -85,6 +85,9 @@
   .collection-titulo { font-size:16px; font-weight:900; letter-spacing:1px; color:var(--accent); text-align:center; }
   .collection-sub { font-size:12px; color:#9a9a96; text-align:center; max-width:500px; }
   .collection-lista { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:640px; }
+  /* DÉCADAS usa o painel denso em linhas (.decadas-painel), não a grelha de
+     3 colunas de .collection-btn — ver escolherUniversoDaFamilia(). */
+  .collection-lista.collection-lista-decadas { display:block; }
   .collection-btn { background:var(--bg2); border:2px solid var(--border); border-radius:8px; padding:14px 10px; color:var(--text); cursor:pointer; font-size:13px; font-weight:700; text-align:center; }
   .collection-btn:hover { border-color:var(--accent); }
   .collection-btn:disabled { opacity:0.25; cursor:not-allowed; }
@@ -222,6 +225,11 @@
   #teste-lista button { background:var(--bg2); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:10px 16px; font-size:13px; text-align:left; cursor:pointer; }
   #teste-lista button:hover { background:#1e2229; }
   #teste-lista .voltar { text-align:center; color:#8a8a86; background:none; border:none; }
+  /* #teste-lista button (ID+elemento) sobrepunha border/padding/background
+     das linhas DÉCADAS — reafirma aqui com a mesma especificidade
+     (ID+classe), mesma técnica já usada no .btn-saber-mais acima. */
+  #teste-lista .decada-row { background:none; border:none; border-radius:0; padding:8px 44px 8px 14px; }
+  #teste-lista .decada-row:hover { background:var(--bg3); }
 
   /* Secções "Todas as playlists" agrupadas por família (Décadas/Géneros/
      Especiais — mesma taxonomia de familiaDeChave(), já usada na escolha
@@ -251,6 +259,81 @@
   .playlist-card-subtitulo { font-size:11px; color:var(--text2); line-height:1.25; margin-top:-2px; }
   .playlist-card-meta { font-size:10px; color:var(--text2); line-height:1.4; }
   .playlist-card-codigo { font-size:9px; color:var(--text3); }
+
+  /* DÉCADAS — painel denso em linhas horizontais, estilo dos painéis do
+     Music Box Editor (.assets-card/.assets-card-header em
+     musicbox_studio.html: cabeçalho com título mono maiúsculo à esquerda +
+     contagem à direita, corpo com linhas finas separadas por borda, hover
+     a clarear o fundo). Pedido do utilizador 2026-10-04 — substitui a
+     primeira tentativa em cards verticais (descartada). Só a secção
+     DÉCADAS; Géneros/Especiais continuam com .playlist-card/carrossel.
+     af_renderPainelDecadas() é a função partilhada pelos dois sítios
+     (grelha "Testar uma Playlist" e Escolha de Universo em directo). */
+  .decadas-painel { background:var(--bg2); border:1px solid var(--border); border-radius:8px; overflow:hidden; width:100%; }
+  .decadas-painel-header { padding:10px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+  .decadas-painel-title { font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text3); }
+  .decadas-painel-count { font-size:11px; color:var(--text3); margin-left:auto; font-family:var(--mono); }
+  .decadas-painel-body { display:flex; flex-direction:column; }
+
+  .decada-row-wrap { position:relative; border-bottom:1px solid var(--border); }
+  .decada-row-wrap:last-child { border-bottom:none; }
+  .decada-row {
+    display:flex; align-items:center; gap:14px; width:100%; min-height:48px;
+    box-sizing:border-box; padding:8px 44px 8px 14px; margin:0;
+    background:none; border:none; color:var(--text); text-align:left; cursor:pointer;
+    font-family:var(--sans); font-size:13px; transition:background 0.12s;
+  }
+  .decada-row:hover { background:var(--bg3); }
+  .decada-row-dec { font-family:var(--mono); font-size:11px; color:var(--text3); width:20px; flex-shrink:0; }
+  /* Título nunca é a 1ª coisa a cortar (2026-10-04, pedido do utilizador):
+     flex-shrink muito maior no subtítulo (999 vs 1) faz o subtítulo
+     absorver quase todo o espaço negativo primeiro — o título só começa a
+     ceder (com ellipsis + title="" para tooltip, ver
+     af_criarLinhaDecadaIndividual()) depois do subtítulo já ter chegado a
+     0. Sem max-width fixo — cresce livremente até isso acontecer. */
+  .decada-row-titulo { font-size:13px; font-weight:600; color:var(--text); flex:0 1 auto; flex-shrink:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .decada-row-sub { font-size:12px; color:var(--text2); flex:1 1 auto; flex-shrink:999; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .decada-row-dif { font-family:var(--mono); font-size:10px; color:var(--text3); flex-shrink:0; white-space:nowrap; }
+  .decada-row-tipo { font-family:var(--mono); font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:var(--green); flex-shrink:0; }
+  .decada-row-codigo { font-family:var(--mono); font-size:9px; color:var(--text3); flex-shrink:0; white-space:nowrap; }
+  /* "i" absolutamente posicionado no fim da linha (centrado na vertical) —
+     mesma técnica de wrap+absolute já usada em .playlist-card-wrap, para
+     não aninhar <button> dentro de <button>. #teste-lista .btn-saber-mais
+     (ID+classe) já reescreve border-radius/padding/background; aqui só
+     falta reposicionar (top:8px;right:8px não serve numa linha de 48px). */
+  .decada-row-wrap .btn-saber-mais, #teste-lista .decada-row-wrap .btn-saber-mais { top:50%; right:12px; transform:translateY(-50%); }
+
+  /* Linha-mãe (2+ playlists na mesma década): chevron no lugar de
+     dif./tipo/código, nunca inicia playlist — só expande/colapsa. */
+  .decada-row-grupo { font-weight:600; padding-right:14px; }
+  .decada-row-grupo .decada-row-sub { flex:0 0 auto; font-family:var(--mono); font-size:11px; color:var(--text3); }
+  .decada-row-chevron { margin-left:auto; display:flex; align-items:center; color:var(--text3); flex-shrink:0; transition:transform 0.2s ease; }
+  .decada-row-grupo[aria-expanded="true"] .decada-row-chevron { transform:rotate(180deg); }
+
+  /* Filhos: indentados, ligados por conectores de árvore (├ └) desenhados
+     com ::before (traço vertical) + ::after (ramo horizontal) em CSS puro
+     — var(--border2), mesma cor das bordas do Studio. Último filho só tem
+     a vertical até meio (└), os outros vão até ao fundo (├, continua para
+     o próximo irmão). */
+  .decada-row-filhos[hidden] { display:none; }
+  .decada-row-filhos { display:flex; flex-direction:column; background:var(--bg); }
+  .decada-row-filho-wrap { position:relative; padding-left:26px; border-bottom:1px solid var(--border); }
+  .decada-row-filho-wrap:last-child { border-bottom:none; }
+  .decada-row-filho-wrap::before {
+    content:''; position:absolute; left:12px; top:0; bottom:0; width:1px; background:var(--border2);
+  }
+  .decada-row-filho-wrap:last-child::before { bottom:50%; }
+  .decada-row-filho-wrap::after {
+    content:''; position:absolute; left:12px; top:50%; width:12px; height:1px; background:var(--border2);
+  }
+  .decada-row-filho-wrap .decada-row-wrap { border-bottom:none; padding-left:0; }
+
+  @media (max-width: 640px) {
+    .decada-row-codigo { display:none; }
+  }
+  @media (max-width: 480px) {
+    .decada-row-tipo { display:none; }
+  }
 
   /* Cinema (STD.INT.ALL.CIN.001): tapa o título/canal e o logo que o
      YouTube sobrepõe no iframe — ver carregarTrecho() em musicbox.html,
@@ -1857,6 +1940,7 @@ function escolherUniversoDaFamilia(familia, pool, escolhedorIdx, bandaMin, banda
   const sub = document.getElementById('collection-sub');
   const lista = document.getElementById('collection-lista');
   lista.innerHTML = '';
+  lista.classList.remove('collection-lista-decadas');
   document.getElementById('collection-resultado').textContent = '';
 
   titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[escolhedorIdx] + ' ESCOLHE O UNIVERSO';
@@ -1871,12 +1955,22 @@ function escolherUniversoDaFamilia(familia, pool, escolhedorIdx, bandaMin, banda
     return;
   }
 
-  opcoes.forEach(chave => criarBotaoUniverso(lista, chave));
+  // DÉCADAS: mesmo painel denso em linhas de mostrarTesteLista() —
+  // af_renderPainelDecadas, partilhado — em vez da grelha de 3 colunas de
+  // .collection-btn. Clicar numa linha chama confirmarCollection() a
+  // sério (inicia o jogo), igual ao onclick que criarBotaoUniverso() já
+  // punha no botão principal.
+  if (familia === FAMILIA_DECADAS) {
+    lista.classList.add('collection-lista-decadas');
+    lista.appendChild(af_renderPainelDecadas(opcoes, (chave) => confirmarCollection(chave, false)));
+  } else {
+    opcoes.forEach(chave => criarBotaoUniverso(lista, chave));
+  }
 
   // Botão voltar ao passo 1
   const voltar = document.createElement('button');
   voltar.className = 'collection-btn';
-  voltar.style.cssText = 'opacity:0.5;font-size:11px;';
+  voltar.style.cssText = 'opacity:0.5;font-size:11px;margin-top:10px;';
   voltar.textContent = '← Voltar (trocar família)';
   voltar.onclick = () => iniciarEscolhaCollection();
   lista.appendChild(voltar);
@@ -3724,6 +3818,155 @@ function splitNomeCartao(nome) {
   return { titulo: nome.slice(0, idx), subtitulo: nome.slice(idx + 3) };
 }
 
+// ── DÉCADAS: painel denso em linhas + agrupamento por década ───────────
+// (2026-10-04, pedido do utilizador — 2ª versão, substitui uma 1ª tentativa
+// em cards verticais que foi descartada sem chegar a commit). Estilo
+// replicado dos painéis do Music Box Editor (.assets-card em
+// musicbox_studio.html): cabeçalho mono maiúsculo + linhas finas
+// horizontais separadas por borda. Função partilhada pelos dois sítios
+// onde a família DÉCADAS aparece — grelha "Testar uma Playlist"
+// (mostrarTesteLista) e Escolha de Universo em directo
+// (escolherUniversoDaFamilia) — para não duplicar a lógica de
+// agrupamento/renderização. Géneros/Especiais não usam nada disto, ficam
+// com .playlist-card/.collection-btn como sempre.
+//
+// Agrupamento ESTRITAMENTE pelo 3º segmento do código estruturado
+// (playlistCodigo.split('.')[2], ex. "STD.INT.10.SYN.001" → "10"), nunca
+// pelo nome — mesma regra já usada em ordenarChavesPorFamilia() acima.
+// 1 playlist nessa década → linha individual; 2+ → linha-mãe expansível.
+function af_agruparChavesPorDecada(chaves) {
+  const porDecada = {};
+  const ordemDecada = [];
+  chaves.forEach(chave => {
+    const dec = ((COLLECTIONS[chave].playlistCodigo || '').split('.')[2]) || '??';
+    if (!porDecada[dec]) { porDecada[dec] = []; ordemDecada.push(dec); }
+    porDecada[dec].push(chave);
+  });
+  ordemDecada.sort((a, b) => {
+    let ia = ORDEM_DECADAS_TESTE.indexOf(a); if (ia === -1) ia = 99;
+    let ib = ORDEM_DECADAS_TESTE.indexOf(b); if (ib === -1) ib = 99;
+    return ia - ib;
+  });
+  return ordemDecada.map(dec => {
+    const chavesGrupo = porDecada[dec].slice().sort((a, b) => (COLLECTIONS[a].nome || '').localeCompare(COLLECTIONS[b].nome || '', 'pt'));
+    if (chavesGrupo.length === 1) {
+      return { tipo: 'individual', decada: dec, chave: chavesGrupo[0] };
+    }
+    // Rótulo da linha-mãe: parte comum antes do " — " no nome da 1ª
+    // playlist do grupo (ex. "Anos 2010 — Synth" → "Anos 2010").
+    const label = splitNomeCartao(COLLECTIONS[chavesGrupo[0]].nome).titulo;
+    return { tipo: 'grupo', decada: dec, label, chaves: chavesGrupo };
+  });
+}
+
+const DECADA_CHEVRON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+
+// Linha individual — clicar inicia a playlist (onClickChave). "i" abre o
+// modal Saber Mais sem iniciar nada (stopPropagation, mesmo padrão já
+// usado em criarBotaoUniverso()/mostrarTesteLista()).
+function af_criarLinhaDecadaIndividual(chave, onClickChave) {
+  const col = COLLECTIONS[chave];
+  const dec = (col.playlistCodigo || '').split('.')[2] || '';
+  const dif = col.dificuldade || 3;
+  const tipo = categoriaDe(col).toLowerCase();
+  const { titulo: nomeTitulo, subtitulo: nomeSub } = splitNomeCartao(col.nome);
+  const sub = (nomeSub ? nomeSub + ' — ' : '') + (col.descritivo || '');
+
+  const wrap = document.createElement('div');
+  wrap.className = 'decada-row-wrap';
+
+  const row = document.createElement('button');
+  row.className = 'decada-row';
+  row.innerHTML = '<span class="decada-row-dec">' + dec + '</span>'
+    + '<strong class="decada-row-titulo">' + nomeTitulo + '</strong>'
+    + '<span class="decada-row-sub">' + sub + '</span>'
+    + '<span class="decada-row-dif">Dif. ' + dif + '/5</span>'
+    + '<span class="decada-row-tipo">' + tipo + '</span>'
+    + '<span class="decada-row-codigo">' + col.playlistCodigo + '</span>';
+  row.onclick = () => onClickChave(chave);
+  // title="" com o texto completo (2026-10-04, pedido do utilizador) — só
+  // é lido pelo browser se o título ficar mesmo truncado (ver CSS acima),
+  // inofensivo nos outros casos.
+  row.querySelector('.decada-row-titulo').title = nomeTitulo;
+  wrap.appendChild(row);
+
+  if (col.descritivo_apresentador || col.nota_curadoria) {
+    const btnInfo = document.createElement('button');
+    btnInfo.className = 'btn-saber-mais';
+    btnInfo.textContent = 'ℹ';
+    btnInfo.title = 'Saber mais';
+    btnInfo.setAttribute('aria-label', 'Saber mais');
+    btnInfo.onclick = (ev) => { ev.stopPropagation(); abrirSaberMaisPlaylist(chave); };
+    wrap.appendChild(btnInfo);
+  }
+  return wrap;
+}
+
+// Linha-mãe (2+ playlists na mesma década): clicar SÓ expande/colapsa
+// (aria-expanded + chevron a rodar 180°), nunca inicia uma playlist.
+// Filhas renderizadas com a mesma af_criarLinhaDecadaIndividual(), dentro
+// de .decada-row-filho-wrap (conectores de árvore em CSS, ver <style>).
+function af_criarLinhaDecadaGrupo(item, onClickChave) {
+  const { decada: dec, label, chaves } = item;
+
+  const outerWrap = document.createElement('div');
+  outerWrap.className = 'decada-row-wrap';
+
+  const row = document.createElement('button');
+  row.className = 'decada-row decada-row-grupo';
+  row.setAttribute('aria-expanded', 'false');
+  row.setAttribute('aria-label', label + ', ' + chaves.length + ' playlists');
+  row.innerHTML = '<span class="decada-row-dec">' + dec + '</span>'
+    + '<strong class="decada-row-titulo">' + label + '</strong>'
+    + '<span class="decada-row-sub">' + chaves.length + ' playlists</span>'
+    + '<span class="decada-row-chevron">' + DECADA_CHEVRON_SVG + '</span>';
+
+  const filhos = document.createElement('div');
+  filhos.className = 'decada-row-filhos';
+  filhos.hidden = true;
+  chaves.forEach(chave => {
+    const filhoWrap = document.createElement('div');
+    filhoWrap.className = 'decada-row-filho-wrap';
+    filhoWrap.appendChild(af_criarLinhaDecadaIndividual(chave, onClickChave));
+    filhos.appendChild(filhoWrap);
+  });
+
+  row.onclick = () => {
+    const aberto = row.getAttribute('aria-expanded') === 'true';
+    row.setAttribute('aria-expanded', aberto ? 'false' : 'true');
+    filhos.hidden = aberto;
+  };
+
+  outerWrap.appendChild(row);
+  outerWrap.appendChild(filhos);
+  return outerWrap;
+}
+
+// Painel completo (cabeçalho + corpo) — chamado pelos dois sítios.
+function af_renderPainelDecadas(chaves, onClickChave) {
+  const itens = af_agruparChavesPorDecada(chaves);
+
+  const painel = document.createElement('div');
+  painel.className = 'decadas-painel';
+
+  const header = document.createElement('div');
+  header.className = 'decadas-painel-header';
+  header.innerHTML = '<span class="decadas-painel-title">▤ DÉCADAS</span>'
+    + '<span class="decadas-painel-count">' + chaves.length + ' playlist' + (chaves.length === 1 ? '' : 's') + '</span>';
+  painel.appendChild(header);
+
+  const body = document.createElement('div');
+  body.className = 'decadas-painel-body';
+  itens.forEach(item => {
+    body.appendChild(item.tipo === 'grupo'
+      ? af_criarLinhaDecadaGrupo(item, onClickChave)
+      : af_criarLinhaDecadaIndividual(item.chave, onClickChave));
+  });
+  painel.appendChild(body);
+
+  return painel;
+}
+
 async function mostrarTesteLista() {
   // CHAVES_COLLECTIONS só fica completo depois de catalogoPronto resolver
   // (playlists standard/retrato descobertas automaticamente de
@@ -3748,6 +3991,17 @@ async function mostrarTesteLista() {
     // houver aprovação legal.
     const chaves = ordenarChavesPorFamilia(CHAVES_COLLECTIONS.filter(chave => familiaDeChave(chave) === familia && chave !== 'LOGO001'), familia);
     if (!chaves.length) return;
+
+    // DÉCADAS: painel denso em linhas + agrupamento por década
+    // (af_renderPainelDecadas, partilhado com escolherUniversoDaFamilia) —
+    // substitui o carrossel de .playlist-card só para esta família.
+    if (familia === FAMILIA_DECADAS) {
+      const secaoDecadas = document.createElement('div');
+      secaoDecadas.className = 'categoria-secao';
+      secaoDecadas.appendChild(af_renderPainelDecadas(chaves, (chave) => { garantirAudioCtx(); mostrarFaixasPlaylist(chave); }));
+      lista.appendChild(secaoDecadas);
+      return;
+    }
 
     const secao = document.createElement('div');
     secao.className = 'categoria-secao';
