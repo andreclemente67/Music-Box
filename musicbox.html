@@ -858,7 +858,7 @@ const COLLECTIONS = {
     mosaico: { categoria: 'Baterista', pessoa: 'Dave Grohl', titulo: 'In Bloom', artista: 'Nirvana', imagem: 'MOSAICO_BATERIA.jpg', audio: 'MOSAICO_BATERIA.mp3' }
   },
   ANOS2010: {
-    nome: 'Anos 2010+', descritivo: 'Grandes Êxitos', playlistCodigo: 'A10-001', universo: 'Eixo Temporal', temBonus: false, dificuldade: 3,
+    nome: 'Anos 2010', descritivo: 'Grandes Êxitos', playlistCodigo: 'A10-001', universo: 'Eixo Temporal', temBonus: false, dificuldade: 3,
     musicas: [
       { titulo:'Work', artista:'Rihanna ft. Drake', a:'A10_01_a.mp3', b:'A10_01_b.mp3' },
       { titulo:'Shape of You', artista:'Ed Sheeran', a:'A10_02_a.mp3', b:'A10_02_b.mp3' },
@@ -1858,7 +1858,7 @@ function familiaDeChave(chave) {
 const DECADAS_LABEL = {
   ANOS80: 'Anos 80',
   PT80: 'Portugal — Anos 80',
-  ANOS2010: 'Anos 2010+',
+  ANOS2010: 'Anos 2010',
 };
 
 // ── ESCOLHA DE PLAYLIST ──
@@ -3811,7 +3811,7 @@ function ordenarChavesPorFamilia(chaves, familia) {
 // Separa "categoria genérica — detalhe" em título/subtítulo no cartão de
 // playlist (pedido do utilizador, 2026-08-30) — ex. "Anos 2010 — Synth"
 // vira título "Anos 2010" + subtítulo "Synth". Nomes sem "—" (ex.
-// "Americana", "Anos 2010+") ficam inteiros no título, sem subtítulo.
+// "Americana", "Anos 2010") ficam inteiros no título, sem subtítulo.
 function splitNomeCartao(nome) {
   const idx = nome.indexOf(' — ');
   if (idx === -1) return { titulo: nome, subtitulo: null };
