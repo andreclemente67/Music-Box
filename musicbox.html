@@ -587,6 +587,60 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────
+// DUCKING DA MÚSICA PÓS-ACERTO (2026-10-04, pedido do utilizador) —
+// constantes no topo do script para ser fácil afinar. VOL_MUSICA é o
+// volume normal de fundo durante a revelação (continuidade sonora,
+// Bíblia §5.4b); VOL_DUCK é o volume reduzido só enquanto o nome do
+// artista está a ser anunciado, para a voz se ouvir bem por cima.
+// FADE_DOWN_MS/FADE_UP_MS são as durações das transições suaves (não
+// saltos instantâneos). Ver fadeVolume()/acertouFaixa()/
+// testeTocarSequenciaSom().
+const VOL_MUSICA = 0.75;
+const VOL_DUCK = 0.25;
+const FADE_DOWN_MS = 300;
+const FADE_UP_MS = 600;
+
+// Fade de volume com requestAnimationFrame — cancelável: cada chamada
+// gera um "token" novo; um fade anterior ainda em curso vê que o seu
+// token deixou de ser o actual e pára-se sozinho no próximo frame, sem
+// nunca deixar o volume preso a meio de uma transição. Só há um
+// elemento <audio> global nesta app (`audio`), por isso um único token
+// module-level chega — não precisa de um Map por elemento.
+let audioFadeToken = 0;
+function cancelarFadeVolume() {
+  audioFadeToken++;
+}
+function fadeVolume(el, alvo, ms, aoTerminar) {
+  const meuToken = ++audioFadeToken;
+  const inicio = el.volume;
+  const t0 = performance.now();
+  function passo(agora) {
+    if (meuToken !== audioFadeToken) return; // cancelado por um fade mais recente
+    // Math.max(0, ...) é necessário, não só decoração: o timestamp que o
+    // rAF passa a "agora" reflecte o início do frame, que pode ser
+    // ligeiramente ANTERIOR ao performance.now() capturado em t0 (lido
+    // de forma síncrona, já dentro desse mesmo frame) — sem o clamp
+    // inferior, (agora - t0) dava negativo no 1º frame e o volume
+    // ultrapassava o intervalo [0,1] (bug real, apanhado em teste:
+    // volume chegou a 1.007 e o browser rejeitava a escrita).
+    const t = ms > 0 ? Math.min(1, Math.max(0, (agora - t0) / ms)) : 1;
+    el.volume = inicio + (alvo - inicio) * t;
+    if (t < 1) {
+      requestAnimationFrame(passo);
+    } else {
+      el.volume = alvo; // valor exacto no fim, sem arredondamentos do rAF
+      if (aoTerminar) aoTerminar();
+    }
+  }
+  requestAnimationFrame(passo);
+  return meuToken;
+}
+// Versão em Promise — usada para ESPERAR o fade-down terminar antes de
+// arrancar o nome do artista (ver testeTocarSequenciaSom()).
+function fadeVolumePromise(el, alvo, ms) {
+  return new Promise(resolve => fadeVolume(el, alvo, ms, resolve));
+}
+
 // COLLECTIONS — reaproveita os catálogos reais já construídos.
 // NOTA: os títulos/artistas de "Música Portuguesa" foram confirmados (22 Jul).
 // Os ficheiros 0X_PT_a/b.mp3 que já existem na pasta foram cortados quando os
@@ -1159,6 +1213,11 @@ let TESTE_FAIXA_INICIAL = 1;
 // acertouFaixa()). Remover esta variável junto com o resto do bloco de
 // teste do som.
 let TESTE_SOM_CONTROLA_TRECHO_B = false;
+// Ducking (2026-10-04, pedido do utilizador): promise do fade-down
+// (VOL_MUSICA → VOL_DUCK) disparado em acertouFaixa() — testeTocarSequenciaSom()
+// espera por ela antes de arrancar o nome do artista, para a voz nunca
+// começar a meio da transição de volume. null fora de uma revelação.
+let testeFadeDuckPromise = null;
 let faixaAtual = 1;           // 1-7 (ou 1-9 na Ronda 4)
 let totalFaixasPlaylist = 7;
 let collectionsUsadas = [];
@@ -2455,10 +2514,16 @@ function iniciarFaixa() {
   faseGeral = 'faixa';
   reporPausa();
   // 2026-09-17, pedido do utilizador (§5.4b): repõe o volume normal aqui
-  // — acertouFaixa() reduz para 0.25 durante a revelação (música de
-  // fundo continua a tocar, não pára); só volta a 1 quando a Faixa
-  // seguinte a sério arranca (não no Encore — esse só chama
-  // carregarTrecho(), nunca iniciarFaixa()).
+  // — acertouFaixa() reduz para VOL_DUCK durante o anúncio do nome
+  // (música de fundo continua a tocar, não pára); só volta a 1 quando a
+  // Faixa seguinte a sério arranca (não no Encore — esse só chama
+  // carregarTrecho(), nunca iniciarFaixa()). cancelarFadeVolume() aqui é
+  // a rede de segurança (2026-10-04, pedido do utilizador): se o
+  // jogador avançar a meio de um fade de ducking, este é o ponto de
+  // passagem garantido antes de qualquer Faixa nova tocar — mata
+  // qualquer fade pendente para nunca deixar o volume preso em
+  // VOL_DUCK.
+  cancelarFadeVolume();
   audio.volume = 1;
   trechoAtual = 'A';
   vencedorFaixa = null;
@@ -2691,6 +2756,14 @@ function testeCliqueTrechoB() {
     testeAudioRevelacaoActual.pause();
     testeAudioRevelacaoActual = null;
   }
+  // Rede de segurança do ducking (2026-10-04, pedido do utilizador):
+  // corte manual aqui pode acontecer com a música ainda em VOL_DUCK (ou
+  // a meio de um fade) se o operador cortar antes da sequência nome→
+  // in_the_box→roar terminar sozinha — repõe VOL_MUSICA de imediato
+  // (sem fade, é um corte manual) em vez de depender só do próximo
+  // iniciarFaixa().
+  cancelarFadeVolume();
+  audio.volume = VOL_MUSICA;
   audio.onended = null;
   audio.pause();
   avancarParaProximaFaixaOuMosaico();
@@ -2722,36 +2795,88 @@ function testeArrancarTrechoBSemFF() {
 }
 
 // TESTE TEMPORÁRIO (2026-10-04, pedido do utilizador) — NÃO COMMITAR.
-// "Versão B": frase única contínua "[Artista] — In the Box!" num só
-// ficheiro (_preview_voz_artista_<trackId>.wav, voz Alex + entoação
-// festiva — ver aplicar_entoacao_festiva.py), substitui a sequência
-// anterior de dois ficheiros separados ("in the box" synth +eco → voz do
-// nome; ver histórico em versões anteriores deste ficheiro). Toca
-// imediatamente ao acerto, sem pausa, e ao terminar avança direto para a
-// janela de decisão do Trecho B (testeMostrarJanelaDecisaoTrechoB()).
-// trackId é o id do catalogo.json (ex. "dec50_01", "80_01"). Falha em
-// qualquer passo (ficheiro em falta, play() rejeitado) nunca trava o
-// jogo — cai sempre em frente até testeMostrarJanelaDecisaoTrechoB().
+// Nova arquitectura — 3 ficheiros encadeados por 'ended' (substitui a
+// "Versão B" de frase única, ver DECISIONS.md 2026-10-04):
+//   1. voz/nome_<trackId>.wav — só o nome do artista (voz Alex, rate
+//      205, tom natural de apresentador, sem efeito festivo/pitch).
+//   2. (pausa PAUSA_NOME_ITB_MS) efeitos/in_the_box.wav — "In the Box!"
+//      eufórico, ficheiro único partilhado por todas as faixas.
+//   3. efeitos/roar.wav — roar de multidão, se existir; se não existir
+//      (404/play rejeitado), salta directamente para o fim da sequência
+//      sem bloquear o jogo.
+// O nome só começa a tocar depois de testeFadeDuckPromise resolver
+// (fade-down da música para VOL_DUCK, disparado em acertouFaixa()) —
+// nunca arranca a meio da transição de volume. No 'ended' do ÚLTIMO som
+// que realmente tocou (roar, ou in_the_box se não houver roar), a
+// música sobe de volta a VOL_MUSICA com fade suave. Falha em qualquer
+// passo (ficheiro em falta, play() rejeitado) nunca trava o jogo nem
+// deixa o volume preso em VOL_DUCK — cai sempre em frente até
+// testeMostrarJanelaDecisaoTrechoB(), sempre pelo mesmo caminho de saída
+// (terminarSequencia()).
 function testeTocarSequenciaSom(trackId) {
   const __t0 = performance.now();
-  const avancar = () => {
+  const PAUSA_NOME_ITB_MS = 120;
+  let sequenciaTerminada = false;
+
+  const terminarSequencia = (motivo) => {
+    if (sequenciaTerminada) return; // guarda contra 'ended'+catch duplicados
+    sequenciaTerminada = true;
+    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade de volta a VOL_MUSICA + janela de decisão do Trecho B a seguir');
     testeAudioRevelacaoActual = null;
+    fadeVolume(audio, VOL_MUSICA, FADE_UP_MS);
     testeMostrarJanelaDecisaoTrechoB();
   };
-  try {
-    const frase = new Audio('_preview_voz_artista_' + trackId + '.wav');
-    testeAudioRevelacaoActual = frase;
-    frase.addEventListener('ended', () => {
-      console.log('[TESTE SOM] frase de anúncio terminou, t=' + Math.round(performance.now() - __t0) + 'ms — janela de decisão do Trecho B a seguir');
-      avancar();
-    });
-    frase.play().then(() => {
-      console.log('[TESTE SOM] frase de anúncio a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
-    }).catch((err) => {
-      console.log('[TESTE SOM] frase de anúncio play() rejeitado: ' + err.message);
-      avancar();
-    });
-  } catch (e) { avancar(); }
+
+  const tocarRoarOuTerminar = () => {
+    try {
+      const roar = new Audio('efeitos/roar.wav');
+      testeAudioRevelacaoActual = roar;
+      roar.addEventListener('ended', () => terminarSequencia('roar terminou'));
+      roar.play().then(() => {
+        console.log('[TESTE SOM] roar a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
+      }).catch((err) => {
+        console.log('[TESTE SOM] roar.wav indisponível (' + err.message + ') — a saltar');
+        terminarSequencia('roar indisponível');
+      });
+    } catch (e) { terminarSequencia('roar excepção'); }
+  };
+
+  const tocarItb = () => {
+    try {
+      const itb = new Audio('efeitos/in_the_box.wav');
+      testeAudioRevelacaoActual = itb;
+      itb.addEventListener('ended', tocarRoarOuTerminar);
+      itb.play().then(() => {
+        console.log('[TESTE SOM] in_the_box a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
+      }).catch((err) => {
+        console.log('[TESTE SOM] in_the_box.wav play() rejeitado: ' + err.message);
+        terminarSequencia('in_the_box falhou');
+      });
+    } catch (e) { terminarSequencia('in_the_box excepção'); }
+  };
+
+  const tocarNome = () => {
+    try {
+      const nome = new Audio('voz/nome_' + trackId + '.wav');
+      testeAudioRevelacaoActual = nome;
+      nome.addEventListener('ended', () => {
+        console.log('[TESTE SOM] nome terminou, t=' + Math.round(performance.now() - __t0) + 'ms — pausa ' + PAUSA_NOME_ITB_MS + 'ms antes de in_the_box');
+        setTimeout(tocarItb, PAUSA_NOME_ITB_MS);
+      });
+      nome.play().then(() => {
+        console.log('[TESTE SOM] nome a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
+      }).catch((err) => {
+        console.log('[TESTE SOM] voz/nome_' + trackId + '.wav play() rejeitado: ' + err.message);
+        terminarSequencia('nome falhou');
+      });
+    } catch (e) { terminarSequencia('nome excepção'); }
+  };
+
+  // Espera o fade-down (VOL_MUSICA → VOL_DUCK, disparado em
+  // acertouFaixa()) terminar antes de tocar o nome — Promise.resolve()
+  // de reserva caso esta função seja chamada sem um fade pendente
+  // (nunca deveria acontecer no fluxo real, mas evita travar o jogo).
+  (testeFadeDuckPromise || Promise.resolve()).then(tocarNome);
 }
 
 // MANUAL_ADVANCE (Bíblia §19.1) — atalho de régie: chama exactamente a
@@ -2866,13 +2991,22 @@ function acertouFaixa(i) {
   // (2026-09-03b), contradizendo directamente o comentário/§5.4b acima —
   // a música de fundo estava mesmo a ser cortada, não só a continuar a
   // baixo volume. Corrigido: reduz o volume (não pára) durante a
-  // revelação; volta a 1 quando a Faixa seguinte arranca (ver
+  // revelação; volta a VOL_MUSICA quando a Faixa seguinte arranca (ver
   // iniciarFaixa()) — cobre tanto o caminho automático como o Encore
   // (que só chama carregarTrecho(), nunca iniciarFaixa(), por isso o
   // volume continua reduzido durante o Trecho B do Encore, como deve
   // ser — só volta ao normal na Faixa seguinte a sério).
-  // 2026-10-04, pedido do utilizador: 0.25 → 0.75 — ducking mais leve.
-  audio.volume = 0.75;
+  // 2026-10-04, pedido do utilizador: ducking em duas fases com fade
+  // suave (antes: salto instantâneo para 0.75, fixo durante toda a
+  // revelação). Agora: desce para VOL_DUCK (mais baixo, 0.25) só
+  // enquanto o nome do artista é anunciado — testeTocarSequenciaSom()
+  // espera por testeFadeDuckPromise antes de tocar o nome, e sobe de
+  // volta a VOL_MUSICA (0.75, não o 1.0 total) no 'ended' do último som
+  // da sequência (roar, ou in_the_box se não houver roar). cancelarFadeVolume()
+  // primeiro por segurança — nunca acumula com um fade anterior ainda
+  // em curso (ex. um acerto muito seguido a outro, caso extremo).
+  cancelarFadeVolume();
+  testeFadeDuckPromise = fadeVolumePromise(audio, VOL_DUCK, FADE_DOWN_MS);
   clearInterval(timerInterval);
   document.getElementById('chave-resposta').style.display = '';
   revelarRetrato();
