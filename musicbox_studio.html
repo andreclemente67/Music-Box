@@ -2560,6 +2560,17 @@ const YOUTUBE_API_KEY = 'AIzaSyC19-R6szocU-ZJA2jAb8XiGgRppB-ppyA';
 let CATALOGO = [];
 let CATALOGO_BY_ID = new Map();
 let PLAYLISTS = {};
+// 2026-10-04, pedido do utilizador (fix): chaves de PLAYLISTS que já
+// estão realmente gravadas em playlists.json — carregado em loadData(),
+// actualizado a cada exportPlaylists() bem sucedido. Existe para
+// af_playlistsSemDescritivoApresentador() poder distinguir "playlist já
+// publicada, nunca pode regredir para incompleta" de "playlist nova
+// desta sessão, ainda nem chegou a disco" — ver essa função. Bug real
+// encontrado: uma playlist nova criada a meio de uma geração (ex. modo
+// Elo, descritivo_apresentador/nota_curadoria nunca preenchidos) ficava
+// em PLAYLISTS só em memória e bloqueava QUALQUER guardar — mesmo de
+// playlists completamente different, já prontas, nada a ver com ela.
+let PLAYLISTS_CHAVES_DISCO = new Set();
 // Sistema de feedback e aprendizagem (2026-09-18, pedido do utilizador) —
 // historico[] de sessões de decisão do curador (aceitar/rejeitar/
 // substituir faixas sugeridas por "✦ Gerar com IA") + feedback pós-
@@ -2597,6 +2608,7 @@ async function loadData() {
     CATALOGO = catalogo;
     CATALOGO_BY_ID = new Map(catalogo.map(t => [t.id, t]));
     PLAYLISTS = playlists;
+    PLAYLISTS_CHAVES_DISCO = new Set(Object.keys(PLAYLISTS));
     AF_VERSAO_PLAYLISTS = await af_lerVersaoPlaylists();
     af_popularFiltrosPlaylist();
     af_popularSelectsModoIA();
@@ -8528,6 +8540,7 @@ function loadPlaylistsFile(event) {
   reader.onload = e => {
     try {
       PLAYLISTS = JSON.parse(e.target.result);
+      PLAYLISTS_CHAVES_DISCO = new Set(Object.keys(PLAYLISTS));
       currentPlaylistKey = null;
       selectedSlot = null;
       dirty = false;
@@ -8726,8 +8739,20 @@ function af_confirmarSubstituirPlaylists() {
 // aqui como excepção (PLAYLISTS_QUEBRADAS_SEM_VALIDACAO, 2026-09-01) foram
 // removidas de playlists.json a 2026-09-02 — deixaram de existir, por isso
 // a excepção também foi removida.
+// Fix (2026-10-04, pedido do utilizador): só bloqueia playlists que já
+// existem de facto em disco (PLAYLISTS_CHAVES_DISCO, ver loadData()) —
+// nunca por causa de uma playlist nova, criada só nesta sessão, ainda
+// por acabar (ex. geração no modo Elo interrompida a meio, sem
+// descritivo_apresentador/nota_curadoria preenchidos). Protege playlists
+// já publicadas contra regressão (nunca podem perder estes campos
+// obrigatórios, Bíblia §18.7/§30.5), mas uma playlist em rascunho nunca
+// deveria poder bloquear o guardar de TODO o ficheiro, incluindo
+// playlists completamente alheias a ela. Repete-se o mesmo bug real: uma
+// "STD.INT.ALL.MIX.005" nunca gravada ficava presa em PLAYLISTS e
+// impedia guardar qualquer coisa, mesmo playlists já prontas.
 function af_playlistsSemDescritivoApresentador() {
   return Object.entries(PLAYLISTS)
+    .filter(([chave]) => PLAYLISTS_CHAVES_DISCO.has(chave))
     .filter(([, pl]) => (!pl.descritivo_apresentador || !pl.descritivo_apresentador.trim())
                       || (!pl.nota_curadoria || !pl.nota_curadoria.trim()))
     .map(([chave, pl]) => `${pl.nome || chave} (${chave})`);
@@ -8768,6 +8793,14 @@ async function exportPlaylists(opcoes = {}) {
     escritoDirectamente = await escreverViaFileSystemAPI('playlists.json', json);
   }
   if (!escritoDirectamente && resultadoServidor !== 'ok') downloadBlob('playlists.json', json);
+
+  // Chegou aqui (escrito no servidor, via File System API, ou pelo menos
+  // descarregado para o utilizador substituir manualmente) — a partir de
+  // agora todas as chaves actuais contam como "em disco" para
+  // af_playlistsSemDescritivoApresentador(), incluindo as que acabaram
+  // de ser criadas nesta sessão (deixam de poder regredir, mas também já
+  // não precisam de ser excluídas da validação).
+  PLAYLISTS_CHAVES_DISCO = new Set(Object.keys(PLAYLISTS));
 
   dirty = false;
   document.getElementById('dirty-dot').classList.remove('show');
