@@ -641,6 +641,34 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
+    transition: width 0.15s;
+  }
+
+  /* 2026-10-04, pedido do utilizador: colapsar a sidebar direita
+     (Biblioteca + Detalhe da posição) — .episodio-panel (Mesa de
+     Montagem) já é flex:1 na mesma linha (.episodio-layout), por isso
+     encolher esta sidebar para quase nada já faz o painel central
+     expandir sozinho, sem precisar de tocar no CSS do centro. */
+  .episodio-sidebar-toggle-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .episodio-sidebar.collapsed {
+    width: 33px;
+  }
+
+  .episodio-sidebar.collapsed .episodio-sidebar-toggle-row {
+    justify-content: center;
+    border-bottom: none;
+  }
+
+  .episodio-sidebar.collapsed .catalogo-picker,
+  .episodio-sidebar.collapsed .detail-scroll {
+    display: none;
   }
 
   .panel-title {
@@ -1781,7 +1809,10 @@
                renderMontagem()/renderDetail(). -->
           <div id="img-search-panel"></div>
         </div>
-        <div class="episodio-sidebar">
+        <div class="episodio-sidebar" id="episodio-sidebar">
+          <div class="episodio-sidebar-toggle-row">
+            <button class="icon-btn" id="btn-toggle-sidebar-direito" title="Colapsar painel (Biblioteca + Detalhe da posição)" onclick="af_toggleSidebarDireito()">←</button>
+          </div>
           <div class="catalogo-picker">
             <div class="catalogo-picker-toolbar">
               <input type="text" id="picker-search" placeholder="Pesquisar faixas do catálogo…" oninput="renderCatalogoPicker()">
@@ -2798,6 +2829,32 @@ function af_toggleSidebarPlaylists() {
   AF_SIDEBAR_PLAYLISTS_EXPANDIDO = !AF_SIDEBAR_PLAYLISTS_EXPANDIDO;
   try { localStorage.setItem('af_sidebar_playlists_expandido', AF_SIDEBAR_PLAYLISTS_EXPANDIDO ? '1' : '0'); } catch (e) { /* ok ignorar */ }
   renderSidebar();
+}
+
+// 2026-10-04, pedido do utilizador: colapsar a sidebar direita da Mesa
+// de Montagem (Biblioteca/catalogo-picker + Detalhe da posição) — útil
+// quando se quer ver a playlist inteira sem a faixa lateral a tirar
+// espaço. .episodio-panel (centro) é flex:1 na mesma linha flex
+// (.episodio-layout), por isso encolher esta sidebar para 33px já faz o
+// painel central expandir sozinho — não precisa de nenhum ajuste à
+// parte no CSS do centro. Estado persistido em localStorage, mesmo
+// padrão de AF_SIDEBAR_PLAYLISTS_EXPANDIDO acima.
+let AF_SIDEBAR_DIREITO_COLAPSADO = false;
+try { AF_SIDEBAR_DIREITO_COLAPSADO = localStorage.getItem('af_sidebar_direito_colapsado') === '1'; } catch (e) { /* localStorage indisponível — mantém-se expandida */ }
+function af_aplicarEstadoSidebarDireito() {
+  const el = document.getElementById('episodio-sidebar');
+  const btn = document.getElementById('btn-toggle-sidebar-direito');
+  if (!el || !btn) return;
+  el.classList.toggle('collapsed', AF_SIDEBAR_DIREITO_COLAPSADO);
+  btn.textContent = AF_SIDEBAR_DIREITO_COLAPSADO ? '→' : '←';
+  btn.title = AF_SIDEBAR_DIREITO_COLAPSADO
+    ? 'Expandir painel (Biblioteca + Detalhe da posição)'
+    : 'Colapsar painel (Biblioteca + Detalhe da posição)';
+}
+function af_toggleSidebarDireito() {
+  AF_SIDEBAR_DIREITO_COLAPSADO = !AF_SIDEBAR_DIREITO_COLAPSADO;
+  try { localStorage.setItem('af_sidebar_direito_colapsado', AF_SIDEBAR_DIREITO_COLAPSADO ? '1' : '0'); } catch (e) { /* ok ignorar */ }
+  af_aplicarEstadoSidebarDireito();
 }
 
 // Foco num Universo específico (activado a partir de um cartão do Mapa
@@ -7278,10 +7335,16 @@ let AF_IA_SUBSTITUTOS_ESTADO = null;
 let AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
 let AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
 
+// 2026-10-04, pedido do utilizador: "substituida" deixa de ser cinzento+
+// tachado (lia-se como rejeição) — passa a âmbar/dourado (cor própria,
+// não confundir com o --accent dourado já usado para marcar faixas
+// fixas/semente), texto normal, com uma etiqueta discreta "substituída"
+// por baixo do título em vez de riscar — para ficar claro que foi uma
+// escolha activa do curador, não uma rejeição.
 const AF_CORES_DECISAO_IA = {
   aceite: 'var(--green, #4ec98e)',
   rejeitada: 'var(--red, #e05555)',
-  substituida: 'var(--text3)',
+  substituida: '#f0a020',
 };
 
 function renderResultadoIA() {
@@ -7299,7 +7362,7 @@ function renderResultadoIA() {
   function linhaMusica(m, i) {
     const ehSemente = i < NP_IA_RESULTADO.nFaixasFixas;
     const cor = AF_CORES_DECISAO_IA[m.decisao] || 'var(--border2)';
-    const riscado = m.decisao === 'rejeitada' || m.decisao === 'substituida' ? 'text-decoration:line-through;opacity:0.6;' : '';
+    const riscado = m.decisao === 'rejeitada' ? 'text-decoration:line-through;opacity:0.6;' : '';
     let html = `<div class="ia-musica-linha" draggable="true" ondragstart="af_dragIAMusicaStart(event, ${i})" ondragover="event.preventDefault()" ondrop="af_dropIAMusica(event, ${i})" style="border:1px solid ${cor};border-radius:5px;padding:4px;margin-bottom:5px;">
       <div style="display:flex;gap:4px;align-items:center;">
         <span style="cursor:grab;color:var(--text3);font-size:12px;" title="Arrastar para reordenar (define a posição final)">⠿</span>
@@ -7308,6 +7371,7 @@ function renderResultadoIA() {
         <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeAttr(m.artista || '')}" oninput="editarIAMusica(${i}, 'artista', this.value)" placeholder="Artista">
         <button class="btn" type="button" style="padding:2px 6px;font-size:11px;" onclick="removerIAMusica(${i})" title="Remover">✕</button>
       </div>
+      ${m.decisao === 'substituida' ? `<div style="padding-left:24px;margin-top:1px;font-size:9px;color:${AF_CORES_DECISAO_IA.substituida};">substituída</div>` : ''}
       <div style="display:flex;gap:4px;align-items:center;margin-top:3px;padding-left:24px;">
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${m.decisao==='aceite'?'background:'+AF_CORES_DECISAO_IA.aceite+';color:#0a2015;border-color:'+AF_CORES_DECISAO_IA.aceite+';':''}" onclick="af_decidirIAMusica(${i}, 'aceite')" title="Aceitar esta sugestão">✓ Aceitar</button>
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${m.decisao==='rejeitada'?'background:'+AF_CORES_DECISAO_IA.rejeitada+';color:#2a0d0d;border-color:'+AF_CORES_DECISAO_IA.rejeitada+';':''}" onclick="af_decidirIAMusica(${i}, 'rejeitada')" title="Rejeitar esta sugestão">✗ Rejeitar</button>
@@ -7320,7 +7384,7 @@ function renderResultadoIA() {
       </div>`;
     }
     if (m.decisao === 'substituida' && m.substituicao_original) {
-      html += `<div style="padding-left:24px;margin-top:3px;font-size:9px;color:var(--text3);font-family:var(--mono);">substituída — original: "${escapeHtml(m.substituicao_original.titulo)}" — ${escapeHtml(m.substituicao_original.artista)}</div>`;
+      html += `<div style="padding-left:24px;margin-top:3px;font-size:9px;color:var(--text3);font-family:var(--mono);">original: "${escapeHtml(m.substituicao_original.titulo)}" — ${escapeHtml(m.substituicao_original.artista)}</div>`;
       if (m.elo_explicacao) {
         html += `<div style="padding-left:24px;margin-top:1px;font-size:9px;color:var(--text3);font-style:italic;">ligação ao elo: ${escapeHtml(m.elo_explicacao)}</div>`;
       }
@@ -7352,7 +7416,8 @@ function renderResultadoIA() {
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_abrirSubstituirIAMosaico()" title="Pedir 2-3 alternativas de mosaico à IA (ou pesquisar no catálogo, se rejeitares todas)">✎ Substituir</button>
       </div>
       ${mos.decisao === 'rejeitada' ? `<div style="margin-top:3px;"><input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeAttr(mos.motivo || '')}" oninput="af_editarMotivoIAMosaico(this.value)" placeholder="Porquê? (opcional)"></div>` : ''}
-      ${mos.decisao === 'substituida' && mos.elo_explicacao ? `<div style="margin-top:3px;font-size:9px;color:var(--text3);font-style:italic;">ligação ao elo: ${escapeHtml(mos.elo_explicacao)}</div>` : ''}
+      ${mos.decisao === 'substituida' ? `<div style="margin-top:3px;font-size:9px;color:${AF_CORES_DECISAO_IA.substituida};">substituída</div>` : ''}
+      ${mos.decisao === 'substituida' && mos.elo_explicacao ? `<div style="margin-top:1px;font-size:9px;color:var(--text3);font-style:italic;">ligação ao elo: ${escapeHtml(mos.elo_explicacao)}</div>` : ''}
       ${AF_IA_SUBSTITUIR_MOSAICO_ABERTO ? af_renderSubstitutosMosaicoIA() : ''}
     </div>`;
   }
@@ -9499,6 +9564,7 @@ loadData().then(() => {
   af_verificarConsistenciaArtistaBanda();
   renderFototeca();
   renderMontagem();
+  af_aplicarEstadoSidebarDireito();
 });
 </script>
 </body>
