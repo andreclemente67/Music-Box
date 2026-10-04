@@ -89,7 +89,7 @@
   .collection-btn:hover { border-color:var(--accent); }
   .collection-btn:disabled { opacity:0.25; cursor:not-allowed; }
   .collection-resultado { font-size:14px; color:var(--green); text-align:center; min-height:20px; }
-  .collection-descritivo-apresentador { font-size:12px; color:var(--text2); text-align:center; max-width:560px; line-height:1.5; margin-top:-4px; padding:0 12px; }
+  .collection-descritivo-apresentador { font-size:12px; font-weight:700; color:var(--text2); text-align:center; max-width:560px; line-height:1.5; margin-top:-4px; padding:0 12px; }
 
   .eliminacao-painel { display:none; flex-direction:column; align-items:center; padding:30px 20px; gap:16px; }
   .eliminacao-painel.activo { display:flex; }
@@ -134,10 +134,24 @@
   .historico-neutro { color:#6a6a66; background:#1a1a18; }
   .estado-vermelho-tag { background:#3a1e1e; color:#e08a87; }
 
-  .rodape { display:flex; justify-content:center; gap:10px; padding:14px; flex-wrap:wrap; }
+  /* 2026-09-17, bug reportado ao vivo: o painel de controlo (Pausar/
+     Retroceder/Avançar/Apresentador) ficava visualmente tapado pelo
+     overlay #momento-resposta (position:fixed;z-index:600) sempre que a
+     área deste coincidia com a posição do .rodape no fluxo normal da
+     página — mais notório depois do overlay do artista/banda crescer
+     (220->264px) e a animação alongar (750->1200ms). O overlay já tem
+     pointer-events:none (cliques sempre passaram), o problema era só
+     visual — position:relative + z-index maior garante que o rodapé
+     pinta sempre por cima, sem mexer na posição/tamanho do overlay. */
+  .rodape { display:flex; justify-content:center; gap:10px; padding:14px; flex-wrap:wrap; position:relative; z-index:650; }
   .rodape button { background:var(--bg3); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:8px 14px; font-size:11px; cursor:pointer; }
   .rodape button:disabled { background:var(--accent); color:#1a1508; border-color:var(--accent); cursor:default; }
   .rodape button.activo { background:var(--accent); color:#1a1508; border-color:var(--accent); }
+  /* TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
+     estado do botão "▶ Encore" — verde enquanto o Trecho B toca,
+     vermelho quando termina (ver testeArrancarTrechoBSemFF()). */
+  .rodape button.teste-trecho-b-verde { background:var(--green); color:#0a2015; border-color:var(--green); }
+  .rodape button.teste-trecho-b-vermelho { background:var(--red); color:#2a0d0d; border-color:var(--red); }
   .hp-concorrente { margin-bottom:16px; }
   .hp-nome { font-weight:700; color:var(--text); margin-bottom:4px; }
   .hp-linha { color:var(--text2); padding:2px 0; }
@@ -246,7 +260,12 @@
     100% { transform: scale(1); opacity: 1; }
   }
   .momento-resposta-entrada-teste {
-    animation: momentoRespostaEntradaTeste 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    /* 2026-09-17, pedido do utilizador: 450ms passava despercebido ao
+       vivo ("quase instantâneo") — subido para 750ms, depois para 1200ms
+       (ainda "demasiado rápido" a 750ms). Reduzido depois para 1000ms —
+       transição pós-acerto mais rápida no geral. Mesmo easing em todas
+       as afinações. */
+    animation: momentoRespostaEntradaTeste 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
     transform-origin: center bottom;
   }
 </style>
@@ -394,9 +413,22 @@
   </div>
 </div>
 
-<div class="cabines" id="cabines"></div>
-
-<div class="rodape">
+<!-- 2026-09-17, pedido do utilizador: rodapé de controlo subiu para aqui
+     (antes de .cabines, ao nível de "◉ Revelar" em #palco-faixa) — deixa
+     de ficar ancorado ao fundo do ecrã (fixed/bottom:0, tentativa
+     anterior), volta a fluxo normal, mas agora ANTES das boxes dos
+     concorrentes em vez de depois. -->
+<div class="rodape" id="rodape-controlo">
+  <!-- TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO
+       COMMITAR: visível sempre a partir do acerto (mostrado logo no
+       início de testeTocarSequenciaSom(), antes até do "in the box"
+       tocar) — verde enquanto o Trecho B está a tocar
+       (testeArrancarTrechoBSemFF()), vermelho quando termina. Um clique,
+       em qualquer estado, corta o que estiver a tocar (revelação ou
+       Trecho B) e avança logo para a Faixa seguinte — ver
+       testeCliqueTrechoB(). Escondido de novo em qualquer NEW_SLOT
+       (esconderMomentoResposta()). -->
+  <button onclick="testeCliqueTrechoB()" id="btn-teste-trecho-b" style="display:none;">▶ Encore</button>
   <button onclick="alternarPausa()" id="btn-pausa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar</button>
   <!-- RETROCEDER_FAIXA (pedido do utilizador, 2026-09-02, simétrico ao
        MANUAL_ADVANCE §19.1) — corrige avanços indevidos da régie: volta à
@@ -425,12 +457,51 @@
        alternarApresentador()/renderApresentador(). Escondido quando não há
        foto configurada (apresentador.json, Studio → tab "Concorrentes"). -->
   <button onclick="alternarApresentador()" id="btn-apresentador" style="display:none;">Apresentador</button>
+  <!-- 2026-09-17, pedido do utilizador: painel "Histórico de Pontos" deixa
+       de estar sempre visível — passa a escondido por defeito, só
+       aparece a pedido deste botão. alternarHistoricoPontos() já
+       existia (feito antes, nunca chegou a ter botão — ver nota junto de
+       #historico-pontos-painel). -->
+  <button onclick="alternarHistoricoPontos()" id="btn-historico-pontos">Pontuação</button>
+</div>
+
+<div class="cabines" id="cabines"></div>
+
+<!-- Destaque temporário do concorrente que acabou de acertar/errar — foto
+     ampliada, agora em fluxo normal logo a seguir a .cabines (2026-09-17,
+     pedido do utilizador: nunca sobrepor os painéis das boxes dos
+     concorrentes — antes era position:fixed, com o risco de coincidir
+     com a área das boxes consoante o ecrã; em fluxo normal, imediatamente
+     depois de .cabines, fica sempre na "zona livre" abaixo delas, sem
+     cálculo nenhum). width:fit-content + margin:auto centra o "cartão"
+     sem esticar o fundo escuro à largura toda da página. Auto-esconde
+     sozinha (MOMENTO_RESPOSTA_MS). #momento-resposta-artista é só para
+     playlists Standard (ver CATALOGO_POR_FICHEIRO_A) — imagem do
+     artista/banda a complementar a foto do concorrente, lado a lado. -->
+<div id="momento-resposta" style="display:none;width:fit-content;margin:16px auto 0;gap:24px;align-items:flex-start;pointer-events:none;background:rgba(10,10,12,0.82);border-radius:16px;padding:16px 24px;box-shadow:0 8px 40px rgba(0,0,0,0.7);">
+  <div id="momento-resposta-concorrente" style="text-align:center;">
+    <img alt="" style="width:220px;height:220px;border-radius:16px;object-fit:cover;box-shadow:0 8px 40px rgba(0,0,0,0.7);">
+    <div style="font-size:15px;font-weight:900;letter-spacing:1px;color:var(--text);margin-top:12px;text-shadow:0 2px 10px rgba(0,0,0,0.9);"></div>
+  </div>
+  <div id="momento-resposta-artista" style="display:none;text-align:center;">
+    <!-- 2026-09-17, pedido do utilizador: de volta a 220px (igual à foto
+         do concorrente ao lado) — devem ter exactamente o mesmo tamanho
+         entre si; o bump de +20% (264px) de um pedido anterior foi
+         revertido. -->
+    <img alt="" style="width:220px;height:220px;border-radius:16px;object-fit:cover;box-shadow:0 8px 40px rgba(0,0,0,0.7);border:3px solid var(--accent);">
+    <!-- 2026-09-17, pedido do utilizador: legenda do nome do artista
+         aumentada (15px -> 20px) — só esta, não a do concorrente ao lado. -->
+    <div id="momento-resposta-artista-nome" style="font-size:20px;font-weight:900;color:var(--text);margin-top:12px;"></div>
+    <div id="momento-resposta-artista-banda" style="display:none;font-size:11px;color:var(--accent);letter-spacing:1px;margin-top:4px;"></div>
+  </div>
 </div>
 
 <!-- Painel lateral — evolução progressiva da pontuação, não só o total
      final (ver historico[i][].pontosApos, gravado em cada acerto/erro).
-     Sempre visível — sem botão de toggle (ver historicoPontosVisivel). -->
-<div id="historico-pontos-painel" style="display:block;position:fixed;top:70px;right:0;bottom:0;width:220px;z-index:420;background:var(--bg2);border-left:1px solid var(--border);padding:14px 12px;overflow-y:auto;font-size:11px;">
+     2026-09-17, pedido do utilizador: escondido por defeito — os pontos
+     já aparecem em cada cartão de concorrente, isto é só detalhe extra a
+     pedido (botão "Histórico" no rodapé, ver alternarHistoricoPontos()). -->
+<div id="historico-pontos-painel" style="display:none;position:fixed;top:70px;right:0;bottom:0;width:220px;z-index:420;background:var(--bg2);border-left:1px solid var(--border);padding:14px 12px;overflow-y:auto;font-size:11px;">
   <div style="font-size:11px;letter-spacing:1.5px;color:var(--accent);margin-bottom:10px;">HISTÓRICO DE PONTOS</div>
   <div id="historico-pontos-conteudo"></div>
 </div>
@@ -440,24 +511,6 @@
 <div id="apresentador-foto" style="display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:450;text-align:center;">
   <img alt="" style="width:140px;height:140px;border-radius:12px;object-fit:cover;border:3px solid var(--accent);box-shadow:0 4px 20px rgba(0,0,0,0.5);display:block;">
   <div style="font-size:10px;letter-spacing:1.5px;color:var(--accent);margin-top:6px;">APRESENTADOR</div>
-</div>
-
-<!-- Destaque temporário do concorrente que acabou de acertar/errar — foto
-     ampliada sobreposta ao ecrã, fora do cartão pequeno (ver
-     mostrarMomentoResposta()). Auto-esconde sozinha (MOMENTO_RESPOSTA_MS).
-     #momento-resposta-artista é só para playlists Standard (ver
-     CATALOGO_POR_FICHEIRO_A) — imagem do artista/banda a complementar a
-     foto do concorrente, lado a lado. -->
-<div id="momento-resposta" style="display:none;position:fixed;top:auto;bottom:80px;left:50%;transform:translateX(-50%);z-index:600;gap:24px;align-items:flex-start;pointer-events:none;background:rgba(10,10,12,0.82);border-radius:16px;padding:16px 24px;box-shadow:0 8px 40px rgba(0,0,0,0.7);">
-  <div id="momento-resposta-concorrente" style="text-align:center;">
-    <img alt="" style="width:220px;height:220px;border-radius:16px;object-fit:cover;box-shadow:0 8px 40px rgba(0,0,0,0.7);">
-    <div style="font-size:15px;font-weight:900;letter-spacing:1px;color:var(--text);margin-top:12px;text-shadow:0 2px 10px rgba(0,0,0,0.9);"></div>
-  </div>
-  <div id="momento-resposta-artista" style="display:none;text-align:center;">
-    <img alt="" style="width:220px;height:220px;border-radius:16px;object-fit:cover;box-shadow:0 8px 40px rgba(0,0,0,0.7);border:3px solid var(--accent);">
-    <div id="momento-resposta-artista-nome" style="font-size:15px;font-weight:900;color:var(--text);margin-top:12px;"></div>
-    <div id="momento-resposta-artista-banda" style="display:none;font-size:11px;color:var(--accent);letter-spacing:1px;margin-top:4px;"></div>
-  </div>
 </div>
 
 <div class="log" id="log"></div>
@@ -776,13 +829,54 @@ const catalogoPronto = (async () => {
     // Usado só para a imagem do artista/banda no overlay de acerto/erro
     // (ver mostrarMomentoResposta) — Retrato/Cinema/etc. já têm o seu
     // próprio caminho para imagem, este é só para Standard.
+    //
+    // Fix (2026-10-04, pedido do utilizador): duas faixas DIFERENTES podem
+    // partilhar o mesmo trecho_a.ficheiro (ex.: "02_a.mp3" em "80_02" E em
+    // "logo_02" — mesma faixa física, catalogada duas vezes para playlists
+    // diferentes). A versão anterior fazia só .set() em ordem do array do
+    // catálogo — "quem vem depois ganha", sem olhar a qual faixa está
+    // realmente em uso — por acaso "logo_02" (índice 141) vinha depois de
+    // "80_02" (índice 1) e ganhava sempre, mesmo a playlist LOGO-001
+    // estando excluída do jogo (pendente de revisão legal, Bíblia §27.15 —
+    // ver também mostrarTesteLista()). Resultado: ao acertar 80_02 (Guns
+    // N' Roses, playlist "Anos 80"), o overlay tentava carregar o ficheiro
+    // de voz de "logo_02" (404) em vez do de "80_02".
+    //
+    // Fix: antes de construir o Map, calcula para cada id de faixa se
+    // pertence a ALGUMA playlist não excluída (idEmPlaylistActiva) — uma
+    // colisão só é resolvida a favor da entrada NOVA quando ela é de uma
+    // playlist activa e a que já está no Map não é; nunca deixa uma faixa
+    // de playlist excluída sobrepor-se a uma de playlist activa,
+    // independentemente da ordem no catalogo.json. Entre duas faixas
+    // activas (sem exclusão envolvida) mantém-se o comportamento anterior
+    // (primeira no array do catálogo fica).
+    const PLAYLIST_CODIGOS_EXCLUIDOS = new Set(['LOGO-001']); // §27.15 — ver mostrarTesteLista()
+    const idEmPlaylistActiva = new Map(); // id de faixa -> true se usada por alguma playlist não excluída
+    Object.entries(playlists).forEach(([codigo, pl]) => {
+      const activa = !PLAYLIST_CODIGOS_EXCLUIDOS.has(codigo);
+      const ids = [...(pl.musicas || [])];
+      if (pl.mosaico && pl.mosaico.id) ids.push(pl.mosaico.id);
+      (pl.posicoes || []).forEach(p => { if (p.id) ids.push(p.id); });
+      ids.forEach(id => {
+        if (activa) idEmPlaylistActiva.set(id, true);
+        else if (!idEmPlaylistActiva.has(id)) idEmPlaylistActiva.set(id, false);
+      });
+    });
+
     CATALOGO_POR_FICHEIRO_A = new Map();
     catalogo.forEach(f => {
-      if (f.trecho_a && f.trecho_a.ficheiro) {
-        CATALOGO_POR_FICHEIRO_A.set(f.trecho_a.ficheiro, f);
-        const _nome = f.trecho_a.ficheiro.split('/').pop();
-        if (_nome !== f.trecho_a.ficheiro) CATALOGO_POR_FICHEIRO_A.set(_nome, f);
-      }
+      if (!(f.trecho_a && f.trecho_a.ficheiro)) return;
+      const definirSeMelhor = (chave) => {
+        const actual = CATALOGO_POR_FICHEIRO_A.get(chave);
+        if (!actual) { CATALOGO_POR_FICHEIRO_A.set(chave, f); return; }
+        if (actual.id === f.id) return; // mesma faixa, nada a decidir
+        const novaActiva = idEmPlaylistActiva.get(f.id) === true;
+        const actualActiva = idEmPlaylistActiva.get(actual.id) === true;
+        if (novaActiva && !actualActiva) CATALOGO_POR_FICHEIRO_A.set(chave, f);
+      };
+      definirSeMelhor(f.trecho_a.ficheiro);
+      const _nome = f.trecho_a.ficheiro.split('/').pop();
+      if (_nome !== f.trecho_a.ficheiro) definirSeMelhor(_nome);
     });
 
     // concorrentes.json é opcional (Studio → tab "Concorrentes") — se não
@@ -1136,6 +1230,16 @@ function fotoConcorrenteHtml(i) {
 
 const MOMENTO_RESPOSTA_MS = 2000;
 let momentoRespostaTimer = null;
+// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
+// testeTimeoutCorteTrechoB: reaproveitado para o corte do Trecho B (7s —
+// ver testeArrancarTrechoBSemFF()) E para a pausa antes do avanço no
+// caminho "vermelho" (TESTE_PAUSA_VERMELHO_MS — só um dos dois activo de
+// cada vez, por ciclo de acerto). testeAudioRevelacaoActual: referência
+// ao Audio() da revelação ("in the box"/voz) actualmente a tocar (ver
+// testeTocarSequenciaSom()). Ambos precisam de ficar acessíveis fora da
+// função onde nascem para testeCliqueTrechoB() os poder cortar.
+let testeTimeoutCorteTrechoB = null;
+let testeAudioRevelacaoActual = null;
 
 // Esconde o overlay de acerto (foto do concorrente + artista/banda) no
 // NEW_SLOT real — ver nota em abrirOverlay() dentro de
@@ -1146,6 +1250,21 @@ let momentoRespostaTimer = null;
 // acertou, terminarFaixaSemVencedor()).
 function esconderMomentoResposta() {
   clearTimeout(momentoRespostaTimer);
+  // TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
+  // cancela os timeouts da janela de decisão/corte do Trecho B e
+  // esconde/repõe "▶ Encore" (ver testeMostrarJanelaDecisaoTrechoB()/
+  // testeArrancarTrechoBSemFF()) — evita um segundo avanço se o NEW_SLOT
+  // já aconteceu por outra via (ex.: MANUAL_ADVANCE do operador)
+  // enquanto a janela/Trecho B ainda estava em curso.
+  clearTimeout(testeTimeoutJanelaDecisao);
+  clearTimeout(testeTimeoutCorteTrechoB);
+  testeTrechoBEscolhido = false;
+  testeAudioRevelacaoActual = null;
+  const btnTrechoB = document.getElementById('btn-teste-trecho-b');
+  if (btnTrechoB) {
+    btnTrechoB.style.display = 'none';
+    btnTrechoB.classList.remove('teste-trecho-b-verde', 'teste-trecho-b-vermelho');
+  }
   const overlay = document.getElementById('momento-resposta');
   if (overlay) overlay.style.display = 'none';
 }
@@ -1308,7 +1427,11 @@ function renderCabines() {
 // Painel lateral "Histórico de Pontos" — evolução progressiva da pontuação
 // por faixa, não só o total final. Reaproveita historico[i], que já guarda
 // pontosApos (o total logo a seguir a cada acerto/erro) em cada entrada.
-let historicoPontosVisivel = true;
+// 2026-09-17, pedido do utilizador: escondido por defeito — os pontos já
+// aparecem dentro de cada cartão de concorrente, este painel é só
+// informação extra a pedido (ver botão #btn-historico-pontos/
+// alternarHistoricoPontos()).
+let historicoPontosVisivel = false;
 
 function alternarHistoricoPontos() {
   historicoPontosVisivel = !historicoPontosVisivel;
@@ -2218,6 +2341,12 @@ function revelarRetrato() {
 function iniciarFaixa() {
   faseGeral = 'faixa';
   reporPausa();
+  // 2026-09-17, pedido do utilizador (§5.4b): repõe o volume normal aqui
+  // — acertouFaixa() reduz para 0.25 durante a revelação (música de
+  // fundo continua a tocar, não pára); só volta a 1 quando a Faixa
+  // seguinte a sério arranca (não no Encore — esse só chama
+  // carregarTrecho(), nunca iniciarFaixa()).
+  audio.volume = 1;
   trechoAtual = 'A';
   vencedorFaixa = null;
   mutados = mutadoAteFaixa.map((ateFaixa, i) => !eliminado[i] && faixaAtual <= ateFaixa);
@@ -2396,121 +2525,120 @@ function aguardarFimTrechoBAposAcerto() {
   }
 }
 
-// TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — NÃO COMMITAR.
-// Arranca o Trecho B directamente, sem o efeito "⏩ FF"/tocarSomFF() nem
-// o corte de 400ms de fastForward() — o Trecho A já foi cortado bem
-// antes (logo ao clicar Correcto, ver acertouFaixa()), por isso não há
-// nada a "cortar por cima" aqui. Réplica do essencial de fastForward(),
-// sem o som/timing que só faz sentido numa transição a meio da faixa a
-// tocar.
+// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
+// redesenho — "▶ Encore" passa a ser uma JANELA DE DECISÃO de 1.5s
+// (verde), não um indicador de "Trecho B a tocar". O Trecho B NUNCA toca
+// sozinho — só se o operador clicar no verde dentro da janela:
+//   clique no verde  → testeTrechoBEscolhido=true → toca Trecho B (~7s)
+//                       → avança automaticamente no fim (sem vermelho).
+//   sem clique (1.5s) → fica vermelho → avança automaticamente pouco
+//                       depois (TESTE_PAUSA_VERMELHO_MS, só para o
+//                       vermelho ser mesmo visível, não um flash de 0ms).
+// Ver testeMostrarJanelaDecisaoTrechoB()/testeCliqueTrechoB()/
+// testeArrancarTrechoBSemFF().
+const TESTE_JANELA_DECISAO_TRECHO_B_MS = 1500;
+const TESTE_PAUSA_VERMELHO_MS = 400;
+let testeTimeoutJanelaDecisao = null;
+let testeTrechoBEscolhido = false;
+
+function testeMostrarJanelaDecisaoTrechoB() {
+  testeTrechoBEscolhido = false;
+  const btn = document.getElementById('btn-teste-trecho-b');
+  btn.style.display = '';
+  btn.classList.remove('teste-trecho-b-vermelho');
+  btn.classList.add('teste-trecho-b-verde');
+  console.log('[TESTE SOM] janela de decisão do Trecho B (verde) — ' + (TESTE_JANELA_DECISAO_TRECHO_B_MS / 1000) + 's para o operador clicar');
+  clearTimeout(testeTimeoutJanelaDecisao);
+  testeTimeoutJanelaDecisao = setTimeout(() => {
+    if (testeTrechoBEscolhido) return; // já foi escolhido entretanto — testeCliqueTrechoB() já cancelou isto, guarda extra
+    btn.classList.remove('teste-trecho-b-verde');
+    btn.classList.add('teste-trecho-b-vermelho');
+    console.log('[TESTE SOM] janela de decisão terminou sem clique — vermelho — Trecho B fica por tocar, avança em ' + TESTE_PAUSA_VERMELHO_MS + 'ms');
+    testeTimeoutCorteTrechoB = setTimeout(() => {
+      if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
+    }, TESTE_PAUSA_VERMELHO_MS);
+  }, TESTE_JANELA_DECISAO_TRECHO_B_MS);
+}
+
+// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
+// clique no botão "▶ Encore" — comportamento depende de já ter sido
+// escolhido ou não (testeTrechoBEscolhido): dentro da janela de decisão
+// (verde, ainda não escolhido), o clique ESCOLHE tocar o Trecho B; depois
+// disso (Trecho B já a tocar, ou já vermelho à espera do avanço), o
+// clique só acelera o avanço, cortando o que estiver a tocar.
+function testeCliqueTrechoB() {
+  if (!testeTrechoBEscolhido) {
+    clearTimeout(testeTimeoutJanelaDecisao);
+    testeTrechoBEscolhido = true;
+    testeArrancarTrechoBSemFF();
+    return;
+  }
+  clearTimeout(testeTimeoutCorteTrechoB);
+  if (testeAudioRevelacaoActual) {
+    testeAudioRevelacaoActual.pause();
+    testeAudioRevelacaoActual = null;
+  }
+  audio.onended = null;
+  audio.pause();
+  avancarParaProximaFaixaOuMosaico();
+}
+
+// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
+// só corre depois de testeCliqueTrechoB() escolher tocar o Trecho B (não
+// arranca sozinho). Arranca o Trecho B directamente (sem "⏩ FF"), corta
+// aos 7s ou ao fim natural, avança automaticamente no fim — sem passar
+// por vermelho (essa cor é só para o caminho "não escolheu", ver
+// testeMostrarJanelaDecisaoTrechoB()).
 function testeArrancarTrechoBSemFF() {
   trechoAtual = 'B';
   tempoRestante = JANELA_TRECHO;
   carregarTrecho();
   atualizarTimerUI();
-  // Pedido do utilizador (17 Set 2026): depois de um acerto (sequência
-  // "in the box" → nome → Trecho B), o Trecho B só toca 7s em vez da
-  // duração completa — o público já sabe a resposta nesta altura, não
-  // faz sentido continuar a tocar tanto tempo. Isto NÃO mexe no Trecho B
-  // do jogo normal (audição sem acerto, Fast Forward a meio da faixa —
-  // ver fastForward()/aguardarFimTrechoBAposAcerto() acima, inalterados)
-  // — só este caminho, só depois de um acerto certo com a sequência de
-  // som de teste activa.
   const TEMPO_TRECHO_B_APOS_ACERTO_MS = 7000;
   let avancouTrechoBTeste = false;
   const avancarUmaVezTeste = () => {
     if (avancouTrechoBTeste) return;
     avancouTrechoBTeste = true;
     audio.onended = null;
-    clearTimeout(timeoutTrechoBTeste);
+    clearTimeout(testeTimeoutCorteTrechoB);
     if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
   };
   audio.onended = avancarUmaVezTeste;
-  const timeoutTrechoBTeste = setTimeout(avancarUmaVezTeste, TEMPO_TRECHO_B_APOS_ACERTO_MS);
-  console.log('[TESTE SOM] Trecho B arrancado (sem FF) — corta aos 7s ou ao fim natural, o que vier primeiro');
+  testeTimeoutCorteTrechoB = setTimeout(avancarUmaVezTeste, TEMPO_TRECHO_B_APOS_ACERTO_MS);
+  console.log('[TESTE SOM] Trecho B escolhido — a tocar (verde) — corta aos 7s ou ao fim natural, depois avança sozinho');
 }
 
-// TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — NÃO COMMITAR.
-// "in the box" (synth+eco) → voz limpa (Alex, sem eco) a dizer o nome do
-// artista/banda da faixa actual → Trecho B, encadeados por 'ended',
-// sem pausas extra. trackId é o id do catalogo.json (ex. "dec50_01") —
-// os ficheiros de voz por nome só existem para a playlist "Anos 50"
-// neste teste (gerados à mão, um por faixa — ver
-// _preview_voz_artista_<id>.wav). Falha em qualquer passo (ficheiro em
-// falta, play() rejeitado) nunca trava o jogo — cai sempre em frente
-// até testeArrancarTrechoBSemFF().
+// TESTE TEMPORÁRIO (2026-10-04, pedido do utilizador) — NÃO COMMITAR.
+// "Versão B": frase única contínua "[Artista] — In the Box!" num só
+// ficheiro (_preview_voz_artista_<trackId>.wav, voz Alex + entoação
+// festiva — ver aplicar_entoacao_festiva.py), substitui a sequência
+// anterior de dois ficheiros separados ("in the box" synth +eco → voz do
+// nome; ver histórico em versões anteriores deste ficheiro). Toca
+// imediatamente ao acerto, sem pausa, e ao terminar avança direto para a
+// janela de decisão do Trecho B (testeMostrarJanelaDecisaoTrechoB()).
+// trackId é o id do catalogo.json (ex. "dec50_01", "80_01"). Falha em
+// qualquer passo (ficheiro em falta, play() rejeitado) nunca trava o
+// jogo — cai sempre em frente até testeMostrarJanelaDecisaoTrechoB().
 function testeTocarSequenciaSom(trackId) {
   const __t0 = performance.now();
-
-  // Pré-carrega a voz do nome já aqui, em paralelo com o "in the box" —
-  // só criar o Audio() no momento de o tocar dava um pequeno atraso
-  // audível (tempo de fetch/descodificação do .wav), mesmo o código a
-  // disparar a chamada com 0-1ms de diferença. Com preload='auto' e
-  // .load() explícito, quando chegar a vez já está pronto a tocar de
-  // imediato (2026-09-17, pedido do utilizador — eliminar silêncio entre
-  // "in the box" e a voz do nome).
-  let vozNome = null;
-  try {
-    vozNome = new Audio('_preview_voz_artista_' + trackId + '.wav');
-    vozNome.preload = 'auto';
-    vozNome.load();
-  } catch (e) { vozNome = null; }
-
-  // Pedido do utilizador (17 Set 2026): quer o nome do artista "colado" ao
-  // "in the box", sem qualquer perceção de silêncio — melhor ainda do que
-  // os 0.4-0.5ms de intervalo já conseguidos com o preload. Solução:
-  // sobrepor ligeiramente — a voz arranca ~100ms ANTES de "in the box"
-  // terminar de todo, em vez de esperar pelo evento 'ended'. Isto soa como
-  // uma frase única e contínua ("...box Elvis"), em vez de duas frases
-  // coladas mas ainda distintas. A deteção usa 'timeupdate' (currentTime
-  // vs duration) com um setTimeout de segurança como rede de proteção,
-  // caso 'timeupdate' não dispare a tempo (ex.: duração desconhecida por
-  // metadata ainda não carregada) — e uma flag de guarda evita disparar a
-  // voz duas vezes.
-  const OVERLAP_MS = 100;
-  let vozIniciada = false;
-
-  const tocarVozNome = () => {
-    if (vozIniciada) return;
-    vozIniciada = true;
-    console.log('[TESTE SOM] voz do nome a começar, t=' + Math.round(performance.now() - __t0) + 'ms');
-    try {
-      if (!vozNome) vozNome = new Audio('_preview_voz_artista_' + trackId + '.wav');
-      vozNome.addEventListener('ended', () => {
-        console.log('[TESTE SOM] voz do nome terminou, t=' + Math.round(performance.now() - __t0) + 'ms — Trecho B a seguir, sem pausa');
-        testeArrancarTrechoBSemFF();
-      });
-      vozNome.play().catch((err) => {
-        console.log('[TESTE SOM] voz do nome play() rejeitado: ' + err.message);
-        testeArrancarTrechoBSemFF();
-      });
-    } catch (e) { testeArrancarTrechoBSemFF(); }
+  const avancar = () => {
+    testeAudioRevelacaoActual = null;
+    testeMostrarJanelaDecisaoTrechoB();
   };
   try {
-    const inTheBox = new Audio('_preview_som_correcto_A.wav');
-    inTheBox.addEventListener('timeupdate', () => {
-      if (!vozIniciada && inTheBox.duration && !isNaN(inTheBox.duration) &&
-          (inTheBox.duration - inTheBox.currentTime) * 1000 <= OVERLAP_MS) {
-        console.log('[TESTE SOM] "in the box" quase a acabar (sobreposição), t=' + Math.round(performance.now() - __t0) + 'ms');
-        tocarVozNome();
-      }
+    const frase = new Audio('_preview_voz_artista_' + trackId + '.wav');
+    testeAudioRevelacaoActual = frase;
+    frase.addEventListener('ended', () => {
+      console.log('[TESTE SOM] frase de anúncio terminou, t=' + Math.round(performance.now() - __t0) + 'ms — janela de decisão do Trecho B a seguir');
+      avancar();
     });
-    inTheBox.addEventListener('ended', () => {
-      console.log('[TESTE SOM] "in the box" terminou, t=' + Math.round(performance.now() - __t0) + 'ms');
-      tocarVozNome();
-    });
-    inTheBox.play().then(() => {
-      console.log('[TESTE SOM] "in the box" a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
-      // Rede de segurança: mesmo sem 'timeupdate' a disparar a tempo (ex.:
-      // duration ainda não disponível), garante a sobreposição usando a
-      // duração conhecida (medida: 2.150000s) menos o overlap.
-      const duracaoConhecidaMs = 2150;
-      setTimeout(tocarVozNome, Math.max(0, duracaoConhecidaMs - OVERLAP_MS));
+    frase.play().then(() => {
+      console.log('[TESTE SOM] frase de anúncio a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
     }).catch((err) => {
-      console.log('[TESTE SOM] "in the box" play() rejeitado: ' + err.message);
-      tocarVozNome();
+      console.log('[TESTE SOM] frase de anúncio play() rejeitado: ' + err.message);
+      avancar();
     });
-  } catch (e) { tocarVozNome(); }
+  } catch (e) { avancar(); }
 }
 
 // MANUAL_ADVANCE (Bíblia §19.1) — atalho de régie: chama exactamente a
@@ -2602,12 +2730,11 @@ function acertouFaixa(i) {
   // imediato do Trecho A (aqui) → imagem do artista em ecrã inteiro
   // (animação maior, ver @keyframes) + "in the box" (synth+eco) → voz limpa
   // a dizer o nome (disparada em sincronia com a animação — ver
-  // abrirOverlay() dentro de mostrarMomentoResposta()) → Trecho B, tudo
-  // encadeado por 'ended', sem pausas artificiais. Ver
-  // testeTocarSequenciaSom()/testeArrancarTrechoBSemFF() mais abaixo.
+  // abrirOverlay() dentro de mostrarMomentoResposta()) → Trecho B
+  // (sempre, automático — 2026-09-17, ver testeArrancarTrechoBSemFF()),
+  // tudo encadeado por 'ended', sem pausas artificiais. Ver
+  // testeTocarSequenciaSom() mais abaixo.
   TESTE_SOM_CONTROLA_TRECHO_B = true;
-  audio.pause();
-  clearInterval(timerInterval);
   // Continuidade Sonora Pós-Acerto (Bíblia §5.4b, 2026-09-01): NÃO parar o
   // áudio corrente aqui — continua a tocar a partir do ponto exacto onde
   // ia (Trecho A ou B, com ou sem BONUS_MODE a seguir) até ao NEW_SLOT da
@@ -2620,6 +2747,19 @@ function acertouFaixa(i) {
   // vigiar para quem acertou. tocarSireneBonus() (Faixas com BONUS_MODE)
   // usa Web Audio API à parte, não mexe em `audio` — a música de fundo
   // convive com a sirene/pergunta sem precisar de nenhuma alteração aqui.
+  //
+  // 2026-09-17, pedido do utilizador — CORRECÇÃO: esta chamada tinha
+  // ficado "audio.pause()" desde a sequência de teste "in the box"
+  // (2026-09-03b), contradizendo directamente o comentário/§5.4b acima —
+  // a música de fundo estava mesmo a ser cortada, não só a continuar a
+  // baixo volume. Corrigido: reduz o volume (não pára) durante a
+  // revelação; volta a 1 quando a Faixa seguinte arranca (ver
+  // iniciarFaixa()) — cobre tanto o caminho automático como o Encore
+  // (que só chama carregarTrecho(), nunca iniciarFaixa(), por isso o
+  // volume continua reduzido durante o Trecho B do Encore, como deve
+  // ser — só volta ao normal na Faixa seguinte a sério).
+  audio.volume = 0.25;
+  clearInterval(timerInterval);
   document.getElementById('chave-resposta').style.display = '';
   revelarRetrato();
   vencedorFaixa = i;
@@ -2668,7 +2808,10 @@ function acertouFaixa(i) {
     // dispararAudioProximaPosicao()) — todos mantêm o comportamento
     // anterior (pausaAposAcerto fixo), inalterado.
     if (!temImagem && !col.temLogo && !col.temExcertoUnico && !col.temTributo) {
-      log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — a aguardar o fim do Trecho B…`);
+      // 2026-09-17, pedido do utilizador: removida a mensagem de log
+      // "✓ NOME acertou (+X pontos)..." aqui — aparecia por baixo das
+      // imagens do overlay (#momento-resposta), redundante com o que já
+      // se vê na própria box do concorrente (moldura/estado + pontos).
       // TESTE TEMPORÁRIO (2026-09-02n) — NÃO COMMITAR: com
       // TESTE_SOM_CONTROLA_TRECHO_B, esta chamada fica desactivada aqui —
       // é feita a partir do 'ended' do som de teste "✓ Correcto" (ver o
@@ -3328,7 +3471,12 @@ async function mostrarTesteLista() {
   lista.style.cssText = 'flex-direction:column;gap:0;width:100%;max-width:820px;min-width:0;';
 
   FAMILIAS_TESTE_ORDEM.forEach(({ familia, emoji }) => {
-    const chaves = ordenarChavesPorFamilia(CHAVES_COLLECTIONS.filter(chave => familiaDeChave(chave) === familia), familia);
+    // LOGO001 ("Logótipos — Edição Especial", LOGO-001) excluída do Modo
+    // Teste — pendente de revisão legal sobre direitos de marca dos
+    // logótipos usados (Bíblia §27.15, nota_curadoria em playlists.json:
+    // "NÃO APROVADA PARA EMISSÃO REAL"). Remover este filtro quando
+    // houver aprovação legal.
+    const chaves = ordenarChavesPorFamilia(CHAVES_COLLECTIONS.filter(chave => familiaDeChave(chave) === familia && chave !== 'LOGO001'), familia);
     if (!chaves.length) return;
 
     const secao = document.createElement('div');
