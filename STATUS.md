@@ -1,7 +1,39 @@
 # Music Box — Status
 
 ## Última actualização
-2026-08-29
+2026-10-04
+
+## 2026-10-04 — Sessão 4 Out 2026
+
+**Commits de hoje** (mais antigo → mais recente):
+- `6148955` — fix(audio): 80_01 (Take On Me, a-ha) — remove silêncio residual no início do Trecho A.
+- `571681e` — feat(audio): frase única de anúncio "[Artista] — In the Box!" (302 ficheiros de voz gerados) + fix da colisão em `CATALOGO_POR_FICHEIRO_A` por ficheiro de áudio partilhado.
+- `07e0993` — docs: actualiza `DECISIONS.md` com o trabalho de 2026-09-17 a 2026-10-04 (ficheiro estava parado desde 28 Ago).
+- `b7ba9bf` — feat(studio): painel direito colapsável na Mesa de Montagem + estilo âmbar para faixas substituídas (antes tachado, confundia-se com rejeição).
+- `cf6fccc` — feat(studio+app): `elo_explicacao` pedido em todas as faixas da geração inicial (não só substituições), UI de "Gerar trechos" deixa claro que é automático, botões de acção global movidos para o topo da Mesa de Montagem, `MOMENTO_RESPOSTA_MS` 2000→4000.
+- `1527512` — feat(app+studio): botão "ℹ Saber mais" no ecrã de escolha de playlist (prévia do descritivo sem seleccionar) + campo `nota_editorial` por faixa, por posição, em `playlists.json`.
+- `ed41535` — fix(studio): guardar deixa de bloquear por playlists novas ainda não gravadas em disco (`PLAYLISTS_CHAVES_DISCO`).
+- `1b3e16a` — UI: botão "ℹ Saber mais" compacto (ícone-só, 24×24 circular) nos cards de playlist + "Studio" renomeado para "Music Box Editor".
+- `41cbe84` — UI: ícone outline (sliders, estilo Lucide) a substituir o emoji 🎛 no botão "Music Box Editor".
+
+**Verificação tarefa a tarefa:**
+
+- ✅ Botão "i" circular 24×24 nos cards de playlist (`1b3e16a`) — inclui o fix de especificidade CSS `#teste-lista .btn-saber-mais` (a regra `#teste-lista button`, mais específica, estava a sobrepor o círculo para quadrado).
+- ✅ "Studio" → "Music Box Editor" com ícone SVG outline sliders (`1b3e16a` + `41cbe84`).
+- 🟡 Voz pós-acerto: investigação feita — a voz é gerada **offline** com o comando `say` (macOS) + efeito festivo em `ffmpeg` (pitch/volume), **não** `speechSynthesis` do browser. Proposta de comandos embutidos `[[pbas +N]]`/`[[pmod +N]]` **ABANDONADA** — sintaxe com "+" não documentada pela Apple, comandos inválidos são ignorados em silêncio pelo motor de fala (sem erro, sem aviso). **Nova arquitectura decidida**: 3 ficheiros encadeados no browser — nome do artista (voz natural de apresentador, sem efeito) → "In the Box!" (ficheiro único, partilhado por todas as faixas, eufórico) → roar (ficheiro separado). Passo 1 em curso: amostras de voz em `propostas/` (Alex/Samantha/Daniel/Oliver × 3 nomes); à espera de instalar vozes Enhanced e escolher antes de continuar.
+- ⏸ Ducking da música pós-acerto (0.75 → 0.25 ao soar o nome → 0.75 depois, com fades; constantes `VOL_MUSICA`/`VOL_DUCK`/`FADE_DOWN_MS`/`FADE_UP_MS`) — especificado, não implementado.
+- ❌ Roar — pasta `efeitos/` não existe no projecto; utilizador vai descarregar um efeito livre (Pixabay/Freesound CC0).
+- ❌ Décadas em cards verticais + agrupamento por década (pelo 3º segmento do código estruturado, seta para expandir, grupos fechados por defeito) — especificado, não feito.
+- ❌ "Anos 2010+" → "Anos 2010" em todo o projecto — especificado, não feito; `playlists.json:41` ainda tem "+".
+
+**Pendentes que transitam** (de sessões anteriores, ainda por resolver):
+- Aprovação de áudio via YouTube para "Areias do Tempo" (`STD.INT.ALL.MIX.005`) — por confirmar.
+- Fototeca: recuperar imagens de playlists entretanto apagadas.
+- Rejeições do modo Elo guardadas em sessão (nunca persistidas em `feedback.json`, perdem-se ao fechar o separador).
+
+**⚡ WORKFLOW** — houve duas sessões do Claude Code em paralelo na mesma pasta durante grande parte do dia. **Regra nova a partir de agora**: uma sessão trata de `musicbox.html`/áudio, outra trata de dados (`catalogo.json`/`playlists.json`/`feedback.json`/`mp3_index.json`/ficheiros `.mp3`). Nunca as duas no mesmo ficheiro ao mesmo tempo.
+
+**Nota**: `hip_01..07_a/b.mp3` aparecem modificados (LFS, tamanhos diferentes dos committados) e há 18 `.mp3` novos por adicionar (america_horse_with_no_name_2, cesaria_evora_sodade, king_crimson_the_sheltering_sky, maurice_jarre_lara_s_theme, the_rolling_stones_paint_it_black, etc.) — tudo da outra sessão, fora do âmbito dos commits acima.
 
 ## 2026-08-29 — Tags secundárias aplicadas a 21 playlists (`universos_secundarios`)
 Plano proposto (36 playlists analisadas via `_dados_36_playlists.txt`) e

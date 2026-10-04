@@ -1325,3 +1325,64 @@ têm de ser integrados no catálogo, e a playlist regenerada no Studio
 depois do motor Elo estar estabilizado (a instrução do mosaico mudou
 entretanto, ver 2026-09-19 acima — uma geração anterior a essa data
 pode não reflectir a regra actual).
+
+## 2026-10-04 — Abandonada a proposta de comandos embutidos `[[pbas]]`/`[[pmod]]` para "In the Box!"
+Investigação pedida pelo utilizador antes de regenerar os 302 ficheiros
+de voz com entoação diferente na parte "In the Box!" (mais aguda/
+entusiasmada). Testada a sintaxe sugerida — `[[pbas +10]][[pmod +40]]`
+(valores relativos, com "+") — directamente com `say -v Alex`: o
+comando `say`/motor de fala do macOS **não gera erro nem aviso para
+comandos embutidos inválidos — ignora-os em silêncio**, continuando a
+falar o resto do texto normalmente. Como a sintaxe documentada da Apple
+(Speech Synthesis Programming Guide) usa sempre **valores absolutos em
+Hz** para `pbas`/`pmod`, não deltas relativos, não havia forma de saber
+só pela duração do áudio se os comandos "+10"/"+40" estavam de facto a
+ter efeito ou a ser descartados silenciosamente. `[[rate N]]` (sintaxe
+absoluta, documentada) confirmou-se a funcionar (duração do áudio variou
+de forma consistente com a mudança de velocidade).
+
+Gerada uma amostra com valores absolutos (`[[pbas 150]][[pmod 60]]
+[[rate 230]][[emph +]]`) para comparação directa com o actual — ver
+`propostas/in_the_box_actual_80_01.wav` vs
+`propostas/in_the_box_tunado_80_01.wav`. **Abandonada de qualquer
+forma** — substituída pela arquitectura de 3 ficheiros abaixo, que
+resolve o problema de forma mais robusta (controlo total sobre o "In
+the Box!" em vez de depender de comandos embutidos de fiabilidade
+incerta).
+
+## 2026-10-04 — Nova arquitectura da voz pós-acerto: 3 ficheiros encadeados no browser
+Substitui o modelo anterior (1 ficheiro por faixa, frase completa
+"[Artista] — In the Box!" num só `.wav`, ver 2026-10-04 "Frase única de
+anúncio" acima) por 3 ficheiros distintos, tocados em sequência no
+browser (`testeTocarSequenciaSom()`), encadeados por eventos `ended`:
+
+1. **`voz/nome_<id>.wav`** — só o nome do artista, voz natural de
+   apresentador de TV, sem efeito festivo, sem pitch alterado. Um
+   ficheiro por faixa (como antes), mas agora só com o nome.
+2. **`efeitos/in_the_box.wav`** — um único ficheiro, **partilhado por
+   todas as faixas** — "In the Box!" eufórico/comemorativo. Deixa de
+   haver 302 cópias quase-idênticas desta parte da frase.
+3. **`efeitos/roar.wav`** — roar de multidão/estúdio, sobreposto ao
+   fim do "In the Box!" (~150ms de overlap).
+
+Razão da mudança: a parte "In the Box!" era idêntica em todas as 302
+faixas (só o nome do artista varia) — gerá-la 302 vezes, embutida em
+cada ficheiro, desperdiça trabalho e torna impossível afiná-la
+centralmente (mudar o tom exigia regenerar tudo outra vez). Com um
+ficheiro único partilhado, afinar "In the Box!" ou trocar o roar passa
+a ser uma alteração num sítio só.
+
+Escolhida a voz do nome: **Oliver** (en_GB), de entre Alex (actual),
+Samantha, Daniel e Oliver — comparados em `propostas/nome_<voz>_<n>.wav`
+com os nomes "a-ha", "Red Hot Chili Peppers", "Earth, Wind & Fire".
+Nenhuma voz "Enhanced"/"Premium" está instalada nesta máquina
+(`say -v '?'` não lista nenhuma com essa qualidade) — todas as
+comparações foram feitas com vozes "compact" (qualidade base do
+sistema).
+
+**Por fazer antes de regenerar os 302 nomes**: afinar o rate do Oliver
+(Passo 1b, propostas em curso) e decidir "In the Box!" (gravação própria
+do utilizador, se existir em `efeitos/in_the_box_takes/`, ou TTS
+processado — Passo 2). Roar ainda não existe no projecto (pasta
+`efeitos/` por criar) — utilizador vai obter um efeito livre (Pixabay/
+Freesound CC0), nada foi descarregado automaticamente.
