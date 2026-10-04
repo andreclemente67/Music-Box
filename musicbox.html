@@ -937,6 +937,22 @@ function resolverFaixaExterna(catalogoPorId, id) {
   return musica;
 }
 
+// Verificação única do roar.wav (2026-10-04, pedido do utilizador) — em
+// vez de tentar carregar/tocar o ficheiro a cada acerto (um 404 por
+// faixa na consola enquanto não existir), verifica-se UMA VEZ aqui no
+// arranque e guarda-se o resultado nesta flag; testeTocarSequenciaSom()
+// lê-a antes de sequer tentar. GET em vez de HEAD — _servidor_escrita.py
+// (Handler extends BaseHTTPRequestHandler) só implementa do_GET, não
+// do_HEAD (um HEAD devolveria sempre 501, independentemente do ficheiro
+// existir ou não — testado, confirma-se este comportamento no servidor
+// actual). null = ainda por verificar (muito curta janela entre o
+// arranque e a resposta); testeTocarSequenciaSom() trata null como "tenta
+// na mesma", com o mesmo fallback gracioso de sempre.
+let roarDisponivel = null;
+fetch('efeitos/roar.wav', { cache: 'no-cache' })
+  .then(r => { roarDisponivel = r.ok; })
+  .catch(() => { roarDisponivel = false; });
+
 const catalogoPronto = (async () => {
   try {
     const [catalogo, playlists] = await Promise.all([
@@ -2828,6 +2844,12 @@ function testeTocarSequenciaSom(trackId) {
   };
 
   const tocarRoarOuTerminar = () => {
+    if (roarDisponivel === false) {
+      // Já sabemos (verificado no arranque, ver roarDisponivel) que o
+      // ficheiro não existe — nem tenta, nem pede, nem há 404 na consola.
+      terminarSequencia('roar não existe (verificado no arranque)');
+      return;
+    }
     try {
       const roar = new Audio('efeitos/roar.wav');
       testeAudioRevelacaoActual = roar;
