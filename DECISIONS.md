@@ -1180,3 +1180,148 @@ também em `CHAVE_GENERO_PARA_PALAVRAS`, `CHAVE_GENERO_PARA_QUERY`,
 `MIGRACAO_CHAVES` e `montarPromptIA()` — todas as estruturas que
 referenciavam os códigos antigos JZZ/SOL/HHP/CLX). Playlists já
 publicadas mantidas intocadas. Ver STATUS.md.
+
+## 2026-09-17 — §5.4b revisto: continuidade sonora pós-acerto + redesenho do "Encore"
+Duas decisões ligadas, ambas no motor de jogo (`musicbox.html`), dentro
+do redesenho da sequência pós-acerto (bloco "TESTE TEMPORÁRIO — NÃO
+COMMITAR" na altura, commitado em 2026-10-04, ver abaixo).
+
+**§5.4b — Continuidade Sonora Pós-Acerto**: a chamada em `acertouFaixa()`
+tinha ficado `audio.pause()` desde uma iteração anterior da sequência de
+teste, contradizendo directamente o próprio comentário/regra §5.4b ao
+lado ("não parar o áudio corrente, continua a tocar"). Corrigido para
+`audio.volume = 0.25` (reduz, não pára) durante a revelação; o volume só
+volta a 1 quando a Faixa seguinte arranca de facto (`iniciarFaixa()`) —
+cobre tanto o avanço automático como o "Encore" (que só chama
+`carregarTrecho()`, nunca `iniciarFaixa()`, por isso o volume continua
+reduzido durante o Trecho B do Encore, voltando ao normal só na Faixa
+seguinte a sério).
+
+**"▶ Encore" — nunca toca automaticamente**: redesenhado como uma JANELA
+DE DECISÃO de 1.5s (`TESTE_JANELA_DECISAO_TRECHO_B_MS`) — verde enquanto
+dentro da janela; clicar nessa janela escolhe tocar o Trecho B (~7s,
+depois avança sozinho); não clicar faz o botão ficar vermelho e avançar
+sozinho pouco depois (`TESTE_PAUSA_VERMELHO_MS`, só para o vermelho ser
+mesmo visível). O Trecho B nunca arranca por si só em caso algum.
+
+## 2026-09-18 — Sistema de Feedback e Aprendizagem + Modo Elo (Studio)
+**Sistema de feedback** (`feedback.json`): regista, por sessão de
+geração com IA, a decisão do curador por faixa (aceite/rejeitada/
+substituída) e por mosaico, ligado à playlist via `feedback_id`. Serve
+de contexto para a IA em gerações futuras — `montarPromptIA()` injecta
+um bloco com os últimos 20 registos relevantes (filtrados por modo de
+geração + parâmetro) antes da instrução principal, para a IA aprender
+dos padrões já aceites/rejeitados pelo curador. `feedback_jogo` (tempo
+de resposta, % de acerto, ritmo dramático) fica `null` até haver
+episódios reais lançados com essa playlist — não é inferido nem
+simulado. As 39 playlists já existentes antes deste sistema foram
+registadas por backfill (`popular_feedback_inicial.py`) com
+`modo_geracao: "manual"`, todas as faixas marcadas `aceite` na posição
+em que já estavam.
+
+**Modo Elo**: novo modo de geração na tab "✦ Gerar com IA" — o curador
+dá uma palavra/frase curta (ex. "Deserto") e a IA explora ligações
+variadas a esse elo (artista, título, letra, filme, imaginário, etc.)
+em vez de um critério fixo de década/género. Limite do prompt
+(`GERAR_FAIXAS_MAX_PROMPT`) subido de 4000 para 12000 caracteres — o
+limite antigo rejeitava prompts deste modo (mais as instruções de
+`descritivo_apresentador`/`nota_curadoria`, pedidas em todos os modos),
+fazendo cair, por engano, no fallback manual (entretanto removido por
+completo — ver 2026-09-18 mais abaixo, "Substituir").
+
+**`elo_explicacao`**: campo que a IA preenche só no fluxo de
+substituição de faixas (✎ Substituir, auto ou validação da sugestão do
+curador) explicando a ligação ao elo — exclusivo do modo Elo, visível
+só no Studio (Mesa de Montagem, `af_playlistCriadaPeloModoElo()` decide
+pela `modo_geracao` do registo de feedback da playlist), nunca exposto
+na app de jogo.
+
+**`risco_elo`** (campo que sinalizaria o quão arriscada/óbvia é uma
+ligação): **não implementado** — decisão explícita de resolver primeiro
+editorialmente via instrução no prompt (ver entrada de 2026-09-19 a
+seguir) antes de adicionar mais um campo de dados à estrutura.
+
+## 2026-09-19 — Revisão da instrução do mosaico no modo Elo: ligação indirecta, não óbvia
+Inversão deliberada da instrução original de 2026-09-18. Antes: pedia-se
+à IA a imagem mais directa e imediatamente óbvia possível para o elo
+(ex. "alguém fotografado com dunas, calor, horizonte árido" para
+"Deserto") — na prática isto entrega o tema secreto da playlist ao
+jogador antes da revelação, estragando a mecânica de charada do
+mosaico. Agora: o mosaico deve ter ligação real ao elo mas
+preferencialmente INDIRECTA — a imagem tem de ser reconhecível e
+funcionar como charada por si só, só ficando "satisfatória" (a ligação
+ao elo faz sentido) depois de revelada, nunca antes. Exemplo a evitar,
+citado na própria instrução: Hans Zimmer/Dune para o elo "Deserto" — é
+real, mas demasiado directo.
+
+## 2026-10-04 — Frase única de anúncio "Versão B" + 302 ficheiros de voz gerados
+Substituída a sequência de dois ficheiros separados pós-acerto ("in the
+box" sintetizado + eco → voz limpa só com o nome do artista) por um
+único ficheiro com a frase completa "[Artista] — In the Box!", voz
+`say -v Alex -r 205`, com o mesmo efeito de entoação festiva já em uso
+(pitch ascendente em duas zonas — 55% a +2%, 45% restantes a +6% — mais
+volume +18%, duração final preservada por `atempo` a compensar
+`asetrate`). Testado em A/B contra a versão anterior ("In the Box —
+[Artista]"); a Versão B ("[Artista] — In the Box!") foi a escolhida.
+`testeTocarSequenciaSom()` simplificada para tocar só este ficheiro e
+avançar para a janela de decisão do Encore ao terminar — já não precisa
+da lógica de overlap/preload que só fazia sentido para colar dois
+ficheiros em sequência.
+
+Ficheiro em disco: `_preview_voz_artista_<id>.wav` (id do catalogo.json).
+Gerados para as 302 faixas de todas as séries standard/retrato/video do
+catálogo. Excluídos de propósito:
+- `beatles_*` — playlist Tributo (`TRB.UK.ALL.ROC.001`), estrutura de
+  jogo diferente (posições foto/trivia/solo, sem o mecanismo de
+  revelação Trecho A/B que este anúncio de voz pressupõe).
+- `logo_*` / `LOGO-001` — pendente de revisão legal de direitos de
+  marca dos logótipos usados (Bíblia §27.15), mesma razão por que esta
+  playlist já estava excluída do Modo Teste.
+
+## 2026-10-04 — Fix: colisão em CATALOGO_POR_FICHEIRO_A por ficheiro de áudio partilhado
+`CATALOGO_POR_FICHEIRO_A` (ponte entre `catalogo.json` e as playlists
+Standard, usada para a imagem do artista/banda no overlay de acerto/
+erro) resolvia colisões de `trecho_a.ficheiro` partilhado por ORDEM DO
+ARRAY do catálogo — "quem vem depois ganha", sem olhar a que playlist a
+faixa pertence. Caso real: `80_02` (Guns N' Roses, playlist "Anos 80",
+activa) e `logo_02` (mesma faixa física, playlist `LOGO-001`, excluída)
+partilham o ficheiro `02_a.mp3`; como `logo_02` vem depois no array,
+sobrescrevia sempre `80_02` — ao acertar a faixa 80_02 no jogo, o
+sistema tentava carregar o ficheiro de voz/imagem de `logo_02` (404).
+
+Fix: antes de construir o Map, calcula-se para cada id de faixa se
+pertence a alguma playlist NÃO excluída
+(`PLAYLIST_CODIGOS_EXCLUIDOS = new Set(['LOGO-001'])`, mesma lista
+conceptual de exclusão do §27.15 usada em `mostrarTesteLista()` — ainda
+não unificada num único sítio porque uma trabalha com o código da
+playlist e a outra com a chave curta de `COLLECTIONS`, espaços de
+chaves diferentes). Uma colisão só troca a entrada já guardada a favor
+da nova quando esta pertence a uma playlist activa e a antiga não —
+nunca ao contrário, independentemente da ordem no `catalogo.json`.
+Varrido o catálogo completo: esta é a única colisão deste tipo
+existente nos dados actuais.
+
+## Convenção de teste — confirmar a porta 8002 antes de reportar erros
+Processo parasita encontrado durante a sessão: um `python -m
+http.server 8002` solto, sem suporte a POST, a ocupar a mesma porta que
+`_servidor_escrita.py` (IPv6 vs IPv4 — a resolução de `localhost`
+alternava entre os dois de forma imprevisível). Causava falhas
+intermitentes e confusas em funcionalidades que dependem de POST (ex.
+geração por IA a "cair sempre no fallback"). Convenção adoptada: correr
+`lsof -i :8002` antes de qualquer teste e antes de reportar um erro
+501/"falha a gerar" como bug de produto — só `_servidor_escrita.py`
+deve lá estar.
+
+## Playlist "Deserto" (modo Elo) — em curso, não finalizada
+Primeira playlist gerada pelo modo Elo, usada como caso de teste de
+referência para todo o fluxo (geração inicial, substituição de faixas e
+de mosaico, validação de artista repetido, `elo_explicacao`). Ainda por
+fazer antes de poder ser considerada uma playlist real: os ficheiros de
+áudio gerados durante os testes (darude_sand_storm, eagles_hotel_
+california_2, gnr_dunas, hans_zimmer_dune_main_theme, oasis_wonderwall_3,
+sting_desert_rose_3, the_bangles_walk_like_an_egyptian, the_clash_rock_
+the_casbah — soltos na raiz do projecto, ainda fora de `catalogo.json`)
+têm de ser integrados no catálogo, e a playlist regenerada no Studio
+depois do motor Elo estar estabilizado (a instrução do mosaico mudou
+entretanto, ver 2026-09-19 acima — uma geração anterior a essa data
+pode não reflectir a regra actual).
