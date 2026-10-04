@@ -3863,14 +3863,22 @@ const DECADA_CHEVRON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill
 
 // Linha individual — clicar inicia a playlist (onClickChave). "i" abre o
 // modal Saber Mais sem iniciar nada (stopPropagation, mesmo padrão já
-// usado em criarBotaoUniverso()/mostrarTesteLista()).
-function af_criarLinhaDecadaIndividual(chave, onClickChave) {
+// usado em criarBotaoUniverso()/mostrarTesteLista()). dentroDeGrupo=true
+// (2026-10-04, pedido do utilizador) — usada para as filhas de um grupo:
+// não repete o título da linha-mãe (ex. "Anos 2010"), mostra antes o
+// subtítulo/descrição em destaque (no lugar visual do título, mesma
+// prioridade de espaço — ver CSS .decada-row-titulo).
+function af_criarLinhaDecadaIndividual(chave, onClickChave, dentroDeGrupo) {
   const col = COLLECTIONS[chave];
   const dec = (col.playlistCodigo || '').split('.')[2] || '';
   const dif = col.dificuldade || 3;
   const tipo = categoriaDe(col).toLowerCase();
   const { titulo: nomeTitulo, subtitulo: nomeSub } = splitNomeCartao(col.nome);
-  const sub = (nomeSub ? nomeSub + ' — ' : '') + (col.descritivo || '');
+
+  const destaque = dentroDeGrupo
+    ? (nomeSub ? nomeSub + ' — ' + (col.descritivo || '') : (col.descritivo || nomeTitulo))
+    : nomeTitulo;
+  const sub = dentroDeGrupo ? '' : (nomeSub ? nomeSub + ' — ' : '') + (col.descritivo || '');
 
   const wrap = document.createElement('div');
   wrap.className = 'decada-row-wrap';
@@ -3878,7 +3886,7 @@ function af_criarLinhaDecadaIndividual(chave, onClickChave) {
   const row = document.createElement('button');
   row.className = 'decada-row';
   row.innerHTML = '<span class="decada-row-dec">' + dec + '</span>'
-    + '<strong class="decada-row-titulo">' + nomeTitulo + '</strong>'
+    + '<strong class="decada-row-titulo">' + destaque + '</strong>'
     + '<span class="decada-row-sub">' + sub + '</span>'
     + '<span class="decada-row-dif">Dif. ' + dif + '/5</span>'
     + '<span class="decada-row-tipo">' + tipo + '</span>'
@@ -3887,7 +3895,7 @@ function af_criarLinhaDecadaIndividual(chave, onClickChave) {
   // title="" com o texto completo (2026-10-04, pedido do utilizador) — só
   // é lido pelo browser se o título ficar mesmo truncado (ver CSS acima),
   // inofensivo nos outros casos.
-  row.querySelector('.decada-row-titulo').title = nomeTitulo;
+  row.querySelector('.decada-row-titulo').title = destaque;
   wrap.appendChild(row);
 
   if (col.descritivo_apresentador || col.nota_curadoria) {
@@ -3927,7 +3935,7 @@ function af_criarLinhaDecadaGrupo(item, onClickChave) {
   chaves.forEach(chave => {
     const filhoWrap = document.createElement('div');
     filhoWrap.className = 'decada-row-filho-wrap';
-    filhoWrap.appendChild(af_criarLinhaDecadaIndividual(chave, onClickChave));
+    filhoWrap.appendChild(af_criarLinhaDecadaIndividual(chave, onClickChave, true));
     filhos.appendChild(filhoWrap);
   });
 
