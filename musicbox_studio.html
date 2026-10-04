@@ -858,6 +858,25 @@
     margin-top: 2px;
   }
 
+  /* 2026-10-04, pedido do utilizador: nota_editorial — genérica, qualquer
+     playlist (ao contrário de elo_explicacao, exclusiva do modo Elo), só
+     no Studio — ver af_editarNotaEditorial()/af_chaveNotaEditorial(). */
+  .posicao-nota-editorial {
+    width: 100%;
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--border2);
+    color: var(--text3);
+    font-size: 10px;
+    font-style: italic;
+    padding: 2px 0;
+    margin-top: 2px;
+    outline: none;
+  }
+  .posicao-nota-editorial:focus { border-bottom-color: var(--accent2); color: var(--text2); }
+  .posicao-nota-editorial::placeholder { color: var(--text3); opacity: 0.6; }
+
   .posicao-assets {
     display: flex;
     gap: 4px;
@@ -3717,6 +3736,43 @@ function af_editarNotaCuradoria(valor) {
   if (aviso) aviso.innerHTML = valor.trim() ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>';
 }
 
+// Nota Editorial por faixa (2026-10-04, pedido do utilizador) — ao
+// contrário de descritivo_apresentador/nota_curadoria (um por playlist,
+// no cabeçalho) e de elo_explicacao (um por faixa, mas só existe/aparece
+// no modo Elo — guardado no próprio catalogo.json via
+// criarFaixaRascunhoIA()), esta é genérica (qualquer playlist, qualquer
+// modo) e guardada POR POSIÇÃO em playlists.json
+// (pl.notas_editoriais[chave]), não no catálogo — a mesma faixa pode
+// estar noutra playlist com um motivo editorial diferente. Nunca exposta
+// na app de jogo (musicbox.html não lê este campo).
+//
+// Chave por tipo de posição: 'musica' → posição 1-based (índice+1);
+// 'mosaico' → literal "mosaico"; 'posicao' (Tributo) → p.pos (já é o
+// número 1-based nos dados). Arrastar para reordenar (drag-and-drop)
+// NÃO move a nota com a faixa — fica ligada à posição, mesmo
+// comportamento/razão de nFaixasFixas em af_dropIAMusica() (reordenar é
+// uma escolha deliberada do curador, não ajustado automaticamente).
+function af_chaveNotaEditorial(kind, index, pl) {
+  if (kind === 'mosaico') return 'mosaico';
+  if (kind === 'posicao') return String(((pl.posicoes || [])[index] || {}).pos ?? (index + 1));
+  return String(index + 1);
+}
+function af_obterNotaEditorial(kind, index) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return '';
+  return (pl.notas_editoriais || {})[af_chaveNotaEditorial(kind, index, pl)] || '';
+}
+function af_editarNotaEditorial(kind, index, valor) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+  const chave = af_chaveNotaEditorial(kind, index, pl);
+  const limpo = valor.trim();
+  if (!pl.notas_editoriais) pl.notas_editoriais = {};
+  if (limpo) pl.notas_editoriais[chave] = limpo;
+  else delete pl.notas_editoriais[chave]; // nunca guarda entradas vazias — evita lixo no JSON
+  markDirty();
+}
+
 function renderMontagem() {
   const el = document.getElementById('montagem-content');
   if (!currentPlaylistKey || !PLAYLISTS[currentPlaylistKey]) {
@@ -4114,6 +4170,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
         <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
         ${mostrarElo && t.elo_explicacao ? `<div class="posicao-elo-explicacao">↳ ${escapeHtml(t.elo_explicacao)}</div>` : ''}
+        <input class="posicao-nota-editorial" value="${escapeAttr(af_obterNotaEditorial(kind, index))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('${kind}', ${index}, this.value)">
         <div class="timing-row">
           <button class="timing-btn" title="${cinema ? 'Definir início do Excerto (fim = início + 30s)' : 'Definir início do Trecho A (fim = início + 15s)'}" onclick="toggleTimingEditor('${kind}',${index},'a',event)">⏱ Definir início</button>
           ${precisaAuto ? `<button class="timing-btn auto-btn" title="${cinema ? "Ponto de partida — excerto em 0-30s. Confirma por audição e ajusta com 'Definir início' se necessário." : "Ponto de partida — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' se necessário."}" onclick="autoDefinirTrechos('${kind}',${index},event)">⚡ Auto</button>` : ''}
@@ -5367,6 +5424,7 @@ function renderPosicoesTributo(pl) {
         <div class="posicao-info">
           <div class="posicao-titulo">${escapeHtml(titulo)}</div>
           <div class="posicao-artista">${escapeHtml(artista)}</div>
+          <input class="posicao-nota-editorial" value="${escapeAttr(af_obterNotaEditorial('posicao', i))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('posicao', ${i}, this.value)">
           ${t ? `<div class="timing-row">
             <button class="timing-btn" title="Definir início do Trecho A (fim = início + 15s)" onclick="toggleTimingEditor('posicao',${i},'a',event)">⏱ Definir início</button>
             <button class="timing-btn" title="Procurar/trocar a imagem desta faixa (Wikimedia Commons)" onclick="event.stopPropagation();abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar imagem</button>

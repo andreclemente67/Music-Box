@@ -91,6 +91,38 @@
   .collection-resultado { font-size:14px; color:var(--green); text-align:center; min-height:20px; }
   .collection-descritivo-apresentador { font-size:12px; font-weight:700; color:var(--text2); text-align:center; max-width:560px; line-height:1.5; margin-top:-4px; padding:0 12px; }
 
+  /* "ℹ Saber mais" (2026-10-04, pedido do utilizador): prévia do
+     descritivo_apresentador + nota_curadoria de uma playlist candidata,
+     ANTES de a escolher — ver criarBotaoUniverso()/abrirSaberMaisPlaylist().
+     .collection-item embrulha o botão principal (escolher) + o botão
+     pequeno (prévia), para o grid de 3 colunas continuar a tratar cada
+     candidata como uma só célula. */
+  .collection-item { position:relative; }
+  .collection-item .collection-btn { width:100%; height:100%; box-sizing:border-box; }
+  .btn-saber-mais {
+    position:absolute; top:4px; right:4px;
+    background:var(--bg3); border:1px solid var(--border); border-radius:4px;
+    color:var(--text3); font-size:10px; padding:2px 6px; cursor:pointer;
+    letter-spacing:0.3px;
+  }
+  .btn-saber-mais:hover { color:var(--accent); border-color:var(--accent2); }
+
+  #saber-mais-overlay {
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7);
+    z-index:1000; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;
+  }
+  #saber-mais-overlay.activo { display:flex; }
+  .saber-mais-caixa {
+    background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+    padding:20px 24px; max-width:520px; width:100%; max-height:80vh; overflow-y:auto;
+  }
+  .saber-mais-nome { font-size:15px; font-weight:900; color:var(--accent); margin-bottom:12px; }
+  .saber-mais-label { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--text3); margin-bottom:4px; }
+  .saber-mais-texto { font-size:13px; color:var(--text); line-height:1.5; margin-bottom:16px; }
+  .saber-mais-texto.nota { color:var(--text2); font-style:italic; }
+  .saber-mais-fechar { background:var(--bg3); color:var(--text); border:none; border-radius:6px; padding:8px 20px; font-size:12px; cursor:pointer; }
+  .saber-mais-fechar:hover { background:var(--border); }
+
   .eliminacao-painel { display:none; flex-direction:column; align-items:center; padding:30px 20px; gap:16px; }
   .eliminacao-painel.activo { display:flex; }
   .eliminacao-titulo { font-size:20px; font-weight:900; color:var(--red); letter-spacing:1px; }
@@ -323,6 +355,20 @@
        Playlist". Escondida por defeito — só aparece com conteúdo, ver
        confirmarCollection(). -->
   <div class="collection-descritivo-apresentador" id="collection-descritivo-apresentador" style="display:none;"></div>
+</div>
+
+<!-- "ℹ Saber mais" (2026-10-04, pedido do utilizador): prévia de uma
+     playlist candidata (descritivo_apresentador + nota_curadoria) sem a
+     escolher — ver abrirSaberMaisPlaylist()/fecharSaberMaisPlaylist(). -->
+<div id="saber-mais-overlay" onclick="if(event.target===this) fecharSaberMaisPlaylist()">
+  <div class="saber-mais-caixa">
+    <div class="saber-mais-nome" id="saber-mais-nome"></div>
+    <div class="saber-mais-label">Descritivo do Apresentador</div>
+    <div class="saber-mais-texto" id="saber-mais-descritivo"></div>
+    <div class="saber-mais-label">Nota de Curadoria</div>
+    <div class="saber-mais-texto nota" id="saber-mais-nota"></div>
+    <button class="saber-mais-fechar" onclick="fecharSaberMaisPlaylist()">Fechar</button>
+  </div>
 </div>
 
 <div class="eliminacao-painel" id="eliminacao-painel">
@@ -1741,12 +1787,50 @@ function escolherUniversoDaFamilia(familia, pool, escolhedorIdx, bandaMin, banda
 }
 
 function criarBotaoUniverso(lista, chave) {
+  const item = document.createElement('div');
+  item.className = 'collection-item';
+
   const btn = document.createElement('button');
   btn.className = 'collection-btn';
   const dif = COLLECTIONS[chave].dificuldade || 3;
   btn.textContent = COLLECTIONS[chave].universo + '\n→ ' + COLLECTIONS[chave].nome + ' · Dif. ' + dif + '/5';
   btn.onclick = () => confirmarCollection(chave, false);
-  lista.appendChild(btn);
+  item.appendChild(btn);
+
+  // "ℹ Saber mais" (2026-10-04, pedido do utilizador): o apresentador
+  // pode consultar o descritivo/nota desta candidata ANTES de a
+  // escolher — stopPropagation() porque o botão principal fica por
+  // baixo no mesmo espaço (position:absolute), sem isto um clique no "ℹ"
+  // também chegaria ao onclick do botão por baixo em alguns navegadores.
+  if (COLLECTIONS[chave].descritivo_apresentador || COLLECTIONS[chave].nota_curadoria) {
+    const btnInfo = document.createElement('button');
+    btnInfo.className = 'btn-saber-mais';
+    btnInfo.textContent = 'ℹ Saber mais';
+    btnInfo.onclick = (ev) => { ev.stopPropagation(); abrirSaberMaisPlaylist(chave); };
+    item.appendChild(btnInfo);
+  }
+
+  lista.appendChild(item);
+}
+
+// "ℹ Saber mais" (2026-10-04, pedido do utilizador) — mostra o
+// descritivo_apresentador + nota_curadoria de UMA playlist candidata no
+// ecrã de escolha (collection-lista), sem a seleccionar. Fecha e volta à
+// selecção normalmente (fecharSaberMaisPlaylist()), nunca chama
+// confirmarCollection() nem altera collectionsUsadas/faseGeral — é só
+// consulta. Campos em falta (ex. Tributo, fora de UNIVERSOS_EXTERNOS)
+// mostram um aviso em vez de ficarem vazios.
+function abrirSaberMaisPlaylist(chave) {
+  const c = COLLECTIONS[chave];
+  if (!c) return;
+  document.getElementById('saber-mais-nome').textContent = c.universo + ' → ' + c.nome;
+  document.getElementById('saber-mais-descritivo').textContent = c.descritivo_apresentador || '(sem descritivo_apresentador preenchido)';
+  document.getElementById('saber-mais-nota').textContent = c.nota_curadoria || '(sem nota_curadoria preenchida)';
+  document.getElementById('saber-mais-overlay').classList.add('activo');
+}
+
+function fecharSaberMaisPlaylist() {
+  document.getElementById('saber-mais-overlay').classList.remove('activo');
 }
 
 function confirmarCollection(chave, foiAleatorio) {
