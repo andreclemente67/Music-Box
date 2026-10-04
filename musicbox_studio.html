@@ -920,6 +920,11 @@
   }
   .fill-auto-btn:hover { background: rgba(85,153,238,0.12); border-color: var(--blue); }
 
+  /* 2026-10-04, pedido do utilizador: botões de acção global movidos para
+     antes da lista de posições (eram inseridos a seguir à posição 01,
+     pareciam específicos dela sem ser). */
+  .montagem-accoes-globais { margin-bottom: 14px; }
+
   /* METADADOS INLINE (mostrados assim que uma faixa é atribuída a uma posição) */
   .posicao-meta {
     padding: 0 14px 10px 46px;
@@ -4145,10 +4150,21 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
 // Montagem. event.stopPropagation() no wrapper porque o cartão inteiro
 // tem onclick="selectSlot(...)" — sem isto, escrever no campo ou clicar no
 // botão também seleccionava/desseleccionava o slot.
+//
+// 2026-10-04, pedido do utilizador: o motor (af_gerarTrechoCore() →
+// POST /gerar-faixa) já procura automaticamente por título+artista
+// (iTunes preview primeiro, YouTube como fallback) quando o campo de URL
+// fica vazio — só pede o URL quando a busca automática falha. O botão/
+// placeholder antigos ("URL do YouTube para gerar Trecho A/B") não
+// deixavam isso claro, pareciam exigir sempre um URL — reformulados para
+// deixar o automático como acção principal e o URL como alternativa
+// manual só para quando a busca automática falha ou escolhe o vídeo
+// errado.
 function gerarTrechoRowHtml(t) {
   return `<div class="gerar-trecho-row" style="padding:6px 10px 8px;border-top:1px solid var(--border);" onclick="event.stopPropagation()">
-    <input class="detail-input" type="text" id="gerar-trecho-url-${t.id}" placeholder="URL do YouTube para gerar Trecho A/B" style="width:100%;font-size:11px;padding:4px 6px;box-sizing:border-box;">
-    <button class="btn" type="button" style="margin-top:4px;font-size:11px;padding:3px 8px;" onclick="gerarTrechosViaServidor('${t.id}')">⬇ Gerar trechos</button>
+    <button class="btn" type="button" style="font-size:11px;padding:3px 8px;" onclick="gerarTrechosViaServidor('${t.id}')">⬇ Gerar trechos automaticamente (título + artista)</button>
+    <div style="font-size:9px;color:var(--text3);margin-top:4px;">Não encontrou o vídeo certo? Cola um URL do YouTube específico:</div>
+    <input class="detail-input" type="text" id="gerar-trecho-url-${t.id}" placeholder="Opcional — só se a busca automática falhar ou escolher o vídeo errado" style="width:100%;font-size:11px;padding:4px 6px;margin-top:3px;box-sizing:border-box;">
     <div id="gerar-trecho-status-${t.id}" style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-top:3px;"></div>
   </div>`;
 }
@@ -5270,22 +5286,33 @@ function af_playlistCriadaPeloModoElo(pl) {
   return !!registo && registo.modo_geracao === 'elo';
 }
 
+// Botões de acção global da Mesa de Montagem (2026-10-04, pedido do
+// utilizador: moveram-se para antes da lista de posições — não são
+// específicos de nenhuma faixa, estavam só visualmente "dentro" da
+// posição 01 por serem inseridos a seguir a ela no HTML). "Preencher com
+// este artista" só existe para Retrato (precisa da posição 01 já
+// preenchida, única razão por que ainda depende de `pl`/`musicas[0]`).
+function af_renderAccoesGlobaisMontagem(pl, musicas) {
+  let html = '<div class="montagem-accoes-globais">';
+  if (pl.tipo === 'retrato' && musicas[0]) {
+    html += `<button class="fill-artista-btn" title="Só Retrato: procura no catálogo outras faixas do mesmo artista/banda da posição 01 e preenche as posições 02-08 com elas, ordenadas por década. Nunca mexe na posição 01." onclick="preencherComArtista()">Preencher com este artista</button>`;
+  }
+  html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist (ex. STD.PT.80.ROC.001) e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
+  html += `<button class="fill-auto-btn" title="Gera trechos A/B (áudio) para todas as faixas desta playlist que ainda não têm nenhum — por artista+título, sem precisar de URL. Tenta primeiro a iTunes Search API (preview de 30s, corte 0-12s/18-30s), cai para pesquisa no YouTube se não houver preview. Corre faixa a faixa, pode demorar — progresso ao vivo aparece nesta mesma página." onclick="af_gerarTrechosEmFalta()">🎧 Gerar trechos em falta</button>`;
+  html += `<button class="fill-auto-btn" title="${isCinemaPlaylist() ? "Ponto de partida para todas as faixas sem excerto definido — 0-30s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário." : "Ponto de partida para todas as faixas sem início definido — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário."}" onclick="autoDefinirTrechosTodos()">⚡ Auto em toda a playlist</button>`;
+  html += `<button class="fill-auto-btn" title="Associa ficheiros .mp3 já existentes em app/ às posições sem trecho_a — por nome exacto, a partir de mp3_index.json. Depois define A/B automaticamente para o que encontrar (⚡ Auto)." onclick="autoMatchMp3()">🔗 Auto-match MP3</button>`;
+  html += '</div>';
+  return html;
+}
+
 function renderSlotsSimples(pl) {
   const exp = expectedCount(pl.tipo);
   const musicas = pl.musicas || [];
   const mostrarElo = af_playlistCriadaPeloModoElo(pl);
-  let html = `<div class="detail-label">Posições (${musicas.length}${exp?'/'+exp:''})</div><div id="posicoes-list">`;
+  let html = af_renderAccoesGlobaisMontagem(pl, musicas);
+  html += `<div class="detail-label">Posições (${musicas.length}${exp?'/'+exp:''})</div><div id="posicoes-list">`;
   musicas.forEach((id, i) => {
     html += slotCardHtml('musica', i, id, 'tipo-audio', String(i+1).padStart(2,'0'), mostrarElo);
-    if (i === 0 && id) {
-      if (pl.tipo === 'retrato') {
-        html += `<button class="fill-artista-btn" title="Só Retrato: procura no catálogo outras faixas do mesmo artista/banda da posição 01 e preenche as posições 02-08 com elas, ordenadas por década. Nunca mexe na posição 01." onclick="preencherComArtista()">Preencher com este artista</button>`;
-      }
-      html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist (ex. STD.PT.80.ROC.001) e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
-      html += `<button class="fill-auto-btn" title="Gera trechos A/B (áudio) para todas as faixas desta playlist que ainda não têm nenhum — por artista+título, sem precisar de URL. Tenta primeiro a iTunes Search API (preview de 30s, corte 0-12s/18-30s), cai para pesquisa no YouTube se não houver preview. Corre faixa a faixa, pode demorar — progresso ao vivo aparece nesta mesma página." onclick="af_gerarTrechosEmFalta()">🎧 Gerar trechos em falta</button>`;
-      html += `<button class="fill-auto-btn" title="${isCinemaPlaylist() ? "Ponto de partida para todas as faixas sem excerto definido — 0-30s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário." : "Ponto de partida para todas as faixas sem início definido — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário."}" onclick="autoDefinirTrechosTodos()">⚡ Auto em toda a playlist</button>`;
-      html += `<button class="fill-auto-btn" title="Associa ficheiros .mp3 já existentes em app/ às posições sem trecho_a — por nome exacto, a partir de mp3_index.json. Depois define A/B automaticamente para o que encontrar (⚡ Auto)." onclick="autoMatchMp3()">🔗 Auto-match MP3</button>`;
-    }
   });
   const totalSlots = exp || (musicas.length + 1);
   for (let i = musicas.length; i < totalSlots; i++) {
@@ -5307,7 +5334,14 @@ function renderSlotsSimples(pl) {
 
 function renderPosicoesTributo(pl) {
   const posicoes = pl.posicoes || [];
-  let html = `<div class="detail-label">Posições (curadoria livre)</div><div id="posicoes-list">`;
+  // 2026-10-04, pedido do utilizador: acção global movida para antes da
+  // lista (mesma razão da Mesa de Montagem standard/retrato, ver
+  // af_renderAccoesGlobaisMontagem()) — aqui não depende da posição 01
+  // estar preenchida, por isso mostra-se sempre que houver posições.
+  let html = posicoes.length
+    ? `<div class="montagem-accoes-globais"><button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button></div>`
+    : '';
+  html += `<div class="detail-label">Posições (curadoria livre)</div><div id="posicoes-list">`;
   posicoes.forEach((p, i) => {
     const t = resolveTrack(p.id);
     const selected = selectedSlot && selectedSlot.kind === 'posicao' && selectedSlot.index === i;
@@ -5350,9 +5384,6 @@ function renderPosicoesTributo(pl) {
       ${trackMetaHtml(t)}
       ${t ? timingEditorHtml('posicao', i, p.id) : ''}
     </div>`;
-    if (i === 0 && p.id) {
-      html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
-    }
   });
   html += `</div><button class="add-posicao-btn" onclick="addPosicaoTributo()">+ Adicionar posição</button>`;
 
@@ -7064,6 +7095,22 @@ ${instrucaoDescritivos}`;
     ? ` Para este mosaico em particular, escolhe uma pessoa/elemento com ligação real ao elo "${info.eloMosaicoInstrucao}", mas preferencialmente indirecta — a imagem deve ser reconhecível e fazer uma boa charada por si só, sem que o título, o nome ou a associação praticamente entregue o tema secreto. A ligação ao elo deve ser satisfatória depois da revelação, não antes. Exemplo a evitar para o elo "Deserto": Hans Zimmer / Dune (demasiado directo). Prefere alguém cuja ligação ao deserto existe mas não é imediata.`
     : '';
 
+  // Fix (2026-10-04, pedido do utilizador): elo_explicacao só era pedido
+  // nos prompts de SUBSTITUIÇÃO de faixa/mosaico (af_montarPromptSubstituicaoIA/
+  // Mosaico, af_montarPromptValidacaoSugestaoCurador/Mosaico) — nunca na
+  // geração inicial. Resultado: faixas aceites tal e qual na primeira
+  // geração do modo Elo ficavam sem elo_explicacao (null), só as
+  // substituídas depois é que o tinham — daí a Mesa de Montagem mostrar a
+  // explicação só em "algumas" posições, não em todas. Agora pedido
+  // também aqui, só no modo Elo (info.eloMosaicoInstrucao só existe
+  // nesse modo).
+  const instrucaoEloExplicacaoPorFaixa = info.eloMosaicoInstrucao
+    ? `\n- elo_explicacao: explicação curta da ligação desta faixa ao elo "${info.eloMosaicoInstrucao}" — varia o tipo de ligação de faixa para faixa (nome do artista/banda, título, letra, filme, série, referência cultural, imaginário, etc., tal como pedido acima), nunca repitas sempre o mesmo tipo`
+    : '';
+  const campoEloExplicacaoSchema = info.eloMosaicoInstrucao
+    ? `, "elo_explicacao": "explicação curta da ligação ao elo"`
+    : '';
+
   const blocoHistorico = af_blocoHistoricoIA();
 
   return `${blocoHistorico}Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
@@ -7079,15 +7126,15 @@ Regras obrigatórias sobre repetição de artistas:
 Para cada uma dessas faixas (incluindo o mosaico), indica também:
 - genero: género musical principal, texto livre (ex.: "Rock", "Jazz", "Electronic") — não é o código da playlist acima, é o género real da faixa
 - tags: array de até 3 tags descritivas curtas (ex.: ["guitarra eléctrica", "instrumental", "anos 70"])
-- universal: true se a faixa é reconhecida transgeracionalmente (qualquer geração reconhece), false caso contrário
+- universal: true se a faixa é reconhecida transgeracionalmente (qualquer geração reconhece), false caso contrário${instrucaoEloExplicacaoPorFaixa}
 
 Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
 {
   "playlist": {"nome": "...", "geo": "INT", "decadas": "80", "genero": "POP", "dificuldade": 3, "tipo": "STD", "descritivo_apresentador": "frase curta para o apresentador dizer em directo antes da playlist começar — tom entusiasmado, nunca técnico (máx 2 linhas, Bíblia §18.7)", "nota_curadoria": "explicação editorial interna — porquê desta playlist, critério de curadoria usado, para consulta interna no Studio (nunca exposta na app de jogo, §30.5)"},
   "musicas": [
-    {"titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "descrição curta do estilo", "genero": "...", "tags": ["...", "...", "..."], "universal": true}
+    {"titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "descrição curta do estilo", "genero": "...", "tags": ["...", "...", "..."], "universal": true${campoEloExplicacaoSchema}}
   ],
-  "mosaico": {"categoria": "Artista|Baterista|Compositor|Dupla|Intérprete", "pessoa": "nome a adivinhar", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "descrição curta do estilo", "genero": "...", "tags": ["...", "...", "..."], "universal": true}
+  "mosaico": {"categoria": "Artista|Baterista|Compositor|Dupla|Intérprete", "pessoa": "nome a adivinhar", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "descrição curta do estilo", "genero": "...", "tags": ["...", "...", "..."], "universal": true${campoEloExplicacaoSchema}}
 }
 O array "musicas" tem de ter exactamente ${nFaixasIA} objectos.`;
 }

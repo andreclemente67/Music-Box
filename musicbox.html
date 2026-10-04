@@ -1228,7 +1228,13 @@ function fotoConcorrenteHtml(i) {
   return '';
 }
 
-const MOMENTO_RESPOSTA_MS = 2000;
+// 2026-10-04, pedido do utilizador: subido de 2000 para 4000 — mais
+// tempo para ver a imagem/resposta correcta antes de avançar, nas
+// faixas sem Trecho A/B real (temImagem/temLogo/temExcertoUnico/
+// temTributo) e na Ronda 4, que usam este valor fixo (ver pausaAposAcerto
+// abaixo — Standard com Trecho A/B real já não depende disto desde o
+// §5.4b revisto, avança pelo fim real do áudio/Encore).
+const MOMENTO_RESPOSTA_MS = 4000;
 let momentoRespostaTimer = null;
 // TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
 // testeTimeoutCorteTrechoB: reaproveitado para o corte do Trecho B (7s —
@@ -2758,7 +2764,8 @@ function acertouFaixa(i) {
   // (que só chama carregarTrecho(), nunca iniciarFaixa(), por isso o
   // volume continua reduzido durante o Trecho B do Encore, como deve
   // ser — só volta ao normal na Faixa seguinte a sério).
-  audio.volume = 0.25;
+  // 2026-10-04, pedido do utilizador: 0.25 → 0.75 — ducking mais leve.
+  audio.volume = 0.75;
   clearInterval(timerInterval);
   document.getElementById('chave-resposta').style.display = '';
   revelarRetrato();
