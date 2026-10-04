@@ -3140,6 +3140,393 @@
       "mosaico": null,
       "playlist_aprovada": true,
       "feedback_jogo": null
+    },
+    {
+      "id": "fb_040",
+      "data": "2026-09-18",
+      "curador": "André Clemente",
+      "modo_geracao": "elo",
+      "parametro": "Deserto",
+      "playlist_codigo": "STD.INT.ALL.MIX.002",
+      "faixas": [
+        {
+          "id_faixa": "sting_desert_rose",
+          "titulo": "Desert Rose",
+          "artista": "Sting",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "nightwish_sahara",
+          "titulo": "Sahara",
+          "artista": "Nightwish",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "america_horse_with_no_name",
+          "titulo": "Horse With No Name",
+          "artista": "America",
+          "decisao": "substituida",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": "substituída por sugestão da IA"
+        },
+        {
+          "id_faixa": "oasis_wonderwall",
+          "titulo": "Wonderwall",
+          "artista": "Oasis",
+          "decisao": "substituida",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": "substituída por sugestão do curador (validada pela IA)"
+        },
+        {
+          "id_faixa": "the_doors_riders_on_the_storm",
+          "titulo": "Riders on the Storm",
+          "artista": "The Doors",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tinariwen_touareg",
+          "titulo": "Touareg",
+          "artista": "Tinariwen",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "queen_a_kind_of_magic",
+          "titulo": "A Kind of Magic",
+          "artista": "Queen",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "chris_rea_the_road_to_hell",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_041",
+      "data": "2026-09-18",
+      "curador": "André Clemente",
+      "modo_geracao": "elo",
+      "parametro": "Deserto",
+      "playlist_codigo": "STD.INT.ALL.MIX.003",
+      "faixas": [
+        {
+          "id_faixa": "sting_desert_rose_2",
+          "titulo": "Desert Rose",
+          "artista": "Sting",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tame_impala_sahara",
+          "titulo": "Sahara",
+          "artista": "Tame Impala",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "maurice_jarre_lawrence_of_arabia_main_",
+          "titulo": "Lawrence of Arabia (Main Theme)",
+          "artista": "Maurice Jarre",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "oasis_wonderwall_2",
+          "titulo": "Wonderwall",
+          "artista": "Oasis",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "the_doors_riders_on_the_storm_2",
+          "titulo": "Riders on the Storm",
+          "artista": "The Doors",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "tinariwen_cler_achel",
+          "titulo": "Cler Achel",
+          "artista": "Tinariwen",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "gnr_dunas_2",
+          "titulo": "Dunas",
+          "artista": "GNR",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": null,
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_042",
+      "data": "2026-09-18",
+      "curador": "André Clemente",
+      "modo_geracao": "elo",
+      "parametro": "Deserto",
+      "playlist_codigo": "STD.INT.ALL.MIX.004",
+      "faixas": [
+        {
+          "id_faixa": "the_clash_rock_the_casbah",
+          "titulo": "Rock the Casbah",
+          "artista": "The Clash",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "darude_sand_storm",
+          "titulo": "Sand Storm",
+          "artista": "Darude",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "oasis_wonderwall_3",
+          "titulo": "Wonderwall",
+          "artista": "Oasis",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "the_bangles_walk_like_an_egyptian",
+          "titulo": "Walk Like an Egyptian",
+          "artista": "The Bangles",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "sting_desert_rose_3",
+          "titulo": "Desert Rose",
+          "artista": "Sting",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "eagles_hotel_california_2",
+          "titulo": "Hotel California",
+          "artista": "Eagles",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 6,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "hans_zimmer_dune_main_theme",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_043",
+      "data": "2026-10-04",
+      "curador": "André Clemente",
+      "modo_geracao": "elo",
+      "parametro": "Deserto",
+      "playlist_codigo": "STD.INT.ALL.MIX.006",
+      "faixas": [
+        {
+          "id_faixa": "the_clash_rock_the_casbah_2",
+          "titulo": "Rock the Casbah",
+          "artista": "The Clash",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "america_horse_with_no_name_2",
+          "titulo": "Horse With No Name",
+          "artista": "America",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "oasis_wonderwall_4",
+          "titulo": "Wonderwall",
+          "artista": "Oasis",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "brian_eno_dune_prophecy",
+          "titulo": "Dune (Prophecy)",
+          "artista": "Brian Eno",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "the_rolling_stones_paint_it_black",
+          "titulo": "Paint It Black",
+          "artista": "The Rolling Stones",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "sting_desert_rose_4",
+          "titulo": "Desert Rose",
+          "artista": "Sting",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "khaled_aicha",
+          "titulo": "Aïcha",
+          "artista": "Khaled",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "cesaria_evora_sodade",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
+    },
+    {
+      "id": "fb_044",
+      "data": "2026-10-04",
+      "curador": "André Clemente",
+      "modo_geracao": "elo",
+      "parametro": "Deserto",
+      "playlist_codigo": "STD.INT.ALL.MIX.005",
+      "faixas": [
+        {
+          "id_faixa": "sting_desert_rose_4",
+          "titulo": "Desert Rose",
+          "artista": "Sting",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "the_clash_rock_the_casbah_2",
+          "titulo": "Rock the Casbah",
+          "artista": "The Clash",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "oasis_wonderwall_4",
+          "titulo": "Wonderwall",
+          "artista": "Oasis",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "ennio_morricone_son_of_a_desert_wind",
+          "titulo": "Son of a Desert Wind",
+          "artista": "Ennio Morricone",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "darude_sand_storm_2",
+          "titulo": "Sand Storm",
+          "artista": "Darude",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "america_a_horse_with_no_name",
+          "titulo": "A Horse With No Name",
+          "artista": "America",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "king_crimson_the_sheltering_sky",
+          "titulo": "The Sheltering Sky",
+          "artista": "King Crimson",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "maurice_jarre_lara_s_theme_somewhere_m",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
     }
   ]
 }

@@ -14373,5 +14373,1253 @@
     "curador": "",
     "data": "2026-08-31",
     "video": null
+  },
+  {
+    "id": "sting_desert_rose",
+    "titulo": "Desert Rose",
+    "artista": [
+      "Sting"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop / World"
+    ],
+    "geografia": "UK",
+    "estilo": "pop world music com influências árabes",
+    "instrumento": [],
+    "tags": [
+      "deserto no título",
+      "world music",
+      "anos 90"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "nightwish_sahara",
+    "titulo": "Sahara",
+    "artista": [
+      "Nightwish"
+    ],
+    "decadas": [
+      "2000s"
+    ],
+    "generos": [
+      "Symphonic Metal"
+    ],
+    "geografia": "FI",
+    "estilo": "metal sinfónico épico com evocação do deserto do Saara",
+    "instrumento": [],
+    "tags": [
+      "Saara",
+      "metal sinfónico",
+      "épico"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "america_horse_with_no_name",
+    "titulo": "Horse With No Name",
+    "artista": [
+      "America"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk Rock"
+    ],
+    "geografia": "Estados Unidos",
+    "estilo": "Folk rock suave com imagery desértica",
+    "instrumento": [],
+    "tags": [
+      "deserto americano",
+      "viagem",
+      "imaginário"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "oasis_wonderwall",
+    "titulo": "Wonderwall",
+    "artista": [
+      "Oasis"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock alternativo britânico com influências Beatles",
+    "instrumento": [],
+    "tags": [
+      "Britpop",
+      "anthemic",
+      "icónico"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "the_doors_riders_on_the_storm",
+    "titulo": "Riders on the Storm",
+    "artista": [
+      "The Doors"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Psychedelic Rock"
+    ],
+    "geografia": "US",
+    "estilo": "rock psicodélico — Jim Morrison era obcecado pelo deserto do Mojave, tema central no imaginário e vida da banda",
+    "instrumento": [],
+    "tags": [
+      "Mojave",
+      "imaginário deserto",
+      "psicodélico"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "tinariwen_touareg",
+    "titulo": "Touareg",
+    "artista": [
+      "Tinariwen"
+    ],
+    "decadas": [
+      "2000s"
+    ],
+    "generos": [
+      "Desert Blues"
+    ],
+    "geografia": "ML",
+    "estilo": "blues do deserto do Saara — banda originária do Mali, povo Tuaregue, nascida literalmente no deserto",
+    "instrumento": [],
+    "tags": [
+      "Tuaregues",
+      "Saara",
+      "blues africano"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "queen_a_kind_of_magic",
+    "titulo": "A Kind of Magic",
+    "artista": [
+      "Queen"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "UK",
+    "estilo": "rock arena — composta para o filme Highlander, cujo videoclipe icónico foi filmado em cenários áridos e desérticos",
+    "instrumento": [],
+    "tags": [
+      "videoclipe deserto",
+      "Highlander",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "chris_rea_the_road_to_hell",
+    "titulo": "The Road to Hell",
+    "artista": [
+      "Chris Rea"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Soft Rock / Blues"
+    ],
+    "geografia": "UK",
+    "estilo": "rock suave com blues — capa do álbum 'The Road to Hell' mostra estrada árida evocando deserto; Chris Rea é amplamente fotografado em paisagens desérticas e a sua imagem está intrinsecamente ligada a este tipo de cenário",
+    "instrumento": [],
+    "tags": [
+      "estrada deserta",
+      "capa icónica",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "gnr_dunas",
+    "titulo": "Dunas",
+    "artista": [
+      "GNR"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "pop rock",
+      "post-punk"
+    ],
+    "geografia": "Portugal",
+    "estilo": "",
+    "instrumento": [],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "gnr_dunas_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "gnr_dunas_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "imagem": "http://r2.theaudiodb.com/images/media/artist/thumb/gnr-510b0bdde4f1a.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/165245",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "sting_desert_rose_2",
+    "titulo": "Desert Rose",
+    "artista": [
+      "Sting"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop rock com influências árabes e colaboração com Cheb Mami",
+    "instrumento": [],
+    "tags": [
+      "deserto",
+      "fusão",
+      "world music"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "tame_impala_sahara",
+    "titulo": "Sahara",
+    "artista": [
+      "Tame Impala"
+    ],
+    "decadas": [
+      "2010s"
+    ],
+    "generos": [
+      "Psychedelic Pop"
+    ],
+    "geografia": "Austrália",
+    "estilo": "psicadélico onírico com texturas de sintetizador",
+    "instrumento": [],
+    "tags": [
+      "deserto",
+      "psicodelia",
+      "atmosférico"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "maurice_jarre_lawrence_of_arabia_main_",
+    "titulo": "Lawrence of Arabia (Main Theme)",
+    "artista": [
+      "Maurice Jarre"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Banda Sonora"
+    ],
+    "geografia": "FR",
+    "estilo": "Banda sonora orquestral épica — a partitura mais associada à imagem cinematográfica do deserto árabe",
+    "instrumento": [],
+    "tags": [
+      "cinema clássico",
+      "orquestral",
+      "deserto árabe"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "oasis_wonderwall_2",
+    "titulo": "Wonderwall",
+    "artista": [
+      "Oasis"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Britpop melancólico com guitarra acústica",
+    "instrumento": [],
+    "tags": [
+      "britpop",
+      "icónico",
+      "anos 90"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "the_doors_riders_on_the_storm_2",
+    "titulo": "Riders on the Storm",
+    "artista": [
+      "The Doors"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock Psicodélico"
+    ],
+    "geografia": "EUA",
+    "estilo": "rock psicodélico atmosférico com piano e efeitos de tempestade",
+    "instrumento": [],
+    "tags": [
+      "estrada",
+      "tempestade",
+      "psicodélico"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "tinariwen_cler_achel",
+    "titulo": "Cler Achel",
+    "artista": [
+      "Tinariwen"
+    ],
+    "decadas": [
+      "2000s"
+    ],
+    "generos": [
+      "Desert Blues / World Music"
+    ],
+    "geografia": "Mali / Norte de África",
+    "estilo": "Blues do Sahara, guitarra elétrica sobre ritmos tribais tuaregues",
+    "instrumento": [],
+    "tags": [
+      "Tuaregues",
+      "Sahara",
+      "deserto"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "gnr_dunas_2",
+    "titulo": "Dunas",
+    "artista": [
+      "GNR"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Portugal",
+    "estilo": "Rock alternativo português com influências new wave",
+    "instrumento": [],
+    "tags": [
+      "dunas",
+      "deserto",
+      "rock português"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": null,
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null
+  },
+  {
+    "id": "the_clash_rock_the_casbah",
+    "titulo": "Rock the Casbah",
+    "artista": [
+      "The Clash"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Punk Rock"
+    ],
+    "geografia": "UK",
+    "estilo": "Punk rock com influências árabes e reggae, imagem e letra ligadas ao mundo árabe e desértico",
+    "instrumento": [],
+    "tags": [
+      "deserto árabe",
+      "punk",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "the_clash_rock_the_casbah_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "the_clash_rock_the_casbah_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/clash-the-4fbfabd5de00d.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111450",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "darude_sand_storm",
+    "titulo": "Sand Storm",
+    "artista": [
+      "Darude"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Trance"
+    ],
+    "geografia": "FI",
+    "estilo": "Trance electrónico eufórico, título e atmosfera remetem directamente para tempestade de areia no deserto",
+    "instrumento": [],
+    "tags": [
+      "tempestade de areia",
+      "electrónico",
+      "anos 90"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "darude_sand_storm_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "darude_sand_storm_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/yxppuy1340225179.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111701",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "oasis_wonderwall_3",
+    "titulo": "Wonderwall",
+    "artista": [
+      "Oasis"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock alternativo britânico com melodias melancólicas",
+    "instrumento": [],
+    "tags": [
+      "Britpop",
+      "anthem",
+      "90s"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "oasis_wonderwall_3_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "oasis_wonderwall_3_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wwwwqy1349529331.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111516",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "the_bangles_walk_like_an_egyptian",
+    "titulo": "Walk Like an Egyptian",
+    "artista": [
+      "The Bangles"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "US",
+    "estilo": "Pop rock dos anos 80 com referência cultural ao Egipto e ao deserto do Sahara",
+    "instrumento": [],
+    "tags": [
+      "Egipto",
+      "deserto",
+      "anos 80"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "the_bangles_walk_like_an_egyptian_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "the_bangles_walk_like_an_egyptian_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/pyn8121771639745.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111654",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "sting_desert_rose_3",
+    "titulo": "Desert Rose",
+    "artista": [
+      "Sting"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop rock com influências árabes e world music",
+    "instrumento": [],
+    "tags": [
+      "deserto",
+      "world music",
+      "lírica"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "sting_desert_rose_3_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "sting_desert_rose_3_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wuprus1340023845.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111600",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "eagles_hotel_california_2",
+    "titulo": "Hotel California",
+    "artista": [
+      "Eagles"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "US",
+    "estilo": "Rock clássico americano com imaginário de estrada deserta e solidão do sudoeste árido dos EUA",
+    "instrumento": [],
+    "tags": [
+      "estrada deserta",
+      "California árida",
+      "anos 70"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "eagles_hotel_california_2_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "eagles_hotel_california_2_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/wttyrt1362245227.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111416",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "hans_zimmer_dune_main_theme",
+    "titulo": "Dune (Main Theme)",
+    "artista": [
+      "Hans Zimmer"
+    ],
+    "decadas": [
+      "2020s"
+    ],
+    "generos": [
+      "Banda Sonora"
+    ],
+    "geografia": "US",
+    "estilo": "Trilha sonora épica do filme Dune (2021), ambientado inteiramente num planeta desértico",
+    "instrumento": [],
+    "tags": [
+      "Dune",
+      "planeta desértico",
+      "épico"
+    ],
+    "universal": false,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "hans_zimmer_dune_main_theme_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "hans_zimmer_dune_main_theme_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-09-18",
+    "video": null,
+    "imagem": "https://www.theaudiodb.com/images/media/artist/thumb/syojs21789552322.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/112475",
+    "imagem_data_captura": "2026-09-18",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "sting_desert_rose_4",
+    "titulo": "Desert Rose",
+    "artista": [
+      "Sting"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop/World Music"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Pop rock com influências árabes e world music",
+    "instrumento": [],
+    "tags": [
+      "deserto",
+      "oriente",
+      "atmosférico"
+    ],
+    "universal": true,
+    "elo_explicacao": null,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "sting_desert_rose_4_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "sting_desert_rose_4_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1a/Sting_at_2026_Montreux_Jazz_Festival-12-CA_%28cropped%29.jpg/3840px-Sting_at_2026_Montreux_Jazz_Festival-12-CA_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Sting (musician)",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Sting_(musician)",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "the_clash_rock_the_casbah_2",
+    "titulo": "Rock the Casbah",
+    "artista": [
+      "The Clash"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Punk Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "punk rock com influências new wave e funk",
+    "instrumento": [],
+    "tags": [
+      "Médio Oriente",
+      "deserto",
+      "clássico"
+    ],
+    "universal": true,
+    "elo_explicacao": "Título corrigido de 'rock the cashbsah' para 'Rock the Casbah'. A Casbah é uma fortaleza/medina típica do Norte de África, evocando imageticamente o deserto arábico e o mundo islâmico. O videoclipe reforça esse imaginário com cenas no deserto do Texas, e a letra refere-se à proibição de música no Irão — ligação ao imaginário desértico do Médio Oriente. Artista não duplicado na playlist.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "the_clash_rock_the_casbah_2_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "the_clash_rock_the_casbah_2_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/6/6f/The_Clash_in_San_Diego%2C_1982_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — The Clash",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/The_Clash",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "oasis_wonderwall_4",
+    "titulo": "Wonderwall",
+    "artista": [
+      "Oasis"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Britpop / Rock alternativo"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock alternativo britânico com arranjos melódicos",
+    "instrumento": [],
+    "tags": [
+      "britpop",
+      "anos 90",
+      "icónico"
+    ],
+    "universal": true,
+    "elo_explicacao": "O curador sugeriu 'oasis' — palavra que designa um ponto de água e vegetação no meio do deserto, ligação directa e imediata ao elo editorial 'Deserto'. A faixa identificada é 'Wonderwall' dos Oasis, banda britânica cujo nome é precisamente 'oasis', evocando esse imaginário de refúgio no deserto. A ligação é pelo nome da banda, não pelo título literal, o que varia o tipo de conexão na playlist. Nenhum dos artistas já presentes na playlist corresponde a este artista, pelo que não há duplicação.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "oasis_wonderwall_4_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "oasis_wonderwall_4_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c0/Oasis_-_Principality_Stadium%2C_Cardiff_-_Friday_4th_July_2025_member_collage.jpg/3840px-Oasis_-_Principality_Stadium%2C_Cardiff_-_Friday_4th_July_2025_member_collage.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Oasis (band)",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Oasis_(band)",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "ennio_morricone_son_of_a_desert_wind",
+    "titulo": "Son of a Desert Wind",
+    "artista": [
+      "Ennio Morricone"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Soundtrack"
+    ],
+    "geografia": "IT",
+    "estilo": "Banda sonora orquestral épica",
+    "instrumento": [],
+    "tags": [
+      "orquestral",
+      "banda sonora",
+      "épico"
+    ],
+    "universal": false,
+    "elo_explicacao": "Faixa composta por Morricone para o filme 'The Good, the Bad and the Ugly' — o deserto do Oeste americano é o cenário absolutamente central do filme e da composição.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "ennio_morricone_son_of_a_desert_wind_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "ennio_morricone_son_of_a_desert_wind_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Ennio_Morricone_Cannes_2007.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Ennio Morricone",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Ennio_Morricone",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "darude_sand_storm_2",
+    "titulo": "Sand Storm",
+    "artista": [
+      "Darude"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Electronic"
+    ],
+    "geografia": "FI",
+    "estilo": "Eurodance electrónico",
+    "instrumento": [],
+    "tags": [
+      "dance",
+      "electrónico",
+      "anos 90"
+    ],
+    "universal": true,
+    "elo_explicacao": "O título 'Sandstorm' remete literalmente para uma tempestade de areia — fenómeno característico dos desertos — e a faixa tornou-se um ícone cultural global.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "darude_sand_storm_2_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "darude_sand_storm_2_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/7/70/Darude_photo_in_2015.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Darude",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Darude",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "livre"
+  },
+  {
+    "id": "america_a_horse_with_no_name",
+    "titulo": "A Horse With No Name",
+    "artista": [
+      "America"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Folk Rock"
+    ],
+    "geografia": "Reino Unido / EUA",
+    "estilo": "Folk rock suave com imagética árida e desértica",
+    "instrumento": [],
+    "tags": [
+      "deserto",
+      "viagem",
+      "clássico"
+    ],
+    "universal": true,
+    "elo_explicacao": null,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "america_a_horse_with_no_name_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "america_a_horse_with_no_name_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/7/70/America2012.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — America (band)",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/America_(band)",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "king_crimson_the_sheltering_sky",
+    "titulo": "The Sheltering Sky",
+    "artista": [
+      "King Crimson"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Rock Progressivo"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Rock progressivo instrumental denso e atmosférico",
+    "instrumento": [],
+    "tags": [
+      "instrumental",
+      "progressivo",
+      "árido"
+    ],
+    "universal": false,
+    "elo_explicacao": "Faixa instrumental do álbum 'Discipline' (1981). O título é uma referência directa ao romance 'The Sheltering Sky' de Paul Bowles (1949), cuja acção se passa no deserto do Saara — a ligação ao elo 'Deserto' é literária e cultural, através do imaginário árido e existencial do romance. A natureza da ligação (referência literária via título) é distinta das outras faixas da playlist. O artista King Crimson não está na lista de artistas já incluídos.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "king_crimson_the_sheltering_sky_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "king_crimson_the_sheltering_sky_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music5/v4/2f/c7/19/2fc71988-6871-be2c-6731-a3d0f2a6b232/Court_2500px.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/21st-century-schizoid-man-including-mirrors/918534711?i=918534776&uo=4",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "maurice_jarre_lara_s_theme_somewhere_m",
+    "titulo": "Lara's Theme (Somewhere My Love)",
+    "artista": [
+      "Maurice Jarre"
+    ],
+    "decadas": [
+      "1960s"
+    ],
+    "generos": [
+      "Soundtrack"
+    ],
+    "geografia": "FR",
+    "estilo": "Tema orquestral cinematográfico romântico",
+    "instrumento": [],
+    "tags": [
+      "orquestral",
+      "cinema",
+      "tema clássico"
+    ],
+    "universal": true,
+    "elo_explicacao": "Maurice Jarre compôs a banda sonora de 'Lawrence of Arabia' (1962), um dos filmes mais celebrados sobre o deserto arábico — mas a faixa escolhida é do épico 'Doctor Zhivago', o que torna a ligação satisfatória após revelação sem a entregar de imediato.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "maurice_jarre_lara_s_theme_somewhere_m_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "maurice_jarre_lara_s_theme_somewhere_m_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-04",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d5/dd/b0/d5ddb006-e0df-2d09-a38b-8da05281ed8e/886448179184.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/unchained-melody-from-ghost-orchestral-version/1541888743?i=1541888750&uo=4",
+    "imagem_data_captura": "2026-10-04",
+    "imagem_licenca_estado": "confirmar"
   }
 ]

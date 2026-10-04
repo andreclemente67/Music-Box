@@ -1385,5 +1385,31 @@
       "pessoa": "Manuel Alegre",
       "id": "luis_cilia_trova_do_vento_que_passa"
     }
+  },
+  "STD.INT.ALL.MIX.005": {
+    "tipo": "standard",
+    "nome": "Areias do Tempo",
+    "descritivo": "",
+    "descritivo_apresentador": "Calor, silêncio e horizontes infinitos — preparem-se para uma viagem musical pelos desertos do mundo! Vamos ver quem sobrevive a esta playlist!",
+    "nota_curadoria": "Playlist construída sobre o elo 'Deserto' com variação deliberada nos tipos de ligação: título literal, letra/imaginário, referência geográfica real, nome de banda, trilha sonora, personagem cultural e atmosfera sonora. Evitados artistas já presentes no histórico aprovado. Mix de géneros e décadas para manter ritmo variado no jogo de trivia. Dificuldade moderada com uma entrada fácil e duas entradas de nicho para equilibrar o grupo.",
+    "playlistCodigo": "STD.INT.ALL.MIX.005",
+    "feedback_id": "fb_044",
+    "universo": "Multi-género / décadas",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "sting_desert_rose_4",
+      "the_clash_rock_the_casbah_2",
+      "oasis_wonderwall_4",
+      "ennio_morricone_son_of_a_desert_wind",
+      "darude_sand_storm_2",
+      "america_a_horse_with_no_name",
+      "king_crimson_the_sheltering_sky"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Maurice Jarre",
+      "id": "maurice_jarre_lara_s_theme_somewhere_m"
+    }
   }
 }
