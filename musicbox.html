@@ -1177,6 +1177,13 @@ fetch('efeitos/roar.wav', { cache: 'no-cache' })
   .then(r => { roarDisponivel = r.ok; })
   .catch(() => { roarDisponivel = false; });
 
+// Mesmo padrão de verificação única do roarDisponivel, para o sinal
+// sonoro da Pergunta Bónus (efeitos/bonus.wav).
+let bonusSomDisponivel = null;
+fetch('efeitos/bonus.wav', { cache: 'no-cache' })
+  .then(r => { bonusSomDisponivel = r.ok; })
+  .catch(() => { bonusSomDisponivel = false; });
+
 const catalogoPronto = (async () => {
   try {
     const [catalogo, playlists] = await Promise.all([
@@ -1561,6 +1568,19 @@ function tocarSireneBonus() {
     gain.gain.linearRampToValueAtTime(0.0001, t0 + 1.05);
     osc.start(t0);
     osc.stop(t0 + 1.1);
+  } catch (e) {}
+}
+
+// Sinal sonoro do momento em que o painel do BONUS_MODE aparece —
+// diferente da sirene acima (que toca logo no acerto, antes da pausa de
+// revelação). Ficheiro escolhido pelo utilizador em propostas/bonus_F.wav
+// ("ding-ding-DING"), copiado para efeitos/bonus.wav. Mesmo padrão de
+// verificação única do roar.wav (bonusSomDisponivel) — se o ficheiro não
+// existir, segue sem som e sem erro na consola.
+function tocarSinalBonusPainel() {
+  if (bonusSomDisponivel === false) return;
+  try {
+    new Audio('efeitos/bonus.wav').play().catch(() => {});
   } catch (e) {}
 }
 // ── PATH DE IMAGENS DO MOSAICO (Bíblia 27 — mosaicos copiados automaticamente) ──
@@ -3393,6 +3413,7 @@ function acertouFaixa(i) {
     tocarSireneBonus();
     setTimeout(() => {
       mostrarSoPainel('bonus-painel');
+      tocarSinalBonusPainel();
       document.getElementById('bonus-quem').textContent =
         `${NOMES[i]} ganhou a Faixa ${faixaAtual} (+${PONTOS_FAIXA} pontos). Pergunta Bónus temática (${COLLECTIONS[collectionActual].nome}):`;
       preencherPainelBonus(collectionActual, faixaAtual);
