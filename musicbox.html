@@ -655,16 +655,24 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────
-// DUCKING DA MÚSICA PÓS-ACERTO (2026-10-04, pedido do utilizador) —
-// constantes no topo do script para ser fácil afinar. VOL_MUSICA é o
-// volume normal de fundo durante a revelação (continuidade sonora,
-// Bíblia §5.4b); VOL_DUCK é o volume reduzido só enquanto o nome do
-// artista está a ser anunciado, para a voz se ouvir bem por cima.
-// FADE_DOWN_MS/FADE_UP_MS são as durações das transições suaves (não
-// saltos instantâneos). Ver fadeVolume()/acertouFaixa()/
-// testeTocarSequenciaSom().
+// DUCKING DA MÚSICA PÓS-ACERTO (2026-10-04, pedido do utilizador;
+// VOL_ENCORE acrescentado 2026-10-05 — "meio-termo" depois de comparar
+// sample_actual.wav vs sample_proposto.wav) — constantes no topo do
+// script para ser fácil afinar. VOL_MUSICA é o volume normal de fundo
+// durante a revelação (continuidade sonora, Bíblia §5.4b); VOL_DUCK é o
+// volume reduzido só enquanto o nome do artista + "In the Box!!" estão a
+// tocar, para se ouvirem bem por cima; VOL_ENCORE é o nível intermédio
+// mantido durante a pausa e toda a janela de decisão do Encore (nem tão
+// alto que pareça já ter voltado ao normal antes da decisão, nem tão
+// baixo como durante a voz). FADE_DOWN_MS/FADE_UP_MS são as durações das
+// transições suaves (não saltos instantâneos) — FADE_DOWN_MS é reusado
+// tanto para o duck inicial (VOL_MUSICA→VOL_DUCK) como para a descida a
+// VOL_ENCORE (VOL_DUCK→VOL_ENCORE), FADE_UP_MS só para a subida final a
+// VOL_MUSICA quando o Trecho B arranca. Ver fadeVolume()/acertouFaixa()/
+// testeTocarSequenciaSom()/testeArrancarTrechoBSemFF().
 const VOL_MUSICA = 0.75;
 const VOL_DUCK = 0.25;
+const VOL_ENCORE = 0.45;
 const FADE_DOWN_MS = 300;
 const FADE_UP_MS = 600;
 
@@ -2609,16 +2617,23 @@ function iniciarFaixa() {
   reporPausa();
   // 2026-09-17, pedido do utilizador (§5.4b): repõe o volume normal aqui
   // — acertouFaixa() reduz para VOL_DUCK durante o anúncio do nome
-  // (música de fundo continua a tocar, não pára); só volta a 1 quando a
-  // Faixa seguinte a sério arranca (não no Encore — esse só chama
-  // carregarTrecho(), nunca iniciarFaixa()). cancelarFadeVolume() aqui é
-  // a rede de segurança (2026-10-04, pedido do utilizador): se o
-  // jogador avançar a meio de um fade de ducking, este é o ponto de
-  // passagem garantido antes de qualquer Faixa nova tocar — mata
-  // qualquer fade pendente para nunca deixar o volume preso em
-  // VOL_DUCK.
+  // (música de fundo continua a tocar, não pára); só volta a VOL_MUSICA
+  // quando a Faixa seguinte a sério arranca (não no Encore — esse só
+  // chama carregarTrecho(), nunca iniciarFaixa()). cancelarFadeVolume()
+  // aqui é a rede de segurança (2026-10-04, pedido do utilizador): se o
+  // jogador avançar a meio de um fade de ducking (ou da janela de
+  // decisão do Encore, em VOL_ENCORE), este é o ponto de passagem
+  // garantido antes de qualquer Faixa nova tocar — mata qualquer fade
+  // pendente para nunca deixar o volume preso em VOL_DUCK/VOL_ENCORE.
+  // BUG encontrado e corrigido 2026-10-05 (a testar o "meio-termo" do
+  // Encore): esta linha ainda repunha o volume a "1" (valor literal de
+  // antes de VOL_MUSICA/VOL_DUCK existirem, 2026-09-17) em vez de
+  // VOL_MUSICA (0.75, introduzido só em 2026-10-04) — a música de fundo
+  // normal de cada Faixa nova tocava sempre a volume máximo, não ao
+  // nível "normal" pretendido; só a reposição pós-Encore usava VOL_MUSICA
+  // correctamente (ver testeArrancarTrechoBSemFF()).
   cancelarFadeVolume();
-  audio.volume = 1;
+  audio.volume = VOL_MUSICA;
   trechoAtual = 'A';
   vencedorFaixa = null;
   mutados = mutadoAteFaixa.map((ateFaixa, i) => !eliminado[i] && faixaAtual <= ateFaixa);
@@ -2870,6 +2885,11 @@ function testeCliqueTrechoB() {
 // por vermelho (essa cor é só para o caminho "não escolheu", ver
 // testeMostrarJanelaDecisaoTrechoB()).
 function testeArrancarTrechoBSemFF() {
+  // 2026-10-05, pedido do utilizador ("meio-termo"): sobe de VOL_ENCORE
+  // para VOL_MUSICA aqui — só quando o Trecho B é mesmo escolhido e
+  // arranca a sério (antes era em terminarSequencia(), logo depois do
+  // "In the Box!!", sem esperar pela decisão do Encore).
+  fadeVolume(audio, VOL_MUSICA, FADE_UP_MS);
   trechoAtual = 'B';
   tempoRestante = JANELA_TRECHO;
   carregarTrecho();
@@ -2915,9 +2935,15 @@ function testeTocarSequenciaSom(trackId) {
   const terminarSequencia = (motivo) => {
     if (sequenciaTerminada) return; // guarda contra 'ended'+catch duplicados
     sequenciaTerminada = true;
-    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade de volta a VOL_MUSICA + janela de decisão do Trecho B a seguir');
+    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade para VOL_ENCORE + janela de decisão do Trecho B a seguir');
     testeAudioRevelacaoActual = null;
-    fadeVolume(audio, VOL_MUSICA, FADE_UP_MS);
+    // 2026-10-05, pedido do utilizador ("meio-termo"): já não sobe logo a
+    // VOL_MUSICA aqui — fica em VOL_ENCORE (intermédio) durante a pausa e
+    // toda a janela de decisão (testeMostrarJanelaDecisaoTrechoB()). Só
+    // sobe a VOL_MUSICA quando o Trecho B realmente arranca (ver
+    // testeArrancarTrechoBSemFF()) — se não for escolhido, a próxima
+    // Faixa repõe VOL_MUSICA directamente em iniciarFaixa(), sem fade.
+    fadeVolume(audio, VOL_ENCORE, FADE_DOWN_MS);
     testeMostrarJanelaDecisaoTrechoB();
   };
 
