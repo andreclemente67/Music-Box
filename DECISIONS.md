@@ -1624,15 +1624,13 @@ Tchaikovsky (`ru-RU-DmitryNeural`, `texto` em cirílico: "Пётр Ильич
 Чайковский"). José Feliciano/Michael Bublé/Beyoncé ficam deliberadamente
 em Alex (já bem conhecidos em contexto anglófono).
 
-**Em curso, sem decisão fechada** — ficam em Alex até confirmação:
-- **Vangelis**: voz grega (`el-GR-NestorasNeural`) testada e rejeitada
-  ("soa estranha") — a aguardar escolha entre Alex ("Vangelis") e
-  Duarte com grafia fonética PT ("Vanguélis"), amostra em
-  `propostas/vangelis_alt.wav`.
-- **Compositores japoneses de videojogos** (Koji Kondo, Nobuo Uematsu,
-  Yoko Shimomura): voz japonesa com grafia nativa também rejeitada — a
-  aguardar escolha entre Alex com romaji e Duarte com grafia fonética
-  PT, amostra em `propostas/japoneses_alt.wav`.
+**Resolvido (5 Out 2026)**: voz grega (Vangelis) e voz japonesa (Koji
+Kondo/Nobuo Uematsu/Yoko Shimomura) testadas e rejeitadas ("soam
+estranhas") — ambas passam para **Duarte**, com grafia fonética PT:
+Vangelis → "Vanguélis"; Koji Kondo → "Côji Côndo"; Nobuo Uematsu → sem
+alteração (grafia original já soa bem); Yoko Shimomura → "Ióco
+Ximomura". Amostras em `propostas/vangelis_alt.wav`/
+`japoneses_alt.wav`.
 
 **Implementado** (`gerar_vozes_nome_artista.py`): dois motores — `say`
 (Alex, como antes) e edge-tts (as restantes vozes, mesmo filtro de

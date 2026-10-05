@@ -18,6 +18,10 @@
     "Maurice Jarre": { "voz": "fr-FR-HenriNeural" },
     "Claude Debussy": { "voz": "fr-FR-HenriNeural" },
     "Enrique Iglesias": { "voz": "es-ES-AlvaroNeural" },
-    "Pyotr Ilyich Tchaikovsky": { "voz": "ru-RU-DmitryNeural", "texto": "Пётр Ильич Чайковский" }
+    "Pyotr Ilyich Tchaikovsky": { "voz": "ru-RU-DmitryNeural", "texto": "Пётр Ильич Чайковский" },
+    "Vangelis": { "voz": "pt-PT-DuarteNeural", "texto": "Vanguélis" },
+    "Koji Kondo": { "voz": "pt-PT-DuarteNeural", "texto": "Côji Côndo" },
+    "Nobuo Uematsu": { "voz": "pt-PT-DuarteNeural" },
+    "Yoko Shimomura": { "voz": "pt-PT-DuarteNeural", "texto": "Ióco Ximomura" }
   }
 }
