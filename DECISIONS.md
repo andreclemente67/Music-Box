@@ -1476,3 +1476,27 @@ Deixados por mexer, deliberadamente: comentários de código que mencionam
 documentação interna, não interface; e uma linha em
 `musicbox_studio.html` (~7007) que usa "Género:" dentro de um prompt
 enviado à IA, não texto mostrado a um humano.
+
+## 2026-10-05 — Sinal sonoro da Pergunta Bónus
+
+Decisão do utilizador: nova direcção pedida ("meia fanfarra, som curto,
+tipo sino") depois de rejeitar as 3 primeiras propostas (A: arpejo
+ascendente, B: fanfarra de 2 acordes, C: sting de suspense — nenhuma
+escolhida). Geradas 3 variantes novas com ffmpeg (sem sox disponível no
+sistema), timbre de sino sintetizado por partials inarmónicos
+(`aevalsrc` com soma de senos em razões 1/2.0/2.76/4.0/5.4 e decaimentos
+exponenciais distintos por partial — aproximação de sino metálico):
+D (2 notas em quinta ascendente), E (acorde de fanfarra só de ataque +
+camada de sino), F (3 notas rápidas "ding-ding-DING", última mais
+forte). Escolhida a proposta **F** — copiada para `efeitos/bonus.wav`.
+
+Toca no momento em que o painel do BONUS_MODE aparece (dentro do
+`setTimeout` de `acertouFaixa()`, dispara `tocarSinalBonusPainel()`) —
+distinto da sirene sintetizada já existente (`tocarSireneBonus()`, que
+toca mais cedo, logo no acerto). Mesmo padrão de verificação única do
+`roar.wav` (`bonusSomDisponivel`, checado uma vez no arranque): se o
+ficheiro não existir, segue sem som e sem erro na consola.
+
+Testado com Playwright nas Décadas (Faixa 4) e numa Especial (Faixas 3
+e 6) — sinal toca exactamente uma vez por aparecimento do painel, zero
+erros de JS.

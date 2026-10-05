@@ -23,13 +23,14 @@
 - `78067d3` — sistema de estados aprovada/gravada: decisão de adiar, registada.
 - `647f176` — "✎ Substituir" (3 alternativas da IA) também na Mesa de Montagem, para playlists já guardadas — não só na criação.
 - `a6dd968` — **narração redesenhada**: deixa de ser automática — botão "🔊 Apresentação" manual (toca/pára, repetível), nunca bloqueia "▶ Iniciar Playlist"; toggle ON/OFF removido; `.topo` "⚙ Studio" → "Music Box Editor" (ícone sliders).
-- (este commit) — família "Géneros" → "Estilos" no texto visível (`FAMILIA_GENEROS` continua a existir como identificador, só o valor mostrado mudou) — `DECISIONS.md` tem o detalhe completo.
+- família "Géneros" → "Estilos" no texto visível (`FAMILIA_GENEROS` continua a existir como identificador, só o valor mostrado mudou) — `DECISIONS.md` tem o detalhe completo.
+- Pergunta Bónus nas famílias Décadas/Estilos (Faixa 4, `FAIXA_BONUS_MUSICAL`) — implementada no jogo e no Studio, 46 perguntas geradas por IA e gravadas, botão "✓ Revisto" no Studio (`2fd1b17`).
+- `08ddc11` — **sinal sonoro da Pergunta Bónus**: `efeitos/bonus.wav` ("ding-ding-DING", 3 notas de sino ascendentes), toca uma vez quando o painel do BONUS_MODE aparece (Décadas/Estilos Faixa 4, Especiais Faixas 3/6); testado com Playwright, verificação graciosa sem ficheiro.
 
 **Pendente desta sessão, ainda por fazer:**
-- Pergunta Bónus nas famílias Décadas/Estilos (Faixa 4, `FAIXA_BONUS_MUSICAL`) — especificado, investigação do código actual em curso, nada implementado.
 - Pronúncia por língua dos nomes PT/BR (Duarte/Antonio) — lista de candidatos dada, à espera da confirmação do utilizador antes de regenerar.
 - Anúncio de voz no acerto do Mosaico — pedido recebido, nada feito.
-- `BIBLIA.md`: utilizador disse tê-lo colocado na raiz do projecto — **não está lá** (confirmado por `ls`/`find`), avisado, a aguardar.
+- `BIBLIA.md`: agora existe na raiz (última entrada confirmada em 2 Set 2026, §30.8; não encontrei o número de versão "V3.29" como texto literal no ficheiro — a confirmar com o utilizador) — reconciliação com `DECISIONS.md` em curso.
 
 ## 2026-10-04/05 — Sessão 4-5 Out 2026
 
