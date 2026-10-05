@@ -633,6 +633,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == '/versao':
             self._versao_ficheiro(parsed)
             return
+        if parsed.path == '/listar-voz':
+            self._listar_voz()
+            return
 
         caminho_pedido = unquote(parsed.path)
         relativo = caminho_pedido.lstrip('/')
@@ -692,6 +695,19 @@ class Handler(BaseHTTPRequestHandler):
             self._enviar_json(500, {"erro": f"falha a ler versão: {e}"})
             return
         self._enviar_json(200, {"ok": True, "ficheiro": ficheiro, "existe": True, "mtime": mtime})
+
+    def _listar_voz(self):
+        # GET /listar-voz -> {"ok":true,"ficheiros":["nome_80_01.wav", ...]}
+        # Usado pelo Studio para decidir, numa só verificação, quais botões
+        # de pré-escuta de voz (▶ junto ao artista/Mosaico) ficam activos —
+        # evita um fetch por faixa (ver DECISIONS.md, pré-escuta de voz).
+        caminho = os.path.join(APP_DIR, 'voz')
+        try:
+            ficheiros = os.listdir(caminho) if os.path.isdir(caminho) else []
+        except OSError as e:
+            self._enviar_json(500, {"erro": f"falha a listar voz/: {e}"})
+            return
+        self._enviar_json(200, {"ok": True, "ficheiros": ficheiros})
 
     def _mb_proxy(self, parsed):
         # Proxy de pedidos à API da MusicBrainz do lado do servidor — o

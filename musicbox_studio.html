@@ -2602,6 +2602,43 @@ let YT_RESULTADOS = [];               // resultados YouTube da pesquisa actual, 
 let currentAudio = null;
 let currentBtn = null;
 
+// Pré-escuta da voz do artista/Mosaico (2026-10-05, pedido do
+// utilizador) — AF_VOZ_FICHEIROS é a lista de voz/ carregada uma vez em
+// loadData() via GET /listar-voz; af_previewVoz() toca/pára, nunca mais
+// do que um de cada vez (mesmo padrão de currentAudio/currentBtn acima,
+// instância própria para não interferir com os outros players A/B).
+let AF_VOZ_FICHEIROS = new Set();
+let AF_PREVIEW_VOZ_AUDIO = null;
+let AF_PREVIEW_VOZ_BTN = null;
+
+const AF_SVG_PLAY = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>';
+const AF_SVG_STOP = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="1"></rect></svg>';
+
+function af_previewVozBotaoHtml(ficheiroBase) {
+  const disponivel = AF_VOZ_FICHEIROS.has(ficheiroBase + '.wav');
+  const aTocar = AF_PREVIEW_VOZ_BTN === ficheiroBase;
+  return `<button type="button" class="icon-btn af-preview-voz-btn" style="color:var(--text2);${disponivel ? '' : 'opacity:0.3;cursor:default;'}"
+    title="${disponivel ? 'Pré-escutar voz' : 'Voz por gerar'}"
+    ${disponivel ? `onclick="event.stopPropagation();af_previewVoz('${ficheiroBase}', this)"` : 'disabled'}
+    >${aTocar ? AF_SVG_STOP : AF_SVG_PLAY}</button>`;
+}
+
+function af_previewVoz(ficheiroBase, btn) {
+  const tocandoEsteJa = AF_PREVIEW_VOZ_BTN === ficheiroBase;
+  if (AF_PREVIEW_VOZ_AUDIO) {
+    AF_PREVIEW_VOZ_AUDIO.pause();
+    AF_PREVIEW_VOZ_AUDIO = null;
+  }
+  AF_PREVIEW_VOZ_BTN = null;
+  if (tocandoEsteJa) { renderMontagem(); return; } // só pedia para parar
+  const audio = new Audio('voz/' + ficheiroBase + '.wav');
+  AF_PREVIEW_VOZ_AUDIO = audio;
+  AF_PREVIEW_VOZ_BTN = ficheiroBase;
+  audio.addEventListener('ended', () => { AF_PREVIEW_VOZ_AUDIO = null; AF_PREVIEW_VOZ_BTN = null; renderMontagem(); });
+  audio.play().catch(() => { AF_PREVIEW_VOZ_AUDIO = null; AF_PREVIEW_VOZ_BTN = null; });
+  renderMontagem();
+}
+
 // ─── CARREGAMENTO ───────────────────────────────────────────
 async function loadData() {
   try {
@@ -2614,6 +2651,17 @@ async function loadData() {
     PLAYLISTS = playlists;
     PLAYLISTS_CHAVES_DISCO = new Set(Object.keys(PLAYLISTS));
     AF_VERSAO_PLAYLISTS = await af_lerVersaoPlaylists();
+    // Pré-escuta de voz (▶ junto ao artista/Mosaico, 2026-10-05): uma só
+    // verificação de que ficheiros já existem em voz/ — evita um fetch
+    // por faixa. Falha graciosamente (fica vazio, todos os botões ▶
+    // ficam desactivados) se o endpoint não existir ainda.
+    try {
+      const rv = await fetch('/listar-voz', { cache: 'no-cache' });
+      if (rv.ok) {
+        const dv = await rv.json();
+        AF_VOZ_FICHEIROS = new Set(dv.ficheiros || []);
+      }
+    } catch (e) { /* fica com o Set vazio — todos os ▶ desactivados */ }
     af_popularFiltrosPlaylist();
     af_popularSelectsModoIA();
     renderAll();
@@ -4240,7 +4288,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
         : `<div class="posicao-thumb-placeholder" title="Sem imagem">🖼</div>`}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
       <div class="posicao-info">
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
-        <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
+        <div class="posicao-artista" style="display:flex;align-items:center;gap:4px;">${escapeHtml(artistaTexto(t))}${af_previewVozBotaoHtml(kind === 'mosaico' ? ('mosaico_' + ((PLAYLISTS[currentPlaylistKey] || {}).playlistCodigo || currentPlaylistKey)) : ('nome_' + t.id))}</div>
         ${mostrarElo && t.elo_explicacao ? `<div class="posicao-elo-explicacao">↳ ${escapeHtml(t.elo_explicacao)}</div>` : ''}
         <input class="posicao-nota-editorial" value="${escapeHtml(af_obterNotaEditorial(kind, index))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('${kind}', ${index}, this.value)">
         <div class="timing-row">
