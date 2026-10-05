@@ -3,6 +3,16 @@
 ## Última actualização
 2026-10-05
 
+## Revisão de conteúdo para o piloto definitivo (pendentes, sem prazo)
+
+- Rever os descritivos reescritos sem spoilers (commit `b075be2`) — tom e conteúdo.
+- Rever as perguntas bónus geradas por IA (quando existirem).
+- Rever as imagens com `imagem_licenca_estado: "confirmar"`.
+- Rever versões de faixas cover vs. original (ex.: playlist Disney — "Kiss the Girl", "Be Our Guest").
+- Substituir as vozes edge-tts por voz licenciada ou locutor real.
+- Uniformizar artistas duplicados no catálogo (ex.: José Afonso / Zeca Afonso).
+- Limpar as 3 versões da playlist Deserto (`.002`/`.003`/`.004`).
+
 ## 2026-10-05 (continuação) — Narração do descritivo, Substituir na Montagem, família "Estilos"
 
 **Commits** (`26f4613`..`HEAD`, mais antigo → mais recente):
