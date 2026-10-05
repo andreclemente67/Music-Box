@@ -3892,6 +3892,7 @@ function renderMontagem() {
           if (!c) return '';
           return `<span class="shape-badge ${c.revistos === c.total ? 'ok' : 'warn'}" title="Perguntas Bónus marcadas como revistas nesta playlist"><span class="dot"></span>Bónus revistos: ${c.revistos}/${c.total}</span>`;
         })()}
+        ${af_avisoArtistasRepetidosHtml(pl)}
       </div>
       <div class="detail-field" style="margin-top:10px;">
         <label>Descritivo do Apresentador <span id="descritivo-apresentador-aviso">${pl.descritivo_apresentador ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>'}</span></label>
@@ -4327,6 +4328,50 @@ function af_alternarRevistoBonus(posicao) {
   else delete pb.data_revisao;
   markDirty();
   renderMontagem();
+}
+
+// Bíblia §27.2/§27.3 — "nunca dois artistas iguais na mesma playlist",
+// incluindo o Mosaico. Revisto em 5 Out 2026: um membro conhecido de uma
+// banda conta como a própria banda (ex: Roger Taylor = Queen) — usa o
+// campo `banda` do catálogo quando existe (convenção já usada nas faixas
+// de séries Solista/Bateria), senão cai para `artista`. Só aplica a
+// playlists standard — Tributo é sobre 1 banda só, por desenho.
+function af_identidadeArtistaFaixa(trackId) {
+  const t = CATALOGO.find(x => x.id === trackId);
+  if (!t) return null;
+  const banda = (t.banda || '').trim();
+  if (banda) return banda;
+  const artista = Array.isArray(t.artista) ? t.artista[0] : t.artista;
+  return (artista || '').trim() || null;
+}
+
+function af_artistasRepetidosNaPlaylist(pl) {
+  if (!pl || pl.tipo === 'tributo') return [];
+  const vistos = new Map(); // identidade normalizada -> [{label, nome}]
+  const musicas = pl.musicas || [];
+  musicas.forEach((id, i) => {
+    const nome = af_identidadeArtistaFaixa(id);
+    if (!nome) return;
+    const chave = afSlug(nome);
+    if (!vistos.has(chave)) vistos.set(chave, { nome, posicoes: [] });
+    vistos.get(chave).posicoes.push(`Faixa ${i + 1}`);
+  });
+  if (pl.mosaico && pl.mosaico.id) {
+    const nome = af_identidadeArtistaFaixa(pl.mosaico.id);
+    if (nome) {
+      const chave = afSlug(nome);
+      if (!vistos.has(chave)) vistos.set(chave, { nome, posicoes: [] });
+      vistos.get(chave).posicoes.push('Mosaico');
+    }
+  }
+  return [...vistos.values()].filter(v => v.posicoes.length > 1);
+}
+
+function af_avisoArtistasRepetidosHtml(pl) {
+  const repetidos = af_artistasRepetidosNaPlaylist(pl);
+  if (!repetidos.length) return '';
+  const resumo = repetidos.map(r => `${escapeHtml(r.nome)} (${r.posicoes.join(', ')})`).join('; ');
+  return `<span class="shape-badge warn" title="Bíblia §27.2/§27.3 — cada artista/banda só pode aparecer uma vez por playlist, contando membros de banda e o Mosaico"><span class="dot"></span>Artista repetido: ${resumo}</span>`;
 }
 
 function af_contadorBonusRevistos(pl) {
@@ -7832,7 +7877,7 @@ function af_montarPromptSubstituicaoIA(i) {
 
   const motivoTxt = m.motivo ? ` Motivo da rejeição: "${m.motivo}".` : '';
   const artistasTxt = listaArtistas.length
-    ? ` Os seguintes artistas já estão nesta playlist e NÃO podem aparecer em nenhuma das 3 alternativas: ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
+    ? ` Os seguintes artistas já estão nesta playlist e NÃO podem aparecer em nenhuma das 3 alternativas (incluindo se for membro conhecido, passado ou presente, de uma destas bandas — um membro conta como a própria banda, Bíblia §27.2): ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
     : '';
 
   return `Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
@@ -7971,7 +8016,7 @@ function af_montarPromptValidacaoSugestaoCurador(i, texto) {
   const info = af_infoModoGeracaoIA();
   const listaArtistas = af_artistasNaPlaylistParaSubstituicao(i);
   const artistasTxt = listaArtistas.length
-    ? ` Os seguintes artistas já estão nesta playlist: ${listaArtistas.map(n => `"${n}"`).join(', ')} — se a sugestão do curador usar um destes artistas, sinaliza isso claramente em elo_explicacao.`
+    ? ` Os seguintes artistas já estão nesta playlist: ${listaArtistas.map(n => `"${n}"`).join(', ')} — se a sugestão do curador usar um destes artistas (ou for membro conhecido, passado ou presente, de uma destas bandas — um membro conta como a própria banda, Bíblia §27.2), sinaliza isso claramente em elo_explicacao.`
     : '';
 
   return `Estás a curar uma playlist para um jogo de trivia musical (Music Box), a partir de ${info.contextoTxt}.
@@ -8559,7 +8604,7 @@ function af_montMontarPromptSubstituicaoMusica(i) {
   const t = resolveTrack(pl.musicas[i]);
   const listaArtistas = af_montArtistasNaPlaylist(i);
   const artistasTxt = listaArtistas.length
-    ? ` Os seguintes artistas já estão nesta playlist e NÃO podem aparecer na alternativa: ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
+    ? ` Os seguintes artistas já estão nesta playlist e NÃO podem aparecer na alternativa (incluindo se for membro conhecido, passado ou presente, de uma destas bandas — um membro conta como a própria banda, Bíblia §27.2): ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
     : '';
   return `Estás a curar uma playlist já publicada para um jogo de trivia musical (Music Box), a partir de ${af_montContextoTxt()}
 
@@ -8655,7 +8700,7 @@ async function af_montUsarSugestaoCurador(kind, i) {
     const pl = PLAYLISTS[currentPlaylistKey];
     const listaArtistas = af_montArtistasNaPlaylist(kind === 'mosaico' ? null : i);
     const artistasTxt = listaArtistas.length
-      ? ` Os seguintes artistas já estão nesta playlist: ${listaArtistas.map(n => `"${n}"`).join(', ')} — se a sugestão usar um destes, sinaliza isso em elo_explicacao.`
+      ? ` Os seguintes artistas já estão nesta playlist: ${listaArtistas.map(n => `"${n}"`).join(', ')} — se a sugestão usar um destes (ou for membro conhecido de uma destas bandas — um membro conta como a própria banda, Bíblia §27.2), sinaliza isso em elo_explicacao.`
       : '';
     const prompt = kind === 'mosaico'
       ? `Estás a curar o mosaico (a faixa-charada final) de uma playlist já publicada para um jogo de trivia musical (Music Box), a partir de ${af_montContextoTxt()}

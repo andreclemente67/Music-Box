@@ -1732,9 +1732,11 @@ Este capítulo regista as doze regras operacionais identificadas e validadas dur
 
 O ficheiro HTML da aplicação em execução no momento do encerramento de cada sessão de trabalho faz parte obrigatória do pacote de entrega (handoff). Não é suficiente entregar apenas os ficheiros de conteúdo (listas, imagens, scripts) sem o HTML correspondente à build activa.
 
-## 27.2 Unicidade de Artista por Playlist
+## 27.2 Unicidade de Artista por Playlist (revisto em 5 Out 2026)
 
 Nunca dois artistas iguais na mesma playlist. Cada artista ou banda pode aparecer no máximo uma vez por playlist, independentemente da dimensão do catálogo disponível.
+
+**(revisto em 5 Out 2026)**: esta regra conta membros de uma banda como a própria banda — um baterista, guitarrista ou outro membro conhecido (passado ou presente) de uma banda já presente na playlist não pode aparecer numa posição separada, mesmo creditado pelo nome próprio (ex: Roger Taylor não pode aparecer se "Queen" já estiver presente noutra Faixa). Caso real encontrado por auditoria: "Anos 70 — Rock" tinha Queen (Bohemian Rhapsody, Faixa 1) e Roger Taylor/Queen (We Will Rock You, Faixa 2) nesta situação exacta.
 
 ## 27.3 Separação entre Artista da Faixa e Artista do Mosaico
 

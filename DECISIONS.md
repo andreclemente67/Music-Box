@@ -1563,3 +1563,36 @@ da Bíblia nunca chegou a ser adoptada na prática.
 "(revisto em 5 Out 2026)" — texto original tachado, mantido como
 registo histórico, com nota a apontar para §15.5 como a escala em
 vigor.
+
+## 2026-10-05 — Unicidade de artista: membro de banda conta como a banda (Bíblia §27.2)
+
+Auditoria à Biblioteca encontrada por um caso real: "Anos 70 — Rock"
+tinha Queen (Bohemian Rhapsody, Faixa 1) e Roger Taylor — creditado
+pelo nome próprio, mas `banda: "Queen"` no catálogo — em "We Will Rock
+You" (Faixa 2). A regra §27.2 já existia ("nunca dois artistas iguais
+na mesma playlist") mas não cobria explicitamente membros de banda.
+
+**Regra fechada**: um membro conhecido (passado ou presente) de uma
+banda já presente numa playlist conta como essa banda — não pode
+aparecer numa posição separada, nem como artista da Faixa, nem como
+`pessoa` do Mosaico.
+
+Scan completo à Biblioteca (todas as playlists não-Tributo, usando o
+campo `banda` do catálogo quando existe, senão `artista[0]`) encontrou
+mais 2 casos preexistentes, nenhum por membro de banda — duplicação
+directa do mesmo artista: "Ambient & Introspectivo" (The Durutti
+Column em Faixa 1 + Mosaico; Brian Eno em Faixa 3 + Faixa 6) e "Anos
+2010 — Synth" (Future Islands em Faixa 1 + Mosaico). Ainda por corrigir
+— fora do âmbito desta correcção pontual (só "Anos 70 — Rock").
+
+**Implementado no Studio** (`musicbox_studio.html`): aviso não-bloqueante
+na Mesa de Montagem (`af_avisoArtistasRepetidosHtml`/
+`af_artistasRepetidosNaPlaylist`/`af_identidadeArtistaFaixa`, resolve via
+`banda` do catálogo) — não bloqueia guardar. Prompts de "Gerar com IA"
+(substituição de faixa, 4 ocorrências) actualizados para instruir
+explicitamente a IA a tratar membros de banda como a própria banda —
+antes só os prompts de substituição do Mosaico tinham essa instrução.
+
+Testado com Playwright: aviso aparece para "Anos 70 — Rock" ("Artista
+repetido: Queen (Faixa 1, Faixa 2)"), não aparece para uma playlist
+limpa, zero erros de JS.
