@@ -3,6 +3,24 @@
 ## Última actualização
 2026-10-05
 
+## 2026-10-05 (continuação) — Narração do descritivo, Substituir na Montagem, família "Estilos"
+
+**Commits** (`26f4613`..`HEAD`, mais antigo → mais recente):
+- `26f4613`/`cbf53a1` — toggle de narração (preparado) + edge-tts marcado como só-protótipo (`DECISIONS.md`).
+- `a670648`/`b075be2`/`657011e` — gerador `gerar_vozes_descritivo.py` (Duarte, edge-tts), descritivos sem spoilers reescritos (3 playlists: TV, Videojogos, Blues), voz gerada para as 40 playlists com `descritivo_apresentador`.
+- `0375f88`/`f9e69fc` — 1ª versão da narração (automática) + botão "Gerar voz do descritivo" no Studio (endpoint `/gerar-voz-descritivo`).
+- `82ec047` — lista de faixas + Mosaico escondida por defeito no ecrã de Verificação Rápida (evita spoiler).
+- `78067d3` — sistema de estados aprovada/gravada: decisão de adiar, registada.
+- `647f176` — "✎ Substituir" (3 alternativas da IA) também na Mesa de Montagem, para playlists já guardadas — não só na criação.
+- `a6dd968` — **narração redesenhada**: deixa de ser automática — botão "🔊 Apresentação" manual (toca/pára, repetível), nunca bloqueia "▶ Iniciar Playlist"; toggle ON/OFF removido; `.topo` "⚙ Studio" → "Music Box Editor" (ícone sliders).
+- (este commit) — família "Géneros" → "Estilos" no texto visível (`FAMILIA_GENEROS` continua a existir como identificador, só o valor mostrado mudou) — `DECISIONS.md` tem o detalhe completo.
+
+**Pendente desta sessão, ainda por fazer:**
+- Pergunta Bónus nas famílias Décadas/Estilos (Faixa 4, `FAIXA_BONUS_MUSICAL`) — especificado, investigação do código actual em curso, nada implementado.
+- Pronúncia por língua dos nomes PT/BR (Duarte/Antonio) — lista de candidatos dada, à espera da confirmação do utilizador antes de regenerar.
+- Anúncio de voz no acerto do Mosaico — pedido recebido, nada feito.
+- `BIBLIA.md`: utilizador disse tê-lo colocado na raiz do projecto — **não está lá** (confirmado por `ls`/`find`), avisado, a aguardar.
+
 ## 2026-10-04/05 — Sessão 4-5 Out 2026
 
 **Commits de hoje** (mais antigo → mais recente):

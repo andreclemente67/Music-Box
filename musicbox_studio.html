@@ -1926,7 +1926,7 @@
               <input class="detail-input" type="text" id="af-decadas">
             </div>
             <div class="detail-field">
-              <label>Géneros (separados por vírgula)</label>
+              <label>Estilos (separados por vírgula)</label>
               <input class="detail-input" type="text" id="af-generos">
             </div>
             <div class="detail-field">
@@ -2110,7 +2110,7 @@
               <select class="detail-select" id="np-dec" onchange="atualizarChavePreview()"></select>
             </div>
             <div>
-              <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:block;">GÉNERO</label>
+              <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:block;">ESTILO</label>
               <select class="detail-select" id="np-genero" onchange="atualizarChavePreview()"></select>
             </div>
           </div>
@@ -2275,7 +2275,7 @@
                 <select class="detail-select" id="np-ia-cat-geo"></select>
               </div>
               <div>
-                <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:block;">Género</label>
+                <label style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;display:block;">Estilo</label>
                 <select class="detail-select" id="np-ia-cat-genero"></select>
               </div>
             </div>
@@ -2747,7 +2747,7 @@ function af_popularFiltrosPlaylist() {
       opts.map(o => `<option value="${o.v}">${o.label}</option>`).join('');
   }
   fill('pl-filter-dec',    OPCOES_DEC,    'Década (todas)');
-  fill('pl-filter-genero', OPCOES_GENERO, 'Género (todos)');
+  fill('pl-filter-genero', OPCOES_GENERO, 'Estilo (todos)');
   fill('pl-filter-geo',    OPCOES_GEO,    'Geo (todas)');
 }
 
@@ -2810,7 +2810,10 @@ function af_limparFiltrosPlaylist() {
 // independente de GEO/DEC). Casos verificados contra as 26 playlists
 // reais em playlists.json (2026-08-28) — ver DECISIONS.md.
 const FAMILIA_DECADAS = 'DÉCADAS';
-const FAMILIA_GENEROS = 'GÉNEROS';
+// família apresentada na interface como "Estilos" (decisão 5 Out 2026) —
+// nome do identificador e o valor por omissão ficam GENEROS/GÉNEROS por
+// convenção interna; só o texto mostrado ao utilizador mudou.
+const FAMILIA_GENEROS = 'ESTILOS';
 const FAMILIA_ESPECIAIS = 'ESPECIAIS';
 const DECADA_NOME = { '50': 'Anos 50', '60': 'Anos 60', '70': 'Anos 70', '80': 'Anos 80', '90': 'Anos 90', '00': 'Anos 2000', '10': 'Anos 2010', '20': 'Anos 2020' };
 const GENERO_UNIVERSO_GENEROS = { ROC: 'Rock', POP: 'Pop', MET: 'Metal', AME: 'Americana', SYN: 'Dance & Electrónica', DNC: 'Dance & Electrónica', GTR: 'Solistas', BAT: 'Solistas', JAZ: 'Jazz', BLU: 'Blues', SOU: 'Soul & R&B', HIP: 'Hip Hop', CLA: 'Clássica', LAT: 'Latin' };
@@ -3062,7 +3065,7 @@ function renderSidebar() {
     });
 
     if (atemporais.length) {
-      list.innerHTML += `<li class="sidebar-subgroup-label">Géneros Atemporais</li>`;
+      list.innerHTML += `<li class="sidebar-subgroup-label">Estilos Atemporais</li>`;
       atemporais
         .slice()
         .sort((a, b) => (a[1].nome || a[0]).localeCompare(b[1].nome || b[0]))
@@ -3190,7 +3193,7 @@ function af_renderMapaBiblioteca(familiaFoco) {
   const html = `<div class="mapa-wrap">
     <div class="mapa-header">
       <div>
-        <div class="mapa-subtitle">Organização por eixo — Décadas, Géneros, Especiais — e por tipo de faixa dentro de cada Universo. Clica num Universo para ver as suas playlists.</div>
+        <div class="mapa-subtitle">Organização por eixo — Décadas, Estilos, Especiais — e por tipo de faixa dentro de cada Universo. Clica num Universo para ver as suas playlists.</div>
       </div>
       <div class="mapa-stats">
         <div class="mapa-stat"><div class="n">${totalUniversos}</div><div class="l">Universos</div></div>
@@ -3211,7 +3214,7 @@ function af_renderMapaBiblioteca(familiaFoco) {
       <div class="mapa-root-line"></div>
     </div>
     <div class="mapa-familias">${secoes}</div>
-    <div class="mapa-footer-note">Dados calculados em tempo real a partir de playlists.json (${Object.keys(PLAYLISTS).length} playlists). Clicar num Universo com playlist(s) abre a lista correspondente na sidebar, com os filtros do Studio (Década, Género, Geo, Dificuldade, Tipo, Estado) disponíveis por cima.</div>
+    <div class="mapa-footer-note">Dados calculados em tempo real a partir de playlists.json (${Object.keys(PLAYLISTS).length} playlists). Clicar num Universo com playlist(s) abre a lista correspondente na sidebar, com os filtros do Studio (Década, Estilo, Geo, Dificuldade, Tipo, Estado) disponíveis por cima.</div>
   </div>`;
 
   document.getElementById('mapa-biblioteca-body').innerHTML = html;
@@ -5433,7 +5436,7 @@ function af_renderAccoesGlobaisMontagem(pl, musicas) {
   if (pl.tipo === 'retrato' && musicas[0]) {
     html += `<button class="fill-artista-btn" title="Só Retrato: procura no catálogo outras faixas do mesmo artista/banda da posição 01 e preenche as posições 02-08 com elas, ordenadas por década. Nunca mexe na posição 01." onclick="preencherComArtista()">Preencher com este artista</button>`;
   }
-  html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist (ex. STD.PT.80.ROC.001) e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
+  html += `<button class="fill-auto-btn" title="Deriva Geo/Década/Estilo a partir do código da playlist (ex. STD.PT.80.ROC.001) e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de estilo é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button>`;
   html += `<button class="fill-auto-btn" title="Gera trechos A/B (áudio) para todas as faixas desta playlist que ainda não têm nenhum — por artista+título, sem precisar de URL. Tenta primeiro a iTunes Search API (preview de 30s, corte 0-12s/18-30s), cai para pesquisa no YouTube se não houver preview. Corre faixa a faixa, pode demorar — progresso ao vivo aparece nesta mesma página." onclick="af_gerarTrechosEmFalta()">🎧 Gerar trechos em falta</button>`;
   html += `<button class="fill-auto-btn" title="${isCinemaPlaylist() ? "Ponto de partida para todas as faixas sem excerto definido — 0-30s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário." : "Ponto de partida para todas as faixas sem início definido — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário."}" onclick="autoDefinirTrechosTodos()">⚡ Auto em toda a playlist</button>`;
   html += `<button class="fill-auto-btn" title="Associa ficheiros .mp3 já existentes em app/ às posições sem trecho_a — por nome exacto, a partir de mp3_index.json. Depois define A/B automaticamente para o que encontrar (⚡ Auto)." onclick="autoMatchMp3()">🔗 Auto-match MP3</button>`;
@@ -5475,7 +5478,7 @@ function renderPosicoesTributo(pl) {
   // af_renderAccoesGlobaisMontagem()) — aqui não depende da posição 01
   // estar preenchida, por isso mostra-se sempre que houver posições.
   let html = posicoes.length
-    ? `<div class="montagem-accoes-globais"><button class="fill-auto-btn" title="Deriva Geo/Década/Género a partir do código da playlist e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de género é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button></div>`
+    ? `<div class="montagem-accoes-globais"><button class="fill-auto-btn" title="Deriva Geo/Década/Estilo a partir do código da playlist e preenche as posições vazias com faixas do catálogo que correspondam a esses critérios — correspondência de estilo é aproximada (por palavra-chave), confirma sempre o resultado." onclick="preencherAutomaticamente()">Preencher automaticamente</button></div>`
     : '';
   html += `<div class="detail-label">Posições (curadoria livre)</div><div id="posicoes-list">`;
   posicoes.forEach((p, i) => {
@@ -5590,7 +5593,7 @@ function renderDetail() {
         <div style="color:var(--text2);font-size:12px;margin-bottom:10px;">${escapeHtml(artistaTexto(t))}</div>
 
         <div class="field-grid">
-          ${field('Género', (t.generos||[]).join(', '))}
+          ${field('Estilo', (t.generos||[]).join(', '))}
           ${field('Década', (t.decadas||[]).join(', '))}
           ${field('Geografia', t.geografia)}
           ${field('Instrumento', (t.instrumento||[]).join(', '))}
@@ -6447,7 +6450,7 @@ function calcularProblemasIA() {
   const problemas = [];
 
   if (!gerarChaveEstruturada()) {
-    problemas.push('Chave incompleta — falta TIPO, GEO, DEC ou GÉNERO (tab Estrutura)');
+    problemas.push('Chave incompleta — falta TIPO, GEO, DEC ou ESTILO (tab Estrutura)');
   }
   if (!document.getElementById('np-nome').value.trim()) {
     problemas.push('Falta o nome da playlist (tab Estrutura)');
@@ -6489,7 +6492,7 @@ function renderVerificacaoIA() {
   resumoEl.innerHTML = `
     <div>Chave: <strong style="color:${chave ? 'var(--accent)' : 'var(--red)'};">${escapeHtml(chave || 'incompleta')}</strong></div>
     <div>Tipo: ${escapeHtml(tipoLabel)}</div>
-    <div>Género: ${escapeHtml(generoLabel)}</div>
+    <div>Estilo: ${escapeHtml(generoLabel)}</div>
     <div>Nome: ${nome ? escapeHtml(nome) : '<span style="color:var(--red);">(em falta)</span>'}</div>
     <div>Faixas geradas pela IA: ${nFaixas}${temMosaico ? ' + 1 mosaico' : ''}</div>
   `;
@@ -6570,7 +6573,7 @@ function openNewPlaylistModal() {
 
 function createPlaylist() {
   const chave = gerarChaveEstruturada();
-  if (!chave) { notify('Seleciona TIPO, GEO, DEC e GÉNERO para gerar a chave', 'err'); return; }
+  if (!chave) { notify('Seleciona TIPO, GEO, DEC e ESTILO para gerar a chave', 'err'); return; }
   if (PLAYLISTS[chave]) { notify('Já existe uma playlist com essa chave: ' + chave, 'err'); return; }
 
   const tipo = document.getElementById('np-tipo').value;

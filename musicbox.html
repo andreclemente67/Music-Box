@@ -1936,7 +1936,10 @@ function filtrarPorDificuldade(chaves, posicaoNaRonda) {
 // af_familiaDePlaylist() de musicbox_studio.html (Parte 1, ver
 // DECISIONS.md), adaptada aqui à indirecção chave-curta → COLLECTIONS.
 const FAMILIA_DECADAS = 'DÉCADAS';
-const FAMILIA_GENEROS = 'GÉNEROS';
+// família apresentada na interface como "Estilos" (decisão 5 Out 2026) —
+// nome do identificador e o valor por omissão ficam GENEROS/GÉNEROS por
+// convenção interna; só o texto mostrado ao utilizador mudou.
+const FAMILIA_GENEROS = 'ESTILOS';
 const FAMILIA_ESPECIAIS = 'ESPECIAIS';
 const GENERO_FAMILIA = {
   ROC: FAMILIA_GENEROS, POP: FAMILIA_GENEROS, MET: FAMILIA_GENEROS, AME: FAMILIA_GENEROS,
@@ -2031,7 +2034,7 @@ function iniciarEscolhaCollection() {
   const escolhedorIdx = vencedorMotorEscolha();
   A_REGISTAR_TEMPO_MOTOR_ESCOLHA = false;
   titulo.textContent = 'PLAYLIST ' + playlistGlobal + ' — ' + NOMES[escolhedorIdx] + ' ESCOLHE A FAMÍLIA';
-  sub.textContent = `Passo 1 de 2: escolher primeiro DÉCADAS, GÉNEROS ou ESPECIAIS (vencedor da Playlist anterior escolhe). Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
+  sub.textContent = `Passo 1 de 2: escolher primeiro DÉCADAS, ESTILOS ou ESPECIAIS (vencedor da Playlist anterior escolhe). Dificuldade desta posição: ${bandaMin}${bandaMax > bandaMin ? '-' + bandaMax : ''}/5.`;
 
   const temDecadas = pool.some(k => familiaDeChave(k) === FAMILIA_DECADAS);
   const temGeneros = pool.some(k => familiaDeChave(k) === FAMILIA_GENEROS);

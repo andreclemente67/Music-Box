@@ -1448,3 +1448,31 @@ construída.
 Implementado em vez disso, já: "✎ Substituir" (IA) também na Mesa de
 Montagem para playlists já guardadas — ver commit "Studio: ✎ Substituir
 com IA na Mesa de Montagem".
+
+## 2026-10-05 — Família "Géneros" passa a "Estilos" (só interface)
+
+Decisão do utilizador: a família de playlists "Géneros" (Décadas/Géneros/
+Especiais) passa a chamar-se "Estilos" em todo o texto visível — "♪
+ESTILOS (N)" nos painéis do jogo (`mostrarTesteLista()`/
+`escolherUniversoDaFamilia()`), "Estilos Atemporais" na sidebar do
+Studio, "Estilo (todos)" no filtro da Biblioteca, label "Estilo"/
+"ESTILO" nos campos de género por faixa na criação/edição de faixas.
+
+Só a interface muda — identificadores internos ficam (`FAMILIA_GENEROS`,
+`GENERO_FAMILIA`, `OPCOES_GENERO`, `generoLabel`, `t.genero`/`t.generos`,
+IDs de campos como `pl-filter-genero`/`af-generos`): comentário
+acrescentado junto a cada `const FAMILIA_GENEROS` nos dois ficheiros a
+explicar a decisão. `FAMILIA_GENEROS` passou a valer `'ESTILOS'` (o
+texto mostrado), não `'GÉNEROS'` — o NOME da constante não mudou, só o
+valor que ela guarda (confirmado não haver nenhuma comparação de string
+literal `'GÉNEROS'` no código que isso pudesse partir).
+
+Nenhum dado em `playlists.json`/`catalogo.json` guarda o nome da família
+como valor — só `universo: "Género Musical"` (subtítulo descritivo,
+campo diferente) e `nota_curadoria` (texto interno), nenhum alterado.
+
+Deixados por mexer, deliberadamente: comentários de código que mencionam
+"Géneros" conceptualmente (dezenas, em ambos os ficheiros) — são
+documentação interna, não interface; e uma linha em
+`musicbox_studio.html` (~7007) que usa "Género:" dentro de um prompt
+enviado à IA, não texto mostrado a um humano.
