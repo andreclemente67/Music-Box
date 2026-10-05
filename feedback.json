@@ -3527,6 +3527,86 @@
       },
       "playlist_aprovada": true,
       "feedback_jogo": null
+    },
+    {
+      "id": "fb_045",
+      "data": "2026-10-05",
+      "curador": "André Clemente",
+      "modo_geracao": "elo",
+      "parametro": "disney",
+      "playlist_codigo": "STD.INT.ALL.POP.002",
+      "faixas": [
+        {
+          "id_faixa": "peabo_bryson_regina_bell_a_whole_new_world",
+          "titulo": "A Whole New World",
+          "artista": "Peabo Bryson & Regina Belle",
+          "decisao": "aceite",
+          "posicao_sugerida": 1,
+          "posicao_final": 1,
+          "motivo": null
+        },
+        {
+          "id_faixa": "vanessa_williams_colors_of_the_wind",
+          "titulo": "Colors of the Wind",
+          "artista": "Vanessa Williams",
+          "decisao": "aceite",
+          "posicao_sugerida": 2,
+          "posicao_final": 2,
+          "motivo": null
+        },
+        {
+          "id_faixa": "samuel_e_wright_kiss_the_girl",
+          "titulo": "Kiss the Girl",
+          "artista": "Samuel E. Wright",
+          "decisao": "aceite",
+          "posicao_sugerida": 3,
+          "posicao_final": 3,
+          "motivo": null
+        },
+        {
+          "id_faixa": "toni_basil_mickey",
+          "titulo": "Mickey",
+          "artista": "Toni Basil",
+          "decisao": "aceite",
+          "posicao_sugerida": 4,
+          "posicao_final": 4,
+          "motivo": null
+        },
+        {
+          "id_faixa": "jerry_orbach_be_our_guest",
+          "titulo": "Be Our Guest",
+          "artista": "Jerry Orbach",
+          "decisao": "aceite",
+          "posicao_sugerida": 5,
+          "posicao_final": 5,
+          "motivo": null
+        },
+        {
+          "id_faixa": "phil_collins_you_ll_be_in_my_heart",
+          "titulo": "You'll Be in My Heart",
+          "artista": "Phil Collins",
+          "decisao": "aceite",
+          "posicao_sugerida": 6,
+          "posicao_final": 6,
+          "motivo": null
+        },
+        {
+          "id_faixa": "christina_aguilera_reflection",
+          "titulo": "Reflection",
+          "artista": "Christina Aguilera",
+          "decisao": "aceite",
+          "posicao_sugerida": 7,
+          "posicao_final": 7,
+          "motivo": null
+        }
+      ],
+      "mosaico": {
+        "id_faixa": "randy_newman_you_ve_got_a_friend_in_m",
+        "decisao": "aceite",
+        "motivo": null
+      },
+      "playlist_aprovada": true,
+      "feedback_jogo": null
     }
   ]
 }
