@@ -1602,3 +1602,51 @@ Taylor/Queen) para `bat_08` (Keith Moon/The Who, novo na catalogo.json,
 reaproveita o áudio de `rock_06` "Baba O'Riley" — sem ficheiro próprio
 ainda, ver STATUS.md). Faixa 3 (Eric Clapton/Layla) mantida — não tem
 ligação a Queen. Aviso confirmado desaparecido após a troca.
+
+## 2026-10-05 — Nomes de artista por língua (voz/pronuncia.json)
+
+Alex (voz inglesa, `say`) lê mal nomes de artistas noutras línguas.
+**Regra fechada**: `voz/pronuncia.json` atribui voz edge-tts por
+artista — `{"voz": "<id edge-tts>", "texto": "<grafia alternativa,
+opcional>"}`. Prioridade: excepção manual (nome exacto em
+`pronuncia.json`) > prefixo do código da playlist (`STD.PT.`/`RET.PT.`
+→ `pt-PT-DuarteNeural`; `STD.BR.` → `pt-BR-AntonioNeural`, calculado
+dinamicamente por `gerar_vozes_nome_artista.py`, não listado no
+ficheiro) > Alex r205 (default, inalterado).
+
+Excepções manuais fechadas: António Variações/Cesária Évora (Duarte,
+fora de playlists PT); Boris Vian/Alain Oulman/Maurice Jarre/Claude
+Debussy (`fr-FR-HenriNeural`); Peret/Los Del Río/Enrique Iglesias
+(`es-ES-AlvaroNeural`); Quilapayún (`es-CL-LorenzoNeural`); Ennio
+Morricone/Nino Rota/Antonio Vivaldi (`it-IT-DiegoNeural`); Ramin
+Djawadi/Johann Pachelbel/Carl Orff (`de-DE-ConradNeural`); Pyotr Ilyich
+Tchaikovsky (`ru-RU-DmitryNeural`, `texto` em cirílico: "Пётр Ильич
+Чайковский"). José Feliciano/Michael Bublé/Beyoncé ficam deliberadamente
+em Alex (já bem conhecidos em contexto anglófono).
+
+**Em curso, sem decisão fechada** — ficam em Alex até confirmação:
+- **Vangelis**: voz grega (`el-GR-NestorasNeural`) testada e rejeitada
+  ("soa estranha") — a aguardar escolha entre Alex ("Vangelis") e
+  Duarte com grafia fonética PT ("Vanguélis"), amostra em
+  `propostas/vangelis_alt.wav`.
+- **Compositores japoneses de videojogos** (Koji Kondo, Nobuo Uematsu,
+  Yoko Shimomura): voz japonesa com grafia nativa também rejeitada — a
+  aguardar escolha entre Alex com romaji e Duarte com grafia fonética
+  PT, amostra em `propostas/japoneses_alt.wav`.
+
+**Implementado** (`gerar_vozes_nome_artista.py`): dois motores — `say`
+(Alex, como antes) e edge-tts (as restantes vozes, mesmo filtro de
+corte de silêncio + loudnorm). Índice `voz/nome_index.json` (novo,
+`sha1(texto+voz)`) só regenera uma faixa se o texto OU a voz atribuída
+mudou. **Bug real apanhado e corrigido antes de aplicar**: a 1ª versão
+do índice tratava "nunca indexado" como "precisa de regenerar" mesmo
+para faixas já correctas em Alex — numa base de 348 ficheiros sem
+índice prévio (funcionalidade nova), isto teria regenerado as 348,
+incluindo ~270 sem qualquer alteração real. Corrigido: na ausência de
+entrada no índice, só regenera se a voz resolvida não for Alex (o
+default histórico, sem necessidade de regenerar o que já existe) — a
+1ª execução afectou correctamente só as 75 faixas com voz não-Alex.
+
+Testado com Playwright: acerto na Faixa 1 de "Música Portuguesa"
+(José Afonso) toca `voz/nome_pt_01.wav` (agora Duarte) seguido de
+`efeitos/in_the_box.wav`, zero erros de JS.

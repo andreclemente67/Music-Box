@@ -1,0 +1,23 @@
+{
+  "_nota": "Vozes por artista para voz/nome_<id>.wav e voz/mosaico_<codigo>.wav (gerar_vozes_nome_artista.py). Prioridade: excepção manual aqui > prefixo do código da playlist (STD.PT./RET.PT.->Duarte, STD.BR.->Antonio) > Alex r205 (default). 'voz': identificador de voz edge-tts (ou 'Alex' para o 'say' nativo do macOS, tratado à parte pelo gerador). 'texto' (opcional): grafia alternativa enviada à voz em vez do nome visível em catalogo.json — nunca altera o nome mostrado no ecrã.",
+  "artistas": {
+    "António Variações": { "voz": "pt-PT-DuarteNeural" },
+    "Cesária Évora": { "voz": "pt-PT-DuarteNeural" },
+    "Boris Vian": { "voz": "fr-FR-HenriNeural" },
+    "Alain Oulman": { "voz": "fr-FR-HenriNeural" },
+    "Peret": { "voz": "es-ES-AlvaroNeural" },
+    "Los Del Río": { "voz": "es-ES-AlvaroNeural" },
+    "Víctor Jara": { "voz": "es-CL-LorenzoNeural" },
+    "Quilapayún": { "voz": "es-CL-LorenzoNeural" },
+    "Ennio Morricone": { "voz": "it-IT-DiegoNeural" },
+    "Nino Rota": { "voz": "it-IT-DiegoNeural" },
+    "Antonio Vivaldi": { "voz": "it-IT-DiegoNeural" },
+    "Ramin Djawadi": { "voz": "de-DE-ConradNeural" },
+    "Johann Pachelbel": { "voz": "de-DE-ConradNeural" },
+    "Carl Orff": { "voz": "de-DE-ConradNeural" },
+    "Maurice Jarre": { "voz": "fr-FR-HenriNeural" },
+    "Claude Debussy": { "voz": "fr-FR-HenriNeural" },
+    "Enrique Iglesias": { "voz": "es-ES-AlvaroNeural" },
+    "Pyotr Ilyich Tchaikovsky": { "voz": "ru-RU-DmitryNeural", "texto": "Пётр Ильич Чайковский" }
+  }
+}

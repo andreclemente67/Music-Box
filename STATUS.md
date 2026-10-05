@@ -29,7 +29,7 @@
 - `08ddc11` — **sinal sonoro da Pergunta Bónus**: `efeitos/bonus.wav` ("ding-ding-DING", 3 notas de sino ascendentes), toca uma vez quando o painel do BONUS_MODE aparece (Décadas/Estilos Faixa 4, Especiais Faixas 3/6); testado com Playwright, verificação graciosa sem ficheiro.
 
 **Pendente desta sessão, ainda por fazer:**
-- Pronúncia por língua dos nomes PT/BR (Duarte/Antonio) — lista de candidatos dada, à espera da confirmação do utilizador antes de regenerar.
+- Nomes por língua (Duarte/Antonio/fr/es/it/de/ja/ru/el) — implementado, `voz/pronuncia.json`, 75 vozes regeneradas. Pendente: confirmar Vangelis (grego soa mal, a testar Alex vs. Duarte/"Vanguélis") e os 3 japoneses (Koji Kondo/Nobuo Uematsu/Yoko Shimomura, a testar romaji-Alex vs. fonética PT-Duarte) — ficam em Alex até decisão.
 - Anúncio de voz no acerto do Mosaico — pedido recebido, nada feito.
 - `BIBLIA.md`: no repositório desde V3.29 (`21ea7bc`); reconciliado com `DECISIONS.md` e subido para V3.30 (ver §30.9). §27.13 vs §15.5 resolvido — escala de dificuldade oficial é 1-5 (§15.5); §27.13 marcada revista/substituída.
 
