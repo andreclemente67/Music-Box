@@ -4206,6 +4206,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
         <span class="posicao-tipo-badge ${tipoBadge}">${kind==='mosaico'?'mosaico':'vazio'}</span>
         <div class="posicao-info"><div class="posicao-titulo" style="color:var(--text3)">Arrasta ou seleciona uma faixa →</div></div>
       </div>
+      ${kind === 'musica' ? af_perguntaBonusHtml(index + 1) : ''}
     </div>`;
   }
   const hasA = t.trecho_a && t.trecho_a.ficheiro;
@@ -4264,8 +4265,51 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
     ${t.estado === 'rascunho' ? gerarTrechoRowHtml(t) : ''}
     ${trackMetaHtml(t)}
     ${timingEditorHtml(kind, index, id)}
+    ${kind === 'musica' ? af_perguntaBonusHtml(index + 1) : ''}
     ${kind !== 'posicao' ? af_montSubstituicaoBadgeHtml(kind, index) : ''}
     ${kind !== 'posicao' ? af_montRenderSubstitutos(kind, index) : ''}
+  </div>`;
+}
+
+// Pergunta Bónus (2026-10-05, pedido do utilizador — "Décadas e Estilos
+// passam a ter Pergunta Bónus também"): campos visíveis só nas posições
+// com bónus para esta playlist — Faixas 3/6 nas Especiais, Faixa 4 nas
+// Décadas/Estilos, nunca em retrato/tributo/video (ver af_faixaTemBonus()).
+// Guardado por posição em pl.perguntas_bonus[posicao] — mesmo padrão de
+// pl.notas_editoriais/pl.substituicoes (metadados por posição, não no
+// catálogo — a mesma faixa pode estar noutra playlist sem ser bónus lá).
+const FAIXA_BONUS_MUSICAL_STUDIO = 4; // mesmo valor de FAIXA_BONUS_MUSICAL em musicbox.html
+function af_faixaTemBonus(chave, pl, posicao) {
+  if (!pl || pl.tipo !== 'standard') return false; // retrato/tributo/video — estrutura incompatível com "Faixa N"
+  const familia = af_familiaDePlaylist(chave, pl);
+  if (familia === FAMILIA_ESPECIAIS) return [3, 6].includes(posicao);
+  if (familia === FAMILIA_DECADAS || familia === FAMILIA_GENEROS) return posicao === FAIXA_BONUS_MUSICAL_STUDIO;
+  return false;
+}
+
+function af_obterPerguntaBonus(posicao) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  const pb = pl && (pl.perguntas_bonus || {})[posicao];
+  return { pergunta: (pb && pb.pergunta) || '', resposta: (pb && pb.resposta) || '' };
+}
+
+function af_editarPerguntaBonus(posicao, campo, valor) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+  if (!pl.perguntas_bonus) pl.perguntas_bonus = {};
+  if (!pl.perguntas_bonus[posicao]) pl.perguntas_bonus[posicao] = {};
+  pl.perguntas_bonus[posicao][campo] = valor;
+  markDirty();
+}
+
+function af_perguntaBonusHtml(posicao) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!af_faixaTemBonus(currentPlaylistKey, pl, posicao)) return '';
+  const pb = af_obterPerguntaBonus(posicao);
+  return `<div style="margin:6px 24px 2px;padding:6px 10px;border-left:2px solid var(--accent);background:rgba(232,197,71,0.04);" onclick="event.stopPropagation()">
+    <div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;">✦ Pergunta Bónus (Faixa ${posicao})</div>
+    <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;margin-bottom:3px;" value="${escapeAttr(pb.pergunta)}" placeholder="Pergunta (ano, álbum, história da canção, curiosidade do artista — nunca título/artista de outra faixa nem o mosaico)" onchange="af_editarPerguntaBonus(${posicao}, 'pergunta', this.value)">
+    <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;" value="${escapeAttr(pb.resposta)}" placeholder="Resposta" onchange="af_editarPerguntaBonus(${posicao}, 'resposta', this.value)">
   </div>`;
 }
 
@@ -5440,8 +5484,82 @@ function af_renderAccoesGlobaisMontagem(pl, musicas) {
   html += `<button class="fill-auto-btn" title="Gera trechos A/B (áudio) para todas as faixas desta playlist que ainda não têm nenhum — por artista+título, sem precisar de URL. Tenta primeiro a iTunes Search API (preview de 30s, corte 0-12s/18-30s), cai para pesquisa no YouTube se não houver preview. Corre faixa a faixa, pode demorar — progresso ao vivo aparece nesta mesma página." onclick="af_gerarTrechosEmFalta()">🎧 Gerar trechos em falta</button>`;
   html += `<button class="fill-auto-btn" title="${isCinemaPlaylist() ? "Ponto de partida para todas as faixas sem excerto definido — 0-30s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário." : "Ponto de partida para todas as faixas sem início definido — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' faixa a faixa se necessário."}" onclick="autoDefinirTrechosTodos()">⚡ Auto em toda a playlist</button>`;
   html += `<button class="fill-auto-btn" title="Associa ficheiros .mp3 já existentes em app/ às posições sem trecho_a — por nome exacto, a partir de mp3_index.json. Depois define A/B automaticamente para o que encontrar (⚡ Auto)." onclick="autoMatchMp3()">🔗 Auto-match MP3</button>`;
+  if (pl.tipo === 'standard') {
+    html += `<button class="fill-auto-btn" id="btn-gerar-perguntas-bonus" title="Preenche com a IA as Perguntas Bónus em falta desta playlist (Faixas 3/6 nas Especiais, Faixa 4 nas Décadas/Estilos) — ano, álbum, história da canção ou curiosidade do artista, nunca revela título/artista de outra faixa nem o mosaico. Revê sempre antes de guardar." onclick="af_gerarPerguntasBonusIA()">✦ Gerar perguntas bónus com IA</button>`;
+  }
   html += '</div>';
   return html;
+}
+
+// "✦ Gerar perguntas bónus com IA" (2026-10-05, pedido do utilizador) —
+// preenche com a IA as posições de Pergunta Bónus desta playlist que
+// ainda não têm pergunta (af_faixaTemBonus() decide quais são). Regras
+// de conteúdo no próprio prompt: ano/álbum/história/curiosidade do
+// artista, nunca título/artista de outra faixa nem o mosaico — a IA
+// recebe a lista do que NÃO pode mencionar. Mesmo endpoint genérico
+// /gerar-faixas (só recebe um prompt, devolve o JSON que a IA respondeu)
+// já usado em todo o resto do ✎ Substituir/Gerar com IA.
+async function af_gerarPerguntasBonusIA() {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+  const musicas = pl.musicas || [];
+  const posicoesEmFalta = [];
+  for (let i = 1; i <= musicas.length; i++) {
+    if (af_faixaTemBonus(currentPlaylistKey, pl, i) && !af_obterPerguntaBonus(i).pergunta) {
+      posicoesEmFalta.push(i);
+    }
+  }
+  if (!posicoesEmFalta.length) { notify('Não há Perguntas Bónus em falta nesta playlist.', 'ok'); return; }
+
+  const btn = document.getElementById('btn-gerar-perguntas-bonus');
+  const textoOriginal = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'A gerar…'; }
+
+  const mosaicoTrack = pl.mosaico && pl.mosaico.id ? resolveTrack(pl.mosaico.id) : null;
+  let falhas = 0;
+  try {
+    for (const pos of posicoesEmFalta) {
+      const t = resolveTrack(musicas[pos - 1]);
+      if (!t) continue;
+      const outras = musicas
+        .map((id, j) => (j !== pos - 1 ? resolveTrack(id) : null))
+        .filter(Boolean)
+        .map(x => `"${x.titulo}" — ${artistaTexto(x)}`);
+      const proibidasTxt = outras.length || mosaicoTrack
+        ? ` NUNCA reveles ou dês pistas sobre o título ou artista de nenhuma destas outras faixas desta mesma playlist: ${outras.join('; ')}.${mosaicoTrack ? ` Nem sobre o mosaico: "${mosaicoTrack.titulo}" — ${artistaTexto(mosaicoTrack)}.` : ''}`
+        : '';
+      const prompt = `Estás a escrever uma Pergunta Bónus para um jogo de trivia musical (Music Box), sobre a faixa "${t.titulo}" — ${artistaTexto(t)}.
+
+A pergunta tem de ser sobre: o ano de lançamento, o álbum onde saiu, a história por detrás da canção, ou uma curiosidade verificável sobre o artista — nunca inventes factos.${proibidasTxt}
+
+Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
+{"pergunta": "...", "resposta": "..."}`;
+
+      try {
+        const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-faixas`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt }), keepalive: true,
+        });
+        const dados = await r.json().catch(() => null);
+        if (!r.ok || !dados || !dados.ok || !dados.resultado || !dados.resultado.pergunta) {
+          throw new Error((dados && dados.erro) || `HTTP ${r.status}`);
+        }
+        af_editarPerguntaBonus(pos, 'pergunta', dados.resultado.pergunta);
+        af_editarPerguntaBonus(pos, 'resposta', dados.resultado.resposta || '');
+      } catch (e) {
+        console.error('[af_gerarPerguntasBonusIA] falha na Faixa', pos, e);
+        falhas++;
+      }
+    }
+    renderMontagem();
+    notify(falhas
+      ? `Geradas ${posicoesEmFalta.length - falhas}/${posicoesEmFalta.length} — ${falhas} falha(s), tenta outra vez. Revê sempre antes de guardar.`
+      : `Perguntas Bónus geradas (${posicoesEmFalta.length}) ✓ — revê antes de guardar.`,
+      falhas ? 'err' : 'ok');
+  } finally {
+    const btnFim = document.getElementById('btn-gerar-perguntas-bonus');
+    if (btnFim) { btnFim.disabled = false; btnFim.textContent = textoOriginal; }
+  }
 }
 
 function renderSlotsSimples(pl) {
