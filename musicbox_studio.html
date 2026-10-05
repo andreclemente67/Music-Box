@@ -3739,6 +3739,46 @@ function af_editarDescritivoApresentador(valor) {
   if (aviso) aviso.innerHTML = valor.trim() ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>';
 }
 
+// "🔊 Gerar voz do descritivo" (2026-10-05, pedido do utilizador) — chama
+// gerar_vozes_descritivo.py --codigo <currentPlaylistKey> via
+// _servidor_escrita.py (POST /gerar-voz-descritivo), que corre o gerador
+// como subprocess — mesmo padrão já usado em
+// af_aplicarBackupERegeneracao()/_aplicar_regeneracao_playlist. Usa o
+// texto JÁ GUARDADO em playlists.json (não o que está na textarea agora
+// mesmo, se ainda não foi gravado) — se o utilizador editou o descritivo
+// e ainda não guardou, o aviso abaixo avisa antes de gerar a voz errada.
+async function af_gerarVozDescritivo() {
+  if (!currentPlaylistKey || !PLAYLISTS[currentPlaylistKey]) return;
+  const textoActual = (document.getElementById('descritivo-apresentador-input')?.value || '').trim();
+  if (!textoActual) { notify('Escreve o descritivo antes de gerar a voz.', 'err'); return; }
+  if (dirty) {
+    notify('Guarda as alterações primeiro — a voz usa o texto já gravado em playlists.json.', 'err');
+    return;
+  }
+  const btn = document.getElementById('btn-gerar-voz-descritivo');
+  const textoOriginalBtn = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'A gerar voz…';
+  try {
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-voz-descritivo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playlistCodigo: currentPlaylistKey }),
+    });
+    const corpo = await r.json();
+    if (!r.ok || !corpo.ok) {
+      notify('Erro ao gerar voz: ' + (corpo.erro || r.status), 'err');
+      return;
+    }
+    notify('Voz actualizada ✓');
+  } catch (e) {
+    notify('Erro de rede a gerar a voz: ' + e.message, 'err');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = textoOriginalBtn;
+  }
+}
+
 // Nota de Curadoria (Bíblia §30.5, 2026-09-02) — explicação formal/técnica
 // da lógica editorial da playlist (Memory Triggers, critério de
 // curadoria), distinta do descritivo_apresentador (tom de show, exposto
@@ -3850,6 +3890,12 @@ function renderMontagem() {
         <textarea class="detail-input" id="descritivo-apresentador-input" rows="3"
           placeholder="Texto-base do anúncio breve do apresentador antes desta Music Box começar — estilo dominante, característica do Universo, uma curiosidade/gancho (Bíblia §18.7, tom entusiasmado, nunca técnico — §18.6)."
           onchange="af_editarDescritivoApresentador(this.value)">${escapeHtml(pl.descritivo_apresentador || '')}</textarea>
+        <!-- 2026-10-05, pedido do utilizador: gera voz/descritivo_<codigo>.wav
+             (Duarte, edge-tts) a partir do texto actual — ver
+             af_gerarVozDescritivo()/_servidor_escrita.py POST
+             /gerar-voz-descritivo. edge-tts precisa de internet (ver
+             DECISIONS.md, "edge-tts é só protótipo"). -->
+        <button class="btn" id="btn-gerar-voz-descritivo" style="margin-top:6px;font-size:11px;" onclick="af_gerarVozDescritivo()">🔊 Gerar voz do descritivo</button>
       </div>
       <div class="detail-field" style="margin-top:10px;">
         <label>Nota de Curadoria <span id="nota-curadoria-aviso">${pl.nota_curadoria ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>'}</span></label>

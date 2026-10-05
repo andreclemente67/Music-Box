@@ -179,6 +179,10 @@ GERAR_FAIXA_SCRIPT = os.path.join(APP_DIR, 'gerar_faixa.py')
 GERAR_PREVIEW_REVISAO_SCRIPT = os.path.join(APP_DIR, '_gerar_preview_revisao.py')
 APLICAR_REGENERACAO_SCRIPT = os.path.join(APP_DIR, '_aplicar_regeneracao_playlist.py')
 APLICAR_REGENERACAO_TIMEOUT = 30  # segundos — só move ficheiros já em disco, nada de rede/ffmpeg
+
+# ── Gerar voz do descritivo (gerar_vozes_descritivo.py, botão no Studio) ──
+GERAR_VOZ_DESCRITIVO_SCRIPT = os.path.join(APP_DIR, 'gerar_vozes_descritivo.py')
+GERAR_VOZ_DESCRITIVO_TIMEOUT = 40  # segundos — edge-tts precisa de rede (ver DECISIONS.md, "edge-tts é só protótipo")
 GERAR_FAIXA_TIMEOUT = 600  # segundos (10min) — download + análise + corte; músicas longas (ex. "Weightless", Marconi Union) podem demorar mais
 YT_SEARCH_TIMEOUT = 60  # segundos — yt-dlp --get-url só resolve o URL, não descarrega áudio
 GERAR_FAIXA_ITUNES_TIMEOUT = 60  # segundos — pesquisa + download do preview de 30s + corte ffmpeg (ficheiro pequeno, bem mais rápido que o modo YouTube)
@@ -834,8 +838,10 @@ class Handler(BaseHTTPRequestHandler):
             self._aplicar_regeneracao_playlist()
         elif parsed.path == '/listar-playlist-youtube':
             self._listar_playlist_youtube()
+        elif parsed.path == '/gerar-voz-descritivo':
+            self._gerar_voz_descritivo()
         else:
-            self._enviar_json(404, {"erro": "endpoint desconhecido — usa POST /escrever?ficheiro=..., POST /upload?ficheiro=..., POST /gerar-faixas, POST /gerar-faixa, POST /gerar-preview-revisao, POST /aplicar-regeneracao-playlist ou POST /listar-playlist-youtube"})
+            self._enviar_json(404, {"erro": "endpoint desconhecido — usa POST /escrever?ficheiro=..., POST /upload?ficheiro=..., POST /gerar-faixas, POST /gerar-faixa, POST /gerar-preview-revisao, POST /aplicar-regeneracao-playlist, POST /listar-playlist-youtube ou POST /gerar-voz-descritivo"})
 
     def _escrever_texto(self, parsed):
         params = parse_qs(parsed.query)
@@ -1264,6 +1270,45 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         self._enviar_json(200, {"ok": True, "faixas": faixas})
+
+    def _gerar_voz_descritivo(self):
+        """Botão "Gerar voz do descritivo" na Mesa de Montagem — corre
+        gerar_vozes_descritivo.py --codigo <playlistCodigo> (voz Duarte via
+        edge-tts, ver DECISIONS.md "edge-tts é só protótipo"). Mesmo padrão
+        de validação/subprocess de _aplicar_regeneracao_playlist()."""
+        tamanho = int(self.headers.get('Content-Length') or 0)
+        if tamanho <= 0 or tamanho > 500:
+            self._enviar_json(400, {"erro": "corpo vazio ou demasiado grande"})
+            return
+        try:
+            pedido = json.loads(self.rfile.read(tamanho).decode('utf-8'))
+        except json.JSONDecodeError as e:
+            self._enviar_json(400, {"erro": f"JSON inválido no corpo do pedido: {e}"})
+            return
+
+        playlist_codigo = (pedido.get('playlistCodigo') or '').strip()
+        if not playlist_codigo or not re.match(r'^[A-Za-z0-9.\-]+$', playlist_codigo):
+            self._enviar_json(400, {"erro": f"playlistCodigo inválido: {playlist_codigo!r}"})
+            return
+
+        try:
+            resultado = subprocess.run(
+                [sys.executable, GERAR_VOZ_DESCRITIVO_SCRIPT, '--codigo', playlist_codigo],
+                cwd=APP_DIR, capture_output=True, text=True, timeout=GERAR_VOZ_DESCRITIVO_TIMEOUT,
+            )
+        except subprocess.TimeoutExpired:
+            self._enviar_json(504, {"erro": f"excedeu {GERAR_VOZ_DESCRITIVO_TIMEOUT}s — provavelmente sem ligação à internet (edge-tts precisa de rede)"})
+            return
+        except Exception as e:
+            self._enviar_json(500, {"erro": f"falha a correr gerar_vozes_descritivo.py: {e}"})
+            return
+
+        if resultado.returncode != 0:
+            detalhe = (resultado.stderr or resultado.stdout or '').strip()
+            self._enviar_json(500, {"erro": f"gerar_vozes_descritivo.py falhou: {detalhe[-500:]}"})
+            return
+
+        self._enviar_json(200, {"ok": True, "playlistCodigo": playlist_codigo})
 
 
 def main():
