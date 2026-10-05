@@ -533,6 +533,11 @@
   <h2>✦ BONUS_MODE — PERGUNTA BÓNUS</h2>
   <p style="font-size:10px;color:#8a8a86;margin-top:-4px;">● Microfone do Apresentador aberto (Modo Catalisador) — música parada.</p>
   <p id="bonus-quem">—</p>
+  <!-- Pergunta/resposta visíveis ao apresentador (2026-10-05, pedido do
+       utilizador) — antes o painel não mostrava nada. Ver
+       preencherPainelBonus(). -->
+  <p id="bonus-pergunta" style="font-weight:700;font-size:14px;color:var(--text);margin:10px 0 4px;"></p>
+  <p id="bonus-resposta" style="font-size:12px;color:var(--accent);margin:0 0 10px;"></p>
   <div class="bonus-acoes">
     <button class="btn-bonus-sim" onclick="resolverBonus(true)">Acertou (+dinheiro)</button>
     <button class="btn-bonus-nao" onclick="resolverBonus(false)">Errou (sem dinheiro)</button>
@@ -1259,6 +1264,7 @@ const catalogoPronto = (async () => {
           nome: def.nome, descritivo: def.descritivo, playlistCodigo: def.playlistCodigo,
           universo: def.universo, temBonus: def.temBonus, dificuldade: def.dificuldade,
           nota_curadoria: def.nota_curadoria, descritivo_apresentador: def.descritivo_apresentador,
+          perguntas_bonus: def.perguntas_bonus,
           musicas, mosaico
         };
         log(`Universo "${chaveCollections}" carregado a partir de catalogo.json/playlists.json (chave ${chavePlaylists})`);
@@ -1308,6 +1314,7 @@ const catalogoPronto = (async () => {
           nome: def.nome, descritivo: def.descritivo, playlistCodigo: def.playlistCodigo,
           universo: def.universo, temBonus: def.temBonus, dificuldade: def.dificuldade,
           nota_curadoria: def.nota_curadoria, descritivo_apresentador: def.descritivo_apresentador,
+          perguntas_bonus: def.perguntas_bonus,
           musicas, mosaico
         };
         log(`Universo "${codigo}" carregado automaticamente a partir de playlists.json (tipo ${def.tipo})`);
@@ -1342,7 +1349,13 @@ const LOGO_AUDIO_OFFSET = 15;
 // excepção antiga em que a 5ª Faixa valia o dobro (recuperação de
 // atrasados). Mosaico mantém-se em +200 (PONTOS_MOSAICO).
 const PONTOS_FAIXA = 100;
-const FAIXAS_COM_BONUS = [3, 6]; // só estas Faixas (1-7) disparam a Pergunta Bónus
+const FAIXAS_COM_BONUS = [3, 6]; // Especiais — só estas Faixas (1-7) disparam a Pergunta Bónus
+// Décadas/Estilos (2026-10-05, pedido do utilizador — substitui a regra
+// de 30 Ago/2 Set): 1 Pergunta Bónus por playlist, sempre nesta Faixa —
+// ver faixaTemBonus() abaixo, que decide a regra POR FAMÍLIA (não mais
+// pelo campo `temBonus` fixo na playlist, embora continue presente em
+// playlists.json por compatibilidade/histórico — já não é lido aqui).
+const FAIXA_BONUS_MUSICAL = 4;
 const PONTOS_MOSAICO = 200;
 const MORTE_SUBITA_SEG = 3;
 
@@ -1464,6 +1477,45 @@ function garantirAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
+}
+
+// Pergunta Bónus por FAMÍLIA (2026-10-05, pedido do utilizador — decisão
+// nova, substitui a regra de 30 Ago/2 Set baseada no campo `temBonus`
+// fixo na playlist): Especiais mantém-se nas Faixas 3 e 6
+// (FAIXAS_COM_BONUS); Décadas/Estilos passam a ter 1 Pergunta Bónus por
+// playlist, sempre na Faixa FAIXA_BONUS_MUSICAL (4). Nunca em playlists
+// Tributo/Retrato Sonoro/Logo/Excerto único — estrutura incompatível com
+// "Faixa N" simples (Tributo usa posicoes[], não musicas[]; as outras já
+// têm o seu próprio fluxo de pausaAposAcerto fixo, ver mais abaixo em
+// acertouFaixa()) — na prática nunca colide (RET é sempre Especiais,
+// Tributo é sempre Géneros/Estilos pela classificação de família, mas
+// com estrutura própria que esta regra deliberadamente ignora.
+function faixaTemBonus(chave, faixa) {
+  const col = COLLECTIONS[chave];
+  if (!col || col.temTributo || col.temImagem || col.temLogo || col.temExcertoUnico) return false;
+  const familia = familiaDeChave(chave);
+  if (familia === FAMILIA_ESPECIAIS) return FAIXAS_COM_BONUS.includes(faixa);
+  if (familia === FAMILIA_DECADAS || familia === FAMILIA_GENEROS) return faixa === FAIXA_BONUS_MUSICAL;
+  return false;
+}
+
+// Preenche a pergunta/resposta bónus visíveis no painel do BONUS_MODE
+// (2026-10-05, pedido do utilizador — antes o painel não mostrava nada,
+// o apresentador tinha de saber a pergunta de outro sítio). Lê
+// col.perguntas_bonus[faixa] — {pergunta, resposta} por posição,
+// playlists.json (só leitura, ver loadData()).
+function preencherPainelBonus(chave, faixa) {
+  const col = COLLECTIONS[chave];
+  const pb = (col.perguntas_bonus || {})[faixa];
+  const elPergunta = document.getElementById('bonus-pergunta');
+  const elResposta = document.getElementById('bonus-resposta');
+  if (pb && pb.pergunta) {
+    elPergunta.textContent = 'P: ' + pb.pergunta;
+    elResposta.textContent = pb.resposta ? 'R: ' + pb.resposta : '';
+  } else {
+    elPergunta.textContent = '(sem pergunta bónus definida para esta faixa)';
+    elResposta.textContent = '';
+  }
 }
 
 // Sirene de aviso da Pergunta Bónus — sintetizada, sem ficheiro externo.
@@ -3288,7 +3340,7 @@ function acertouFaixa(i) {
   renderCabines();
   renderProgresso();
 
-  const universoTemBonus = COLLECTIONS[collectionActual].temBonus;
+  const temBonusNestaFaixa = faixaTemBonus(collectionActual, faixaAtual);
   const temImagem = COLLECTIONS[collectionActual].temImagem;
   // Nunca menos que MOMENTO_RESPOSTA_MS — sem isto, a faixa seguinte
   // arrancava (novo título, novo áudio, novo tabuleiro) enquanto o overlay
@@ -3297,16 +3349,17 @@ function acertouFaixa(i) {
   // maior que a do overlay.
   const pausaAposAcerto = Math.max(MOMENTO_RESPOSTA_MS, temImagem ? 1500 : 0);
 
-  if (universoTemBonus && FAIXAS_COM_BONUS.includes(faixaAtual)) {
+  if (temBonusNestaFaixa) {
     faseGeral = 'bonus';
     tocarSireneBonus();
     setTimeout(() => {
       mostrarSoPainel('bonus-painel');
       document.getElementById('bonus-quem').textContent =
         `${NOMES[i]} ganhou a Faixa ${faixaAtual} (+${PONTOS_FAIXA} pontos). Pergunta Bónus temática (${COLLECTIONS[collectionActual].nome}):`;
+      preencherPainelBonus(collectionActual, faixaAtual);
     }, pausaAposAcerto);
     log(`✓ ${NOMES[i]} acertou — quadrado ${faixaAtual} conquistado.`);
-  } else if (!universoTemBonus && ESCADA_MEMORIA_ACTIVA) {
+  } else if (!temBonusNestaFaixa && ESCADA_MEMORIA_ACTIVA) {
     log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — Universo musical: arranca a Escada de Memória.`);
     setTimeout(() => iniciarEscada(i), pausaAposAcerto);
   } else {
