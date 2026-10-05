@@ -1,0 +1,35 @@
+{
+  "_versao": 3,
+  "_nota": "Dicionário de pronúncia para a narração do descritivo do apresentador (Duarte, edge-tts). Aplicado SÓ ao texto enviado ao edge-tts em gerar_vozes_descritivo.py — nunca ao texto visível no ecrã nem ao playlists.json. 'termos': correspondência sem distinção de maiúsculas/minúsculas, palavra inteira, incluindo variantes com hífen/espaço/nada (synth-pop = synth pop = synthpop) e plural inglês opcional (riff/riffs, crooner/crooners, groove/grooves — o 's' final é acrescentado à substituição automaticamente). 'termos_regex' (5 Out 2026): entradas com padrão regex explícito, para siglas/variantes que não cabem no formato simples de 'termos' — hoje só R&B (lido à inglesa, 'ár en bi', nunca como sigla portuguesa; cobre R&B/R & B/R and B/RnB). Depois de aplicados 'termos_regex' e 'termos', qualquer '&' que ainda reste no texto é substituído por ' e ' (nunca chega ao edge-tts como '&' isolado, que seria lido 'e comercial') — rede de segurança, sem ocorrências actuais em playlists.json (confirmado por varrimento, 5 Out 2026). DJ e MTV confirmados por audição (5 Out 2026) — lidos à inglesa, como R&B; 'swing' testado e mantido como está (sem entrada). _versao sobe sempre que este ficheiro muda — gerar_vozes_descritivo.py usa o texto final (já com o dicionário aplicado) para o hash de regeneração, por isso só os descritivos cujo texto final realmente muda com uma alteração ao dicionário são marcados para reprocessar.",
+  "termos": {
+    "synth-pop": "sinte pópe",
+    "synthwave": "sinteuêive",
+    "streaming": "estrimingue",
+    "mainstream": "meinstrime",
+    "indie": "índi",
+    "house": "rauss",
+    "groove": "gruve",
+    "rock-and-roll": "róque end rôl",
+    "riff": "rife",
+    "grunge": "grânje",
+    "new-wave": "niú uêive",
+    "heavy-metal": "révi métal",
+    "breakbeat": "brêiquebite",
+    "clubbing": "clábingue",
+    "old-school": "ôlde escúl",
+    "ambient": "êmbient",
+    "folk-rock": "fôlk roque",
+    "be-bop": "bibope",
+    "hip-hop": "ripe rope",
+    "soul": "sôl",
+    "crooner": "crúner",
+    "abba": "Abba",
+    "beat": "bite",
+    "blues": "blúz",
+    "dj": "di djei",
+    "mtv": "ém ti vi"
+  },
+  "termos_regex": {
+    "\\bR\\s*(?:&|and|n)\\s*B\\b": "ár en bi"
+  }
+}

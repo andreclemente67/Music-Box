@@ -14,10 +14,20 @@ chamada falham). Ver DECISIONS.md, "edge-tts é só para protótipo" —
 decisão final para emissão real (voz licenciada ou locutor real) fica
 para mais tarde.
 
-voz/descritivo_index.json guarda {playlistCodigo: sha1(texto)} — por
-omissão só regenera uma playlist se o texto mudou desde a última vez ou
-o ficheiro de voz ainda não existe. --todos força tudo (com backup
-prévio); --codigo gera só uma playlist.
+voz/pronuncia_descritivo.json — dicionário de pronúncia (termo → grafia
+fonética), aplicado SÓ ao texto enviado ao edge-tts, nunca ao texto
+guardado em playlists.json. Ver esse ficheiro para o formato e a regra
+de siglas (DECISIONS.md, "Dicionário de pronúncia para a narração do
+descritivo").
+
+voz/descritivo_index.json guarda {playlistCodigo: sha1(texto_final)} —
+texto_final é o descritivo JÁ COM o dicionário de pronúncia aplicado.
+Por omissão só regenera uma playlist se esse texto final mudou desde a
+última vez (por edição do descritivo OU por uma alteração ao
+dicionário que lhe toque) ou o ficheiro de voz ainda não existe — uma
+alteração ao dicionário que não afecte o texto de uma playlist não
+regenera essa playlist. --todos força tudo (com backup prévio);
+--codigo gera só uma playlist.
 
 Uso:
   python3 gerar_vozes_descritivo.py                       # só os que faltam/mudaram
@@ -28,6 +38,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -38,6 +49,7 @@ RAIZ = Path(__file__).resolve().parent
 PLAYLISTS = RAIZ / 'playlists.json'
 VOZ_DIR = RAIZ / 'voz'
 INDEX_PATH = VOZ_DIR / 'descritivo_index.json'
+DICIONARIO_PATH = VOZ_DIR / 'pronuncia_descritivo.json'
 EDGE_TTS = Path.home() / '.venvs' / 'musicbox-tts' / 'bin' / 'edge-tts'
 VOZ = 'pt-PT-DuarteNeural'
 SAMPLE_RATE = 44100
@@ -73,6 +85,34 @@ def gravar_index(index):
 
 def sha1_texto(texto):
     return hashlib.sha1(texto.encode('utf-8')).hexdigest()
+
+
+def carregar_dicionario():
+    with open(DICIONARIO_PATH, encoding='utf-8') as f:
+        return json.load(f)
+
+
+def _construir_regex_termo(termo_canonico):
+    partes = termo_canonico.split('-')
+    padrao = r'[-\s]?'.join(re.escape(p) for p in partes)
+    # plural inglês opcional (riff/riffs, crooner/crooners, groove/grooves)
+    return re.compile(r'\b(' + padrao + r')(s)?\b', re.IGNORECASE)
+
+
+def aplicar_dicionario(texto, dicionario):
+    """Aplica voz/pronuncia_descritivo.json ao texto — SÓ para o edge-tts,
+    nunca para o texto guardado em playlists.json."""
+    for padrao, substituicao in dicionario.get('termos_regex', {}).items():
+        texto = re.sub(padrao, substituicao, texto, flags=re.IGNORECASE)
+    for termo, substituicao in dicionario.get('termos', {}).items():
+        regex = _construir_regex_termo(termo)
+        def repl(m, sub=substituicao):
+            return sub + ('s' if m.group(2) else '')
+        texto = regex.sub(repl, texto)
+    # rede de segurança: qualquer '&' que sobreviva aos termos acima nunca
+    # chega ao edge-tts como símbolo isolado (seria lido "e comercial").
+    texto = texto.replace('&', ' e ')
+    return texto
 
 
 def gerar_um(texto, destino):
@@ -111,9 +151,17 @@ def main():
 
     playlists = carregar_playlists()
     index = carregar_index()
+    dicionario = carregar_dicionario()
     VOZ_DIR.mkdir(exist_ok=True)
 
     candidatos = {k: v for k, v in playlists.items() if v.get('descritivo_apresentador')}
+    # texto_final por playlist — já com o dicionário de pronúncia aplicado;
+    # é este texto (nunca o original) que vai para o edge-tts e para o hash
+    # do índice.
+    textos_finais = {
+        k: aplicar_dicionario(v['descritivo_apresentador'], dicionario)
+        for k, v in candidatos.items()
+    }
 
     if args.codigo:
         if args.codigo not in candidatos:
@@ -121,20 +169,11 @@ def main():
         alvo = [args.codigo]
     elif args.todos:
         alvo = sorted(candidatos.keys())
-        existentes = list(VOZ_DIR.glob('descritivo_*.wav'))
-        if existentes:
-            data = datetime.date.today().isoformat()
-            backup_dir = RAIZ / f'_backup_voz_{data}_descritivo'
-            backup_dir.mkdir(exist_ok=True)
-            for f in existentes:
-                shutil.copy2(f, backup_dir / f.name)
-            print(f"Backup de {len(existentes)} ficheiro(s) em {backup_dir}/")
     else:
         alvo = []
-        for k, v in candidatos.items():
-            texto = v['descritivo_apresentador']
+        for k in candidatos:
             destino = VOZ_DIR / f'descritivo_{k}.wav'
-            if not destino.exists() or index.get(k) != sha1_texto(texto):
+            if not destino.exists() or index.get(k) != sha1_texto(textos_finais[k]):
                 alvo.append(k)
         alvo.sort()
 
@@ -142,14 +181,25 @@ def main():
         print("Nada a gerar — todos os descritivos já têm voz actualizada (usa --todos para regenerar).")
         return
 
-    print(f"A gerar {len(alvo)} descritivo(s) (voz={VOZ})…")
+    # Backup prévio dos ficheiros que vão ser sobrescritos (sempre, não só
+    # em --todos) — nunca apaga sem copiar primeiro.
+    existentes = [VOZ_DIR / f'descritivo_{k}.wav' for k in alvo if (VOZ_DIR / f'descritivo_{k}.wav').exists()]
+    if existentes:
+        data = datetime.date.today().isoformat()
+        backup_dir = RAIZ / f'_backup_voz_{data}_descritivo'
+        backup_dir.mkdir(exist_ok=True)
+        for f in existentes:
+            shutil.copy2(f, backup_dir / f.name)
+        print(f"Backup de {len(existentes)} ficheiro(s) em {backup_dir}/")
+
+    print(f"A gerar {len(alvo)} descritivo(s) (voz={VOZ}, dicionário v{dicionario.get('_versao')})…")
     falhas = []
     for k in alvo:
-        texto = candidatos[k]['descritivo_apresentador']
+        texto_final = textos_finais[k]
         destino = VOZ_DIR / f'descritivo_{k}.wav'
         try:
-            gerar_um(texto, destino)
-            index[k] = sha1_texto(texto)
+            gerar_um(texto_final, destino)
+            index[k] = sha1_texto(texto_final)
             gravar_index(index)  # grava já a cada sucesso — não perde progresso se falhar a meio
             print(f"  ✓ {k}")
         except Exception as e:
