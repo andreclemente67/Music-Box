@@ -30,7 +30,7 @@
 **Pendente desta sessão, ainda por fazer:**
 - Pronúncia por língua dos nomes PT/BR (Duarte/Antonio) — lista de candidatos dada, à espera da confirmação do utilizador antes de regenerar.
 - Anúncio de voz no acerto do Mosaico — pedido recebido, nada feito.
-- `BIBLIA.md`: agora existe na raiz (última entrada confirmada em 2 Set 2026, §30.8; não encontrei o número de versão "V3.29" como texto literal no ficheiro — a confirmar com o utilizador) — reconciliação com `DECISIONS.md` em curso.
+- `BIBLIA.md`: no repositório desde V3.29 (`21ea7bc`); reconciliado com `DECISIONS.md` e subido para V3.30 (ver §30.9) — pendente: decidir §27.13 vs §15.5 (escala de dificuldade 3 níveis vs 1-5; código e dados usam 1-5, confirmado).
 
 ## 2026-10-04/05 — Sessão 4-5 Out 2026
 
@@ -85,6 +85,8 @@
 - Mensagem do utilizador "have an on off button fot track description" recebida sem contexto suficiente (que descrição, onde) — por esclarecer antes de agir.
 
 **⚡ WORKFLOW** — houve duas sessões do Claude Code em paralelo na mesma pasta durante grande parte dos dias 4-5 Out. **Regra**: uma sessão trata de `musicbox.html`/`musicbox_studio.html`/áudio, outra trata de dados (`catalogo.json`/`playlists.json`/`feedback.json`/`mp3_index.json`/ficheiros `.mp3`). Nunca as duas no mesmo ficheiro ao mesmo tempo. **Excepção pontual em 5 Out**: a pedido explícito do utilizador, esta sessão validou (`python3 -m json.tool`) e commitou directamente o trabalho pendente da outra sessão nos 4 ficheiros de dados + `.mp3` novos (`4c6cf1b`) — leu o conteúdo só o suficiente para escrever a mensagem do commit, não editou nada. Confirmado no fim que `playlists.json` ficou sem alterações pendentes.
+
+**⚡ WORKFLOW (regra nova, 5 Out 2026)**: toda decisão de formato (regra de jogo, estrutura de dados, comportamento visível ao público ou à régie) actualiza, no mesmo commit, tanto `DECISIONS.md` (registo técnico, cronológico) como `BIBLIA.md` (o capítulo/secção afectado, marcado "(revisto em &lt;data&gt;)"). Decisões puramente técnicas/de ferramenta (ex. porta do servidor, chave de API) continuam só em `DECISIONS.md`. Ver `BIBLIA.md` §30.9 para a primeira reconciliação formal entre os dois ficheiros.
 
 **Nota**: `hip_01..07_a/b.mp3` e os `.mp3` novos mencionados acima (parte de "Areias do Tempo") já foram commitados em `4c6cf1b` — já não há nada pendente nesses ficheiros.
 

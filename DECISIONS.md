@@ -1387,6 +1387,14 @@ processado — Passo 2). Roar ainda não existe no projecto (pasta
 `efeitos/` por criar) — utilizador vai obter um efeito livre (Pixabay/
 Freesound CC0), nada foi descarregado automaticamente.
 
+**Nota de revisão (5 Out 2026)**: o Oliver foi abandonado — a voz final
+do nome do artista (e do "In the Box!!") é **Alex, rate 205**
+(`say -v Alex -r 205`), a mesma já em uso antes desta entrada. Ver
+`gerar_vozes_nome_artista.py` (script committado) e Bíblia §5.4b
+(revisto em 5 Out 2026). Texto original acima mantido sem alterações,
+como registo histórico do processo de comparação (Alex/Samantha/Daniel/
+Oliver) que levou a esta decisão.
+
 ## 2026-10-05 — Narração do descritivo: edge-tts é só para protótipo
 
 O `say` do macOS não tem nenhuma voz masculina em português instalada
@@ -1500,3 +1508,44 @@ ficheiro não existir, segue sem som e sem erro na consola.
 Testado com Playwright nas Décadas (Faixa 4) e numa Especial (Faixas 3
 e 6) — sinal toca exactamente uma vez por aparecimento do painel, zero
 erros de JS.
+
+## 2026-10-05 — Volumes pós-acerto e pausa antes do Encore (entrada em falta, adicionada na reconciliação com a Bíblia)
+
+Decisão já implementada e commitada mais cedo nesta sessão, sem entrada
+própria neste ficheiro até agora — adicionada ao reconciliar
+`DECISIONS.md` com a Bíblia (ver §30.9).
+
+`VOL_ENCORE = 0.45` ("meio-termo", `musicbox.html`): depois da sequência
+de voz pós-acerto (nome → "In the Box!!" → roar) terminar, a música deixa
+de voltar logo a `VOL_MUSICA` (0.75) — desce para este nível intermédio e
+mantém-se aí durante toda a janela de decisão do Encore. Só sobe a
+`VOL_MUSICA` quando o Trecho B realmente arranca (escolhido) ou quando a
+Faixa seguinte arranca a sério (não escolhido).
+
+`PAUSA_ANTES_ENCORE_MS = 1500`: a janela de decisão do Encore só aparece
+1,5s depois do fim do último som da sequência de voz — a música (já em
+VOL_ENCORE) continua a tocar normalmente durante essa pausa, nunca
+parando. Cancelada sem deixar rasto em `esconderMomentoResposta()` se o
+jogador avançar ou houver reset antes de disparar — mesmo padrão dos
+outros timers pendentes pós-acerto (`testeTimeoutJanelaDecisao`,
+`testeTimeoutCorteTrechoB`).
+
+Testado com Playwright (1502ms medidos, cancelamento ao avançar
+verificado). Ver Bíblia §5.4b (revisto em 5 Out 2026).
+
+## 2026-10-05 — Descritivos sem spoilers: regra geral (substitui o registo como fix pontual)
+
+Generalização de uma correcção editorial já aplicada a 3 playlists
+(commit `b075be2`) para uma regra fechada, aplicável a todo o texto
+editorial que antecede uma Playlist (`descritivo_apresentador`) e às
+Perguntas Bónus (ver 2026-10-05 "Pergunta Bónus nas Décadas/Estilos"
+acima):
+
+**Regra fechada**: o descritivo do apresentador evoca o universo da
+Playlist (época, ambiente, tema) sem nunca nomear o título, o artista, a
+obra (filme, série, jogo) ou a pessoa de qualquer Faixa ou do Mosaico da
+própria Playlist. Uma pista vaga é aceitável; uma pista que identifique
+directamente a resposta não.
+
+Registada na Bíblia em §18.7 e na nova §15.6 "Descritivos sem Spoilers"
+(revisto/criado em 5 Out 2026, ver §30.9).
