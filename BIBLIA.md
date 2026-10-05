@@ -1,5 +1,7 @@
 MUSIC BOX CONCURSO TELEVISIVO
 
+**Versão V3.30** — última revisão: 5 Out 2026 (ver §30.9, reconciliação com DECISIONS.md)
+
 # CAPÍTULO 1 — O FORMATO
 
 *"Um formato construído a partir da memória auditiva."*
@@ -132,13 +134,13 @@ Em cada Faixa, todos os concorrentes começam em igualdade, painéis no estado A
 
 Uma identificação incorreta muda o estado do concorrente para VERMELHO (MUTE), descativando o seu microfone até ao final da Faixa e da faixa seguinte. O áudio continua a tocar para os restantes, ainda em Azul.
 
-## 3.6 A Fase Bónus e a Divisão de Fluxos
+## 3.6 A Fase Bónus e a Divisão de Fluxos (revisto em 5 Out 2026)
 
 Quem identificar primeiro o excerto congela o cronómetro, ganha a pontuação da Faixa e muda para o estado VERDE (BÓNUS), suspendendo a competição e abrindo a Fase de Pergunta Bónus. 
 
-Regra fechada: a Fase de Pergunta Bónus é exclusiva dos Universos temáticos (ex: Cinema, Televisão, Media & Entretenimento, Activadores Psicológicos como Eurovisão), onde faz sentido explorar uma curiosidade associada à Faixa (realizador, protagonista, ano). Nesses Universos, a Pergunta Bónus dispara apenas quando a Faixa ganha é a 3.ª ou a 6.ª da Playlist. Nos Universos puramente musicais (Género Musical, Eixo Temporal, Geografia, Solistas como Solo de Guitarra ou Bateria), a Playlist corre sem interrupções: o acerto soma sempre pontos, mas nunca abre a fase de acumulação financeira — a Playlist segue directamente para a Faixa seguinte e, no fim da 7.ª, para o Mosaico.
+Regra fechada: a Fase de Pergunta Bónus é exclusiva dos Universos temáticos (ex: Cinema, Televisão, Media & Entretenimento, Activadores Psicológicos como Eurovisão), onde faz sentido explorar uma curiosidade associada à Faixa (realizador, protagonista, ano). Nesses Universos, a Pergunta Bónus dispara apenas quando a Faixa ganha é a 3.ª ou a 6.ª da Playlist.
 
-Regra fechada (confirmada em 30 Ago 2026): o número de Faixas com Pergunta Bónus fica definitivamente fixado em duas por Playlist temática — Faixas 3 e 6. Não há variação por Universo.
+Regra fechada (confirmada em 30 Ago 2026, revista em 5 Out 2026): nos Universos temáticos (família Especiais), a Pergunta Bónus abre nas Faixas 3 e 6 — duas por Playlist, sem variação. Nos Universos musicais (Décadas e Estilos), abre uma única vez por Playlist, na Faixa 4, com perguntas sobre a própria música (ano, álbum, história da canção ou curiosidade do artista). A pergunta nunca pode revelar outra Faixa da Playlist nem o Mosaico. É anunciada por um sinal sonoro curto (`efeitos/bonus.wav`). Deixa assim de haver Universos sem qualquer Pergunta Bónus — ver 5.3/19.1 para o mesmo ajuste, e Status.md para o estado de implementação.
 
 ## 3.7 A Recompensa e o Risco do Mealheiro (revisto em 30 Ago 2026 — precisão face a §3.6)
 
@@ -304,9 +306,9 @@ O Motor do "Music Box" é o sistema central de software que gere a lógica de jo
 
 Cada Faixa de uma Playlist Regular é uma unidade fechada com duas fases: Reconhecimento Auditivo (dimensão desportiva/ranking) e Pergunta Bónus (dimensão económica/mealheiro).
 
-## 5.3 O Evento BONUS_MODE e a Fase Económica (revisto em 30 Ago 2026 — precisão face a §3.6)
+## 5.3 O Evento BONUS_MODE e a Fase Económica (revisto em 30 Ago 2026 — precisão face a §3.6; revisto em 5 Out 2026 — Pergunta Bónus em Décadas/Estilos)
 
-O acerto no excerto musical atribui de imediato +100 pontos ao ranking. Nos Universos puramente musicais, o Motor avança directamente para a Faixa seguinte (ver 3.6) — não há fase económica nessas Faixas. Apenas nos Universos temáticos, e apenas quando a Faixa vencida é a 3.ª ou a 6.ª da Playlist (ver 3.6), o acerto dispara o evento BONUS_MODE, que executa automaticamente:
+O acerto no excerto musical atribui de imediato +100 pontos ao ranking. Nos Universos temáticos (família Especiais), a Pergunta Bónus abre nas Faixas 3 e 6. Nos Universos musicais (Décadas e Estilos), abre uma única vez por Playlist, na Faixa 4, com perguntas sobre a própria música (ano, álbum, história da canção ou curiosidade do artista). A pergunta nunca pode revelar outra Faixa da Playlist nem o Mosaico. É anunciada por um sinal sonoro curto (`efeitos/bonus.wav`). Em qualquer dos dois casos, o acerto na Faixa elegível dispara o evento BONUS_MODE, que executa automaticamente:
 
 Altera o painel visual do concorrente vencedor para VERDE (BÓNUS).
 
@@ -320,15 +322,21 @@ Informa a régie e os sistemas de grafismo de que o programa entrou na fase de a
 
 A Fase Bónus rege-se pela independência de fluxos: a Pergunta Bónus (colocada verbalmente pelo apresentador) só acumula capital no mealheiro. Acertar ou errar não altera a pontuação de ranking (+100 pontos) já conquistada na Faixa, nem gera MUTE para a Faixa seguinte.
 
-## 5.4b Continuidade Sonora Pós-Acerto (adoptado em 31 Ago 2026)
+## 5.4b Continuidade Sonora Pós-Acerto (adoptado em 31 Ago 2026; revisto em 5 Out 2026)
 
 Regra fechada: sempre que um concorrente acerta uma Faixa — independentemente de essa Faixa disparar ou não o BONUS_MODE (ver 5.3) — a música **não corta abruptamente**. O áudio continua a tocar, a partir exactamente do ponto onde ia quando o acerto foi validado, até à faixa seguinte entrar (via NEW_SLOT, ver 5.5/19.1). Não há reinício do Trecho B nem repetição de qualquer excerto já ouvido.
 
-Justificação editorial: um corte seco imediatamente após o acerto contraria a filosofia de ritmo televisivo já fechada no Capítulo 13 (Fast Forward) — "evita bloqueios prolongados ou silêncios desgastantes em estúdio" (ver 13.7) — e rouba à celebração do acerto (luzes do concorrente, reacção da banda/estúdio) o tapete sonoro que a sustenta. Como hoje a maioria das Faixas não dispara Pergunta Bónus (ver 3.6, exclusiva de Faixas 3 e 6 dos Universos temáticos), restringir esta continuidade só aos momentos de BONUS_MODE deixaria a maior parte do jogo com o corte abrupto que esta regra vem eliminar — por isso aplica-se sempre que há acerto, com ou sem Pergunta Bónus a seguir.
+Justificação editorial: um corte seco imediatamente após o acerto contraria a filosofia de ritmo televisivo já fechada no Capítulo 13 (Fast Forward) — "evita bloqueios prolongados ou silêncios desgastantes em estúdio" (ver 13.7) — e rouba à celebração do acerto (luzes do concorrente, reacção da banda/estúdio) o tapete sonoro que a sustenta. Como hoje a maioria das Faixas não dispara Pergunta Bónus (ver 3.6, exclusiva de Faixas 3 e 6 dos Universos temáticos e Faixa 4 das Décadas/Estilos), restringir esta continuidade só aos momentos de BONUS_MODE deixaria a maior parte do jogo com o corte abrupto que esta regra vem eliminar — por isso aplica-se sempre que há acerto, com ou sem Pergunta Bónus a seguir.
 
 Nas Faixas com BONUS_MODE (Verde), a música de fundo continua a tocar por baixo da Pergunta Bónus verbal do apresentador — sujeita ao Protocolo de Áudio já definido em 18.5 (a sirene assinala quando o microfone do apresentador abre; a música não é obrigada a silenciar-se nesse instante, apenas a partilhar o espaço sonoro com a voz do apresentador, a critério de mistura da régie).
 
 Esta regra não altera a pontuação (ver 5.3/11.2), o MUTE dos restantes concorrentes (ver 5.9/10.6) nem o timing do NEW_SLOT (ver 5.5) — é exclusivamente uma decisão de desenho sonoro pós-acerto.
+
+**Anúncio de voz do acerto (revisto em 5 Out 2026)**: no momento do acerto, o Motor encadeia 3 ficheiros de áudio — (1) o nome do artista/banda, voz natural de apresentador de TV (`say -v Alex -r 205`, macOS); (2) "In the Box!!", eufórico/comemorativo, ficheiro único partilhado por todas as Faixas; (3) um roar de multidão/estúdio, se existir — a ausência deste último nunca bloqueia a sequência. Pronúncia dos nomes por língua (PT/BR, vozes alternativas a Alex para artistas lusófonos) está **em curso**, ainda sem decisão fechada — não escrever regra definitiva aqui até ser confirmada.
+
+**Volumes e pausa pré-Encore (revisto em 5 Out 2026)**: durante o anúncio do nome, a música de fundo baixa para 0.25 (VOL_DUCK); sobe para 0.75 (VOL_MUSICA) quando a Faixa seguinte arranca de facto. Terminada a sequência de voz, a música desce a um nível intermédio de 0.45 (VOL_ENCORE) — nem o volume normal nem o ducking mais baixo — e mantém-se nesse nível durante toda a janela de decisão do Encore (ver parágrafo seguinte), nunca parando. A janela do Encore só aparece 1,5 segundos (`PAUSA_ANTES_ENCORE_MS`) depois do fim do último som da sequência de voz — a música, já em VOL_ENCORE, continua a tocar normalmente durante essa pausa. Esta pausa é cancelada sem deixar rasto se o jogador avançar ou houver reset antes de ela disparar.
+
+**Janela de decisão do "Encore" (revisto em 5 Out 2026)**: o botão "▶ Encore" nunca toca o Trecho B automaticamente. Ao aparecer (ver parágrafo anterior), abre uma janela de decisão de 1,5 segundos, visualmente verde: um clique nessa janela escolhe tocar o Trecho B (dura até ~7 segundos, avançando sozinho no fim); sem clique, o botão fica vermelho por um instante breve e o Motor avança sozinho para a Faixa seguinte, sem o Trecho B chegar a tocar.
 
 ## 5.5 O Protocolo de Reset (NEW_SLOT) (revisto em 30 Ago 2026 — alinhado com §5.9/§10.6)
 
@@ -632,9 +640,9 @@ Propostas de Playlists de Elite (Ronda 4, 9 Faixas, sem Mosaico), ainda por cons
 
 Os 28 universos do "Music Box" organizam-se em três famílias de escolha, apresentadas ao concorrente elegível apenas na Playlist P3 de cada Ronda — o vencedor da P2 imediatamente anterior (ver 10.10 para o mecanismo de escolha em vigor). O fluxograma seguinte mostra a estrutura canónica adoptada:
 
-As três famílias têm pesos distintos no catálogo: DÉCADAS (8 universos — Anos 50 a Anos 2020), GÉNEROS (13 universos — Rock, Pop, Jazz, Blues, Soul & R&B, Hip Hop, Dance & Electrónica, Metal, Clássica, World Music, Latin, Americana, Solistas) e ESPECIAIS (7 universos — Cinema, Televisão, Videojogos, Retrato Sonoro, Ativ. Psicológicos, Slot Local, Cruzamento). O total actual é de 28 universos, com capacidade de expansão modular em qualquer das três famílias.
+As três famílias têm pesos distintos no catálogo: DÉCADAS (8 universos — Anos 50 a Anos 2020), ESTILOS (13 universos — Rock, Pop, Jazz, Blues, Soul & R&B, Hip Hop, Dance & Electrónica, Metal, Clássica, World Music, Latin, Americana, Solistas) e ESPECIAIS (7 universos — Cinema, Televisão, Videojogos, Retrato Sonoro, Ativ. Psicológicos, Slot Local, Cruzamento). O total actual é de 28 universos, com capacidade de expansão modular em qualquer das três famílias.
 
-**Alteração adoptada em 28 Ago 2026 (substitui a restrição anterior)**: as três famílias — DÉCADAS, GÉNEROS e ESPECIAIS — são igualmente escolhíveis desde a Playlist 1 de cada Ronda, incluindo a Ronda 1. A restrição anterior ("ESPECIAIS só disponível a partir da Ronda 2") deixa de vigorar. Esta mudança reflecte a decisão editorial de tratar os três eixos como estrutura de organização única e simétrica da Biblioteca — na curadoria (Studio), no catálogo, e agora também na mecânica de escolha do jogo. Ver 27.12 para o mecanismo de escolha actualizado.
+**Alteração adoptada em 28 Ago 2026 (substitui a restrição anterior)**: as três famílias — DÉCADAS, ESTILOS e ESPECIAIS — são igualmente escolhíveis desde a Playlist 1 de cada Ronda, incluindo a Ronda 1. A restrição anterior ("ESPECIAIS só disponível a partir da Ronda 2") deixa de vigorar. Esta mudança reflecte a decisão editorial de tratar os três eixos como estrutura de organização única e simétrica da Biblioteca — na curadoria (Studio), no catálogo, e agora também na mecânica de escolha do jogo. Ver 27.12 para o mecanismo de escolha actualizado.
 
 # CAPÍTULO 8 — PLAYLISTS
 
@@ -1224,7 +1232,7 @@ Definição do conceito editorial e da curva de dificuldade (1-5).
 
 Seleção de 7 temas musicais + 1 Mosaico. 
 
-Edição de áudio (Trechos 1 e 2) e testes de stress do Motor. 
+Edição de áudio (Trecho A e Trecho B) e testes de stress do Motor. 
 
 Auditoria final de diversidade cultural, impacto emocional e qualidade sonora. 
 
@@ -1247,6 +1255,12 @@ A Biblioteca de memórias é um processo vivo — a Curadoria garante que a actu
 Conclusão
 
 A Curadoria de Memória Auditiva é o activo intelectual que sustenta a identidade do "Music Box" — a sua capacidade de transformar um catálogo musical em experiências de reconhecimento assegura a longevidade do formato em qualquer língua ou cultura.
+
+## 15.6 Descritivos sem Spoilers (revisto em 5 Out 2026)
+
+Regra fechada, aplicável a todo o texto editorial que antecede uma Playlist (`descritivo_apresentador`, ver 18.7): o descritivo evoca o universo da Playlist (época, ambiente, tema) sem nunca nomear o título, o artista, a obra (filme, série, jogo) ou a pessoa de qualquer Faixa ou do Mosaico da própria Playlist. Uma pista vaga é aceitável; uma pista que identifique directamente a resposta não.
+
+Justificação editorial: o "Music Box" testa velocidade de reconhecimento (ver 1.2) — um descritivo que nomeia a resposta de uma Faixa antes de o concorrente a ouvir destrói a própria mecânica que o formato promete. Esta regra aplica-se da mesma forma às Perguntas Bónus (ver 3.6/5.3): a pergunta nunca pode revelar outra Faixa da Playlist nem o Mosaico.
 
 # CAPÍTULO 16 — A RONDA 4 — SOLO FINAL
 
@@ -1422,7 +1436,7 @@ Microfone Contextual do Apresentador (adoptado em 23 Jul): fora dos momentos de 
 
 Independentemente do mercado, o apresentador deve transmitir entusiasmo e paixão pela música, preservando a identidade unificada do formato "Music Box". 
 
-## 18.7 Apresentação da Music Box Seguinte (activado em 31 Ago 2026 — descritivo passa a obrigatório, ver 30.5)
+## 18.7 Apresentação da Music Box Seguinte (activado em 31 Ago 2026 — descritivo passa a obrigatório, ver 30.5; revisto em 5 Out 2026)
 
 Identificada durante a produção do piloto a necessidade de o apresentador anunciar cada Music Box antes de esta começar — a apresentação acontece sempre na transição ou no fecho do momento anterior, nunca sobrepondo o silêncio da Faixa seguinte (ver 18.5, Microfone Contextual).
 
@@ -1434,6 +1448,10 @@ Duração: breve — poucos segundos, suficiente para gerar antecipação sem qu
 
 **Actualização (31 Ago 2026)**: este requisito deixa de estar pendente de desenvolvimento. O campo `descritivo_apresentador` (o texto-base de onde o apresentador extrai o anúncio) passa a ser um metadado obrigatório de toda a Playlist, nova ou já existente no catálogo — ver 30.5 para a decisão fechada e o plano de preenchimento retroactivo. Os textos concretos de apresentação para cada Universo/Playlist do catálogo continuam a ser desenvolvidos pela Curadoria de Memória Auditiva (Cap. 15), mas o campo em si deixa de ser opcional no schema.
 
+**Regra fechada — descritivos sem spoilers (revisto em 5 Out 2026, ver 15.6)**: o descritivo do apresentador evoca o universo da Playlist (época, ambiente, tema) sem nunca nomear o título, o artista, a obra (filme, série, jogo) ou a pessoa de qualquer Faixa ou do Mosaico da própria Playlist. Uma pista vaga é aceitável; uma pista que identifique directamente a resposta não.
+
+**Ferramenta de pré-visualização (revisto em 5 Out 2026)**: na aplicação de jogo, um botão manual "🔊 Apresentação" permite à régie ouvir uma narração do `descritivo_apresentador` antes do episódio, tocando/parando livremente, sem nunca bloquear o arranque da Playlist (ver 19.1, PLAYLIST_START). A narração usada nesta fase de protótipo é sintetizada por edge-tts (voz Duarte, pt-PT) — **esta voz não está licenciada para emissão real**; antes de qualquer gravação definitiva é necessária uma voz devidamente licenciada ou um locutor real. Na emissão real, a apresentação continua a ser sempre feita em directo pelo apresentador humano (ver corpo desta secção) — o botão é só uma ferramenta de ensaio da produção.
+
 # CAPÍTULO 19 — O ESTÚDIO
 
 *"Arquitetura física e tecnológica: O Motor de Jogo no palco."*
@@ -1444,7 +1462,7 @@ O controlo do ritmo do episódio assenta na emissão automática ou manual deste
 
 NEW_SLOT: Comando de reset global que encerra o ciclo anterior, limpa as penalizações de MUTE (excepto a penalização prolongada de quem errou na Faixa imediatamente anterior — ver 5.5, 5.9 e 10.6), devolve os painéis elegíveis ao estado Azul (LIVE) e inicia a reprodução do áudio da Faixa seguinte.
 
-BONUS_MODE: Disparado no milissegundo em que um concorrente acerta no áudio numa Faixa elegível (Universo temático, Faixa 3 ou 6 — ver 3.6 e 5.3), alterando o seu posto para o estado Verde (BÓNUS) e abrindo a janela editorial da Pergunta Bónus.
+BONUS_MODE (revisto em 5 Out 2026): Disparado no milissegundo em que um concorrente acerta no áudio numa Faixa elegível — ver 3.6 e 5.3: nos Universos temáticos (família Especiais), a Pergunta Bónus abre nas Faixas 3 e 6; nos Universos musicais (Décadas e Estilos), abre uma única vez por Playlist, na Faixa 4, com perguntas sobre a própria música (ano, álbum, história da canção ou curiosidade do artista) — a pergunta nunca pode revelar outra Faixa da Playlist nem o Mosaico, e é anunciada por um sinal sonoro curto (`efeitos/bonus.wav`). Em qualquer dos casos, altera o posto do vencedor para o estado Verde (BÓNUS) e abre a janela editorial da Pergunta Bónus.
 
 FINAL_SOLO_START: Comando executado no arranque da Ronda 4 que reconfigura o Motor para o modo a solo, desativa a rotina de MUTE e ativa a árvore financeira parametrizável de 9 Faixas da Playlist de Elite.
 
@@ -1762,9 +1780,9 @@ Qualquer erro identificado durante testes de produção — técnico ou editoria
 
 Antes de encerrar qualquer sessão de trabalho, a playlist ou conteúdo criado é obrigatoriamente testado na aplicação em ambiente local (http://localhost:8000). Só após verificação bem-sucedida na app é que a sessão pode ser considerada encerrada.
 
-## 27.12 Mecânica de Escolha em Dois Passos: DÉCADAS, GÉNEROS ou ESPECIAIS Primeiro (actualizado 28 Ago 2026)
+## 27.12 Mecânica de Escolha em Dois Passos: DÉCADAS, ESTILOS ou ESPECIAIS Primeiro (actualizado 28 Ago 2026; renomeado 5 Out 2026)
 
-O ecrã de selecção de universo organiza-se em dois passos obrigatórios. Primeiro passo: o concorrente escolhe a família — agora as três, em pé de igualdade: **DÉCADAS, GÉNEROS ou ESPECIAIS**, desde a Playlist 1 de qualquer Ronda (ver 7.10 para a mudança que remove a restrição anterior de ESPECIAIS só a partir da Ronda 2). Segundo passo: escolhe o universo específico dentro dessa família. O painel ilumina apenas as combinações com conteúdo disponível. A família DÉCADAS inclui os Anos 2020. A família GÉNEROS inclui Dance & Electronica com extensão a Synthwave, Darkwave e Chillwave.
+O ecrã de selecção de universo organiza-se em dois passos obrigatórios. Primeiro passo: o concorrente escolhe a família — agora as três, em pé de igualdade: **DÉCADAS, ESTILOS ou ESPECIAIS**, desde a Playlist 1 de qualquer Ronda (ver 7.10 para a mudança que remove a restrição anterior de ESPECIAIS só a partir da Ronda 2). Segundo passo: escolhe o universo específico dentro dessa família. O painel ilumina apenas as combinações com conteúdo disponível. A família DÉCADAS inclui os Anos 2020. A família ESTILOS inclui Dance & Electronica com extensão a Synthwave, Darkwave e Chillwave.
 
 ## 27.14 Pesquisa Geral na Web como Último Recurso da Cascata de Imagens (adoptado em 27 Ago 2026)
 
@@ -1776,7 +1794,7 @@ Nota de implementação: uma tentativa anterior de pesquisa geral (Bing) ficou s
 
 ## 27.14b Classificação de Playlists Geradas a partir de uma Faixa-Semente (adoptado em 28 Ago 2026)
 
-Contexto: quando uma Playlist nasce da escolha de uma única faixa-semente e o motor de recomendação (ver 28.6, Motor 2) sugere faixas relacionadas, o resultado tende naturalmente a atravessar várias Décadas e/ou Géneros — o que é positivo para a descoberta musical, mas colide com o mecanismo de escolha de Universo do jogo (ver 27.12), que assume 1 Playlist = 1 Universo.
+Contexto: quando uma Playlist nasce da escolha de uma única faixa-semente e o motor de recomendação (ver 28.6, Motor 2) sugere faixas relacionadas, o resultado tende naturalmente a atravessar várias Décadas e/ou Estilos — o que é positivo para a descoberta musical, mas colide com o mecanismo de escolha de Universo do jogo (ver 27.12), que assume 1 Playlist = 1 Universo.
 
 Regra: toda a Playlist deve ter uma **etiqueta dominante única** (Década ou Género) para efeitos de classificação no motor de jogo, escolhida pelo curador com base no critério que melhor representa o conjunto — mesmo que a Playlist contenha faixas de outras décadas/géneros. Precedente já em uso: "Anos 70 — Rock" (STD.INT.70.ROC.001) está classificada apenas como Década (Anos 70), apesar de ser tematicamente um Género.
 
@@ -1784,19 +1802,19 @@ Esta regra evita duas alternativas rejeitadas: (a) permitir que uma Playlist apa
 
 Critério prático de escolha da etiqueta dominante: maioria das faixas pertence a essa Década/Género, ou o tema geral da Playlist evoca claramente esse Universo mesmo que uma ou duas faixas fujam à regra.
 
-**Refinamento — Tags secundárias internas (adoptado em 28 Ago 2026)**: a Playlist pode registar, além da etiqueta dominante (`universo_principal`), uma lista de etiquetas secundárias (`universos_secundarios`) que reflictam outras Décadas/Géneros presentes no conteúdo. Estas tags secundárias servem apenas para pesquisa e filtros dentro do Studio e para o Mapa da Biblioteca (ex: uma playlist pode contar como "tocada" numa visualização de cobertura sem contar como Universo jogável nesse Género) — nunca aparecem no ecrã de escolha de Universo do concorrente no jogo, que continua a mostrar apenas a etiqueta dominante única. Isto preserva a promessa editorial clara ao concorrente sem perder a riqueza de metadados para produção e curadoria.
+**Refinamento — Tags secundárias internas (adoptado em 28 Ago 2026)**: a Playlist pode registar, além da etiqueta dominante (`universo_principal`), uma lista de etiquetas secundárias (`universos_secundarios`) que reflictam outras Décadas/Estilos presentes no conteúdo. Estas tags secundárias servem apenas para pesquisa e filtros dentro do Studio e para o Mapa da Biblioteca (ex: uma playlist pode contar como "tocada" numa visualização de cobertura sem contar como Universo jogável nesse Estilo) — nunca aparecem no ecrã de escolha de Universo do concorrente no jogo, que continua a mostrar apenas a etiqueta dominante única. Isto preserva a promessa editorial clara ao concorrente sem perder a riqueza de metadados para produção e curadoria.
 
 ## 27.14c Taxonomia Music Box v1 — Famílias Jogáveis vs. Eixos Internos de Indexação (adoptado em 28 Ago 2026)
 
-Contexto: uma proposta externa de reorganização taxonómica (baseada em comparação com Spotify/Apple Music, discutida fora desta Bible) sugeriu 6 "Famílias": Décadas, Géneros, Geografia, Som/Performance, Ecrã, Especiais. Isto misturava dois planos distintos — taxonomia de dados e taxonomia de jogo — e foi corrigido antes de adopção.
+Contexto: uma proposta externa de reorganização taxonómica (baseada em comparação com Spotify/Apple Music, discutida fora desta Bible) sugeriu 6 "Famílias": Décadas, Estilos, Geografia, Som/Performance, Ecrã, Especiais. Isto misturava dois planos distintos — taxonomia de dados e taxonomia de jogo — e foi corrigido antes de adopção.
 
-**Decisão**: as Famílias jogáveis mantêm-se exactamente as 3 já existentes (Décadas, Géneros, Especiais — ver 7.10 e 27.12), sem alteração ao ecrã de escolha de 2 passos do concorrente nem aos 28 Universos canónicos. Geografia e Som/Performance **não** se tornam Famílias jogáveis — ficam como eixos internos de indexação, geridos via `universos_secundarios` (ver 27.14b), nunca visíveis no ecrã de escolha.
+**Decisão**: as Famílias jogáveis mantêm-se exactamente as 3 já existentes (Décadas, Estilos, Especiais — ver 7.10 e 27.12), sem alteração ao ecrã de escolha de 2 passos do concorrente nem aos 28 Universos canónicos. Geografia e Som/Performance **não** se tornam Famílias jogáveis — ficam como eixos internos de indexação, geridos via `universos_secundarios` (ver 27.14b), nunca visíveis no ecrã de escolha.
 
 Estrutura formal em 5 níveis:
 
 | Nível | Função | Exemplo |
 |---|---|---|
-| Família jogável | Aparece ao concorrente | Décadas · Géneros · Especiais |
+| Família jogável | Aparece ao concorrente | Décadas · Estilos · Especiais |
 | Universo jogável | Escolha dentro da Família | Anos 80 · Rock · Cinema |
 | Metadados internos (eixos de indexação) | Pesquisa/filtros/curadoria no Studio | Portugal · UK · Guitarra · Voz · Live |
 | Universos secundários | Relações entre conteúdos (ver 27.14b) | Rock + Portugal + Anos 80 |
@@ -1810,7 +1828,7 @@ Princípio fixo: nunca alterar códigos já em produção — a tabela completa-
 
 **Décadas** (3ª posição do ID, sem código de 3 letras dedicado): 50, 60, 70, 80, 90, 00, 10, 20, ALL.
 
-**Géneros** — já em uso: POP, ROC, MET, JAZ, BLU, SOU, HIP, DNC, LAT, CLA, SYN, AME (Americana, mantido tal como está, não fundido em "COU"). Reservados novos (ainda sem playlist): ALT (Alternative/Indie), FUK (Funk/Disco), REG (Reggae/Ska), COU (Country/Folk, distinto de AME).
+**Estilos** — já em uso: POP, ROC, MET, JAZ, BLU, SOU, HIP, DNC, LAT, CLA, SYN, AME (Americana, mantido tal como está, não fundido em "COU"). Reservados novos (ainda sem playlist): ALT (Alternative/Indie), FUK (Funk/Disco), REG (Reggae/Ska), COU (Country/Folk, distinto de AME).
 
 **Geografia** (eixo interno, não Família jogável) — já em uso: INT, PT. Reservados: BR, US, UK, ES, FR, IT, AF, JP, LATAM.
 
@@ -1904,7 +1922,7 @@ PRODUÇÃO: elegivel_mosaico (sim/não), estado (rascunho / aprovado / arquivado
 
 ## 28.3 As Três Variáveis Declaradas (adoptado em 6 Ago 2026)
 
-Quando um concorrente escolhe um Universo, o motor sorteia 3 variáveis dentro desse Universo e declara-as a todos os concorrentes antes de a Playlist começar. As 3 variáveis dependem do tipo de Universo escolhido: nas Décadas são géneros (ex: Anos 50 → Jazz · Rock & Roll · Doo-wop); nos Géneros são décadas, subgéneros ou estilos (ex: Jazz → Anos 50 · Anos 60 · Fusion); nos Solistas são estilos ou épocas; nos Especiais são subcategorias temáticas. Esta declaração é pública — todos os concorrentes entram na Playlist com o mesmo contexto.
+Quando um concorrente escolhe um Universo, o motor sorteia 3 variáveis dentro desse Universo e declara-as a todos os concorrentes antes de a Playlist começar. As 3 variáveis dependem do tipo de Universo escolhido: nas Décadas são géneros (ex: Anos 50 → Jazz · Rock & Roll · Doo-wop); nos Estilos são décadas, subgéneros ou estilos (ex: Jazz → Anos 50 · Anos 60 · Fusion); nos Solistas são estilos ou épocas; nos Especiais são subcategorias temáticas. Esta declaração é pública — todos os concorrentes entram na Playlist com o mesmo contexto.
 
 ## 28.4 Protocolo de Equilíbrio Geracional (adoptado em 6 Ago 2026)
 
@@ -2035,14 +2053,28 @@ Estas três decisões ainda não foram enviadas como instrução ao VS Code — 
 
 ## 30.7 Ativação de temBonus:true — Família Especiais (registado em 2 Set 2026)
 
-**Decisão fechada com o utilizador (AskUserQuestion, 2 Set 2026)**: o metadado `temBonus:true` (que controla se uma Playlist dispara a Pergunta Bónus, ver §3.6/§5.3) activa-se em toda a família **Especiais** — Cinema, Televisão, Videojogos, Ativadores Psicológicos, Retrato Sonoro, Cruzamento (ver §7.10 para a lista canónica desta família) — e nunca nas famílias Décadas ou Géneros.
+**Decisão fechada com o utilizador (AskUserQuestion, 2 Set 2026)**: o metadado `temBonus:true` (que controla se uma Playlist dispara a Pergunta Bónus, ver §3.6/§5.3) activa-se em toda a família **Especiais** — Cinema, Televisão, Videojogos, Ativadores Psicológicos, Retrato Sonoro, Cruzamento (ver §7.10 para a lista canónica desta família) — e nunca nas famílias Décadas ou Estilos.
 
-**Justificação editorial**: alinha directamente com a regra já fechada em §3.6 — "a Fase de Pergunta Bónus é exclusiva dos Universos temáticos... Nos Universos puramente musicais... a Playlist corre sem interrupções". A família Especiais é, por definição, o conjunto dos Universos temáticos (eventos, memórias afectivas, media, cruzamentos conceptuais) onde faz sentido explorar uma curiosidade associada à Faixa; Décadas e Géneros são estruturalmente puramente musicais. Esta decisão não cria regra nova — apenas resolve, ao nível dos dados (`temBonus:true` na Playlist), uma correspondência 1:1 com a família jogável já definida na arquitectura de §7.10/§27.12, sem ambiguidade Playlist a Playlist.
+**Justificação editorial**: alinha directamente com a regra já fechada em §3.6 — "a Fase de Pergunta Bónus é exclusiva dos Universos temáticos... Nos Universos puramente musicais... a Playlist corre sem interrupções". A família Especiais é, por definição, o conjunto dos Universos temáticos (eventos, memórias afectivas, media, cruzamentos conceptuais) onde faz sentido explorar uma curiosidade associada à Faixa; Décadas e Estilos são estruturalmente puramente musicais. Esta decisão não cria regra nova — apenas resolve, ao nível dos dados (`temBonus:true` na Playlist), uma correspondência 1:1 com a família jogável já definida na arquitectura de §7.10/§27.12, sem ambiguidade Playlist a Playlist.
 
-**Âmbito de aplicação**: aplica-se a todas as Playlists já existentes no catálogo cujo Universo pertença à família Especiais, e a todas as novas Playlists criadas nesses Universos daqui em diante. Décadas e Géneros mantêm sempre `temBonus:false` (ou o campo ausente/omitido, consoante o schema actual).
+**Âmbito de aplicação**: aplica-se a todas as Playlists já existentes no catálogo cujo Universo pertença à família Especiais, e a todas as novas Playlists criadas nesses Universos daqui em diante. Décadas e Estilos mantêm sempre `temBonus:false` (ou o campo ausente/omitido, consoante o schema actual) — este campo específico não é usado pela regra de 5 Out 2026 que passa a dar 1 Pergunta Bónus por Playlist a estas duas famílias (Faixa 4, mecanismo separado por família — ver §3.6/§5.3/§19.1); o que este parágrafo descreve é apenas o campo `temBonus:true` em si, não a existência de Pergunta Bónus nessas famílias.
 
 **Estado de implementação (2 Set 2026)**: decisão registada na Bíblia; instrução de aplicação aos dados (`playlists.json`) enviada ao VS Code — ver Status.md para o ponto de situação e confirmação de execução.
 
 ## 30.8 Normalização de Nomenclatura — Trecho A / Trecho B (registado em 2 Set 2026)
 
 **Decisão fechada com o utilizador**: a Bíblia usava dois termos para os mesmos dois excertos de áudio de cada Faixa — "Trecho 1"/"Trecho 2" (sobretudo no Capítulo 13, Fast Forward) e "Trecho A"/"Trecho B" (§27.4, §28.2, §5.4b). Fica normalizado definitivamente para **Trecho A / Trecho B** em toda a Bíblia — "Trecho 1"/"Trecho 2" deixa de ser usado, incluindo no Capítulo 13. A mesma normalização foi pedida para o Studio e para a aplicação de jogo (código e UI), para eliminar a inconsistência de nomenclatura entre a documentação e o produto.
+
+## 30.9 Reconciliação com DECISIONS.md — V3.30 (registado em 5 Out 2026)
+
+Primeira reconciliação formal entre a Bíblia e o registo técnico de decisões do projecto (`DECISIONS.md`), cobrindo o intervalo desde a última entrada anterior desta Bíblia (§30.8, 2 Set 2026) até 5 Out 2026. Decisões aplicadas, cada uma marcada "(revisto em 5 Out 2026)" no respectivo capítulo:
+
+- **§5.4b** — janela de decisão do "Encore" (1,5s, verde/vermelho, nunca toca o Trecho B automaticamente); volumes da música de fundo (0.25 durante o anúncio do nome, 0.45 na janela do Encore, 0.75 na Faixa seguinte) e pausa de 1,5s antes da janela do Encore (`PAUSA_ANTES_ENCORE_MS`); anúncio de voz pós-acerto em 3 ficheiros encadeados (nome do artista — voz Alex, rate 205 — → "In the Box!!" → roar); pronúncia dos nomes por língua (PT/BR) registada como **em curso**, sem regra fechada.
+- **§3.6, §5.3, §19.1** — a Pergunta Bónus deixa de ser exclusiva da família Especiais (Faixas 3/6): as famílias Décadas e Estilos passam a ter 1 Pergunta Bónus por Playlist, na Faixa 4, sobre a própria música, nunca revelando outra Faixa ou o Mosaico, anunciada por sinal sonoro (`efeitos/bonus.wav`).
+- **§18.7, §15.6 (nova)** — regra geral de descritivos sem spoilers: o descritivo do apresentador evoca o universo da Playlist sem nunca nomear o título, artista, obra ou pessoa de qualquer Faixa ou do Mosaico da própria Playlist; ferramenta de pré-visualização "🔊 Apresentação" (edge-tts, voz Duarte) registada explicitamente como protótipo, não licenciada para emissão.
+- **Em todo o documento** (excepto onde "género" é usado no sentido geral de estilo musical, não como nome de família) — "Géneros" passa a "Estilos": §7.10, §27.12, §27.14b, §27.14d, §30.7.
+- **§15.4** — "Trechos 1 e 2" corrigido para "Trecho A / Trecho B", alinhando com a normalização já fechada em §30.8 (lapso da redacção anterior).
+
+**Deixado deliberadamente de fora desta reconciliação**: anúncio de voz no acerto do Mosaico — pedido recebido mas ainda sem decisão nem implementação, não há nada para reconciliar; e a contradição entre §15.5 ("Calibragem 1-5") e §27.13 (3 níveis) — o código e os dados usam de facto uma escala de 1 a 5 (`dificuldade`, confirmado em `playlists.json` e na UI, "Dif. X/5"), mas a correcção de §27.13 fica pendente de decisão do utilizador.
+
+**Versão do documento**: sobe para **V3.30** nesta reconciliação (ver cabeçalho).
