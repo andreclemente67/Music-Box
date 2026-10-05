@@ -34,7 +34,16 @@
     "universos_secundarios": [
       "Reino Unido",
       "Synth"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Don't You Want Me' dos The Human League, tornando-se um enorme êxito natalício no Reino Unido?",
+        "resposta_bonus": "1981",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.10.MIX.001": {
     "tipo": "standard",
@@ -67,6 +76,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Blinding Lights' de The Weeknd?",
+        "resposta_bonus": "2019",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.US.ALL.AME.001": {
@@ -104,7 +122,16 @@
     "universos_secundarios": [
       "Country/Folk",
       "Acústico"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que álbum dos Creedence Clearwater Revival foi originalmente lançada a canção 'Have You Ever Seen the Rain', em 1971?",
+        "resposta_bonus": "Pendulum",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.SYN.001": {
     "tipo": "standard",
@@ -140,7 +167,16 @@
     },
     "universos_secundarios": [
       "França"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o álbum 'Endless Summer', dos The Midnight, que inclui a faixa 'Sunset'?",
+        "resposta_bonus": "2016",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.BR.ALL.MIX.001": {
     "tipo": "standard",
@@ -173,6 +209,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado 'O Leãozinho', a famosa canção de Caetano Veloso dedicada ao seu filho?",
+        "resposta_bonus": "1977",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.ALL.GTR.001": {
@@ -206,6 +251,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o álbum de estreia homónimo dos Van Halen, que contém a faixa instrumental 'Eruption'?",
+        "resposta_bonus": "1978",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.ALL.BAT.001": {
@@ -242,7 +296,16 @@
     },
     "universos_secundarios": [
       "Reino Unido"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "John Bonham gravou 'Moby Dick' para o segundo álbum dos Led Zeppelin, lançado em 1969. Como se chama esse álbum?",
+        "resposta_bonus": "Led Zeppelin II",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.PT.ALL.MIX.001": {
     "tipo": "standard",
@@ -275,6 +338,22 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "O Rádio Macau foi uma das bandas mais influentes do rock alternativo português dos anos 90. Em que ano foi lançado o álbum 'Sou Teu' (também conhecido como 'Mesmo Assim'), que inclui a faixa 'Cantiga d'Amor (Mesmo Assim)'?",
+        "resposta_bonus": "1996",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "O álbum de estreia de Dulce Pontes, lançado em 1992 e que inclui a icónica 'Canção do Mar', chama-se como?",
+        "resposta_bonus": "Lágrimas",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.ALL.CIN.001": {
@@ -344,6 +423,22 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Os Heróis do Mar foram o grupo que representou Portugal na Eurovisão de 1983 com a canção 'É o Amor'. Em que ano lançaram o álbum de estreia homónimo 'Heróis do Mar', onde ficou registada a sua sonoridade característica inspirada na estética nacionalista portuguesa?",
+        "resposta_bonus": "1982",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "Fernando Tordo representou Portugal no Festival Eurovisão da Canção em 1973 com a canção 'Tourada'. Em que cidade europeia se realizou esse festival?",
+        "resposta_bonus": "Luxemburgo",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.PT.ALL.BAT.001": {
@@ -377,6 +472,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "De que artista é a faixa 'Capitão Romance'?",
+        "resposta_bonus": "Kinörm",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "RET.INT.ALL.VOZ.001": {
@@ -566,7 +670,23 @@
     "universos_secundarios": [
       "Ambient",
       "Reino Unido"
-    ]
+    ],
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "\"By This River\" foi lançada em 1977 num álbum de ambient/art rock gravado em colaboração com dois músicos alemães, Cluster (Dieter Moebius e Hans-Joachim Roedelius). Como se chama esse álbum?",
+        "resposta_bonus": "\"Before and After Science\" — não, na verdade \"By This River\" aparece no álbum \"Before and After Science\" (1977), mas foi co-escrita com Moebius e Roedelius e reflecte a influência da cena krautrock alemã. O álbum chama-se \"Before and After Science\".",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "O álbum homónimo de onde vem a faixa 'On Land' foi lançado em que ano?",
+        "resposta_bonus": "1982. O álbum '4 (On Land)' foi lançado em 1982 e é o quarto e último volume da série de álbuns de música ambiente do seu autor, sendo frequentemente descrito como o mais sombrio e evocativo da colecção.",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.10.SYN.001": {
     "tipo": "standard",
@@ -603,7 +723,16 @@
     "universos_secundarios": [
       "Reino Unido",
       "Alternative/Indie"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que álbum de James Blake foi lançada a faixa 'Retrograde', em 2013?",
+        "resposta_bonus": "Overgrown",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.10.SYN.002": {
     "tipo": "standard",
@@ -639,7 +768,16 @@
     },
     "universos_secundarios": [
       "Alternative/Indie"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que álbum de LCD Soundsystem foi incluída a faixa 'Home'?",
+        "resposta_bonus": "'Home' foi incluída no álbum 'American Dream', lançado em 2017 — o regresso da banda após o hiato que se seguiu ao concerto de despedida no Madison Square Garden em 2011.",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.70.ROC.001": {
     "tipo": "standard",
@@ -672,6 +810,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que álbum dos Led Zeppelin foi originalmente lançada a canção 'Stairway to Heaven', em 1971?",
+        "resposta_bonus": "Led Zeppelin IV (também conhecido como 'Four Symbols' ou 'Zoso')",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "LOGO-001": {
@@ -739,7 +886,16 @@
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
     },
     "descritivo_apresentador": "Os hinos que definiram o que significa \"clássico do rock\" — estão todos aqui, os riffs lendários que qualquer guitarra de garagem já tentou copiar pelo menos uma vez. Fácil de reconhecer, difícil de não cantar em voz alta.",
-    "nota_curadoria": "Cânone do rock clássico (predominância 1970s, uma excepção 1980s com Journey). Critério de selecção: faixas com estatuto de \"hino\" cultural consensual, filtradas por ubiquidade em rádio/cultura popular ao longo de várias décadas — não por critério cronológico estrito nem por representatividade equilibrada de bandas. Dificuldade 1/5: o género com maior taxa de reconhecimento transversal de todo o catálogo. Memory Trigger: riff de guitarra ou abertura instrumental icónica, presente nas sete faixas sem excepção."
+    "nota_curadoria": "Cânone do rock clássico (predominância 1970s, uma excepção 1980s com Journey). Critério de selecção: faixas com estatuto de \"hino\" cultural consensual, filtradas por ubiquidade em rádio/cultura popular ao longo de várias décadas — não por critério cronológico estrito nem por representatividade equilibrada de bandas. Dificuldade 1/5: o género com maior taxa de reconhecimento transversal de todo o catálogo. Memory Trigger: riff de guitarra ou abertura instrumental icónica, presente nas sete faixas sem excepção.",
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Hotel California' dos Eagles?",
+        "resposta_bonus": "1977",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.POP.001": {
     "tipo": "standard",
@@ -775,7 +931,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançada a icónica canção 'Dancing Queen' pelo grupo sueco ABBA?",
+        "resposta_bonus": "1976",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.MET.001": {
     "tipo": "standard",
@@ -811,7 +976,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que álbum dos Megadeth foi lançada a faixa 'Symphony of Destruction' em 1992?",
+        "resposta_bonus": "Countdown to Extinction",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.TV.001": {
     "tipo": "standard",
@@ -847,7 +1021,23 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "O tema de 'The X-Files' tornou-se um sucesso inesperado nas tabelas musicais quando foi lançado como single em 1996. Em que país chegou ao Top 3, tornando-se um fenómeno nas rádias?",
+        "resposta_bonus": "Reino Unido (chegou ao número 2 nas tabelas britânicas)",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "Murray Gold compôs a música-tema para o relançamento de Doctor Who em 2005. Para que canal de televisão britânico foi composta esta icónica banda sonora?",
+        "resposta_bonus": "BBC",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.GAM.001": {
     "tipo": "standard",
@@ -883,7 +1073,23 @@
     },
     "universos_secundarios": [
       "Instrumental"
-    ]
+    ],
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Em que videojogo surgiu originalmente 'One-Winged Angel', a icónica composição de Nobuo Uematsu?",
+        "resposta_bonus": "Final Fantasy VII (1997)",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "A faixa 'BFG Division' de Mick Gordon foi lançada em 2016 como parte da banda sonora de um famoso jogo de ação. Qual é o nome desse jogo?",
+        "resposta_bonus": "DOOM (2016)",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.NAT.001": {
     "tipo": "standard",
@@ -916,6 +1122,22 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Em que ano foi lançada originalmente a canção 'White Christmas' por Bing Crosby?",
+        "resposta_bonus": "1942",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "A canção 'Do They Know It's Christmas?' foi gravada em 1984 por um supergrupo de artistas britânicos e irlandeses chamado Band Aid, com o objetivo de angariar fundos para combater a fome em que país africano?",
+        "resposta_bonus": "Etiópia",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.90.DNC.001": {
@@ -949,6 +1171,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Children' de Robert Miles?",
+        "resposta_bonus": "1995",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.50.MIX.001": {
@@ -985,7 +1216,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Great Balls of Fire' de Jerry Lee Lewis?",
+        "resposta_bonus": "1957",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.60.MIX.001": {
     "tipo": "standard",
@@ -1021,7 +1261,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Like a Rolling Stone' de Bob Dylan?",
+        "resposta_bonus": "1965",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.00.MIX.001": {
     "tipo": "standard",
@@ -1057,7 +1306,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Seven Nation Army' dos The White Stripes?",
+        "resposta_bonus": "2003",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.20.MIX.001": {
     "tipo": "standard",
@@ -1093,7 +1351,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançada a canção 'Anti-Hero' de Taylor Swift?",
+        "resposta_bonus": "2022",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.JAZ.001": {
     "tipo": "standard",
@@ -1129,7 +1396,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que álbum de Miles Davis, lançado em 1959 e considerado um dos mais influentes da história do jazz, aparece a faixa 'So What'?",
+        "resposta_bonus": "Kind of Blue",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.BLU.001": {
     "tipo": "standard",
@@ -1165,7 +1441,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "T-Bone Walker gravou 'Stormy Monday' em 1947, tornando-se um dos blues mais influentes de todos os tempos. Qual é o título completo e oficial desta canção, frequentemente confundido por ser abreviado?",
+        "resposta_bonus": "O título completo e oficial é 'Call It Stormy Monday (But Tuesday Is Just as Bad)'.",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.SOU.001": {
     "tipo": "standard",
@@ -1202,7 +1487,16 @@
     "universos_secundarios": [
       "Estados Unidos",
       "Funk/Disco"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançada a canção 'Lean on Me' por Bill Withers?",
+        "resposta_bonus": "1972",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.HIP.001": {
     "tipo": "standard",
@@ -1238,7 +1532,16 @@
     },
     "universos_secundarios": [
       "Estados Unidos"
-    ]
+    ],
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'In Da Club' de 50 Cent?",
+        "resposta_bonus": "2003",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
   },
   "STD.INT.ALL.CLA.001": {
     "tipo": "standard",
@@ -1271,6 +1574,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi publicada pela primeira vez a suite para piano 'Suite bergamasque', que contém o famoso andamento 'Clair de Lune' de Claude Debussy?",
+        "resposta_bonus": "1905",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.ALL.LAT.001": {
@@ -1304,6 +1616,15 @@
       "ajustada_segundos": 330,
       "ajustada_formatada": "5m 30s",
       "nota": "Pura = 7×22s (12s TrechoA+8s gap FF+10s TrechoB, arquitectura v2.0) + 30s Mosaico contínuo (regra 27.7) = 184s. Ajustada = referência Bíblia 26.1 (~5-6min incluindo escolha de Universo, respostas e transições) — ponto médio."
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Vivir Mi Vida' de Marc Anthony?",
+        "resposta_bonus": "2013",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.PT.70.WLD.001": {
@@ -1330,6 +1651,22 @@
       "categoria": "Compositor",
       "pessoa": "Víctor Jara",
       "id": "mercedes_sosa_te_recuerdo_amanda"
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Adriano Correia de Oliveira, conhecido como 'Adriano', gravou 'Trova do Vento que Passa', uma canção com letra de Manuel Alegre. Em que década foi lançada esta canção, que se tornou um símbolo da resistência ao regime do Estado Novo em Portugal?",
+        "resposta_bonus": "Na década de 1960 (1965).",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "Em que ano foi lançada a canção 'Venham Mais Cinco' de Sérgio Godinho?",
+        "resposta_bonus": "1974",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.PT.ALL.FAD.001": {
@@ -1357,6 +1694,22 @@
       "categoria": "Compositor",
       "pessoa": "Alain Oulman",
       "id": "carlos_do_carmo_estranha_forma_de_vida"
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Sérgio Godinho é um cantor e compositor português nascido em que cidade?",
+        "resposta_bonus": "Porto",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "Rui Veloso é frequentemente referido como o pai do rock português. Em que ano lançou o álbum de estreia 'Ar de Rock', que incluía a icónica faixa 'Eléctrico 28'?",
+        "resposta_bonus": "1980",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.PT.ALL.WLD.001": {
@@ -1384,6 +1737,22 @@
       "categoria": "Compositor",
       "pessoa": "Manuel Alegre",
       "id": "luis_cilia_trova_do_vento_que_passa"
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Amália Rodrigues é amplamente considerada a maior embaixadora do fado no mundo. Em que década nasceu esta icónica cantora portuguesa, que viria a tornar-se conhecida internacionalmente como a 'Rainha do Fado'?",
+        "resposta_bonus": "Amália Rodrigues nasceu na década de 1920, mais precisamente a 23 de julho de 1920, em Lisboa.",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "Peret é considerado o pai de um género musical que fusiona o flamenco com ritmos caribenhos. Como se chama esse género?",
+        "resposta_bonus": "Rumba catalana",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   },
   "STD.INT.ALL.MIX.005": {
@@ -1410,6 +1779,57 @@
       "categoria": "Compositor",
       "pessoa": "Maurice Jarre",
       "id": "maurice_jarre_lara_s_theme_somewhere_m"
+    },
+    "perguntas_bonus": {
+      "3": {
+        "pergunta_bonus": "Em que álbum dos Oasis foi originalmente lançada a canção 'Wonderwall', em 1995?",
+        "resposta_bonus": "(What's the Story) Morning Glory?",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      },
+      "6": {
+        "pergunta_bonus": "'A Horse With No Name' foi o primeiro single de grande sucesso do grupo America, atingindo o número 1 nos EUA em 1972. Em que álbum de estreia da banda foi incluída esta faixa?",
+        "resposta_bonus": "America (o álbum de estreia homónimo da banda, lançado em 1971)",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
+    }
+  },
+  "STD.INT.ALL.POP.002": {
+    "tipo": "standard",
+    "nome": "Há Magia no Ar",
+    "descritivo": "",
+    "descritivo_apresentador": "Preparem-se para uma viagem encantada onde cada música esconde uma ligação mágica! Será que conseguem descobrir o fio que une tudo isto?",
+    "nota_curadoria": "Playlist construída em torno do elo 'disney' explorando múltiplas dimensões: bandas sonoras icónicas, artistas que colaboraram com a Disney, músicas cujos títulos remetem para personagens ou filmes, referências culturais indirectas e imaginário partilhado. Evitou-se o óbvio 'compilação de clássicos Disney' — a curadoria aposta em diversidade de géneros e décadas para surpreender jogadores de diferentes gerações.",
+    "playlistCodigo": "STD.INT.ALL.POP.002",
+    "feedback_id": "fb_045",
+    "universo": "Pop",
+    "temBonus": false,
+    "dificuldade": 3,
+    "musicas": [
+      "peabo_bryson_regina_bell_a_whole_new_world",
+      "vanessa_williams_colors_of_the_wind",
+      "samuel_e_wright_kiss_the_girl",
+      "toni_basil_mickey",
+      "jerry_orbach_be_our_guest",
+      "phil_collins_you_ll_be_in_my_heart",
+      "christina_aguilera_reflection"
+    ],
+    "mosaico": {
+      "categoria": "Compositor",
+      "pessoa": "Randy Newman",
+      "id": "randy_newman_you_ve_got_a_friend_in_m"
+    },
+    "perguntas_bonus": {
+      "4": {
+        "pergunta_bonus": "Em que ano foi lançado o single 'Mickey' de Toni Basil?",
+        "resposta_bonus": "1981",
+        "origem": "ia",
+        "revisto": false,
+        "data": "2026-10-05"
+      }
     }
   }
 }
