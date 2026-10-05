@@ -712,6 +712,14 @@ const VOL_DUCK = 0.25;
 const VOL_ENCORE = 0.45;
 const FADE_DOWN_MS = 300;
 const FADE_UP_MS = 600;
+// 2026-10-05, pedido do utilizador: pausa entre o fim do "In the Box!!"
+// (ou do roar, se existir) e o que vier a seguir — hoje só há um "a
+// seguir" possível (a janela de decisão do Encore, SEMPRE mostrada por
+// testeMostrarJanelaDecisaoTrechoB() — não há hoje nenhum caminho "sem
+// Encore" que vá direito para a Faixa seguinte); a música mantém-se a
+// tocar (em VOL_ENCORE) durante esta pausa, nunca pára. Ver
+// testeTocarSequenciaSom()/testeTimeoutPreEncore.
+const PAUSA_ANTES_ENCORE_MS = 1500;
 
 // Fade de volume com requestAnimationFrame — cancelável: cada chamada
 // gera um "token" novo; um fade anterior ainda em curso vê que o seu
@@ -1674,6 +1682,10 @@ function esconderMomentoResposta() {
   // enquanto a janela/Trecho B ainda estava em curso.
   clearTimeout(testeTimeoutJanelaDecisao);
   clearTimeout(testeTimeoutCorteTrechoB);
+  // 2026-10-05, pedido do utilizador: cancela também a pausa de 1,5s
+  // antes do Encore (PAUSA_ANTES_ENCORE_MS) — sem isto, a janela podia
+  // aparecer depois de o jogador já ter avançado por outra via.
+  clearTimeout(testeTimeoutPreEncore);
   testeTrechoBEscolhido = false;
   testeAudioRevelacaoActual = null;
   const btnTrechoB = document.getElementById('btn-teste-trecho-b');
@@ -3029,6 +3041,10 @@ const TESTE_JANELA_DECISAO_TRECHO_B_MS = 1500;
 const TESTE_PAUSA_VERMELHO_MS = 400;
 let testeTimeoutJanelaDecisao = null;
 let testeTrechoBEscolhido = false;
+// Timer da pausa de 1,5s antes da janela do Encore aparecer (ver
+// PAUSA_ANTES_ENCORE_MS) — cancelado em esconderMomentoResposta() se o
+// jogador avançar/houver reset antes de disparar.
+let testeTimeoutPreEncore = null;
 
 function testeMostrarJanelaDecisaoTrechoB() {
   testeTrechoBEscolhido = false;
@@ -3137,7 +3153,7 @@ function testeTocarSequenciaSom(trackId) {
   const terminarSequencia = (motivo) => {
     if (sequenciaTerminada) return; // guarda contra 'ended'+catch duplicados
     sequenciaTerminada = true;
-    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade para VOL_ENCORE + janela de decisão do Trecho B a seguir');
+    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade para VOL_ENCORE + pausa de ' + PAUSA_ANTES_ENCORE_MS + 'ms antes da janela do Encore');
     testeAudioRevelacaoActual = null;
     // 2026-10-05, pedido do utilizador ("meio-termo"): já não sobe logo a
     // VOL_MUSICA aqui — fica em VOL_ENCORE (intermédio) durante a pausa e
@@ -3146,7 +3162,15 @@ function testeTocarSequenciaSom(trackId) {
     // testeArrancarTrechoBSemFF()) — se não for escolhido, a próxima
     // Faixa repõe VOL_MUSICA directamente em iniciarFaixa(), sem fade.
     fadeVolume(audio, VOL_ENCORE, FADE_DOWN_MS);
-    testeMostrarJanelaDecisaoTrechoB();
+    // 2026-10-05, pedido do utilizador: a janela do Encore só aparece
+    // PAUSA_ANTES_ENCORE_MS depois do fim do último som — a música
+    // (já em VOL_ENCORE) continua a tocar normalmente durante esta
+    // pausa, nunca pára. Cancelado em esconderMomentoResposta() se o
+    // jogador avançar/houver reset antes de disparar (ver
+    // testeTimeoutPreEncore) — a janela nunca aparece depois disso.
+    testeTimeoutPreEncore = setTimeout(() => {
+      testeMostrarJanelaDecisaoTrechoB();
+    }, PAUSA_ANTES_ENCORE_MS);
   };
 
   const tocarRoarOuTerminar = () => {
