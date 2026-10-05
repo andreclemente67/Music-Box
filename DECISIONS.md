@@ -1386,3 +1386,34 @@ do utilizador, se existir em `efeitos/in_the_box_takes/`, ou TTS
 processado — Passo 2). Roar ainda não existe no projecto (pasta
 `efeitos/` por criar) — utilizador vai obter um efeito livre (Pixabay/
 Freesound CC0), nada foi descarregado automaticamente.
+
+## 2026-10-05 — Narração do descritivo: edge-tts é só para protótipo
+
+O `say` do macOS não tem nenhuma voz masculina em português instalada
+(só Catarina/Joana pt_PT e Luciana pt_BR, todas femininas, todas
+"compact" — confirmado com `say -v '?'`). O utilizador quer uma voz
+masculina para a narração do `descritivo_apresentador`.
+
+Instalado **edge-tts** (pacote Python, vozes neurais da Microsoft — o
+mesmo motor do "Ler em voz alta" do Edge), num venv isolado do projecto
+(`.venv-tts/`, fora do git) para não tocar no Python do sistema
+("externally-managed-environment", PEP 668). Comparadas duas vozes
+masculinas: `pt-PT-DuarteNeural` e `pt-BR-AntonioNeural` (amostras em
+`propostas/desc_duarte.wav`/`desc_antonio.wav` + nomes de teste com
+Duarte).
+
+**AVISO — só para protótipo, não para a versão final/emissão real**:
+- edge-tts precisa de ligação à internet em cada geração — cada frase é
+  enviada ao serviço da Microsoft pela rede, não há modo offline.
+- Os termos de uso para uso comercial/emissão de TV **não estão
+  confirmados** — é um projecto open-source que reaproveita uma API não
+  documentada oficialmente para esse fim pela Microsoft; o estatuto
+  legal para este tipo de uso não foi verificado.
+- A versão final (quando o programa for para emissão real) precisa de
+  uma voz devidamente licenciada para esse fim (ex. ElevenLabs, com
+  licença comercial) ou de um locutor real — decisão a tomar nessa
+  altura, não agora.
+
+Escolha da voz (Duarte/Antonio/outra) ainda pendente — amostras geradas,
+a aguardar confirmação do utilizador antes de qualquer geração em massa
+ou ligação ao jogo.
