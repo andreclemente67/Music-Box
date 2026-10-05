@@ -237,6 +237,17 @@
   #teste-lista .decada-row { background:none; border:none; border-radius:0; padding:8px 44px 8px 14px; }
   #teste-lista .decada-row:hover { background:var(--bg3); }
 
+  /* "Mostrar/Esconder faixas e mosaico" (2026-10-05, pedido do
+     utilizador) — ecrã "Verificação rápida": a lista mostra as respostas
+     (título — artista), começa sempre fechada, nunca guarda estado entre
+     playlists (ver mostrarFaixasPlaylist()). Mesmo chevron/rotação do
+     painel das Décadas (DECADA_CHEVRON_SVG/.decada-row-chevron). */
+  .teste-faixas-toggle { display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; }
+  .teste-faixas-toggle-chevron { display:flex; align-items:center; color:var(--text3); flex-shrink:0; transition:transform 0.2s ease; }
+  .teste-faixas-toggle[aria-expanded="true"] .teste-faixas-toggle-chevron { transform:rotate(180deg); }
+  .teste-faixas-wrap { display:flex; flex-direction:column; gap:8px; }
+  .teste-faixas-wrap[hidden] { display:none; }
+
   /* Secções "Todas as playlists" agrupadas por família (Décadas/Géneros/
      Especiais — mesma taxonomia de familiaDeChave(), já usada na escolha
      real de Universo em jogo). Ver mostrarTesteLista(). Cada secção é um
@@ -4252,12 +4263,34 @@ function mostrarFaixasPlaylist(chave) {
   btnVerif.onclick = () => { document.getElementById('start-overlay').style.display='none'; iniciarVerificacao(chave); };
   lista.appendChild(btnVerif);
 
+  // Lista de faixas + Mosaico — escondida por defeito (2026-10-05, pedido
+  // do utilizador): mostra as respostas (título — artista), por isso
+  // começa sempre fechada, nunca guarda estado entre playlists. Chevron
+  // SVG + aria-expanded, mesmo estilo do painel das Décadas
+  // (DECADA_CHEVRON_SVG, já definido acima). A "Verificação rápida"
+  // continua a funcionar com isto fechado — não depende em nada deste
+  // bloco (troca de ecrã inteiro para 'palco-faixa', ver iniciarVerificacao()).
+  const nTotalFaixasMosaico = col.musicas.length + (col.mosaico ? 1 : 0);
+  const textoFechado = 'Mostrar faixas e mosaico (' + nTotalFaixasMosaico + ')';
+  const textoAberto = 'Esconder faixas e mosaico';
+
+  const toggleFaixas = document.createElement('button');
+  toggleFaixas.className = 'teste-faixas-toggle';
+  toggleFaixas.setAttribute('aria-expanded', 'false');
+  toggleFaixas.innerHTML = '<span class="teste-faixas-toggle-texto">' + textoFechado + '</span>'
+    + '<span class="teste-faixas-toggle-chevron">' + DECADA_CHEVRON_SVG + '</span>';
+  lista.appendChild(toggleFaixas);
+
+  const faixasWrap = document.createElement('div');
+  faixasWrap.className = 'teste-faixas-wrap';
+  faixasWrap.hidden = true;
+
   // Faixas individuais
   col.musicas.forEach((m, idx) => {
     const btn = document.createElement('button');
     btn.textContent = (idx + 1) + '. ' + m.titulo + ' — ' + m.artista;
     btn.onclick = () => testarPlaylist(chave, idx + 1);
-    lista.appendChild(btn);
+    faixasWrap.appendChild(btn);
   });
 
   // Mosaico
@@ -4266,7 +4299,16 @@ function mostrarFaixasPlaylist(chave) {
   btnMosaico.textContent = '▦ Mosaico — ' + (infoM && infoM.titulo && infoM.titulo !== 'POR DEFINIR' ? infoM.titulo + ' / ' + infoM.pessoa : 'POR DEFINIR');
   btnMosaico.style.cssText = 'border-color:#5aa06a;color:#5aa06a;';
   btnMosaico.onclick = () => testarMosaico(chave);
-  lista.appendChild(btnMosaico);
+  faixasWrap.appendChild(btnMosaico);
+
+  lista.appendChild(faixasWrap);
+
+  toggleFaixas.onclick = () => {
+    const aberto = toggleFaixas.getAttribute('aria-expanded') === 'true';
+    toggleFaixas.setAttribute('aria-expanded', aberto ? 'false' : 'true');
+    faixasWrap.hidden = aberto;
+    toggleFaixas.querySelector('.teste-faixas-toggle-texto').textContent = aberto ? textoFechado : textoAberto;
+  };
 
   const voltar = document.createElement('button');
   voltar.className = 'voltar';
