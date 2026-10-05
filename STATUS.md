@@ -1,9 +1,9 @@
 # Music Box — Status
 
 ## Última actualização
-2026-10-04
+2026-10-05
 
-## 2026-10-04 — Sessão 4 Out 2026
+## 2026-10-04/05 — Sessão 4-5 Out 2026
 
 **Commits de hoje** (mais antigo → mais recente):
 - `6148955` — fix(audio): 80_01 (Take On Me, a-ha) — remove silêncio residual no início do Trecho A.
@@ -16,6 +16,16 @@
 - `1b3e16a` — UI: botão "ℹ Saber mais" compacto (ícone-só, 24×24 circular) nos cards de playlist + "Studio" renomeado para "Music Box Editor".
 - `41cbe84` — UI: ícone outline (sliders, estilo Lucide) a substituir o emoji 🎛 no botão "Music Box Editor".
 - `f67b080` — Áudio: voz Alex r205 (nome natural) + "In the Box!!" partilhado em ficheiro único, ducking com fade suave.
+- `9ab2f86` — Docs: Status — decisão final da voz pós-acerto.
+- `fda4fe0` — Fix: referências à nova pasta `voz/` + verificação única do roar (evita 404 repetido por acerto).
+- `76dd455` — UI: Décadas em painel estilo Studio (linhas densas + árvore por década) — substitui a 1ª tentativa em cards verticais, descartada sem commit.
+- `4c6cf1b` — Dados: playlist "Areias do Tempo" (Elo Deserto, `STD.INT.ALL.MIX.005`) + faixas novas — **trabalho da outra sessão, commitado por esta a pedido explícito do utilizador** (excepção pontual à separação habitual, ver nota no fim desta secção).
+- `bd1e9c9` — Dados: renomear "Anos 2010+" para "Anos 2010" em `playlists.json`/`musicbox.html`.
+- `4cf5701` — UI: filhos de grupo (painel por categoria) sem repetir o título da linha-mãe.
+- `a69ad22` — UI: Géneros e Especiais no painel estilo Studio (generalização de `af_renderPainelDecadas` → `af_renderPainelCategoria`) + limpeza de código morto (`.playlist-card`/`.categoria-carrossel`, `ordenarChavesPorFamilia()`).
+- `142d5aa` — Áudio: duck 0.25 na voz, 0.45 na janela Encore (`VOL_ENCORE`, novo), 0.75 no Trecho B — "meio-termo" entre o comportamento antigo e a proposta testada em `propostas/sample_*.wav`.
+- `d05edeb` — Tools: `gerar_vozes_nome_artista.py` (gerador reutilizável, Alex r205) + os 302 `voz/nome_*.wav` + `efeitos/in_the_box.wav` convertidos de 192kHz para 44.1kHz (sem regenerar a voz).
+- `f31857a` — Fix: favicon inline em `musicbox.html`/`musicbox_studio.html` — elimina o 404 "fantasma" (confirmado ser `/favicon.ico`, invisível aos eventos de rede do Playwright, só visível na consola).
 
 **Verificação tarefa a tarefa:**
 
@@ -24,17 +34,30 @@
 - ✅ **Voz pós-acerto — decisão final e implementada (`f67b080`)**: investigação feita — a voz é gerada **offline** com o comando `say` (macOS) + efeito festivo em `ffmpeg` (pitch/volume), **não** `speechSynthesis` do browser. Proposta de comandos embutidos `[[pbas +N]]`/`[[pmod +N]]` **ABANDONADA** — sintaxe com "+" não documentada pela Apple, comandos inválidos são ignorados em silêncio pelo motor de fala (sem erro, sem aviso). **Nova arquitectura em produção**: 3 ficheiros encadeados no browser (`testeTocarSequenciaSom()`) — `voz/nome_<id>.wav` (302 ficheiros, voz **Alex, rate 205**, tom natural, sem efeito) → pausa 120ms → `efeitos/in_the_box.wav` (ficheiro único partilhado, "In the Box!!" eufórico, voz Alex rate 235 + compressão/reverb) → `efeitos/roar.wav` (ainda não existe — sequência salta-o graciosamente até existir). Nenhuma voz "Enhanced"/"Premium" está instalada nesta máquina — todas as comparações (Alex/Samantha/Daniel/Oliver) foram com vozes "compact". 302 ficheiros antigos (`_preview_voz_artista_*.wav`) removidos do repositório, backup local em `_backup_voz_2026-10-04/` (fora do git).
 - ✅ **Ducking da música pós-acerto — implementado (`f67b080`)**: `VOL_MUSICA=0.75`/`VOL_DUCK=0.25`/`FADE_DOWN_MS=300`/`FADE_UP_MS=600`, constantes no topo do script. `fadeVolume()`/`cancelarFadeVolume()` com `requestAnimationFrame`, cancelável por token. Rede de segurança testada (interrupção a meio do fade repõe o volume de imediato, nunca fica preso em `VOL_DUCK`). Bug real apanhado e corrigido em teste: timestamp do `requestAnimationFrame` podia ser anterior ao `performance.now()` síncrono, dando `t` negativo no 1º frame do fade e o volume ultrapassava 1.0 — corrigido com `Math.max(0, ...)` no clamp.
 - ❌ Roar — pasta `efeitos/` existe mas só tem `in_the_box.wav`; `roar.wav` ainda não existe. Utilizador vai descarregar um efeito livre (Pixabay/Freesound CC0).
-- ❌ Décadas em cards verticais + agrupamento por década (pelo 3º segmento do código estruturado, seta para expandir, grupos fechados por defeito) — especificado, não feito.
-- ❌ "Anos 2010+" → "Anos 2010" em todo o projecto — especificado, não feito; `playlists.json:41` ainda tem "+".
+- ✅ **Painel estilo Studio — Décadas, Géneros e Especiais (`76dd455`, `4cf5701`, `a69ad22`)**: linhas densas (não cards verticais — essa 1ª versão foi descartada a meio, sem commit), agrupamento por segmento do código (3º para Décadas/cronológico, 4º para Géneros/alfabético, Especiais nunca agrupa), árvore com conectores CSS (├/└), chevron a rodar, "i" sem iniciar a playlist. Função única `af_renderPainelCategoria()` partilhada pelos 2 sítios (grelha de teste + Escolha de Universo real) e pelas 3 famílias — substituiu `.playlist-card`/carrossel/`ordenarChavesPorFamilia()`, removidos por serem código morto. Fallback de códigos legados sem pontos (ex. `TRB-BEA-001`) generalizado para 2º segmento por "-". Lista completa de códigos não-conformes ao formato `TIPO.GEO.DEC.GEN.NNN` dada ao utilizador (não migrados).
+- ✅ "Anos 2010+" → "Anos 2010" em todo o projecto (`bd1e9c9`) — `playlists.json`/`musicbox.html` actualizados; `episodio_piloto2/3.html` e `backups/` deixados de fora (fora do âmbito pedido / ficheiros históricos).
+- ✅ **Volume pós-acerto "meio-termo" (`142d5aa`)**: nova constante `VOL_ENCORE=0.45` — duck a `VOL_DUCK` (0.25) durante nome+"In the Box!!", sobe a `VOL_ENCORE` (fade 300ms) durante a pausa + janela de decisão do Encore, só sobe a `VOL_MUSICA` (fade 600ms) quando o Trecho B arranca mesmo. Testado com Playwright nos dois caminhos (Encore escolhido/não escolhido), volumes medidos por passo batem certo com o esperado. **Bug real encontrado e corrigido**: `iniciarFaixa()` repunha `audio.volume=1` (resquício de antes de `VOL_MUSICA` existir) em vez de `VOL_MUSICA` — a música normal de cada Faixa nova tocava sempre a volume máximo, não ao nível "normal" pretendido.
+- ✅ **Gerador de vozes + 44.1kHz (`d05edeb`)**: `gerar_vozes_nome_artista.py` na raiz (sem argumentos = só as que faltam; `--todos` com backup; `--id <id>`), testado (duração igual ao original, diferença de microssegundos). Os 302 `voz/nome_*.wav` + `efeitos/in_the_box.wav` convertidos de 192kHz para 44.1kHz mono (resample, voz não regenerada) — maior diferença de duração medida: 0.01ms (limite pedido: 10ms).
+- ✅ **Favicon inline (`f31857a`)**: 404 "fantasma" confirmado ser `/favicon.ico` (pedido automático do Chromium, invisível a `page.on('response')`/`requestfailed` a nível de página — só apareceu com um listener a nível de **contexto**, e mesmo assim sem corresponder a nenhum evento de rede, consistente com ser um pedido interno do browser). Favicon SVG inline (🎵) adicionado às duas páginas — confirmado com Playwright que o erro de consola desaparece.
+- 🟡 **Diagnóstico do Encore (não commitado — é só análise)**: tempos reais medidos (acerto→avanço automático sem escolha: ~4.6s); janela fixa de 1.5s (`TESTE_JANELA_DECISAO_TRECHO_B_MS`, `musicbox.html:2832`) + 400ms vermelho; confirmado que `MOMENTO_RESPOSTA_MS` (4s, `cf6fccc`) não colide — só se aplica a faixas sem Trecho A/B real. Proposta de `PAUSA_ANTES_ENCORE_MS≈500ms` (atraso entre o fim do "In the Box!!" e a janela verde abrir) dada ao utilizador, **não aplicada**.
 
 **Pendentes que transitam** (de sessões anteriores, ainda por resolver):
 - Aprovação de áudio via YouTube para "Areias do Tempo" (`STD.INT.ALL.MIX.005`) — por confirmar.
 - Fototeca: recuperar imagens de playlists entretanto apagadas.
 - Rejeições do modo Elo guardadas em sessão (nunca persistidas em `feedback.json`, perdem-se ao fechar o separador).
 
-**⚡ WORKFLOW** — houve duas sessões do Claude Code em paralelo na mesma pasta durante grande parte do dia. **Regra nova a partir de agora**: uma sessão trata de `musicbox.html`/áudio, outra trata de dados (`catalogo.json`/`playlists.json`/`feedback.json`/`mp3_index.json`/ficheiros `.mp3`). Nunca as duas no mesmo ficheiro ao mesmo tempo.
+**Pedidos recebidos 5 Out, ainda não começados** (❌ — zero código escrito):
+- Fototeca: candidatas escondidas por defeito + filtro "Sem imagem" + diagnóstico (faixas sem imagem, por categoria aprovada/rascunho/solta) + proposta de preenchimento por artista (sem escrever em `catalogo.json`).
+- Pré-escuta de voz no Studio (▶ junto ao nome do artista, toca `voz/nome_<id>.wav`).
+- Narração do descritivo ao abrir uma playlist (`gerar_vozes_descritivo.py` + wiring no jogo + regeneração no Studio).
+- Pronúncia por língua para nomes não-ingleses (pt_PT/pt_BR) + `voz/pronuncia.json`.
+- Anúncio de voz no acerto do Mosaico (`gerar_vozes_nome_artista.py --mosaicos` + wiring da sequência) — diagnóstico, geração e integração no jogo, pedido completo ainda por fazer.
+- `PAUSA_ANTES_ENCORE_MS` — proposta dada (~500ms, ver acima), não aplicada.
+- Mensagem do utilizador "have an on off button fot track description" recebida sem contexto suficiente (que descrição, onde) — por esclarecer antes de agir.
 
-**Nota**: `hip_01..07_a/b.mp3` aparecem modificados (LFS, tamanhos diferentes dos committados) e há 18 `.mp3` novos por adicionar (america_horse_with_no_name_2, cesaria_evora_sodade, king_crimson_the_sheltering_sky, maurice_jarre_lara_s_theme, the_rolling_stones_paint_it_black, etc.) — tudo da outra sessão, fora do âmbito dos commits acima.
+**⚡ WORKFLOW** — houve duas sessões do Claude Code em paralelo na mesma pasta durante grande parte dos dias 4-5 Out. **Regra**: uma sessão trata de `musicbox.html`/`musicbox_studio.html`/áudio, outra trata de dados (`catalogo.json`/`playlists.json`/`feedback.json`/`mp3_index.json`/ficheiros `.mp3`). Nunca as duas no mesmo ficheiro ao mesmo tempo. **Excepção pontual em 5 Out**: a pedido explícito do utilizador, esta sessão validou (`python3 -m json.tool`) e commitou directamente o trabalho pendente da outra sessão nos 4 ficheiros de dados + `.mp3` novos (`4c6cf1b`) — leu o conteúdo só o suficiente para escrever a mensagem do commit, não editou nada. Confirmado no fim que `playlists.json` ficou sem alterações pendentes.
+
+**Nota**: `hip_01..07_a/b.mp3` e os `.mp3` novos mencionados acima (parte de "Areias do Tempo") já foram commitados em `4c6cf1b` — já não há nada pendente nesses ficheiros.
 
 ## 2026-08-29 — Tags secundárias aplicadas a 21 playlists (`universos_secundarios`)
 Plano proposto (36 playlists analisadas via `_dados_36_playlists.txt`) e
