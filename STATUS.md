@@ -30,7 +30,7 @@
 
 **Pendente desta sessão, ainda por fazer:**
 - Nomes por língua (Duarte/Antonio/fr/es/it/de/ja/ru/el) — implementado, `voz/pronuncia.json`, 75 vozes regeneradas. Pendente: confirmar Vangelis (grego soa mal, a testar Alex vs. Duarte/"Vanguélis") e os 3 japoneses (Koji Kondo/Nobuo Uematsu/Yoko Shimomura, a testar romaji-Alex vs. fonética PT-Duarte) — ficam em Alex até decisão.
-- Anúncio de voz no acerto do Mosaico — pedido recebido, nada feito.
+- Anúncio de voz no acerto do Mosaico — implementado (`voz/mosaico_<codigo>.wav`, 38 gerados, mesmas regras de voz por língua). Nota: nenhum mosaico tem hoje `pessoa` vazia (0/38, confirmado por scan) — o exemplo citado (STD.INT.ALL.MIX.004) não existe nos dados actuais.
 - `BIBLIA.md`: no repositório desde V3.29 (`21ea7bc`); reconciliado com `DECISIONS.md` e subido para V3.30 (ver §30.9). §27.13 vs §15.5 resolvido — escala de dificuldade oficial é 1-5 (§15.5); §27.13 marcada revista/substituída.
 
 ## 2026-10-04/05 — Sessão 4-5 Out 2026
@@ -80,8 +80,6 @@
 - Fototeca: candidatas escondidas por defeito + filtro "Sem imagem" + diagnóstico (faixas sem imagem, por categoria aprovada/rascunho/solta) + proposta de preenchimento por artista (sem escrever em `catalogo.json`).
 - Pré-escuta de voz no Studio (▶ junto ao nome do artista, toca `voz/nome_<id>.wav`).
 - Narração do descritivo ao abrir uma playlist (`gerar_vozes_descritivo.py` + wiring no jogo + regeneração no Studio).
-- Pronúncia por língua para nomes não-ingleses (pt_PT/pt_BR) + `voz/pronuncia.json`.
-- Anúncio de voz no acerto do Mosaico (`gerar_vozes_nome_artista.py --mosaicos` + wiring da sequência) — diagnóstico, geração e integração no jogo, pedido completo ainda por fazer.
 - `PAUSA_ANTES_ENCORE_MS` — proposta dada (~500ms, ver acima), não aplicada.
 - Mensagem do utilizador "have an on off button fot track description" recebida sem contexto suficiente (que descrição, onde) — por esclarecer antes de agir.
 

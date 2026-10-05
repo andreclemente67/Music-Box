@@ -1632,6 +1632,43 @@ alteração (grafia original já soa bem); Yoko Shimomura → "Ióco
 Ximomura". Amostras em `propostas/vangelis_alt.wav`/
 `japoneses_alt.wav`.
 
+## 2026-10-05 — Anúncio de voz no acerto do Mosaico
+
+**Diagnóstico**: `confirmarMosaicoAcerto(i)` (`musicbox.html`) nunca
+teve anúncio de voz — só revelava a grelha, somava pontos e avançava
+após 1200ms, sem tocar nada. Único caminho de código, partilhado pelo
+fluxo real e pelo Modo Teste (`testarMosaico()` → `iniciarMosaico()` →
+mesma função). Scan a `playlists.json`: **0 de 38 mosaicos têm `pessoa`
+vazia** hoje — o exemplo citado (`STD.INT.ALL.MIX.004`, Hans Zimmer
+"Dune") não existe nos dados actuais.
+
+**Implementado**: `gerar_vozes_nome_artista.py --mosaicos` gera
+`voz/mosaico_<código>.wav` a partir do campo `pessoa` de cada playlist
+(mesmas regras de voz por língua de `voz/pronuncia.json`, índice
+próprio em `voz/mosaico_index.json`) — 38/38 gerados. No jogo,
+`confirmarMosaicoAcerto()` passa a: duck para `VOL_DUCK` → `voz/
+mosaico_<código>.wav` → 120ms → `efeitos/in_the_box.wav` → fade de
+`FADE_UP_MS` (600ms) para `VOL_MUSICA` → avanço já existente — o
+Mosaico não tem Encore nem Trecho B, por isso este é o único sítio onde
+o volume volta ao normal. Ficheiro de nome em falta: salta direito para
+"In the Box!!" (nunca fica em silêncio) — verificação única em cache
+por código (`mosaicoSomAnuncioDisponivelCache`, mesmo padrão de
+`apresentacaoDisponivel()`).
+
+**Bug real apanhado e corrigido antes de aplicar**: algumas playlists
+vivem em `COLLECTIONS` sob uma chave curta legada (ex. `"ANOS80"`, não
+`"STD.INT.80.MIX.001"`) — usar `collectionActual` directamente para o
+nome do ficheiro de voz falhava silenciosamente para essas. Corrigido
+para usar `COLLECTIONS[collectionActual].playlistCodigo`, que guarda
+sempre o código estruturado (igual à chave para playlists já no formato
+novo) — mesmo campo que `playlistCodigo` já usa noutros sítios.
+
+Testado com Playwright: fluxo real e Modo Teste em "Anos 80" (Mark
+Knopfler) — volume 0.75→0.25→0.75, sequência `mosaico_STD.INT.80.
+MIX.001.wav` → `in_the_box.wav` confirmada; ficheiro inexistente toca
+só `in_the_box.wav`, sem erro. Zero erros de JS nos três cenários.
+`catalogo.json`/`playlists.json` não tocados.
+
 **Implementado** (`gerar_vozes_nome_artista.py`): dois motores — `say`
 (Alex, como antes) e edge-tts (as restantes vozes, mesmo filtro de
 corte de silêncio + loudnorm). Índice `voz/nome_index.json` (novo,

@@ -791,6 +791,58 @@ async function apresentacaoDisponivel(codigo) {
   return ok;
 }
 
+// Anúncio de voz no acerto do Mosaico (2026-10-05, pedido do utilizador)
+// — mesmo padrão de verificação em cache por código de apresentacaoDisponivel()
+// acima, aplicado a voz/mosaico_<codigo>.wav.
+const mosaicoSomAnuncioDisponivelCache = new Map();
+
+async function mosaicoSomAnuncioDisponivel(codigo) {
+  if (mosaicoSomAnuncioDisponivelCache.has(codigo)) return mosaicoSomAnuncioDisponivelCache.get(codigo);
+  let ok = false;
+  try {
+    const resp = await fetch('voz/mosaico_' + codigo + '.wav', { cache: 'no-cache' });
+    ok = resp.ok;
+  } catch (e) { ok = false; }
+  mosaicoSomAnuncioDisponivelCache.set(codigo, ok);
+  return ok;
+}
+
+// Sequência de voz do acerto do Mosaico — nome da pessoa (voz/mosaico_
+// <codigo>.wav) → 120ms → "In the Box!!" (efeitos/in_the_box.wav),
+// reaproveitando o mesmo padrão de encadeamento por 'ended' de
+// testeTocarSequenciaSom() mas sem roar (o Mosaico não tem essa 3ª
+// camada). Falha em qualquer passo (ficheiro em falta, play() rejeitado)
+// nunca trava o fluxo — cai sempre em frente para `aoTerminar`. A
+// música de fundo do Mosaico desce para VOL_DUCK antes de arrancar e
+// volta a VOL_MUSICA com fade de 600ms (FADE_UP_MS) no fim desta
+// sequência — não há Encore nem Trecho B no Mosaico, por isso este é o
+// único sítio onde o volume sobe de volta.
+function tocarAnuncioMosaico(codigo, aoTerminar) {
+  const PAUSA_NOME_ITB_MS = 120;
+  let terminou = false;
+  const concluir = () => {
+    if (terminou) return;
+    terminou = true;
+    fadeVolume(audio, VOL_MUSICA, FADE_UP_MS);
+    aoTerminar();
+  };
+  const tocarItb = () => {
+    try {
+      const itb = new Audio('efeitos/in_the_box.wav');
+      itb.addEventListener('ended', concluir);
+      itb.play().catch(concluir);
+    } catch (e) { concluir(); }
+  };
+  mosaicoSomAnuncioDisponivel(codigo).then(ok => {
+    if (!ok) { tocarItb(); return; } // sem nome, mas o "In the Box!!" continua
+    try {
+      const nome = new Audio('voz/mosaico_' + codigo + '.wav');
+      nome.addEventListener('ended', () => setTimeout(tocarItb, PAUSA_NOME_ITB_MS));
+      nome.play().catch(() => setTimeout(tocarItb, PAUSA_NOME_ITB_MS));
+    } catch (e) { setTimeout(tocarItb, PAUSA_NOME_ITB_MS); }
+  });
+}
+
 // Ícone/texto (2026-10-05, pedido do utilizador): mesmo glyph ▶/cor azul
 // de "Iniciar Playlist" — <span>▶</span> Texto, exactamente o mesmo
 // padrão de markup, só a cor (var(--blue), não var(--green)) e o
@@ -3661,7 +3713,22 @@ function confirmarMosaicoAcerto(i) {
   renderCabines();
   document.getElementById('mosaico-status').textContent = `★ ${NOMES[i]} venceu o Mosaico! +${PONTOS_MOSAICO} pontos.`;
   log(`★ ${NOMES[i]} identificou correctamente: ${infoMosaico.pessoa}.`);
-  setTimeout(avancarDepoisDaPlaylist, 1200);
+  // Anúncio de voz (2026-10-05, pedido do utilizador): duck para VOL_DUCK
+  // já aqui, sempre — mesmo que voz/mosaico_<codigo>.wav não exista,
+  // tocarAnuncioMosaico() restaura VOL_MUSICA no fim de qualquer forma
+  // (ver aí). Não há Encore nem Trecho B no Mosaico — este é o único
+  // sítio onde o volume volta ao normal, antes do avanço já existente.
+  cancelarFadeVolume();
+  fadeVolume(audio, VOL_DUCK, FADE_DOWN_MS);
+  // playlistCodigo, não collectionActual: algumas playlists vivem em
+  // COLLECTIONS sob uma chave curta legada (ex. "ANOS80"), mas
+  // voz/mosaico_<codigo>.wav foi gerado com o código estruturado de
+  // playlists.json (ex. "STD.INT.80.MIX.001") — playlistCodigo guarda
+  // sempre esse código, igual à própria chave para playlists já no
+  // formato novo (mesmo padrão de apresentacaoDisponivel()).
+  tocarAnuncioMosaico(COLLECTIONS[collectionActual].playlistCodigo, () => {
+    setTimeout(avancarDepoisDaPlaylist, 1200);
+  });
 }
 
 function confirmarMosaicoErro(i) {

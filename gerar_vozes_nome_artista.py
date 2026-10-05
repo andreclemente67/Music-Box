@@ -35,6 +35,11 @@ Uso:
   python3 gerar_vozes_nome_artista.py            # só os que faltam/mudaram
   python3 gerar_vozes_nome_artista.py --todos    # regenera tudo, com backup
   python3 gerar_vozes_nome_artista.py --id dec50_01   # só uma faixa
+  python3 gerar_vozes_nome_artista.py --mosaicos # voz/mosaico_<codigo>.wav,
+                                                  # a partir do campo `pessoa`
+                                                  # de cada playlist (mesmas
+                                                  # regras de voz, índice
+                                                  # próprio em mosaico_index.json)
 """
 import argparse
 import datetime
@@ -193,17 +198,112 @@ def gerar_um(texto, voz, destino):
         gerar_um_edge(texto, voz, destino)
 
 
+MOSAICO_INDEX_PATH = VOZ_DIR / 'mosaico_index.json'
+
+
+def af_resolverVozMosaico(chave, pessoa, pronuncia):
+    """Mesma prioridade de af_resolverVoz(), mas para o `pessoa` do
+    Mosaico — o prefixo relevante é o da própria playlist (chave), não
+    de um id de catalogo.json cruzado."""
+    excepcao = pronuncia.get(pessoa)
+    if excepcao:
+        return excepcao['voz'], excepcao.get('texto', pessoa)
+    for prefixo, voz in PREFIXOS_VOZ:
+        if chave.startswith(prefixo):
+            return voz, pessoa
+    return VOZ_ALEX, pessoa
+
+
+def gerar_mosaicos():
+    playlists = carregar_playlists()
+    pronuncia = carregar_pronuncia()
+    index = json.load(open(MOSAICO_INDEX_PATH, encoding='utf-8')) if MOSAICO_INDEX_PATH.exists() else {}
+    VOZ_DIR.mkdir(exist_ok=True)
+
+    resolucao = {}
+    vazios = []
+    for chave, pl in playlists.items():
+        mosaico = pl.get('mosaico')
+        if not isinstance(mosaico, dict):
+            continue
+        pessoa = (mosaico.get('pessoa') or '').strip()
+        if not pessoa:
+            vazios.append((chave, pl.get('nome')))
+            continue
+        voz, texto_falado = af_resolverVozMosaico(chave, pessoa, pronuncia)
+        resolucao[chave] = (texto_falado, voz)
+
+    if vazios:
+        print(f"{len(vazios)} mosaico(s) sem 'pessoa' preenchida — não gerados:")
+        for chave, nome in vazios:
+            print(f"  {chave} ({nome})")
+
+    alvo = []
+    for chave, (texto_falado, voz) in resolucao.items():
+        destino = VOZ_DIR / f'mosaico_{chave}.wav'
+        if not destino.exists():
+            alvo.append(chave)
+            continue
+        if chave not in index:
+            if voz != VOZ_ALEX:
+                alvo.append(chave)
+            continue
+        if index.get(chave) != sha1_texto(texto_falado + '|' + voz):
+            alvo.append(chave)
+    alvo.sort()
+
+    if not alvo:
+        print("Nada a gerar — todas as vozes de mosaico já estão actualizadas.")
+        return
+
+    existentes = [VOZ_DIR / f'mosaico_{chave}.wav' for chave in alvo if (VOZ_DIR / f'mosaico_{chave}.wav').exists()]
+    if existentes:
+        data = datetime.date.today().isoformat()
+        backup_dir = RAIZ / f'_backup_voz_{data}_mosaico'
+        backup_dir.mkdir(exist_ok=True)
+        for f in existentes:
+            shutil.copy2(f, backup_dir / f.name)
+        print(f"Backup de {len(existentes)} ficheiro(s) em {backup_dir}/")
+
+    print(f"A gerar {len(alvo)} voz(es) de mosaico…")
+    falhas = []
+    for chave in alvo:
+        texto_falado, voz = resolucao[chave]
+        destino = VOZ_DIR / f'mosaico_{chave}.wav'
+        try:
+            gerar_um(texto_falado, voz, destino)
+            index[chave] = sha1_texto(texto_falado + '|' + voz)
+            with open(MOSAICO_INDEX_PATH, 'w', encoding='utf-8') as f:
+                json.dump(index, f, ensure_ascii=False, indent=2, sort_keys=True)
+                f.write('\n')
+            print(f"  ✓ {chave} — \"{texto_falado}\" (voz={voz})")
+        except (subprocess.CalledProcessError, RuntimeError) as e:
+            detalhe = e.stderr.decode('utf-8', 'ignore')[-300:] if isinstance(e, subprocess.CalledProcessError) and e.stderr else str(e)
+            print(f"  ✗ {chave}: {detalhe}")
+            falhas.append(chave)
+
+    print(f"\nConcluído: {len(alvo) - len(falhas)}/{len(alvo)} gerado(s).")
+    if falhas:
+        sys.exit(1)
+
+
 def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--todos', action='store_true',
                      help='Regenera todas as vozes (com backup prévio)')
     ap.add_argument('--id', help='Gera só uma faixa (id do catalogo.json)')
+    ap.add_argument('--mosaicos', action='store_true',
+                     help='Gera voz/mosaico_<codigo>.wav a partir do campo pessoa de cada playlist')
     args = ap.parse_args()
 
     for exe in ('say', 'ffmpeg'):
         if shutil.which(exe) is None:
             sys.exit(f"Erro: '{exe}' não encontrado no PATH.")
+
+    if args.mosaicos:
+        gerar_mosaicos()
+        return
 
     catalogo = carregar_catalogo()
     por_id = {t['id']: t for t in catalogo}
