@@ -3442,7 +3442,7 @@ function renderConcorrentes() {
         onerror="this.style.visibility='hidden'" onload="this.style.visibility='visible'">
       <div style="flex:1;">
         <label style="display:block;font-size:11px;color:var(--text2);margin-bottom:4px;">Concorrente ${i + 1}</label>
-        <input class="detail-input" type="text" id="concorrente-url-${i}" placeholder="https://... (URL da foto)" value="${escapeAttr(url)}"
+        <input class="detail-input" type="text" id="concorrente-url-${i}" placeholder="https://... (URL da foto)" value="${escapeHtml(url)}"
           oninput="atualizarConcorrenteFoto(${i}, this.value)" style="margin-bottom:6px;">
         <input type="file" accept="image/jpeg,image/png" style="font-size:11px;color:var(--text2);" onchange="onFotoFicheiroSelecionado(${i}, this)">
       </div>
@@ -4242,7 +4242,7 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
         <div class="posicao-titulo">${escapeHtml(t.titulo)}</div>
         <div class="posicao-artista">${escapeHtml(artistaTexto(t))}</div>
         ${mostrarElo && t.elo_explicacao ? `<div class="posicao-elo-explicacao">↳ ${escapeHtml(t.elo_explicacao)}</div>` : ''}
-        <input class="posicao-nota-editorial" value="${escapeAttr(af_obterNotaEditorial(kind, index))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('${kind}', ${index}, this.value)">
+        <input class="posicao-nota-editorial" value="${escapeHtml(af_obterNotaEditorial(kind, index))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('${kind}', ${index}, this.value)">
         <div class="timing-row">
           <button class="timing-btn" title="${cinema ? 'Definir início do Excerto (fim = início + 30s)' : 'Definir início do Trecho A (fim = início + 15s)'}" onclick="toggleTimingEditor('${kind}',${index},'a',event)">⏱ Definir início</button>
           ${precisaAuto ? `<button class="timing-btn auto-btn" title="${cinema ? "Ponto de partida — excerto em 0-30s. Confirma por audição e ajusta com 'Definir início' se necessário." : "Ponto de partida — A em 0-15s, B em 30-45s. Confirma por audição e ajusta com 'Definir início' se necessário."}" onclick="autoDefinirTrechos('${kind}',${index},event)">⚡ Auto</button>` : ''}
@@ -4395,8 +4395,8 @@ function af_perguntaBonusHtml(posicao) {
       <span style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;flex:1;">✦ Pergunta Bónus (Faixa ${posicao})${pb.origem === 'ia' && !pb.revisto ? ' · IA, por rever' : ''}</span>
       <button type="button" class="btn" style="padding:2px 7px;font-size:9px;${pb.revisto ? `background:${'var(--green)'};color:#0a2015;border-color:var(--green);` : ''}" onclick="af_alternarRevistoBonus(${posicao})" title="${pb.revisto ? 'Revisto em ' + pb.data_revisao + ' — clica para desfazer' : 'Marcar como revisto'}">✓ Revisto</button>
     </div>
-    <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;margin-bottom:3px;" value="${escapeAttr(pb.pergunta)}" placeholder="Pergunta (ano, álbum, história da canção, curiosidade do artista — nunca título/artista de outra faixa nem o mosaico)" onchange="af_editarPerguntaBonus(${posicao}, 'pergunta', this.value)">
-    <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;" value="${escapeAttr(pb.resposta)}" placeholder="Resposta" onchange="af_editarPerguntaBonus(${posicao}, 'resposta', this.value)">
+    <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;margin-bottom:3px;" value="${escapeHtml(pb.pergunta)}" placeholder="Pergunta (ano, álbum, história da canção, curiosidade do artista — nunca título/artista de outra faixa nem o mosaico)" onchange="af_editarPerguntaBonus(${posicao}, 'pergunta', this.value)">
+    <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;" value="${escapeHtml(pb.resposta)}" placeholder="Resposta" onchange="af_editarPerguntaBonus(${posicao}, 'resposta', this.value)">
   </div>`;
 }
 
@@ -4923,7 +4923,7 @@ function abrirPesquisaImagem(faixaId, artista, titulo) {
       </div>
       <div id="img-wikimedia-livre-wrap" style="display:none;">
         <div class="img-panel-header">
-          <input class="search-input" type="text" id="img-search-query" value="${escapeAttr(query)}" style="flex:1;"
+          <input class="search-input" type="text" id="img-search-query" value="${escapeHtml(query)}" style="flex:1;"
             onkeydown="if(event.key==='Enter') executarPesquisaImagem();">
           <button class="btn btn-primary" onclick="executarPesquisaImagem()">Pesquisar</button>
         </div>
@@ -5713,7 +5713,7 @@ function renderPosicoesTributo(pl) {
         <div class="posicao-info">
           <div class="posicao-titulo">${escapeHtml(titulo)}</div>
           <div class="posicao-artista">${escapeHtml(artista)}</div>
-          <input class="posicao-nota-editorial" value="${escapeAttr(af_obterNotaEditorial('posicao', i))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('posicao', ${i}, this.value)">
+          <input class="posicao-nota-editorial" value="${escapeHtml(af_obterNotaEditorial('posicao', i))}" placeholder="Nota editorial (porquê esta faixa aqui?)" onchange="af_editarNotaEditorial('posicao', ${i}, this.value)">
           ${t ? `<div class="timing-row">
             <button class="timing-btn" title="Definir início do Trecho A (fim = início + 15s)" onclick="toggleTimingEditor('posicao',${i},'a',event)">⏱ Definir início</button>
             <button class="timing-btn" title="Procurar/trocar a imagem desta faixa (Wikimedia Commons)" onclick="event.stopPropagation();abrirPesquisaImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar imagem</button>
@@ -5825,7 +5825,7 @@ function renderDetail() {
         ${pl.playlistCodigo === 'STD.INT.ALL.CIN.001' ? `
           <div class="detail-field" style="margin-top:8px;">
             <label>Clip de filme (URL YouTube da cena)</label>
-            <input class="detail-input" type="text" id="clip-input-${t.id}" value="${escapeAttr(t.clip || '')}" placeholder="https://www.youtube.com/watch?v=...&amp;t=125" style="width:100%;"
+            <input class="detail-input" type="text" id="clip-input-${t.id}" value="${escapeHtml(t.clip || '')}" placeholder="https://www.youtube.com/watch?v=...&amp;t=125" style="width:100%;"
               onchange="updateClipField('${t.id}', this.value)">
             <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
               ${t.clip ? `<button class="btn" onclick="window.open('${escapeAttr(t.clip)}','_blank')" title="Abrir clip no YouTube">▶ Ver clip</button>` : ''}
@@ -5855,8 +5855,8 @@ function renderDetail() {
     html += `
       <div class="detail-section">
         <div class="detail-label">Curadoria do mosaico</div>
-        <div class="detail-field"><label>Categoria</label><input class="detail-input" id="df-categoria" value="${escapeAttr(extra.categoria)}" onchange="updateMosaicoField('categoria',this.value)"></div>
-        <div class="detail-field"><label>Pessoa</label><input class="detail-input" id="df-pessoa" value="${escapeAttr(extra.pessoa)}" onchange="updateMosaicoField('pessoa',this.value)"></div>
+        <div class="detail-field"><label>Categoria</label><input class="detail-input" id="df-categoria" value="${escapeHtml(extra.categoria)}" onchange="updateMosaicoField('categoria',this.value)"></div>
+        <div class="detail-field"><label>Pessoa</label><input class="detail-input" id="df-pessoa" value="${escapeHtml(extra.pessoa)}" onchange="updateMosaicoField('pessoa',this.value)"></div>
       </div>`;
   } else if (selectedSlot.kind === 'posicao') {
     const tipos = ['audio','trivia','solo','cover','riff','bateria','foto','logo','capa'];
@@ -5868,10 +5868,10 @@ function renderDetail() {
             ${tipos.map(tp => `<option value="${tp}" ${extra.tipo===tp?'selected':''}>${tp}</option>`).join('')}
           </select>
         </div>
-        <div class="detail-field"><label>Chave (resposta certa)</label><input class="detail-input" id="df-chave" value="${escapeAttr(extra.chave)}" onchange="updatePosicaoField('chave',this.value)"></div>
-        <div class="detail-field"><label>Pergunta (trivia)</label><input class="detail-input" id="df-pergunta" value="${escapeAttr(extra.pergunta)}" onchange="updatePosicaoField('pergunta',this.value)"></div>
+        <div class="detail-field"><label>Chave (resposta certa)</label><input class="detail-input" id="df-chave" value="${escapeHtml(extra.chave)}" onchange="updatePosicaoField('chave',this.value)"></div>
+        <div class="detail-field"><label>Pergunta (trivia)</label><input class="detail-input" id="df-pergunta" value="${escapeHtml(extra.pergunta)}" onchange="updatePosicaoField('pergunta',this.value)"></div>
         <div class="detail-field"><label>Dica</label><textarea class="detail-input" id="df-dica" rows="2" onchange="updatePosicaoField('dica',this.value)">${escapeHtml(extra.dica)}</textarea></div>
-        ${!t ? `<div class="detail-field"><label>Imagem (só quando não há faixa associada)</label><input class="detail-input" id="df-imagem" value="${escapeAttr(extra.imagem)}" onchange="updatePosicaoField('imagem',this.value)"></div>` : ''}
+        ${!t ? `<div class="detail-field"><label>Imagem (só quando não há faixa associada)</label><input class="detail-input" id="df-imagem" value="${escapeHtml(extra.imagem)}" onchange="updatePosicaoField('imagem',this.value)"></div>` : ''}
         <label class="detail-checkbox"><input type="checkbox" ${extra.mosaico?'checked':''} onchange="updatePosicaoField('mosaico',this.checked)"> Conta para a revelação do mosaico</label>
       </div>`;
   }
@@ -7048,8 +7048,8 @@ function af_renderPlaylistYoutubeLista() {
   let html = '<div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px;">Faixas lidas — desmarca as que não quiseres usar como contexto:</div>';
   html += AF_PLAYLIST_YT_FAIXAS.map((f, i) => `<div style="display:flex;gap:4px;align-items:center;margin-bottom:4px;">
     <input type="checkbox" ${f.incluir !== false ? 'checked' : ''} onchange="af_alternarFaixaPlaylistYoutube(${i})" title="Incluir como contexto">
-    <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(f.titulo || '')}" oninput="af_editarFaixaPlaylistYoutube(${i}, 'titulo', this.value)" placeholder="Título">
-    <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(f.artista || '')}" oninput="af_editarFaixaPlaylistYoutube(${i}, 'artista', this.value)" placeholder="Artista">
+    <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeHtml(f.titulo || '')}" oninput="af_editarFaixaPlaylistYoutube(${i}, 'titulo', this.value)" placeholder="Título">
+    <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeHtml(f.artista || '')}" oninput="af_editarFaixaPlaylistYoutube(${i}, 'artista', this.value)" placeholder="Artista">
   </div>`).join('');
 
   const nIncluidas = AF_PLAYLIST_YT_FAIXAS.filter(f => f.incluir !== false).length;
@@ -7761,8 +7761,8 @@ function renderResultadoIA() {
       <div style="display:flex;gap:4px;align-items:center;">
         <span style="cursor:grab;color:var(--text3);font-size:12px;" title="Arrastar para reordenar (define a posição final)">⠿</span>
         <span style="font-size:9px;color:${ehSemente ? 'var(--accent)' : 'var(--text3)'};font-family:var(--mono);width:20px;flex-shrink:0;" title="${ehSemente ? 'Faixa fixa (semente desta geração)' : 'Posição sugerida pela IA: ' + m.posicao_sugerida}">#${i+1}${ehSemente ? ' ✦' : ''}</span>
-        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeAttr(m.titulo || '')}" oninput="editarIAMusica(${i}, 'titulo', this.value)" placeholder="Título">
-        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeAttr(m.artista || '')}" oninput="editarIAMusica(${i}, 'artista', this.value)" placeholder="Artista">
+        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeHtml(m.titulo || '')}" oninput="editarIAMusica(${i}, 'titulo', this.value)" placeholder="Título">
+        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;${riscado}" value="${escapeHtml(m.artista || '')}" oninput="editarIAMusica(${i}, 'artista', this.value)" placeholder="Artista">
         <button class="btn" type="button" style="padding:2px 6px;font-size:11px;" onclick="removerIAMusica(${i})" title="Remover">✕</button>
       </div>
       ${m.decisao === 'substituida' ? `<div style="padding-left:24px;margin-top:1px;font-size:9px;color:${AF_CORES_DECISAO_IA.substituida};">substituída</div>` : ''}
@@ -7774,7 +7774,7 @@ function renderResultadoIA() {
       </div>`;
     if (m.decisao === 'rejeitada') {
       html += `<div style="padding-left:24px;margin-top:3px;">
-        <input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeAttr(m.motivo || '')}" oninput="af_editarMotivoIAMusica(${i}, this.value)" placeholder="Porquê? (opcional)">
+        <input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeHtml(m.motivo || '')}" oninput="af_editarMotivoIAMusica(${i}, this.value)" placeholder="Porquê? (opcional)">
       </div>`;
     }
     if (m.decisao === 'substituida' && m.substituicao_original) {
@@ -7797,11 +7797,11 @@ function renderResultadoIA() {
     const corMos = AF_CORES_DECISAO_IA[mos.decisao] || 'var(--border2)';
     html += `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--border2);border:1px solid ${corMos};border-radius:5px;padding:6px;">
       <div style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-bottom:3px;">Mosaico — categoria: ${escapeHtml(mos.categoria || '?')} · pessoa a adivinhar:
-        <input class="detail-input" style="width:150px;padding:2px 6px;font-size:11px;display:inline-block;" value="${escapeAttr(mos.pessoa || '')}" oninput="editarIAMosaico('pessoa', this.value)">
+        <input class="detail-input" style="width:150px;padding:2px 6px;font-size:11px;display:inline-block;" value="${escapeHtml(mos.pessoa || '')}" oninput="editarIAMosaico('pessoa', this.value)">
       </div>
       <div style="display:flex;gap:4px;align-items:center;">
-        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(mos.titulo || '')}" oninput="editarIAMosaico('titulo', this.value)" placeholder="Título da faixa-mosaico">
-        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeAttr(mos.artista || '')}" oninput="editarIAMosaico('artista', this.value)" placeholder="Artista">
+        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeHtml(mos.titulo || '')}" oninput="editarIAMosaico('titulo', this.value)" placeholder="Título da faixa-mosaico">
+        <input class="detail-input" style="flex:1;padding:4px 6px;font-size:11px;" value="${escapeHtml(mos.artista || '')}" oninput="editarIAMosaico('artista', this.value)" placeholder="Artista">
         <button class="btn" type="button" style="padding:2px 6px;font-size:11px;" onclick="removerIAMosaico()" title="Remover">✕</button>
       </div>
       <div style="display:flex;gap:4px;align-items:center;margin-top:3px;">
@@ -7809,7 +7809,7 @@ function renderResultadoIA() {
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;${mos.decisao==='rejeitada'?'background:'+AF_CORES_DECISAO_IA.rejeitada+';color:#2a0d0d;border-color:'+AF_CORES_DECISAO_IA.rejeitada+';':''}" onclick="af_decidirIAMosaico('rejeitada')">✗ Rejeitar</button>
         <button type="button" class="btn" style="padding:2px 7px;font-size:10px;" onclick="af_abrirSubstituirIAMosaico()" title="Pedir 2-3 alternativas de mosaico à IA (ou pesquisar no catálogo, se rejeitares todas)">✎ Substituir</button>
       </div>
-      ${mos.decisao === 'rejeitada' ? `<div style="margin-top:3px;"><input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeAttr(mos.motivo || '')}" oninput="af_editarMotivoIAMosaico(this.value)" placeholder="Porquê? (opcional)"></div>` : ''}
+      ${mos.decisao === 'rejeitada' ? `<div style="margin-top:3px;"><input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" value="${escapeHtml(mos.motivo || '')}" oninput="af_editarMotivoIAMosaico(this.value)" placeholder="Porquê? (opcional)"></div>` : ''}
       ${mos.decisao === 'substituida' ? `<div style="margin-top:3px;font-size:9px;color:${AF_CORES_DECISAO_IA.substituida};">substituída</div>` : ''}
       ${mos.decisao === 'substituida' && mos.elo_explicacao ? `<div style="margin-top:1px;font-size:9px;color:var(--text3);font-style:italic;">ligação ao elo: ${escapeHtml(mos.elo_explicacao)}</div>` : ''}
       ${AF_IA_SUBSTITUIR_MOSAICO_ABERTO ? af_renderSubstitutosMosaicoIA() : ''}
