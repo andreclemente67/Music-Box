@@ -511,6 +511,18 @@
     cursor: pointer;
   }
 
+  /* Filtro activo (2026-10-05, pedido do utilizador) — mesma cor de
+     destaque do botão "Guardar playlists.json" (var(--accent)), só
+     borda+texto (não preenchido, para não competir com .btn-primary). */
+  .filter-select.filtro-ativo {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  #pl-filtros-limpar.filtro-ativo {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
   .tracks-table {
     flex: 1;
     overflow-y: auto;
@@ -2996,8 +3008,43 @@ function af_abrirNaMontagem(chave) {
   selectPlaylistFilter(chave);
 }
 
+// Nome humano de cada <select> de filtro, para o destaque a amarelo e
+// para a mensagem "Nenhuma playlist corresponde aos filtros: ..." —
+// 2026-10-05, pedido do utilizador.
+const AF_FILTROS_PLAYLIST_LABEL = {
+  'pl-filter-dec': 'Década',
+  'pl-filter-genero': 'Estilo',
+  'pl-filter-geo': 'Geo',
+  'pl-filter-dificuldade': 'Dificuldade',
+  'pl-filter-tipo': 'Tipo',
+  'pl-filter-estado': 'Estado',
+};
+
+// Devolve a descrição legível dos filtros de <select> actualmente
+// activos (ex: ["Geo = ES — Espanha"]) — usada na mensagem de lista
+// vazia. Não inclui a pesquisa de texto nem o foco de Universo, só os
+// 6 selects (são os que ganham o destaque a amarelo).
+function af_descreverFiltrosSelectAtivos() {
+  return Object.entries(AF_FILTROS_PLAYLIST_LABEL)
+    .map(([id, label]) => {
+      const el = document.getElementById(id);
+      if (!el || !el.value) return null;
+      const textoOpcao = el.options[el.selectedIndex] ? el.options[el.selectedIndex].text.trim() : el.value;
+      return `${label} = ${textoOpcao}`;
+    })
+    .filter(Boolean);
+}
+
 function renderSidebar() {
   const list = document.getElementById('sidebar-playlists');
+
+  // Destaque a amarelo de cada <select> com filtro activo (ver
+  // .filter-select.filtro-ativo) — antes de calcular filtrosAtivos,
+  // para não depender de uma 2ª passagem.
+  Object.keys(AF_FILTROS_PLAYLIST_LABEL).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('filtro-ativo', !!el.value);
+  });
 
   const filtrosAtivos = !!(
     document.getElementById('pl-search').value.trim() ||
@@ -3009,7 +3056,9 @@ function renderSidebar() {
     document.getElementById('pl-filter-estado').value ||
     AF_UNIVERSO_FOCO
   );
-  document.getElementById('pl-filtros-limpar').style.display = filtrosAtivos ? 'block' : 'none';
+  const btnLimpar = document.getElementById('pl-filtros-limpar');
+  btnLimpar.style.display = filtrosAtivos ? 'block' : 'none';
+  btnLimpar.classList.toggle('filtro-ativo', filtrosAtivos);
 
   const ORDEM_DECADAS = ['50', '60', '70', '80', '90', '00', '10', '20'];
   const LABEL_TIPO = { standard: 'Standard', solo: 'Solo', retrato: 'Retrato', tributo: 'Tributo', video: 'Vídeo' };
@@ -3066,7 +3115,12 @@ function renderSidebar() {
   }
 
   if (filtrosAtivos && !totalPlaylists) {
-    list.innerHTML += `<li style="padding:10px 10px;font-size:11px;color:var(--text3);font-family:var(--mono);">Nenhuma playlist corresponde aos filtros.</li>`;
+    const descricaoFiltros = af_descreverFiltrosSelectAtivos();
+    const sufixo = descricaoFiltros.length ? `: ${descricaoFiltros.join(', ')}` : '.';
+    list.innerHTML += `<li style="padding:10px 10px;font-size:11px;color:var(--accent);font-family:var(--mono);">
+      Nenhuma playlist corresponde aos filtros${sufixo}
+      <a href="#" style="color:var(--accent);text-decoration:underline;margin-left:4px;" onclick="event.preventDefault();af_limparFiltrosPlaylist()">✕ Limpar filtros</a>
+    </li>`;
   }
 
   function af_renderItemPlaylist(chave, pl) {
