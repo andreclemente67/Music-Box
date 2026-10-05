@@ -1417,3 +1417,34 @@ Duarte).
 Escolha da voz (Duarte/Antonio/outra) ainda pendente — amostras geradas,
 a aguardar confirmação do utilizador antes de qualquer geração em massa
 ou ligação ao jogo.
+
+## 2026-10-05 — Sistema de estados (aprovada/gravada) adiado
+
+Investigação (musicbox_studio.html): hoje não há nenhuma máquina de
+estados que bloqueie a edição de playlists — `playlist_aprovada` em
+`feedback.json` é escrito sempre a `true` na criação e nunca lido em
+lado nenhum (campo morto); `af_playlistEstado()` só calcula um rótulo
+`'rascunho'/'pronta'` para o filtro da barra lateral, não bloqueia nada;
+`selectSlot()`/`pickTrack()`/`assignToSlot()`/`removeSlot()` (troca
+manual de faixa numa posição já guardada) não têm nenhuma verificação de
+estado. "✎ Substituir" (3 alternativas da IA) só existe hoje dentro do
+assistente de criação de playlist nova (`NP_IA_RESULTADO`), não no
+fluxo de edição normal de uma playlist já guardada.
+
+Desenhada uma proposta completa de sistema de estados
+(`rascunho`/`aprovada`/`gravada`, botão "🔓 Reabrir para edição" com
+confirmação, re-validação ao reaprovar, marcação `substituida_de` com
+cor âmbar, aviso de regenerar a voz do descritivo se a faixa trocada lá
+for mencionada) — **decisão do utilizador: não implementar agora**.
+Fica registada aqui como ideia para mais perto das gravações reais dos
+episódios: nessa altura, a protecção mais importante é impedir editar
+playlists com `feedback_jogo` já preenchido (ou seja, já usadas num
+episódio gravado) — essas só devem poder ser duplicadas como nova versão
+(ex. "Vol. 2" ou próximo `.NNN`), nunca editadas no lugar. `feedback_jogo`
+(dentro do registo de `feedback.json` associado via `playlist_id`) já
+existe e já é exactamente o sinal certo para essa protecção quando for
+construída.
+
+Implementado em vez disso, já: "✎ Substituir" (IA) também na Mesa de
+Montagem para playlists já guardadas — ver commit "Studio: ✎ Substituir
+com IA na Mesa de Montagem".
