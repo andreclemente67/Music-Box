@@ -12,6 +12,7 @@
 - Substituir as vozes edge-tts por voz licenciada ou locutor real.
 - Uniformizar artistas duplicados no catálogo (ex.: José Afonso / Zeca Afonso).
 - Limpar as 3 versões da playlist Deserto (`.002`/`.003`/`.004`).
+- A posição "Baterista" da Anos 70 — Rock (`bat_08`, Keith Moon) reaproveita o áudio de banda (`rock_06`, Baba O'Riley) — antes do piloto, preparar um Trecho A/B próprio onde a bateria do Keith Moon se destaque.
 
 ## 2026-10-05 (continuação) — Narração do descritivo, Substituir na Montagem, família "Estilos"
 

@@ -1596,3 +1596,9 @@ antes só os prompts de substituição do Mosaico tinham essa instrução.
 Testado com Playwright: aviso aparece para "Anos 70 — Rock" ("Artista
 repetido: Queen (Faixa 1, Faixa 2)"), não aparece para uma playlist
 limpa, zero erros de JS.
+
+**Aplicado**: Faixa 2 de "Anos 70 — Rock" trocada de `bat_02` (Roger
+Taylor/Queen) para `bat_08` (Keith Moon/The Who, novo na catalogo.json,
+reaproveita o áudio de `rock_06` "Baba O'Riley" — sem ficheiro próprio
+ainda, ver STATUS.md). Faixa 3 (Eric Clapton/Layla) mantida — não tem
+ligação a Queen. Aviso confirmado desaparecido após a troca.

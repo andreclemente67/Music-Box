@@ -15621,5 +15621,422 @@
     "imagem_url_origem": "https://music.apple.com/us/album/unchained-melody-from-ghost-orchestral-version/1541888743?i=1541888750&uo=4",
     "imagem_data_captura": "2026-10-04",
     "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "peabo_bryson_regina_bell_a_whole_new_world",
+    "titulo": "A Whole New World",
+    "artista": [
+      "Peabo Bryson & Regina Belle"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "US",
+    "estilo": "Pop romântico orquestral",
+    "instrumento": [],
+    "tags": [
+      "banda sonora",
+      "dueto",
+      "Aladdin"
+    ],
+    "universal": true,
+    "elo_explicacao": "Canção original do filme de animação Disney 'Aladdin' (1992), vencedora do Óscar de Melhor Canção Original — ligação directa ao universo Disney pelo filme.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "peabo_bryson_regina_bell_a_whole_new_world_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "peabo_bryson_regina_bell_a_whole_new_world_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/56/99/47/56994761-ed8e-1e0b-15f9-7b649923ac42/06PNDIM00296.rgb.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/a-whole-new-world-aladdins-theme-soundtrack-version/1440722016?i=1440722345&uo=4",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "vanessa_williams_colors_of_the_wind",
+    "titulo": "Colors of the Wind",
+    "artista": [
+      "Vanessa Williams"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "US",
+    "estilo": "Pop soul",
+    "instrumento": [],
+    "tags": [
+      "Pocahontas",
+      "Óscar",
+      "anos 90"
+    ],
+    "universal": true,
+    "elo_explicacao": "Tema principal do filme Disney 'Pocahontas' (1995), vencedor do Óscar de Melhor Canção Original — ligação pelo título e banda sonora oficial Disney.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "vanessa_williams_colors_of_the_wind_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "vanessa_williams_colors_of_the_wind_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/f/f2/Vanessa_Williams_April_2019.png?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Vanessa Williams",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Vanessa_Williams",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "samuel_e_wright_kiss_the_girl",
+    "titulo": "Kiss the Girl",
+    "artista": [
+      "Samuel E. Wright"
+    ],
+    "decadas": [
+      "2000s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "US",
+    "estilo": "Teen pop",
+    "instrumento": [],
+    "tags": [
+      "Disney Channel",
+      "cover",
+      "A Pequena Sereia"
+    ],
+    "universal": false,
+    "elo_explicacao": "Ashley Tisdale é uma das artistas mais emblemáticas do Disney Channel ('High School Musical'), e esta versão de 'Kiss the Girl' reforça a ligação dupla: artista formada pela Disney e canção originária de um filme Disney.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "samuel_e_wright_kiss_the_girl_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "samuel_e_wright_kiss_the_girl_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/07/5d/84/075d841c-6a20-934a-5ffd-e517a10240ad/06PNDIM00775.rgb.jpg/600x600bb.jpg",
+    "imagem_fonte": "itunes_artist",
+    "imagem_credito": "Capa iTunes (Apple Music) — capa de álbum/single, não retrato do artista",
+    "imagem_url_origem": "https://music.apple.com/us/album/three-little-birds/1444173970?i=1444174044&uo=4",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "toni_basil_mickey",
+    "titulo": "Mickey",
+    "artista": [
+      "Toni Basil"
+    ],
+    "decadas": [
+      "1980s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "US",
+    "estilo": "New wave pop",
+    "instrumento": [],
+    "tags": [
+      "anos 80",
+      "new wave",
+      "ícone pop"
+    ],
+    "universal": true,
+    "elo_explicacao": "O título 'Mickey' partilha o nome com a mascote mais famosa da Disney — Mickey Mouse — criando uma associação imediata pelo nome da personagem, embora a canção não seja sobre o rato.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "toni_basil_mickey_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "toni_basil_mickey_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Toni_Basil_3.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Toni Basil",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Toni_Basil",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "jerry_orbach_be_our_guest",
+    "titulo": "Be Our Guest",
+    "artista": [
+      "Jerry Orbach"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Musical"
+    ],
+    "geografia": "US",
+    "estilo": "Musical teatral",
+    "instrumento": [],
+    "tags": [
+      "A Bela e o Monstro",
+      "animação",
+      "clássico"
+    ],
+    "universal": true,
+    "elo_explicacao": "Angela Lansbury interpretou Mrs. Potts no filme de animação Disney 'A Bela e o Monstro' (1991) — ligação directa pelo papel e pela banda sonora oficial do estúdio.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "jerry_orbach_be_our_guest_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "jerry_orbach_be_our_guest_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Jerry_Orbach_1965_press_photo.JPG?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Jerry Orbach",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Jerry_Orbach",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "livre"
+  },
+  {
+    "id": "phil_collins_you_ll_be_in_my_heart",
+    "titulo": "You'll Be in My Heart",
+    "artista": [
+      "Phil Collins"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop Rock"
+    ],
+    "geografia": "UK",
+    "estilo": "Pop rock suave",
+    "instrumento": [],
+    "tags": [
+      "Tarzan",
+      "Óscar",
+      "Phil Collins"
+    ],
+    "universal": true,
+    "elo_explicacao": "Phil Collins compôs e interpretou toda a banda sonora do filme Disney 'Tarzan' (1999); esta faixa ganhou o Óscar de Melhor Canção Original — ligação pelo compositor e pela produção Disney.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "phil_collins_you_ll_be_in_my_heart_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "phil_collins_you_ll_be_in_my_heart_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Phil_Collins%2C_2025_for_%22Eras%22_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Phil Collins",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Phil_Collins",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "christina_aguilera_reflection",
+    "titulo": "Reflection",
+    "artista": [
+      "Christina Aguilera"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Pop"
+    ],
+    "geografia": "US",
+    "estilo": "Pop balada",
+    "instrumento": [],
+    "tags": [
+      "Mulan",
+      "estreia",
+      "balada"
+    ],
+    "universal": true,
+    "elo_explicacao": "'Reflection' foi o primeiro single de Christina Aguilera, lançado como tema do filme Disney 'Mulan' (1998) — ligação pelo filme e por ser o ponto de partida da carreira da artista através da Disney.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "christina_aguilera_reflection_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "christina_aguilera_reflection_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/8/88/Christina_Aguilera_2019_Disney_Legends_Awards_Ceremony_D23_EXPO_2019_%2851440742748%29_%28cropped3%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Christina Aguilera",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Christina_Aguilera",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "randy_newman_you_ve_got_a_friend_in_m",
+    "titulo": "You've Got a Friend in Me",
+    "artista": [
+      "Randy Newman"
+    ],
+    "decadas": [
+      "1990s"
+    ],
+    "generos": [
+      "Americana"
+    ],
+    "geografia": "US",
+    "estilo": "Americana country suave",
+    "instrumento": [],
+    "tags": [
+      "Toy Story",
+      "Pixar",
+      "tema de amizade"
+    ],
+    "universal": true,
+    "elo_explicacao": "Randy Newman é o compositor de múltiplas bandas sonoras Pixar/Disney ('Toy Story', 'Monsters, Inc.', 'Cars') — a ligação ao elo Disney existe mas não é imediata a partir da faixa isolada, tornando-o uma boa charada de mosaico.",
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "randy_newman_you_ve_got_a_friend_in_m_a.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "trecho_b": {
+      "ficheiro": "randy_newman_you_ve_got_a_friend_in_m_b.mp3",
+      "inicio": null,
+      "fim": null
+    },
+    "full": null,
+    "elegivel_mosaico": false,
+    "estado": "rascunho",
+    "curador": "",
+    "data": "2026-10-05",
+    "video": null,
+    "imagem": "https://upload.wikimedia.org/wikipedia/commons/0/03/Randy_Newman_and_Neil_Diamond_HWOF_Aug_2012_%28levels_adjusted%29_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=api&utm_content=thumbnail_unscaled",
+    "imagem_fonte": "wikipedia_infobox",
+    "imagem_credito": "Wikipedia — Randy Newman",
+    "imagem_url_origem": "https://en.wikipedia.org/wiki/Randy_Newman",
+    "imagem_data_captura": "2026-10-05",
+    "imagem_licenca_estado": "confirmar"
+  },
+  {
+    "id": "bat_08",
+    "titulo": "Baba O'Riley",
+    "artista": [
+      "Keith Moon"
+    ],
+    "decadas": [
+      "1970s"
+    ],
+    "generos": [
+      "Rock"
+    ],
+    "geografia": "Reino Unido",
+    "estilo": "Entrada de bateria icónica de Keith Moon, sintetizador pulsante seguido de rock enérgico",
+    "instrumento": [
+      "Sintetizador",
+      "Guitarra elétrica",
+      "Voz"
+    ],
+    "universal": true,
+    "nivel": 2,
+    "trecho_a": {
+      "ficheiro": "rock_06_a.mp3",
+      "inicio": 0,
+      "fim": 12
+    },
+    "trecho_b": {
+      "ficheiro": "rock_06_b.mp3",
+      "inicio": 18,
+      "fim": 30
+    },
+    "full": null,
+    "elegivel_mosaico": true,
+    "estado": "ativo",
+    "curador": "André Clemente",
+    "data": "2026-10-05",
+    "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/tvvtrq1517695389.jpg",
+    "imagem_fonte": "theaudiodb",
+    "imagem_credito": "TheAudioDB",
+    "imagem_url_origem": "https://www.theaudiodb.com/artist/111296",
+    "imagem_data_captura": "2026-08-27",
+    "imagem_licenca_estado": "confirmar",
+    "sources": {
+      "audio": null,
+      "imagem": "theaudiodb",
+      "data_recolha": "2026-08-27"
+    },
+    "banda": "The Who"
   }
 ]
