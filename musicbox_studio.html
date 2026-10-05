@@ -2027,6 +2027,12 @@
       <div style="display:flex;flex:1;overflow:hidden;flex-direction:column;">
         <div style="padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-shrink:0;">
           <input class="search-input" type="text" id="fototeca-search" placeholder="Pesquisar por artista ou título…" style="flex:1;max-width:360px;" oninput="renderFototeca()">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap;">
+            <input type="checkbox" id="fototeca-filtro-sem-imagem" onchange="renderFototeca()"> Sem imagem (<span id="fototeca-contagem-sem-imagem">0</span>)
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap;" title="Faixas que não pertencem a nenhuma playlist pronta — em rascunho ou em nenhuma playlist">
+            <input type="checkbox" id="fototeca-mostrar-candidatas" onchange="renderFototeca()"> Mostrar candidatas (<span id="fototeca-contagem-candidatas">0</span>)
+          </label>
           <span style="font-family:var(--mono);font-size:11px;color:var(--text3)" id="fototeca-summary"></span>
         </div>
         <div class="fototeca-grid" id="fototeca-grid"></div>
@@ -9657,28 +9663,71 @@ function fototecaTrocarImagem(id, artista, titulo) {
   abrirPesquisaImagem(id, artista, titulo);
 }
 
+// id de catalogo.json -> lista de {chave, estado} das playlists que o
+// referenciam (faixa ou Mosaico/posição). 'pronta' só quando TODAS as
+// faixas dessa playlist têm estado!=='rascunho' (af_playlistEstado()) —
+// mesma regra já usada na sidebar de playlists.
+function af_idParaPlaylists() {
+  const mapa = new Map();
+  Object.entries(PLAYLISTS).forEach(([chave, pl]) => {
+    const ids = pl.tipo === 'tributo' ? (pl.posicoes || []).map(p => p.id) : (pl.musicas || []).slice();
+    if (pl.mosaico && pl.mosaico.id) ids.push(pl.mosaico.id);
+    const estado = af_playlistEstado(pl);
+    ids.forEach(id => {
+      if (!id) return;
+      if (!mapa.has(id)) mapa.set(id, []);
+      mapa.get(id).push({ chave, estado });
+    });
+  });
+  return mapa;
+}
+
+// 'candidata' = não pertence a nenhuma playlist pronta (só rascunho, ou
+// em nenhuma playlist) — ver Fototeca, toggle "Mostrar candidatas".
+function af_fototecaECandidata(id, idParaPlaylists) {
+  const pls = idParaPlaylists.get(id) || [];
+  return !pls.some(p => p.estado === 'pronta');
+}
+
 function renderFototeca() {
   const grid = document.getElementById('fototeca-grid');
   if (!grid) return;
 
   const q = (document.getElementById('fototeca-search')?.value || '').trim().toLowerCase();
+  const soSemImagem = document.getElementById('fototeca-filtro-sem-imagem')?.checked;
+  const mostrarCandidatas = document.getElementById('fototeca-mostrar-candidatas')?.checked;
+  const idParaPlaylists = af_idParaPlaylists();
+
+  const totalSemImagem = CATALOGO.filter(t => !t.imagem).length;
+  const totalCandidatas = CATALOGO.filter(t => af_fototecaECandidata(t.id, idParaPlaylists)).length;
+  document.getElementById('fototeca-contagem-sem-imagem').textContent = totalSemImagem;
+  document.getElementById('fototeca-contagem-candidatas').textContent = totalCandidatas;
+
   const faixas = CATALOGO.filter(t => {
-    if (!q) return true;
-    return (t.titulo || '').toLowerCase().includes(q) || artistaTexto(t).toLowerCase().includes(q);
+    if (q && !((t.titulo || '').toLowerCase().includes(q) || artistaTexto(t).toLowerCase().includes(q))) return false;
+    if (soSemImagem && t.imagem) return false;
+    const candidata = af_fototecaECandidata(t.id, idParaPlaylists);
+    if (candidata && !mostrarCandidatas) return false;
+    return true;
   });
 
   grid.innerHTML = faixas.map(t => {
     const hasImg = !!t.imagem;
+    const candidata = af_fototecaECandidata(t.id, idParaPlaylists);
     const thumb = hasImg
       ? `<img class="posicao-thumb fototeca-thumb-clickable" style="width:100px;height:100px;" src="${escapeAttr(t.imagem)}" alt="" loading="lazy" title="Clica para ver em tamanho grande" onclick="af_abrirFototecaLightbox('${escapeAttr(t.imagem)}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">`
       : `<div class="posicao-thumb-placeholder" style="width:100px;height:100px;font-size:32px;" title="Sem imagem">🖼</div>`;
     const aviso = t.imagem_licenca_estado === 'confirmar'
       ? `<span style="color:#e0a030;font-size:13px;" title="Imagem colada manualmente — confirmar licença de uso antes de lançamento público">⚠️</span>`
       : '';
+    const candidataBadge = candidata
+      ? `<span style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.03em;border:1px solid var(--border);border-radius:3px;padding:1px 4px;" title="Não pertence a nenhuma playlist pronta — só rascunho, ou em nenhuma playlist">candidata</span>`
+      : '';
     return `<div class="fototeca-card">
       <span class="posicao-thumb-wrap">${thumb}${riscoAmbiguidadeBadgeHtml(t)}${alertaDadosBadgeHtml(t)}</span>
       <div class="fototeca-artista">${escapeHtml(artistaTexto(t))}${aviso}</div>
       <div class="fototeca-titulo">${escapeHtml(t.titulo)}</div>
+      ${candidataBadge}
       <button class="timing-btn" onclick="fototecaTrocarImagem('${t.id}','${escapeAttr(artistaTexto(t))}','${escapeAttr(t.titulo)}')">🔄 Trocar</button>
     </div>`;
   }).join('');
