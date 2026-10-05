@@ -418,8 +418,6 @@
   <!-- Atalho discreto para o Studio (curação de catálogo/playlists) — abre
        numa nova aba, não interfere com o jogo em curso nesta aba. -->
   <button class="btn-secundario" onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" style="font-size:11px;opacity:0.7;display:inline-flex;align-items:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>Music Box Editor</button>
-  <!-- Toggle de narração do descritivo (2026-10-05) — ver atualizarUINarracao(). -->
-  <button class="btn-secundario btn-narracao" onclick="alternarNarracao()" style="font-size:11px;opacity:0.7;display:inline-flex;align-items:center;gap:8px;"></button>
   <p>Clica para autorizar o som (obrigatório uma vez, por causa das regras dos browsers).</p>
   <div id="teste-lista"></div>
 </div>
@@ -439,12 +437,11 @@
     <div class="badge" id="fase-badge">RONDA 1 · PLAYLIST 1</div>
     <!-- Mesmo botão do #start-overlay, aqui na barra .topo (sempre presente
          no DOM — ver nota acima do "← Playlists") para ficar acessível a
-         partir de qualquer ecrã principal, não só do arranque. -->
-    <button onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" title="Abre o Studio numa nova aba"
-      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.26 7.26 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.14.24.42.32.6.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.24.1.5 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7z"/></svg> Studio</button>
-    <!-- Toggle de narração (2026-10-05) — sempre visível durante o jogo (inclui pausa), ver atualizarUINarracao(). -->
-    <button class="btn-narracao" onclick="alternarNarracao()"
-      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;display:inline-flex;align-items:center;gap:6px;"></button>
+         partir de qualquer ecrã principal, não só do arranque. Mesmo texto/
+         ícone (sliders outline) do #start-overlay — 2026-10-05, pedido do
+         utilizador: alinhado com "⚙ Studio" → "Music Box Editor" lá. -->
+    <button onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" title="Abre o Music Box Editor numa nova aba"
+      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;display:inline-flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg> Music Box Editor</button>
   </div>
 </div>
 <!-- BUILD 2026-07-30-P13 — CINEMA corrigido · temBonus off · Lawrence of Arabia -->
@@ -466,11 +463,6 @@
        Playlist". Escondida por defeito — só aparece com conteúdo, ver
        confirmarCollection(). -->
   <div class="collection-descritivo-apresentador" id="collection-descritivo-apresentador" style="display:none;"></div>
-  <!-- Narração do descritivo (2026-10-05) — só visível enquanto
-       voz/descritivo_<codigo>.wav está a tocar, ver
-       tocarNarracaoOuProsseguir(). -->
-  <button id="btn-saltar-narracao" onclick="if (narracaoEmCurso) narracaoEmCurso.skip();"
-    style="display:none;background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 16px;font-size:11px;cursor:pointer;margin-top:4px;">Saltar ›</button>
 </div>
 
 <!-- "ℹ Saber mais" (2026-10-04, pedido do utilizador): prévia de uma
@@ -614,6 +606,16 @@
        aplica ao NEW_SLOT entre Faixas dentro da mesma Playlist, que
        continua automático. Visibilidade sincronizada com faseGeral, mesmo
        poll de manualAdvanceSync() (ver abaixo). -->
+  <!-- "🔊 Apresentação" (2026-10-05, pedido do utilizador) — toca
+       voz/descritivo_<codigo>.wav manualmente, a pedido do operador
+       (substituiu a narração automática + toggle ON/OFF, removidos). Não
+       bloqueia nada — "▶ Iniciar Playlist" funciona sempre, mesmo a meio
+       da apresentação (pára-a e arranca, ver iniciarPlaylistManual()).
+       Visibilidade sincronizada com faseGeral no mesmo poll de
+       "▶ Iniciar Playlist" (ver setInterval abaixo). Desactivado + title
+       "Apresentação por gerar" se a playlist não tiver o ficheiro — ver
+       prepararApresentacaoDescritivo()/apresentacaoDisponivel(). -->
+  <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;" disabled></button>
   <button onclick="iniciarPlaylistManual()" id="btn-iniciar-playlist" title="Carrega e arranca o áudio da Faixa 1 desta Playlist — o motor fica à espera deste clique desde que a Playlist foi seleccionada" style="display:none;"><span style="color:var(--green);">▶</span> Iniciar Playlist</button>
   <!-- Apresentador: um único toggle manual pelo operador — ver
        alternarApresentador()/renderApresentador(). Escondido quando não há
@@ -745,120 +747,99 @@ function fadeVolumePromise(el, alvo, ms) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// TOGGLE DE NARRAÇÃO (2026-10-05, pedido do utilizador) — preparado para
-// a narração do descritivo_apresentador ao abrir uma playlist (tarefa
-// ainda não implementada: gerar_vozes_descritivo.py + wiring da
-// reprodução). Este toggle já fica funcional e persistente (localStorage,
-// ligado por defeito) para o utilizador poder ligar/desligar desde já;
-// quando a narração em si for ligada, deve consultar narracaoActiva()
-// antes de tocar o áudio — nunca afecta o nome do artista nem o "In the
-// Box!!" pós-acerto, só a narração do descritivo. Botão duplicado em
-// #start-overlay (ecrã inicial) e .topo (sempre visível durante o jogo,
-// incluindo pausa) — mesmo padrão já usado para o botão "Music Box
-// Editor"/Studio, actualizados em conjunto por atualizarUINarracao().
-const NARRACAO_STORAGE_KEY = 'mb_narracao_on';
-const NARRACAO_ICON_ON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>';
-const NARRACAO_ICON_OFF = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
-
-function narracaoActiva() {
-  try {
-    const v = localStorage.getItem(NARRACAO_STORAGE_KEY);
-    return v === null ? true : v === '1'; // por defeito ligada
-  } catch (e) {
-    return true; // localStorage indisponível (ex. modo privado) — assume ligada
-  }
-}
-
-function atualizarUINarracao() {
-  const activa = narracaoActiva();
-  document.querySelectorAll('.btn-narracao').forEach(btn => {
-    btn.innerHTML = (activa ? NARRACAO_ICON_ON : NARRACAO_ICON_OFF) + ' Narração: ' + (activa ? 'ON' : 'OFF');
-    btn.title = activa ? 'Narração do descritivo ligada — clica para desligar' : 'Narração do descritivo desligada — clica para ligar';
-  });
-}
-
-function alternarNarracao() {
-  const novoEstado = !narracaoActiva();
-  try { localStorage.setItem(NARRACAO_STORAGE_KEY, novoEstado ? '1' : '0'); } catch (e) {}
-  atualizarUINarracao();
-  // Desligar a meio de uma narração em curso pára-a e avança de imediato
-  // (2026-10-05, pedido do utilizador) — ver tocarNarracaoOuProsseguir().
-  if (!novoEstado && narracaoEmCurso) narracaoEmCurso.skip();
-}
-
-document.addEventListener('DOMContentLoaded', atualizarUINarracao);
-
-// ─────────────────────────────────────────────────────────────
-// NARRAÇÃO DO DESCRITIVO (2026-10-05, pedido do utilizador) — toca
+// "🔊 Apresentação" (2026-10-05, pedido do utilizador) — toca
 // voz/descritivo_<playlistCodigo>.wav (voz Duarte, gerar_vozes_descritivo.py)
-// ao arrancar uma playlist, antes da 1ª Faixa. Pré-carregado logo em
-// confirmarCollection() (ver prepararNarracaoDescritivo()), bem antes do
-// clique em "▶ Iniciar Playlist" — o apresentador normalmente demora
-// mais que isso a ler o ecrã, por isso a reprodução em si arranca quase
-// instantânea nesse clique (testado <300ms). Verificação de existência
-// em cache por código (narracaoDisponivelCache) — só um pedido de rede
-// por playlist, nunca repetido, mesmo padrão já usado para roarDisponivel.
-let narracaoAudioAtual = null;
-let narracaoEmCurso = null; // { skip() } só enquanto uma narração está a tocar
-const narracaoDisponivelCache = new Map();
+// SÓ a pedido do operador, nunca automático (substitui a narração
+// automática + toggle ON/OFF de uma versão anterior, removidos — abrir
+// uma playlist não toca nada sozinho). Pré-carregado em
+// confirmarCollection() (ver prepararApresentacaoDescritivo()), bem antes
+// de qualquer clique — o botão fica pronto a tocar instantaneamente.
+// Repetível à vontade (toca, pára, toca de novo). "▶ Iniciar Playlist"
+// nunca espera por isto — ver iniciarPlaylistManual(), que pára a
+// apresentação se estiver em curso e arranca a Faixa 1 de imediato.
+// Verificação de existência em cache por código
+// (apresentacaoDisponivelCache) — só um pedido de rede por playlist,
+// nunca repetido, mesmo padrão já usado para roarDisponivel.
+let apresentacaoAudioAtual = null;
+let apresentacaoTocando = false;
+const apresentacaoDisponivelCache = new Map();
+const APRESENTACAO_ICON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>';
 
-async function narracaoDisponivel(codigo) {
-  if (narracaoDisponivelCache.has(codigo)) return narracaoDisponivelCache.get(codigo);
+async function apresentacaoDisponivel(codigo) {
+  if (apresentacaoDisponivelCache.has(codigo)) return apresentacaoDisponivelCache.get(codigo);
   let ok = false;
   try {
     const resp = await fetch('voz/descritivo_' + codigo + '.wav', { cache: 'no-cache' });
     ok = resp.ok;
   } catch (e) { ok = false; }
-  narracaoDisponivelCache.set(codigo, ok);
+  apresentacaoDisponivelCache.set(codigo, ok);
   return ok;
 }
 
+function atualizarBotaoApresentacao() {
+  const btn = document.getElementById('btn-apresentacao');
+  if (!btn) return;
+  btn.innerHTML = apresentacaoTocando ? '■ Parar apresentação' : APRESENTACAO_ICON_SVG + ' Apresentação';
+}
+
 // Chamado em confirmarCollection() — não bloqueia nada, só prepara o
-// Audio() com antecedência para o clique em "▶ Iniciar Playlist" ficar
-// quase instantâneo. Ficheiros em voz/descritivo_*.wav são nomeados pelo
+// Audio() com antecedência e activa/desactiva o botão consoante o
+// ficheiro exista. Ficheiros em voz/descritivo_*.wav são nomeados pelo
 // playlistCodigo (a chave usada em playlists.json/gerar_vozes_descritivo.py),
 // NÃO pela chave interna de COLLECTIONS — para a maioria das playlists são
 // o mesmo valor, mas nas "legadas" com alias (ANOS80, ANOS2010, LOGO001,
-// TRIBUTO_BEATLES, etc., ver UNIVERSOS_EXTERNOS) são diferentes. BUG real
-// encontrado em teste 2026-10-05: usar `chave` directamente dava sempre
-// 404 nessas ~13 playlists, mesmo já tendo a voz gerada.
-function prepararNarracaoDescritivo(chave) {
-  narracaoAudioAtual = null;
+// TRIBUTO_BEATLES, etc., ver UNIVERSOS_EXTERNOS) são diferentes.
+function prepararApresentacaoDescritivo(chave) {
+  apresentacaoAudioAtual = null;
+  apresentacaoTocando = false;
+  const btn = document.getElementById('btn-apresentacao');
+  if (btn) { btn.disabled = true; btn.title = ''; }
+  atualizarBotaoApresentacao();
   const codigo = COLLECTIONS[chave].playlistCodigo;
-  narracaoDisponivel(codigo).then(disponivel => {
+  apresentacaoDisponivel(codigo).then(disponivel => {
     // collectionActual pode já ter mudado entretanto (candidata vista e
     // descartada) — só usa o resultado se ainda for a playlist actual.
-    if (disponivel && collectionActual === chave) {
+    if (collectionActual !== chave) return;
+    const btnAtual = document.getElementById('btn-apresentacao');
+    if (disponivel) {
       const a = new Audio('voz/descritivo_' + codigo + '.wav');
       a.preload = 'auto';
       a.load();
-      narracaoAudioAtual = a;
+      a.addEventListener('ended', () => { apresentacaoTocando = false; atualizarBotaoApresentacao(); });
+      apresentacaoAudioAtual = a;
+      if (btnAtual) { btnAtual.disabled = false; btnAtual.title = ''; }
+    } else if (btnAtual) {
+      btnAtual.disabled = true;
+      btnAtual.title = 'Apresentação por gerar';
     }
   });
 }
 
-// Chamado em iniciarPlaylistManual() — toca a narração (se ligada e
-// disponível) e só chama aoTerminar() no fim (ou no "Saltar ›", ou se a
-// reprodução falhar); sem narração disponível/ligada, chama aoTerminar()
-// logo. Música nunca está a tocar aqui (ecrã de escolha de Universo, ANTES
-// da 1ª Faixa) — nada para pausar.
-function tocarNarracaoOuProsseguir(aoTerminar) {
-  if (!narracaoActiva() || !narracaoAudioAtual) { aoTerminar(); return; }
-  const audioNarracao = narracaoAudioAtual;
-  const btnSaltar = document.getElementById('btn-saltar-narracao');
-  let concluido = false;
-  const concluir = () => {
-    if (concluido) return;
-    concluido = true;
-    audioNarracao.pause();
-    narracaoEmCurso = null;
-    if (btnSaltar) btnSaltar.style.display = 'none';
-    aoTerminar();
-  };
-  narracaoEmCurso = { skip: concluir };
-  audioNarracao.addEventListener('ended', concluir);
-  audioNarracao.play().catch(() => concluir()); // play() falhou — avança sem travar o jogo
-  if (btnSaltar) { btnSaltar.style.display = ''; btnSaltar.onclick = concluir; }
+// Botão "🔊 Apresentação"/"■ Parar apresentação" — toca/pára, repetível à
+// vontade. Nunca bloqueia "▶ Iniciar Playlist" (ver iniciarPlaylistManual()).
+function alternarApresentacaoDescritivo() {
+  if (!apresentacaoAudioAtual) return;
+  if (apresentacaoTocando) {
+    apresentacaoAudioAtual.pause();
+    apresentacaoAudioAtual.currentTime = 0;
+    apresentacaoTocando = false;
+  } else {
+    apresentacaoAudioAtual.currentTime = 0;
+    apresentacaoTocando = true;
+    apresentacaoAudioAtual.play().catch(() => { apresentacaoTocando = false; atualizarBotaoApresentacao(); });
+  }
+  atualizarBotaoApresentacao();
+}
+
+// Chamado no topo de iniciarPlaylistManual() — se a apresentação estiver a
+// tocar, pára-a sem esperar (a Faixa 1 arranca de imediato a seguir).
+function pararApresentacaoSeTocar() {
+  if (apresentacaoTocando && apresentacaoAudioAtual) {
+    apresentacaoAudioAtual.pause();
+    apresentacaoAudioAtual.currentTime = 0;
+    apresentacaoTocando = false;
+    atualizarBotaoApresentacao();
+  }
 }
 
 // COLLECTIONS — reaproveita os catálogos reais já construídos.
@@ -2197,9 +2178,9 @@ function confirmarCollection(chave, foiAleatorio) {
     descritivoApresentadorEl.textContent = '';
     descritivoApresentadorEl.style.display = 'none';
   }
-  // Narração do descritivo (2026-10-05): prepara já aqui, bem antes do
-  // clique em "▶ Iniciar Playlist" — ver prepararNarracaoDescritivo().
-  prepararNarracaoDescritivo(chave);
+  // "🔊 Apresentação" (2026-10-05): prepara já aqui, bem antes de
+  // qualquer clique — ver prepararApresentacaoDescritivo().
+  prepararApresentacaoDescritivo(chave);
   log(`Playlist desta posição: ${COLLECTIONS[chave].nome} (Universo: ${COLLECTIONS[chave].universo})`);
   // Pausa de entrada de Playlist (2026-09-02): título+universo já
   // revelados acima — fica à espera de "▶ Iniciar Playlist" em vez de
@@ -2232,17 +2213,15 @@ function confirmarCollection(chave, foiAleatorio) {
 
 function iniciarPlaylistManual() {
   if (faseGeral !== 'aguardando_inicio_playlist') return;
-  // Narração do descritivo (2026-10-05) — toca antes da 1ª Faixa (se
-  // ligada e disponível); a 1ª Faixa só arranca no 'ended' dela, no
-  // "Saltar ›", ou de imediato se não houver narração. Ver
-  // tocarNarracaoOuProsseguir()/prepararNarracaoDescritivo().
-  tocarNarracaoOuProsseguir(() => {
-    if (rondaAtual <= 3) {
-      iniciarPlaylistRegular();
-    } else {
-      iniciarRonda4();
-    }
-  });
+  // "🔊 Apresentação" (2026-10-05) — nunca bloqueia: se estiver a tocar,
+  // pára-a e a Faixa 1 arranca de imediato a seguir. Ver
+  // pararApresentacaoSeTocar()/prepararApresentacaoDescritivo().
+  pararApresentacaoSeTocar();
+  if (rondaAtual <= 3) {
+    iniciarPlaylistRegular();
+  } else {
+    iniciarRonda4();
+  }
 }
 
 // ── PLAYLIST REGULAR (7 Faixas + Mosaico) ──
@@ -3229,6 +3208,8 @@ setInterval(() => {
   if (btnRetroceder) btnRetroceder.style.display = (faseGeral === 'faixa' && faixaAtual > 1) ? '' : 'none';
   const btnIniciar = document.getElementById('btn-iniciar-playlist');
   if (btnIniciar) btnIniciar.style.display = (faseGeral === 'aguardando_inicio_playlist') ? '' : 'none';
+  const btnApresentacao = document.getElementById('btn-apresentacao');
+  if (btnApresentacao) btnApresentacao.style.display = (faseGeral === 'aguardando_inicio_playlist') ? '' : 'none';
 }, 300);
 
 function acertouFaixa(i) {
