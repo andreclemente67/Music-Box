@@ -1888,11 +1888,11 @@ Esta ideia está numa fase muito inicial — precisa de desenvolvimento próprio
 
 Conclusão
 
-## 27.13 Mosaico 4×4 e Dificuldade em Três Níveis (adoptado em 8 Ago 2026, revisto em 30 Ago 2026)
+## 27.13 Mosaico 4×4 e Dificuldade em Três Níveis (adoptado em 8 Ago 2026, revisto em 30 Ago 2026; revisto em 5 Out 2026 — substituído: a escala em uso é 1-5, ver §15.5)
 
 
 
-O Mosaico usa uma grelha 4×4 (dezasseis quadrados totais). Cada acerto numa Faixa revela exactamente 1 quadrado — com 7 Faixas por Playlist, ficam sempre 9 quadrados ocultos, preservando o suspense final. A escala de dificuldade das Playlists é fixada em 3 níveis universais: 1 — Fácil, 2 — Médio, 3 — Difícil. Esta escala substitui a escala de 1 a 5 anteriormente prevista e aplica-se a todas as famílias de Playlists sem excepção.
+O Mosaico usa uma grelha 4×4 (dezasseis quadrados totais). Cada acerto numa Faixa revela exactamente 1 quadrado — com 7 Faixas por Playlist, ficam sempre 9 quadrados ocultos, preservando o suspense final. ~~A escala de dificuldade das Playlists é fixada em 3 níveis universais: 1 — Fácil, 2 — Médio, 3 — Difícil. Esta escala substitui a escala de 1 a 5 anteriormente prevista e aplica-se a todas as famílias de Playlists sem excepção.~~ **(revisto em 5 Out 2026)**: esta escala de 3 níveis nunca chegou a ser adoptada na prática — o código, os dados (`dificuldade` em `playlists.json`, valores 1 a 5 confirmados) e a interface ("Dif. X/5") usam todos a escala de 1 a 5 de §15.5, que é a escala oficial. Texto original acima mantido tachado como registo histórico, não apagado.
 
 
 

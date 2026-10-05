@@ -30,7 +30,7 @@
 **Pendente desta sessão, ainda por fazer:**
 - Pronúncia por língua dos nomes PT/BR (Duarte/Antonio) — lista de candidatos dada, à espera da confirmação do utilizador antes de regenerar.
 - Anúncio de voz no acerto do Mosaico — pedido recebido, nada feito.
-- `BIBLIA.md`: no repositório desde V3.29 (`21ea7bc`); reconciliado com `DECISIONS.md` e subido para V3.30 (ver §30.9) — pendente: decidir §27.13 vs §15.5 (escala de dificuldade 3 níveis vs 1-5; código e dados usam 1-5, confirmado).
+- `BIBLIA.md`: no repositório desde V3.29 (`21ea7bc`); reconciliado com `DECISIONS.md` e subido para V3.30 (ver §30.9). §27.13 vs §15.5 resolvido — escala de dificuldade oficial é 1-5 (§15.5); §27.13 marcada revista/substituída.
 
 ## 2026-10-04/05 — Sessão 4-5 Out 2026
 

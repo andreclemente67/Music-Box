@@ -1549,3 +1549,17 @@ directamente a resposta não.
 
 Registada na Bíblia em §18.7 e na nova §15.6 "Descritivos sem Spoilers"
 (revisto/criado em 5 Out 2026, ver §30.9).
+
+## 2026-10-05 — Escala de dificuldade: 1-5 confirmada como oficial (resolve a contradição §15.5/§27.13)
+
+Decisão do utilizador: a escala oficial de dificuldade das Playlists é
+**1 a 5** — confirmado ser a que o código (`musicbox.html`/
+`musicbox_studio.html`, "Dif. X/5", `min="1" max="5"`), os dados
+(`dificuldade` em `playlists.json`, valores 1 a 5 todos presentes) e a
+interface já usam. A escala alternativa de "3 níveis" descrita em §27.13
+da Bíblia nunca chegou a ser adoptada na prática.
+
+§15.5 fica como está (já descreve "Calibragem 1-5"). §27.13 marcada
+"(revisto em 5 Out 2026)" — texto original tachado, mantido como
+registo histórico, com nota a apontar para §15.5 como a escala em
+vigor.
