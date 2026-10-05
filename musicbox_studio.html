@@ -4254,13 +4254,30 @@ function slotCardHtml(kind, index, id, tipoBadge, extraLabel, mostrarElo) {
           style="${hasImg ? 'cursor:pointer' : ''}">🖼</div>
       </div>
       <div class="posicao-actions">
+        ${kind !== 'posicao' ? `<button class="icon-btn" title="Substituir esta faixa (3 alternativas da IA, ou pesquisa manual)" onclick="event.stopPropagation();${kind === 'mosaico' ? 'af_abrirSubstituirMontagemMosaico()' : `af_abrirSubstituirMontagemMusica(${index})`}" style="color:var(--text2);">✎</button>` : ''}
         <button class="icon-btn" title="Remover" onclick="event.stopPropagation();removeSlot('${kind}',${index})" style="color:var(--red)">✕</button>
       </div>
     </div>
     ${t.estado === 'rascunho' ? gerarTrechoRowHtml(t) : ''}
     ${trackMetaHtml(t)}
     ${timingEditorHtml(kind, index, id)}
+    ${kind !== 'posicao' ? af_montSubstituicaoBadgeHtml(kind, index) : ''}
+    ${kind !== 'posicao' ? af_montRenderSubstitutos(kind, index) : ''}
   </div>`;
+}
+
+// Etiqueta âmbar "substituída" (mesma cor AF_CORES_DECISAO_IA.substituida
+// do fluxo de criação) com tooltip indicando a faixa anterior + data — lê
+// pl.substituicoes[chave], ver af_montRegistarSubstituicao().
+function af_montSubstituicaoBadgeHtml(kind, index) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return '';
+  const chave = af_chaveNotaEditorial(kind, index, pl);
+  const sub = (pl.substituicoes || {})[chave];
+  if (!sub) return '';
+  const anterior = sub.substituida_de || {};
+  const tooltip = `Substituída em ${sub.data} — era: ${anterior.titulo || '?'} — ${anterior.artista || '?'}`;
+  return `<div style="padding-left:24px;margin-top:2px;font-size:9px;color:${AF_CORES_DECISAO_IA.substituida};" title="${escapeAttr(tooltip)}">substituída (${escapeHtml(sub.data)})</div>`;
 }
 
 // Linha "⬇ Gerar trechos" — só para faixas em rascunho (sem áudio,
@@ -8303,6 +8320,351 @@ function removerIAMosaico() {
   AF_IA_SUBSTITUIR_MOSAICO_ABERTO = false;
   AF_IA_SUBSTITUTOS_MOSAICO_ESTADO = null;
   renderResultadoIA();
+}
+
+// ─── "✎ SUBSTITUIR" NA MESA DE MONTAGEM (2026-10-05, pedido do utilizador) ───
+// Mesmo padrão UX do fluxo de criação acima (3 sugestões da IA, campo de
+// sugestão do curador validada pela IA, "rejeitar" abre pesquisa manual no
+// catálogo) mas aplicado a uma playlist JÁ GUARDADA
+// (PLAYLISTS[currentPlaylistKey]), para cada posição (faixa ou mosaico) na
+// Mesa de Montagem normal — não só durante a criação. Entry points
+// próprios (AF_MONT_*, não AF_IA_SUBSTITUIR_INDEX/NP_IA_RESULTADO) — os
+// dois fluxos têm modelos de dados completamente diferentes
+// (NP_IA_RESULTADO.musicas[i] é um objecto solto com título/artista/etc.
+// ainda sem id de catálogo; pl.musicas[i] aqui é só o id de uma faixa já
+// existente) e partilhar o mesmo estado arriscava regressões no fluxo de
+// criação, que já funciona bem. Reaproveita o que É genérico:
+// criarFaixaRascunhoIA(), o endpoint /gerar-faixas, af_normalizarArtista(),
+// escapeHtml()/escapeAttr() (preserva apóstrofos — ver nota em
+// escapeAttr()), a cor AF_CORES_DECISAO_IA.substituida, e o mesmo padrão de
+// guardar metadados por posição já usado em af_editarNotaEditorial()
+// (pl.substituicoes[chave], chave de af_chaveNotaEditorial()).
+let AF_MONT_SUBSTITUIR_KIND = null;    // 'musica' | 'mosaico' | null (fechado)
+let AF_MONT_SUBSTITUIR_INDEX = null;   // índice em pl.musicas — só relevante para kind 'musica'
+let AF_MONT_SUBSTITUTOS_ESTADO = null; // { carregando } | { validando } | { manual } | { sugestoes, curadorSugeriu }
+
+function af_montSubstituirAberto(kind, index) {
+  return AF_MONT_SUBSTITUIR_KIND === kind && (kind !== 'musica' || AF_MONT_SUBSTITUIR_INDEX === index);
+}
+
+// Artistas já em uso nesta playlist guardada — resolve ids reais do
+// catálogo (ao contrário do fluxo de criação, aqui as faixas já têm id).
+// excluirIndexMusica: posição a ignorar (a que está a ser substituída).
+function af_montArtistasNaPlaylist(excluirIndexMusica) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return [];
+  const artistas = new Set();
+  (pl.musicas || []).forEach((id, j) => {
+    if (j === excluirIndexMusica) return;
+    const t = resolveTrack(id);
+    if (t) artistaTexto(t).split('/').map(s => s.trim()).forEach(a => a && artistas.add(a));
+  });
+  if (pl.mosaico && pl.mosaico.id) {
+    const t = resolveTrack(pl.mosaico.id);
+    if (t) artistaTexto(t).split('/').map(s => s.trim()).forEach(a => a && artistas.add(a));
+  }
+  if (pl.mosaico && pl.mosaico.pessoa) artistas.add(pl.mosaico.pessoa);
+  return [...artistas];
+}
+
+function af_montFiltrarSugestoesArtistaRepetido(sugestoes, excluirIndexMusica) {
+  const proibidos = new Set(af_montArtistasNaPlaylist(excluirIndexMusica).map(af_normalizarArtista).filter(Boolean));
+  return sugestoes.filter(s => {
+    const artista = af_normalizarArtista(s.artista);
+    const pessoa = af_normalizarArtista(s.pessoa);
+    if (artista && proibidos.has(artista)) return false;
+    if (pessoa && proibidos.has(pessoa)) return false;
+    return true;
+  });
+}
+
+// Contexto textual para o prompt — a própria playlist já guardada
+// (universo + nome + nota de curadoria, que já explica a lógica editorial)
+// no lugar do formulário de criação (af_infoModoGeracaoIA(), não aplicável
+// aqui, a playlist já existe).
+function af_montContextoTxt() {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return '';
+  const notaTxt = pl.nota_curadoria ? ` Nota de curadoria: "${pl.nota_curadoria}"` : '';
+  return `uma playlist já existente chamada "${pl.nome || currentPlaylistKey}" (universo: ${pl.universo || '—'}).${notaTxt}`;
+}
+
+function af_montMontarPromptSubstituicaoMusica(i) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  const t = resolveTrack(pl.musicas[i]);
+  const listaArtistas = af_montArtistasNaPlaylist(i);
+  const artistasTxt = listaArtistas.length
+    ? ` Os seguintes artistas já estão nesta playlist e NÃO podem aparecer na alternativa: ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
+    : '';
+  return `Estás a curar uma playlist já publicada para um jogo de trivia musical (Music Box), a partir de ${af_montContextoTxt()}
+
+Uma das faixas desta playlist vai ser substituída: "${t ? t.titulo : '?'}" — ${t ? artistaTexto(t) : '?'}.${artistasTxt}
+
+Sugere exactamente 3 faixas alternativas REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas ou factos), cada uma com uma ligação clara ao mesmo contexto acima, diferentes entre si e dos artistas já listados. Para cada uma indica: titulo, artista, geografia, decada (formato "AAAAs"), estilo (descrição curta do estilo), genero (texto livre, ex.: "Rock", "Jazz"), tags (array de até 3 tags descritivas curtas), universal (true se a faixa é reconhecida transgeracionalmente).
+
+Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
+{
+  "sugestoes": [
+    {"titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true}
+  ]
+}
+O array "sugestoes" tem de ter exactamente 3 objectos.`;
+}
+
+function af_montMontarPromptSubstituicaoMosaico() {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  const t = pl.mosaico && pl.mosaico.id ? resolveTrack(pl.mosaico.id) : null;
+  const listaArtistas = af_montArtistasNaPlaylist(null);
+  const artistasTxt = listaArtistas.length
+    ? ` Os seguintes artistas já estão nesta playlist — NÃO podem ser o artista da faixa do mosaico, nem a pessoa a adivinhar pode ser membro, compositor ou colaborador conhecido de nenhum deles: ${listaArtistas.map(n => `"${n}"`).join(', ')}.`
+    : '';
+  return `Estás a curar o mosaico (a faixa-charada final) de uma playlist já publicada para um jogo de trivia musical (Music Box), a partir de ${af_montContextoTxt()}
+
+O mosaico actual vai ser substituído: categoria "${(pl.mosaico && pl.mosaico.categoria) || '?'}", pessoa a adivinhar "${(pl.mosaico && pl.mosaico.pessoa) || '?'}", faixa "${t ? t.titulo : '?'}" — ${t ? artistaTexto(t) : '?'}.${artistasTxt}
+
+Sugere 2 a 3 alternativas REAIS, conhecidas e verificáveis (nunca inventes títulos, artistas, pessoas ou factos): uma faixa cujo intérprete, baterista, compositor ou membro é, ele próprio, a pista que os jogadores têm de adivinhar. Cada alternativa tem de ter uma ligação clara ao contexto acima.
+
+Para cada alternativa indica: categoria (Artista|Baterista|Compositor|Dupla|Intérprete), pessoa (nome a adivinhar), titulo (da faixa), artista (da faixa), geografia, decada (formato "AAAAs"), estilo (descrição curta do estilo), genero (texto livre, ex.: "Rock", "Jazz"), tags (array de até 3 tags descritivas curtas), universal (true se reconhecida transgeracionalmente), elo_explicacao (explicação curta da ligação ao contexto acima).
+
+Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem texto antes ou depois, exactamente neste formato:
+{
+  "sugestoes": [
+    {"categoria": "...", "pessoa": "...", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true, "elo_explicacao": "..."}
+  ]
+}
+O array "sugestoes" tem de ter 2 ou 3 objectos.`;
+}
+
+async function af_montPedirSubstitutos(kind, i) {
+  AF_MONT_SUBSTITUTOS_ESTADO = { carregando: true };
+  renderMontagem();
+  try {
+    const prompt = kind === 'mosaico' ? af_montMontarPromptSubstituicaoMosaico() : af_montMontarPromptSubstituicaoMusica(i);
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-faixas`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }), keepalive: true,
+    });
+    const dados = await r.json().catch(() => null);
+    if (!r.ok || !dados || !dados.ok) throw new Error((dados && dados.erro) || `HTTP ${r.status}`);
+    let sugestoes = Array.isArray(dados.resultado && dados.resultado.sugestoes) ? dados.resultado.sugestoes.slice(0, 3) : [];
+    sugestoes = af_montFiltrarSugestoesArtistaRepetido(sugestoes, kind === 'mosaico' ? null : i);
+    if (!sugestoes.length) throw new Error('a IA não devolveu sugestões válidas (sem repetição de artista)');
+    if (!af_montSubstituirAberto(kind, i)) return; // curador fechou/mudou entretanto
+    AF_MONT_SUBSTITUTOS_ESTADO = { sugestoes };
+  } catch (e) {
+    console.error('[af_montPedirSubstitutos]', e);
+    if (!af_montSubstituirAberto(kind, i)) return;
+    AF_MONT_SUBSTITUTOS_ESTADO = { manual: true };
+    notify(`Falha a pedir sugestões à IA (${e.message}) — pesquisa manual disponível.`, 'err');
+  }
+  renderMontagem();
+}
+
+function af_abrirSubstituirMontagemMusica(i) {
+  const abrir = !af_montSubstituirAberto('musica', i);
+  AF_MONT_SUBSTITUIR_KIND = abrir ? 'musica' : null;
+  AF_MONT_SUBSTITUIR_INDEX = abrir ? i : null;
+  AF_MONT_SUBSTITUTOS_ESTADO = null;
+  renderMontagem();
+  if (abrir) af_montPedirSubstitutos('musica', i);
+}
+
+function af_abrirSubstituirMontagemMosaico() {
+  const abrir = !af_montSubstituirAberto('mosaico', null);
+  AF_MONT_SUBSTITUIR_KIND = abrir ? 'mosaico' : null;
+  AF_MONT_SUBSTITUIR_INDEX = null;
+  AF_MONT_SUBSTITUTOS_ESTADO = null;
+  renderMontagem();
+  if (abrir) af_montPedirSubstitutos('mosaico', null);
+}
+
+async function af_montUsarSugestaoCurador(kind, i) {
+  const campoId = kind === 'mosaico' ? 'mont-sugestao-curador-mosaico' : `mont-sugestao-curador-${i}`;
+  const input = document.getElementById(campoId);
+  const texto = input ? input.value.trim() : '';
+  if (!texto) { notify('Escreve título + artista antes de usar a tua sugestão.', 'err'); return; }
+
+  AF_MONT_SUBSTITUTOS_ESTADO = { validando: true };
+  renderMontagem();
+  try {
+    const pl = PLAYLISTS[currentPlaylistKey];
+    const listaArtistas = af_montArtistasNaPlaylist(kind === 'mosaico' ? null : i);
+    const artistasTxt = listaArtistas.length
+      ? ` Os seguintes artistas já estão nesta playlist: ${listaArtistas.map(n => `"${n}"`).join(', ')} — se a sugestão usar um destes, sinaliza isso em elo_explicacao.`
+      : '';
+    const prompt = kind === 'mosaico'
+      ? `Estás a curar o mosaico (a faixa-charada final) de uma playlist já publicada para um jogo de trivia musical (Music Box), a partir de ${af_montContextoTxt()}
+
+O curador sugeriu esta ideia de mosaico: "${texto}".${artistasTxt}
+
+Identifica a faixa real correspondente e a pessoa a adivinhar (categoria: Artista|Baterista|Compositor|Dupla|Intérprete — corrige a grafia se necessário, nunca inventes) e confirma/explica em elo_explicacao a ligação ao contexto acima. Indica também: geografia, decada (formato "AAAAs"), estilo, genero, tags (array até 3), universal.
+
+Responde APENAS com um objecto JSON válido, sem markdown, exactamente neste formato:
+{"faixa": {"categoria": "...", "pessoa": "...", "titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true, "elo_explicacao": "..."}}`
+      : `Estás a curar uma playlist já publicada para um jogo de trivia musical (Music Box), a partir de ${af_montContextoTxt()}
+
+O curador sugeriu esta faixa para substituir uma faixa anterior: "${texto}".${artistasTxt}
+
+Identifica a faixa real correspondente (título e artista correctos — corrige a grafia se necessário, nunca inventes) e confirma/explica em elo_explicacao a ligação dela ao contexto acima. Indica também: geografia, decada (formato "AAAAs"), estilo, genero, tags (array até 3), universal.
+
+Responde APENAS com um objecto JSON válido, sem markdown, exactamente neste formato:
+{"faixa": {"titulo": "...", "artista": "...", "geografia": "...", "decada": "AAAAs", "estilo": "...", "genero": "...", "tags": ["...", "...", "..."], "universal": true, "elo_explicacao": "..."}}`;
+
+    const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-faixas`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }), keepalive: true,
+    });
+    const dados = await r.json().catch(() => null);
+    if (!r.ok || !dados || !dados.ok) throw new Error((dados && dados.erro) || `HTTP ${r.status}`);
+    const faixa = dados.resultado && dados.resultado.faixa;
+    if (!faixa || !faixa.titulo) throw new Error('a IA não devolveu a faixa validada');
+    const filtradas = af_montFiltrarSugestoesArtistaRepetido([faixa], kind === 'mosaico' ? null : i);
+    if (!filtradas.length) throw new Error(`artista "${faixa.artista || faixa.pessoa}" já está nesta playlist`);
+    if (!af_montSubstituirAberto(kind, i)) return;
+    AF_MONT_SUBSTITUTOS_ESTADO = { sugestoes: filtradas, curadorSugeriu: true };
+  } catch (e) {
+    console.error('[af_montUsarSugestaoCurador]', e);
+    if (!af_montSubstituirAberto(kind, i)) return;
+    AF_MONT_SUBSTITUTOS_ESTADO = { manual: true };
+    notify(`Falha a validar a sugestão (${e.message}) — pesquisa manual disponível.`, 'err');
+  }
+  renderMontagem();
+}
+
+function af_montRejeitarSugestoes(kind, i) {
+  if (!af_montSubstituirAberto(kind, i)) return;
+  AF_MONT_SUBSTITUTOS_ESTADO = { manual: true };
+  renderMontagem();
+}
+
+function af_montFiltrarBuscaManual(kind, i, texto) {
+  const elId = kind === 'mosaico' ? 'mont-substituto-resultados-mosaico' : `mont-substituto-resultados-${i}`;
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const termo = texto.trim().toLowerCase();
+  if (!termo) { el.innerHTML = ''; return; }
+  const resultados = CATALOGO.filter(t =>
+    (t.titulo || '').toLowerCase().includes(termo) || artistaTexto(t).toLowerCase().includes(termo)
+  ).slice(0, 8);
+  el.innerHTML = resultados.map(t =>
+    `<div class="detail-input" style="cursor:pointer;padding:3px 6px;font-size:10px;margin-bottom:2px;" onclick="af_montAplicarSubstituicaoCatalogo('${kind}', ${i}, '${t.id}')">${escapeHtml(t.titulo)} — ${escapeHtml(artistaTexto(t))}</div>`
+  ).join('') || '<div style="font-size:10px;color:var(--text3);padding:3px 6px;">sem resultados</div>';
+}
+
+// Regista {substituida_de, data} na posição (mesmo padrão de
+// pl.notas_editoriais/af_chaveNotaEditorial(), ver af_editarNotaEditorial())
+// e avisa se a faixa antiga for mencionada no descritivo do apresentador.
+function af_montRegistarSubstituicao(kind, i, tituloAntigo, artistaAntigo) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  const chave = af_chaveNotaEditorial(kind, i, pl);
+  if (!pl.substituicoes) pl.substituicoes = {};
+  pl.substituicoes[chave] = {
+    substituida_de: { titulo: tituloAntigo, artista: artistaAntigo },
+    data: new Date().toISOString().slice(0, 10),
+  };
+  const descritivo = pl.descritivo_apresentador || '';
+  const mencionada = (tituloAntigo && descritivo.includes(tituloAntigo)) || (artistaAntigo && descritivo.includes(artistaAntigo));
+  if (mencionada) {
+    notify('O descritivo menciona a faixa trocada — rever o texto e regenerar a voz do descritivo.', 'err');
+  } else {
+    notify('Faixa substituída ✓', 'ok');
+  }
+}
+
+// id novo — reaproveita uma faixa já existente no catálogo (mesmo título+
+// artista normalizados) em vez de criar sempre um rascunho duplicado;
+// afGerarId() nunca reaproveita (gera sempre um id novo único), por isso a
+// procura é feita à parte, por título/artista.
+function af_montObterOuCriarFaixa(sugestao) {
+  const tNorm = afSlug(sugestao.titulo);
+  const aNorm = afSlug(sugestao.artista);
+  const existente = CATALOGO.find(t => afSlug(t.titulo) === tNorm && afSlug(artistaTexto(t)) === aNorm);
+  return existente ? existente.id : criarFaixaRascunhoIA(sugestao);
+}
+
+function af_montAplicarSugestao(kind, i, si) {
+  const estado = AF_MONT_SUBSTITUTOS_ESTADO;
+  const s = estado && estado.sugestoes && estado.sugestoes[si];
+  if (!s) return;
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl) return;
+
+  const idAntigo = kind === 'mosaico' ? (pl.mosaico && pl.mosaico.id) : pl.musicas[i];
+  const antiga = idAntigo ? resolveTrack(idAntigo) : null;
+
+  const id = af_montObterOuCriarFaixa(s);
+  if (kind === 'mosaico') {
+    if (!pl.mosaico) pl.mosaico = { categoria: s.categoria || '', pessoa: s.pessoa || '', id };
+    else { pl.mosaico.id = id; if (s.categoria) pl.mosaico.categoria = s.categoria; if (s.pessoa) pl.mosaico.pessoa = s.pessoa; }
+  } else {
+    pl.musicas[i] = id;
+  }
+
+  af_montRegistarSubstituicao(kind, i, antiga ? antiga.titulo : '', antiga ? artistaTexto(antiga) : '');
+  markDirty();
+  AF_MONT_SUBSTITUIR_KIND = null;
+  AF_MONT_SUBSTITUIR_INDEX = null;
+  AF_MONT_SUBSTITUTOS_ESTADO = null;
+  renderMontagem();
+  renderCatalogoPicker();
+}
+
+function af_montAplicarSubstituicaoCatalogo(kind, i, idCatalogo) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl || !CATALOGO_BY_ID.has(idCatalogo)) return;
+
+  const idAntigo = kind === 'mosaico' ? (pl.mosaico && pl.mosaico.id) : pl.musicas[i];
+  const antiga = idAntigo ? resolveTrack(idAntigo) : null;
+
+  if (kind === 'mosaico') {
+    if (!pl.mosaico) pl.mosaico = { categoria: '', pessoa: '', id: idCatalogo };
+    else pl.mosaico.id = idCatalogo;
+  } else {
+    pl.musicas[i] = idCatalogo;
+  }
+
+  af_montRegistarSubstituicao(kind, i, antiga ? antiga.titulo : '', antiga ? artistaTexto(antiga) : '');
+  markDirty();
+  AF_MONT_SUBSTITUIR_KIND = null;
+  AF_MONT_SUBSTITUIR_INDEX = null;
+  AF_MONT_SUBSTITUTOS_ESTADO = null;
+  renderMontagem();
+  renderCatalogoPicker();
+}
+
+// Bloco inline mostrado sob a posição com "✎ Substituir" aberto — mesma
+// estrutura visual de af_renderSubstitutosIA()/af_renderSubstitutosMosaicoIA()
+// do fluxo de criação (campo do curador + carregando/validando/sugestões/
+// manual).
+function af_montRenderSubstitutos(kind, i) {
+  if (!af_montSubstituirAberto(kind, i)) return '';
+  const estado = AF_MONT_SUBSTITUTOS_ESTADO;
+  const campoId = kind === 'mosaico' ? 'mont-sugestao-curador-mosaico' : `mont-sugestao-curador-${i}`;
+  let html = `<div style="padding-left:24px;margin-top:4px;padding-bottom:4px;" onclick="event.stopPropagation()">
+    <div style="display:flex;gap:4px;margin-bottom:4px;">
+      <input class="detail-input" id="${campoId}" style="flex:1;padding:3px 6px;font-size:10px;" placeholder="Tens uma sugestão? Escreve título + artista e a IA confirma a ligação" onkeydown="if(event.key==='Enter'){event.preventDefault();af_montUsarSugestaoCurador('${kind}', ${i});}">
+      <button type="button" class="btn" style="padding:2px 7px;font-size:10px;white-space:nowrap;" onclick="af_montUsarSugestaoCurador('${kind}', ${i})">✦ Usar a minha sugestão</button>
+    </div>`;
+
+  if (!estado || estado.carregando) return html + `<div style="font-size:10px;color:var(--text3);">A pedir sugestões à IA…</div></div>`;
+  if (estado.validando) return html + `<div style="font-size:10px;color:var(--text3);">A validar a ligação…</div></div>`;
+  if (estado.manual) {
+    const resultadosId = kind === 'mosaico' ? 'mont-substituto-resultados-mosaico' : `mont-substituto-resultados-${i}`;
+    return html + `<input class="detail-input" style="width:100%;padding:3px 6px;font-size:10px;" oninput="af_montFiltrarBuscaManual('${kind}', ${i}, this.value)" placeholder="Pesquisar faixa alternativa no catálogo (título ou artista)...">
+      <div id="${resultadosId}" style="margin-top:3px;max-height:120px;overflow-y:auto;"></div></div>`;
+  }
+  const sugestoes = estado.sugestoes || [];
+  html += `<div style="font-size:9px;color:var(--text3);margin-bottom:3px;">${estado.curadorSugeriu ? 'Sugestão validada pela IA:' : 'Sugestões da IA — escolhe uma ou rejeita todas:'}</div>`;
+  html += sugestoes.map((s, si) => `
+    <div style="display:flex;gap:4px;align-items:center;padding:3px 6px;margin-bottom:2px;border:1px solid var(--border2);border-radius:4px;">
+      <div style="flex:1;font-size:10px;">${kind === 'mosaico' ? `${escapeHtml(s.categoria || '?')} · ${escapeHtml(s.pessoa || '?')} — ` : ''}${escapeHtml(s.titulo || '')} — ${escapeHtml(s.artista || '')}
+        <span style="color:var(--text3);">(${escapeHtml(s.geografia || '')} · ${escapeHtml(s.decada || '')} · ${escapeHtml(s.genero || '')})</span>
+        ${s.elo_explicacao ? `<div style="color:var(--text3);font-style:italic;margin-top:2px;">${escapeHtml(s.elo_explicacao)}</div>` : ''}
+      </div>
+      <button type="button" class="btn" style="padding:2px 7px;font-size:9px;" onclick="af_montAplicarSugestao('${kind}', ${i}, ${si})">✓ Usar esta</button>
+    </div>`).join('');
+  html += `<button type="button" class="btn" style="padding:2px 7px;font-size:9px;margin-top:2px;" onclick="af_montRejeitarSugestoes('${kind}', ${i})">✗ Rejeitar — pesquisar no catálogo</button></div>`;
+  return html;
 }
 
 // Cria uma faixa-rascunho no catálogo (sem áudio, estado 'rascunho') a
