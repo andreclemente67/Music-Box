@@ -3887,6 +3887,11 @@ function renderMontagem() {
         <span class="shape-badge ${shapeOk?'ok':'warn'}"><span class="dot"></span>${exp===null ? current+' posições' : current+'/'+exp+' posições'}</span>
         ${avisoCompletudeHtml}
         ${progressoTrechosHtml}
+        ${(() => {
+          const c = af_contadorBonusRevistos(pl);
+          if (!c) return '';
+          return `<span class="shape-badge ${c.revistos === c.total ? 'ok' : 'warn'}" title="Perguntas Bónus marcadas como revistas nesta playlist"><span class="dot"></span>Bónus revistos: ${c.revistos}/${c.total}</span>`;
+        })()}
       </div>
       <div class="detail-field" style="margin-top:10px;">
         <label>Descritivo do Apresentador <span id="descritivo-apresentador-aviso">${pl.descritivo_apresentador ? '' : '<span style="color:var(--red);">— obrigatório, por preencher</span>'}</span></label>
@@ -4290,7 +4295,14 @@ function af_faixaTemBonus(chave, pl, posicao) {
 function af_obterPerguntaBonus(posicao) {
   const pl = PLAYLISTS[currentPlaylistKey];
   const pb = pl && (pl.perguntas_bonus || {})[posicao];
-  return { pergunta: (pb && pb.pergunta) || '', resposta: (pb && pb.resposta) || '' };
+  return {
+    pergunta: (pb && pb.pergunta_bonus) || '',
+    resposta: (pb && pb.resposta_bonus) || '',
+    origem: (pb && pb.origem) || null,
+    revisto: !!(pb && pb.revisto),
+    data: (pb && pb.data) || null,
+    data_revisao: (pb && pb.data_revisao) || null,
+  };
 }
 
 function af_editarPerguntaBonus(posicao, campo, valor) {
@@ -4298,16 +4310,46 @@ function af_editarPerguntaBonus(posicao, campo, valor) {
   if (!pl) return;
   if (!pl.perguntas_bonus) pl.perguntas_bonus = {};
   if (!pl.perguntas_bonus[posicao]) pl.perguntas_bonus[posicao] = {};
-  pl.perguntas_bonus[posicao][campo] = valor;
+  const chaveCampo = campo === 'pergunta' ? 'pergunta_bonus' : 'resposta_bonus';
+  pl.perguntas_bonus[posicao][chaveCampo] = valor;
+  pl.perguntas_bonus[posicao].revisto = false;
+  delete pl.perguntas_bonus[posicao].data_revisao;
   markDirty();
+  renderMontagem();
+}
+
+function af_alternarRevistoBonus(posicao) {
+  const pl = PLAYLISTS[currentPlaylistKey];
+  if (!pl || !pl.perguntas_bonus || !pl.perguntas_bonus[posicao]) return;
+  const pb = pl.perguntas_bonus[posicao];
+  pb.revisto = !pb.revisto;
+  if (pb.revisto) pb.data_revisao = new Date().toISOString().slice(0, 10);
+  else delete pb.data_revisao;
+  markDirty();
+  renderMontagem();
+}
+
+function af_contadorBonusRevistos(pl) {
+  if (!pl) return null;
+  const musicas = pl.musicas || [];
+  let total = 0, revistos = 0;
+  for (let i = 1; i <= musicas.length; i++) {
+    if (!af_faixaTemBonus(currentPlaylistKey, pl, i)) continue;
+    total++;
+    if ((pl.perguntas_bonus || {})[i] && pl.perguntas_bonus[i].revisto) revistos++;
+  }
+  return total ? { revistos, total } : null;
 }
 
 function af_perguntaBonusHtml(posicao) {
   const pl = PLAYLISTS[currentPlaylistKey];
   if (!af_faixaTemBonus(currentPlaylistKey, pl, posicao)) return '';
   const pb = af_obterPerguntaBonus(posicao);
-  return `<div style="margin:6px 24px 2px;padding:6px 10px;border-left:2px solid var(--accent);background:rgba(232,197,71,0.04);" onclick="event.stopPropagation()">
-    <div style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;">✦ Pergunta Bónus (Faixa ${posicao})</div>
+  return `<div style="margin:6px 24px 2px;padding:6px 10px;border-left:2px solid ${pb.revisto ? 'var(--green)' : 'var(--accent)'};background:rgba(232,197,71,0.04);" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+      <span style="font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;flex:1;">✦ Pergunta Bónus (Faixa ${posicao})${pb.origem === 'ia' && !pb.revisto ? ' · IA, por rever' : ''}</span>
+      <button type="button" class="btn" style="padding:2px 7px;font-size:9px;${pb.revisto ? `background:${'var(--green)'};color:#0a2015;border-color:var(--green);` : ''}" onclick="af_alternarRevistoBonus(${posicao})" title="${pb.revisto ? 'Revisto em ' + pb.data_revisao + ' — clica para desfazer' : 'Marcar como revisto'}">✓ Revisto</button>
+    </div>
     <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;margin-bottom:3px;" value="${escapeAttr(pb.pergunta)}" placeholder="Pergunta (ano, álbum, história da canção, curiosidade do artista — nunca título/artista de outra faixa nem o mosaico)" onchange="af_editarPerguntaBonus(${posicao}, 'pergunta', this.value)">
     <input class="detail-input" style="width:100%;padding:4px 6px;font-size:11px;" value="${escapeAttr(pb.resposta)}" placeholder="Resposta" onchange="af_editarPerguntaBonus(${posicao}, 'resposta', this.value)">
   </div>`;
@@ -5546,6 +5588,8 @@ Responde APENAS com um objecto JSON válido, sem markdown, sem comentários, sem
         }
         af_editarPerguntaBonus(pos, 'pergunta', dados.resultado.pergunta);
         af_editarPerguntaBonus(pos, 'resposta', dados.resultado.resposta || '');
+        pl.perguntas_bonus[pos].origem = 'ia';
+        pl.perguntas_bonus[pos].data = new Date().toISOString().slice(0, 10);
       } catch (e) {
         console.error('[af_gerarPerguntasBonusIA] falha na Faixa', pos, e);
         falhas++;
