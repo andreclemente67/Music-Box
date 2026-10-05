@@ -3470,7 +3470,9 @@ function acertouFaixa(i) {
         `${NOMES[i]} ganhou a Faixa ${faixaAtual} (+${PONTOS_FAIXA} pontos). Pergunta Bónus temática (${COLLECTIONS[collectionActual].nome}):`;
       preencherPainelBonus(collectionActual, faixaAtual);
     }, pausaAposAcerto);
-    log(`✓ ${NOMES[i]} acertou — quadrado ${faixaAtual} conquistado.`);
+    // "quadrado X conquistado" removido do texto (revisto em 5 Out
+    // 2026) — a revelação do Mosaico já não depende de Faixas respondidas.
+    log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos).`);
   } else if (!temBonusNestaFaixa && ESCADA_MEMORIA_ACTIVA) {
     log(`✓ ${NOMES[i]} acertou (+${PONTOS_FAIXA} pontos) — Universo musical: arranca a Escada de Memória.`);
     setTimeout(() => iniciarEscada(i), pausaAposAcerto);
@@ -3636,27 +3638,57 @@ function revelarQuadradoMosaico(q) {
   requestAnimationFrame(() => div.classList.remove('a-entrar'));
 }
 
-const QUADRADOS_AUTO_MAX = 14; // dos 16 — os últimos 2 nunca revelam sozinhos
+// Duração do momento do Mosaico (revisto em 5 Out 2026 — Bíblia §27.7:
+// "trecho único e contínuo de 30 segundos"). Antes deste valor era um
+// 20000 solto, sem ligação a nenhuma regra escrita — agora alinhado com
+// o número que já estava fechado na Bíblia, nunca aplicado ao código.
+const MOSAICO_DURACAO_MS = 30000;
+// Timeouts pendentes da revelação automática (animarRevelacaoGrelha) —
+// guardados para serem cancelados se alguém acertar antes do fim (ver
+// confirmarMosaicoAcerto/revelarMosaicoCascata), e o próprio fim
+// automático do Mosaico (ver iniciarMosaico/avancarRevelacao).
+let mosaicoTimeoutsRevelacao = [];
+let mosaicoTimeoutFim = null;
 
 function animarRevelacaoGrelha() {
-  // Comportamento original restaurado: os quadrados revelam-se em ordem
-  // aleatória, espalhados ao longo de ~20s, todos com a mesma transição
-  // suave (revelarQuadradoMosaico). Uma tentativa anterior de ligar isto a
-  // quadradosGanhos ("X de 8") partiu a aleatoriedade e o ritmo — revelava
-  // sequencialmente (0,1,2…) e depressa demais. "Quadrados conquistados: X
-  // de 8" no texto de estado (ver iniciarMosaico) é só informativo, não
-  // condiciona esta animação.
-  // Só os primeiros QUADRADOS_AUTO_MAX do baralho ficam agendados — os
-  // últimos 2 nunca revelam por si só, só via "▦ Revelar Mosaico Completo"
-  // ou uma resposta certa (ver confirmarMosaicoAcerto).
+  // Revisto em 5 Out 2026 (pedido do utilizador — "o Mosaico deixa de
+  // estar ligado às respostas certas"): os 16 quadrados revelam-se
+  // sempre automaticamente, em ordem aleatória, a intervalos regulares
+  // ao longo de MOSAICO_DURACAO_MS — nunca dependem de quadradosGanhos
+  // nem de nenhuma Faixa ter sido respondida (ver DECISIONS.md). Antes
+  // só os primeiros 14 de 16 revelavam por si só; os últimos 2 ficavam
+  // sempre reservados para uma resposta certa ou "Revelar Mosaico
+  // Completo" — essa reserva desaparece, agora é sempre a imagem
+  // completa, com ou sem vencedor.
+  mosaicoTimeoutsRevelacao.forEach(clearTimeout);
+  mosaicoTimeoutsRevelacao = [];
   const todosIndices = Array.from({length: 16}, (_, i) => i);
   for (let i = todosIndices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [todosIndices[i], todosIndices[j]] = [todosIndices[j], todosIndices[i]];
   }
-  const intervalo = 20000 / 16;
-  todosIndices.slice(0, QUADRADOS_AUTO_MAX).forEach((q, ordem) => {
-    setTimeout(() => revelarQuadradoMosaico(q), intervalo * (ordem + 1));
+  const intervalo = MOSAICO_DURACAO_MS / 16;
+  todosIndices.forEach((q, ordem) => {
+    mosaicoTimeoutsRevelacao.push(setTimeout(() => revelarQuadradoMosaico(q), intervalo * (ordem + 1)));
+  });
+}
+
+// Cascata rápida (~1s) dos quadrados que ainda faltam — usada quando
+// alguém acerta antes do fim do tempo normal do Mosaico (revisto em
+// 5 Out 2026): a imagem fica completa durante o anúncio do nome, em
+// vez de aparecer tudo instantaneamente. Cancela primeiro a revelação
+// automática ainda pendente (senão continuaria a disparar por cima).
+function revelarMosaicoCascata() {
+  mosaicoTimeoutsRevelacao.forEach(clearTimeout);
+  mosaicoTimeoutsRevelacao = [];
+  const faltam = [];
+  document.querySelectorAll('.mosaico-quadrado').forEach(div => {
+    if (!div.classList.contains('revelado')) faltam.push(Number(div.dataset.q));
+  });
+  if (!faltam.length) return;
+  const intervalo = 1000 / faltam.length;
+  faltam.forEach((q, ordem) => {
+    setTimeout(() => revelarQuadradoMosaico(q), intervalo * ordem);
   });
 }
 
@@ -3685,9 +3717,20 @@ function iniciarMosaico() {
   // Sem "resposta certa" aqui — mesmo problema da Faixa normal: revelava a
   // resposta no #log assim que o Mosaico arrancava, antes de ser revelado.
   log(`Mosaico — categoria: ${infoMosaico.categoria}`);
-  document.getElementById('mosaico-status').textContent =
-    `Quadrados conquistados: ${quadradosGanhos.filter(Boolean).length} de 8. A revelar...`;
+  // Revisto em 5 Out 2026: já não refere "quadrados conquistados" (a
+  // revelação deixou de depender de Faixas respondidas) — só anuncia
+  // que a revelação automática está em curso.
+  document.getElementById('mosaico-status').textContent = 'A revelar...';
   animarRevelacaoGrelha();
+  // Fim automático do Mosaico ao fim de MOSAICO_DURACAO_MS, se ninguém
+  // tiver acertado antes (revisto em 5 Out 2026) — antes só terminava
+  // por clique manual do operador em "⏭ Revelação terminada"
+  // (avancarRevelacao()). Guard de faseGeral: não dispara se o acerto,
+  // ou um reset/avanço manual, já tiver fechado esta fase entretanto.
+  clearTimeout(mosaicoTimeoutFim);
+  mosaicoTimeoutFim = setTimeout(() => {
+    if (faseGeral === 'mosaico_revelando') avancarRevelacao();
+  }, MOSAICO_DURACAO_MS);
   atualizarBotaoRevelacao();
   const revelarBtnM8 = document.getElementById('mosaico-revelar-btn');
   if (revelarBtnM8) revelarBtnM8.style.display = 'inline-block';
@@ -3699,11 +3742,13 @@ function confirmarMosaicoAcerto(i) {
   if (mutados[i] || (faseGeral !== 'mosaico_revelando' && faseGeral !== 'mosaico_mortesubita')) return;
   const infoMosaico = COLLECTIONS[collectionActual].mosaico;
   clearInterval(timerInterval);
+  clearTimeout(mosaicoTimeoutFim); // acertou antes do fim automático — nunca dispara a seguir
   vencedorMosaico = i;
-  // Resposta certa revela os quadrados que a animação por tempo deixou de
-  // fora (ver QUADRADOS_AUTO_MAX) — reaproveita revelarMosaicoCompleto()
-  // em vez de duplicar a lógica.
-  revelarMosaicoCompleto();
+  // Resposta certa antes do fim do tempo normal do Mosaico (revisto em
+  // 5 Out 2026): cascata rápida (~1s) dos quadrados que ainda faltavam,
+  // em vez de aparecerem todos instantaneamente — a imagem fica
+  // completa durante o anúncio do nome a seguir.
+  revelarMosaicoCascata();
   pontos[i] += PONTOS_MOSAICO;
   // Em falta antes: ao contrário de acertouFaixa/acertouR4/errouFaixa/errouR4,
   // esta função nunca registava o acerto em historico[i] — os pontos do
@@ -3819,6 +3864,12 @@ function revelarMosaicoCompleto() {
 
 function avancarRevelacao() {
   if (faseGeral !== 'mosaico_revelando') return;
+  // Garantia (revisto em 5 Out 2026): "em qualquer desfecho, o público vê
+  // sempre a imagem inteira no fim" — a animação por tempo já devia ter
+  // revelado tudo a esta altura (dispara ao fim de MOSAICO_DURACAO_MS,
+  // exactamente quando isto corre), mas chama-se aqui de qualquer forma
+  // como rede de segurança, nunca dependente de acertar o timing exacto.
+  revelarMosaicoCompleto();
   // Morte Súbita só faz sentido para desempatar — sem empate técnico real
   // entre os concorrentes ainda elegíveis, termina a revelação normalmente,
   // sem o alarme "MORTE SÚBITA" nem o contador de 3s (bug corrigido: antes

@@ -1685,3 +1685,62 @@ default histórico, sem necessidade de regenerar o que já existe) — a
 Testado com Playwright: acerto na Faixa 1 de "Música Portuguesa"
 (José Afonso) toca `voz/nome_pt_01.wav` (agora Duarte) seguido de
 `efeitos/in_the_box.wav`, zero erros de JS.
+
+## 2026-10-05 — Mosaico deixa de estar ligado às respostas certas
+
+**Diagnóstico**: a duração do momento do Mosaico nunca teve uma regra
+fechada aplicada no código — `animarRevelacaoGrelha()` usava um
+`20000` (20s) solto, sem ligação a nada, enquanto a Bíblia §27.7 já
+fixava "trecho único e contínuo de 30 segundos" desde 28 Ago 2026,
+nunca aplicado a esta animação. O áudio do Mosaico (`infoMosaico.audio`)
+toca o ficheiro completo sem corte — não é "Trecho A + Trecho B".
+
+A ligação "Faixa ganha → quadrado do Mosaico" **já não existia na
+grelha visual** — `renderM8Grelha()`/`animarRevelacaoGrelha()` já
+revelavam os quadrados por ordem aleatória, independentes de
+`quadradosGanhos` (um comentário no código, de uma tentativa anterior
+revertida, confirma isto explicitamente). `quadradosGanhos` só
+alimentava texto informativo ("Quadrados conquistados: X de 8",
+removido) e os pontinhos de progresso da sidebar (`renderProgresso()`,
+mantidos — não são sobre o Mosaico, são progresso geral da Playlist).
+A fase 'mosaico_revelando' também não tinha fim automático por tempo —
+só terminava por resposta certa ou pelo operador a clicar manualmente
+"⏭ Revelação terminada" (`avancarRevelacao()`); só a Morte Súbita
+(`mosaico_mortesubita`) tinha temporizador próprio.
+
+**Pontuação/dinheiro**: `PONTOS_MOSAICO = 200` é um valor fixo, somado
+em `confirmarMosaicoAcerto()` independentemente de quantos quadrados
+estavam visíveis nesse momento — não depende do número de quadrados.
+`dinheiro[]` (mealheiro) também não é tocado por `quadradosGanhos` em
+nenhum sítio. Avança-se para a implementação, como já previsto.
+
+**Bíblia**: §9.8 (ligação estrita Faixa→quadrado) e §5.11 (grelha 16,
+1 por Faixa, máx. 7 reveláveis) descreviam exactamente a regra antiga,
+agora substituída — texto original mantido tachado em ambas, como
+registo histórico. §3.8/§27.7 actualizadas para reflectir a revelação
+automática e os 30 segundos finalmente aplicados ao código.
+
+**Implementado** (`musicbox.html`): `MOSAICO_DURACAO_MS = 30000`
+(Bíblia §27.7). `animarRevelacaoGrelha()` revela os 16 quadrados (antes
+só 14 de 16 — os últimos 2 ficavam sempre reservados) a intervalos
+regulares (`30000/16`), guardando os timeouts para poderem ser
+cancelados. Novo `mosaicoTimeoutFim` em `iniciarMosaico()` — fim
+automático da fase ao fim de 30s se ninguém tiver acertado, chamando
+`avancarRevelacao()` (antes só manual). `confirmarMosaicoAcerto()`
+cancela a revelação automática pendente e chama a nova
+`revelarMosaicoCascata()` — os quadrados que faltam abrem-se em
+cascata ao longo de ~1s, em vez de aparecerem todos instantaneamente,
+para a imagem ficar completa durante o anúncio do nome.
+`avancarRevelacao()` chama `revelarMosaicoCompleto()` como rede de
+segurança antes de decidir Morte Súbita ou fim sem vencedor — garante
+"a imagem inteira no fim" em qualquer desfecho, mesmo com folga de
+timing. Texto "quadrado X conquistado" removido do log de
+`acertouFaixa()`; texto de estado do Mosaico já não menciona
+"quadrados conquistados".
+
+Fluxo real e Modo Teste partilham o mesmo código (`testarMosaico()` →
+`iniciarMosaico()` → `confirmarMosaicoAcerto()`), sem alteração extra
+necessária. Testado com Playwright: acerto a meio da revelação (4/16
+visíveis aos ~8s, cascata completa os 16 após o acerto) e ninguém
+acertar (fim automático aos 30s, imagem completa via a rede de
+segurança) — zero erros de JS nos dois cenários.

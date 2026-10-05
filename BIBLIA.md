@@ -158,9 +158,9 @@ Cada acerto soma 100 pontos ao ranking e liberta um quadrado do Mosaico. Apenas 
 
 | 5. Resolução | Se acertar: painel Verde e ganha quadrado. Se falhar: Mute (Vermelho). | Pontos e Bloqueio da Faixa. |
 
-## 3.8 O Mosaico
+## 3.8 O Mosaico (revisto em 5 Out 2026 — revelação automática, não "acumulada")
 
-Ao fechar a sétima Faixa, os quadrados acumulados abrem no ecrã para desvendar a imagem oculta da Playlist, com uma pista sonora de fundo Obs. Considerar tirar com pista sonora de fundo.
+Ao fechar a sétima Faixa, a grelha de dezasseis quadrados começa totalmente tapada e abre-se automaticamente, a intervalos regulares, ao longo dos 30 segundos do momento do Mosaico (ver 5.11/27.7) — já não há quadrados "acumulados" das Faixas anteriores a abrir de início.
 
 O primeiro jogador detetado pelos sensores de voz ganha direito exclusivo de resposta (painel Azul com flicker), enquanto os restantes passam a Vermelho (MUTE). Resposta correta: vitória do Mosaico, painel Verde, +200 pontos. Resposta errada: Vermelho (MUTE). Se o tempo esgotar sem resposta correta, o sistema desencadeia Morte Súbita e bloqueia todo o estúdio a Vermelho.
 
@@ -382,9 +382,15 @@ Nota de Simplificação Mecânica (revista): fechado a 12/07/2026 — o erro pas
 
 Após os sete Faixas, inicia-se o Mosaico: cada Playlist tem associada uma imagem ligada ao seu universo editorial (ex: rosto de um vocalista, logótipo de um festival, instrumento de assinatura, poster de um filme).
 
-## 5.11 A Revelação Conjunta (revisto em 30 Ago 2026 — grelha 16 quadrados, 1 revelado por Faixa)
+## 5.11 A Revelação Automática (revisto em 30 Ago 2026 — grelha 16 quadrados, 1 revelado por Faixa; revisto em 5 Out 2026 — substituído: revelação automática por tempo, já não por Faixa)
 
-A imagem está numa grelha de dezasseis quadrados. Cada Faixa acertada revela exactamente 1 quadrado — com 7 Faixas por Playlist, o máximo de quadrados reveláveis é 7; os restantes 9 quadrados ficam sempre ocultos, mesmo com prestação perfeita, o que garante suspense até ao fim.
+~~A imagem está numa grelha de dezasseis quadrados. Cada Faixa acertada revela exactamente 1 quadrado — com 7 Faixas por Playlist, o máximo de quadrados reveláveis é 7; os restantes 9 quadrados ficam sempre ocultos, mesmo com prestação perfeita, o que garante suspense até ao fim.~~ Texto original mantido tachado como registo histórico, não apagado.
+
+**Regra fechada (revisto em 5 Out 2026)**: a imagem está numa grelha de dezasseis quadrados, mas a sua revelação deixa de estar ligada a quais Faixas foram respondidas correctamente. Os 16 quadrados abrem-se automaticamente, em ordem aleatória, a intervalos regulares, ao longo dos 30 segundos do momento do Mosaico (ver 27.7) — até a imagem ficar completa mesmo que nenhum concorrente responda.
+
+Se um concorrente acertar antes do fim desse tempo, os quadrados que ainda faltam abrem-se todos de seguida, em cascata rápida (~1 segundo) — a imagem fica completa durante o anúncio do nome da pessoa identificada. Se ninguém acertar, a revelação automática termina com o esgotar do tempo, já com a imagem completa. Em qualquer dos dois desfechos, o público vê sempre a imagem inteira no fim — nunca uma grelha parcialmente tapada.
+
+Esta regra substitui por completo a ligação anterior "Faixa acertada → quadrado revelado" (ver 9.8) — a pontuação de cada Faixa (ver 5.3/11.2) e os +200 pontos de vencer o Mosaico mantêm-se inalterados, independentes do número de quadrados visíveis em qualquer momento.
 
 ## 5.12 O Desafio Final e a Morte Súbita
 
@@ -810,13 +816,11 @@ A ordem dos sete Faixas não é aleatória: a Playlist apresenta progressão de 
 
 Cada Faixa deve contribuir para o equilíbrio da Playlist: dificuldade excessiva reduz a participação do público, dificuldade demasiado baixa elimina o desafio. A Curadoria de Memória Auditiva encontra esse equilíbrio.
 
-## 9.8 Relação Estrita com o Mosaico
+## 9.8 Relação com o Mosaico (revisto em 5 Out 2026 — substituído: a revelação deixa de depender das Faixas)
 
-Cada Faixa é uma oportunidade para desvendar um quadrado do Mosaico, mas o preenchimento da grelha obedece a uma lógica inflexível:
+~~Cada Faixa é uma oportunidade para desvendar um quadrado do Mosaico, mas o preenchimento da grelha obedece a uma lógica inflexível: Apenas as respostas validadas como corretas abrem o quadrado associado à Faixa em causa. Se a Faixa encerrar por erro de todos ou por esgotamento de tempo sem resposta, esse quadrado não é conquistado e fica tapado na revelação do Mosaico.~~ Texto original mantido tachado como registo histórico, não apagado.
 
-Apenas as respostas validadas como corretas abrem o quadrado associado à Faixa em causa. 
-
-Se a Faixa encerrar por erro de todos ou por esgotamento de tempo sem resposta, esse quadrado não é conquistado e fica tapado na revelação do Mosaico.
+**(revisto em 5 Out 2026)**: o Mosaico deixa de estar ligado às respostas certas das Faixas anteriores — ver §5.11 para a regra fechada. Cada Faixa continua a valer os seus pontos normalmente (ver 5.3/11.2), mas acertar ou errar uma Faixa não abre nem tapa nenhum quadrado do Mosaico.
 
 ## 9.9 Produção
 
@@ -1758,9 +1762,11 @@ O timestamp de início de cada trecho é definido a 3 segundos antes do momento 
 
 Nas playlists do Universo Cinema e Bandas Sonoras, o ponto de referência para a selecção do trecho é o momento icónico da música tal como surge no filme — não o início da faixa de estúdio. O timestamp documentado nos metadados refere-se à cena cinematográfica associada.
 
-## 27.7 Mosaico: Trecho Único Contínuo de 30 Segundos Sem Fast Forward
+## 27.7 Mosaico: Trecho Único Contínuo de 30 Segundos Sem Fast Forward (aplicado à revelação em 5 Out 2026)
 
 O áudio do Mosaico é um trecho único e contínuo de 30 segundos, sem Fast Forward nem divisão em Trecho A / Trecho B. Esta é uma excepção estrutural ao modelo padrão das faixas regulares (ver Capítulo 13 — Fast Forward).
+
+**(revisto em 5 Out 2026)**: estes 30 segundos passam também a ser a base do tempo da revelação automática da grelha (ver 5.11) — antes do código ligar os dois, o tempo da animação de revelação não tinha nenhuma regra fechada por detrás.
 
 ## 27.8 Imagens do Mosaico: Fotografia Icónica, Nunca Capa de Álbum ou Logo
 
