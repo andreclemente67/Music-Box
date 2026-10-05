@@ -455,6 +455,11 @@
        Playlist". Escondida por defeito — só aparece com conteúdo, ver
        confirmarCollection(). -->
   <div class="collection-descritivo-apresentador" id="collection-descritivo-apresentador" style="display:none;"></div>
+  <!-- Narração do descritivo (2026-10-05) — só visível enquanto
+       voz/descritivo_<codigo>.wav está a tocar, ver
+       tocarNarracaoOuProsseguir(). -->
+  <button id="btn-saltar-narracao" onclick="if (narracaoEmCurso) narracaoEmCurso.skip();"
+    style="display:none;background:var(--bg3);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 16px;font-size:11px;cursor:pointer;margin-top:4px;">Saltar ›</button>
 </div>
 
 <!-- "ℹ Saber mais" (2026-10-04, pedido do utilizador): prévia de uma
@@ -765,9 +770,85 @@ function alternarNarracao() {
   const novoEstado = !narracaoActiva();
   try { localStorage.setItem(NARRACAO_STORAGE_KEY, novoEstado ? '1' : '0'); } catch (e) {}
   atualizarUINarracao();
+  // Desligar a meio de uma narração em curso pára-a e avança de imediato
+  // (2026-10-05, pedido do utilizador) — ver tocarNarracaoOuProsseguir().
+  if (!novoEstado && narracaoEmCurso) narracaoEmCurso.skip();
 }
 
 document.addEventListener('DOMContentLoaded', atualizarUINarracao);
+
+// ─────────────────────────────────────────────────────────────
+// NARRAÇÃO DO DESCRITIVO (2026-10-05, pedido do utilizador) — toca
+// voz/descritivo_<playlistCodigo>.wav (voz Duarte, gerar_vozes_descritivo.py)
+// ao arrancar uma playlist, antes da 1ª Faixa. Pré-carregado logo em
+// confirmarCollection() (ver prepararNarracaoDescritivo()), bem antes do
+// clique em "▶ Iniciar Playlist" — o apresentador normalmente demora
+// mais que isso a ler o ecrã, por isso a reprodução em si arranca quase
+// instantânea nesse clique (testado <300ms). Verificação de existência
+// em cache por código (narracaoDisponivelCache) — só um pedido de rede
+// por playlist, nunca repetido, mesmo padrão já usado para roarDisponivel.
+let narracaoAudioAtual = null;
+let narracaoEmCurso = null; // { skip() } só enquanto uma narração está a tocar
+const narracaoDisponivelCache = new Map();
+
+async function narracaoDisponivel(codigo) {
+  if (narracaoDisponivelCache.has(codigo)) return narracaoDisponivelCache.get(codigo);
+  let ok = false;
+  try {
+    const resp = await fetch('voz/descritivo_' + codigo + '.wav', { cache: 'no-cache' });
+    ok = resp.ok;
+  } catch (e) { ok = false; }
+  narracaoDisponivelCache.set(codigo, ok);
+  return ok;
+}
+
+// Chamado em confirmarCollection() — não bloqueia nada, só prepara o
+// Audio() com antecedência para o clique em "▶ Iniciar Playlist" ficar
+// quase instantâneo. Ficheiros em voz/descritivo_*.wav são nomeados pelo
+// playlistCodigo (a chave usada em playlists.json/gerar_vozes_descritivo.py),
+// NÃO pela chave interna de COLLECTIONS — para a maioria das playlists são
+// o mesmo valor, mas nas "legadas" com alias (ANOS80, ANOS2010, LOGO001,
+// TRIBUTO_BEATLES, etc., ver UNIVERSOS_EXTERNOS) são diferentes. BUG real
+// encontrado em teste 2026-10-05: usar `chave` directamente dava sempre
+// 404 nessas ~13 playlists, mesmo já tendo a voz gerada.
+function prepararNarracaoDescritivo(chave) {
+  narracaoAudioAtual = null;
+  const codigo = COLLECTIONS[chave].playlistCodigo;
+  narracaoDisponivel(codigo).then(disponivel => {
+    // collectionActual pode já ter mudado entretanto (candidata vista e
+    // descartada) — só usa o resultado se ainda for a playlist actual.
+    if (disponivel && collectionActual === chave) {
+      const a = new Audio('voz/descritivo_' + codigo + '.wav');
+      a.preload = 'auto';
+      a.load();
+      narracaoAudioAtual = a;
+    }
+  });
+}
+
+// Chamado em iniciarPlaylistManual() — toca a narração (se ligada e
+// disponível) e só chama aoTerminar() no fim (ou no "Saltar ›", ou se a
+// reprodução falhar); sem narração disponível/ligada, chama aoTerminar()
+// logo. Música nunca está a tocar aqui (ecrã de escolha de Universo, ANTES
+// da 1ª Faixa) — nada para pausar.
+function tocarNarracaoOuProsseguir(aoTerminar) {
+  if (!narracaoActiva() || !narracaoAudioAtual) { aoTerminar(); return; }
+  const audioNarracao = narracaoAudioAtual;
+  const btnSaltar = document.getElementById('btn-saltar-narracao');
+  let concluido = false;
+  const concluir = () => {
+    if (concluido) return;
+    concluido = true;
+    audioNarracao.pause();
+    narracaoEmCurso = null;
+    if (btnSaltar) btnSaltar.style.display = 'none';
+    aoTerminar();
+  };
+  narracaoEmCurso = { skip: concluir };
+  audioNarracao.addEventListener('ended', concluir);
+  audioNarracao.play().catch(() => concluir()); // play() falhou — avança sem travar o jogo
+  if (btnSaltar) { btnSaltar.style.display = ''; btnSaltar.onclick = concluir; }
+}
 
 // COLLECTIONS — reaproveita os catálogos reais já construídos.
 // NOTA: os títulos/artistas de "Música Portuguesa" foram confirmados (22 Jul).
@@ -2105,6 +2186,9 @@ function confirmarCollection(chave, foiAleatorio) {
     descritivoApresentadorEl.textContent = '';
     descritivoApresentadorEl.style.display = 'none';
   }
+  // Narração do descritivo (2026-10-05): prepara já aqui, bem antes do
+  // clique em "▶ Iniciar Playlist" — ver prepararNarracaoDescritivo().
+  prepararNarracaoDescritivo(chave);
   log(`Playlist desta posição: ${COLLECTIONS[chave].nome} (Universo: ${COLLECTIONS[chave].universo})`);
   // Pausa de entrada de Playlist (2026-09-02): título+universo já
   // revelados acima — fica à espera de "▶ Iniciar Playlist" em vez de
@@ -2137,11 +2221,17 @@ function confirmarCollection(chave, foiAleatorio) {
 
 function iniciarPlaylistManual() {
   if (faseGeral !== 'aguardando_inicio_playlist') return;
-  if (rondaAtual <= 3) {
-    iniciarPlaylistRegular();
-  } else {
-    iniciarRonda4();
-  }
+  // Narração do descritivo (2026-10-05) — toca antes da 1ª Faixa (se
+  // ligada e disponível); a 1ª Faixa só arranca no 'ended' dela, no
+  // "Saltar ›", ou de imediato se não houver narração. Ver
+  // tocarNarracaoOuProsseguir()/prepararNarracaoDescritivo().
+  tocarNarracaoOuProsseguir(() => {
+    if (rondaAtual <= 3) {
+      iniciarPlaylistRegular();
+    } else {
+      iniciarRonda4();
+    }
+  });
 }
 
 // ── PLAYLIST REGULAR (7 Faixas + Mosaico) ──
