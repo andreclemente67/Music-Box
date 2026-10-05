@@ -538,6 +538,9 @@
        preencherPainelBonus(). -->
   <p id="bonus-pergunta" style="font-weight:700;font-size:14px;color:var(--text);margin:10px 0 4px;"></p>
   <p id="bonus-resposta" style="font-size:12px;color:var(--accent);margin:0 0 10px;"></p>
+  <!-- "IA · por rever" (2026-10-05, pedido do utilizador) — só aparece
+       quando perguntas_bonus[faixa].revisto === false. Ver preencherPainelBonus(). -->
+  <p id="bonus-indicador" style="display:none;font-size:9px;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;margin:-6px 0 10px;">IA · por rever</p>
   <div class="bonus-acoes">
     <button class="btn-bonus-sim" onclick="resolverBonus(true)">Acertou (+dinheiro)</button>
     <button class="btn-bonus-nao" onclick="resolverBonus(false)">Errou (sem dinheiro)</button>
@@ -1502,19 +1505,24 @@ function faixaTemBonus(chave, faixa) {
 // Preenche a pergunta/resposta bónus visíveis no painel do BONUS_MODE
 // (2026-10-05, pedido do utilizador — antes o painel não mostrava nada,
 // o apresentador tinha de saber a pergunta de outro sítio). Lê
-// col.perguntas_bonus[faixa] — {pergunta, resposta} por posição,
-// playlists.json (só leitura, ver loadData()).
+// col.perguntas_bonus[faixa] — {pergunta_bonus, resposta_bonus, origem,
+// revisto, data} por posição, playlists.json (só leitura, ver loadData()).
+// revisto===false mostra a etiqueta discreta "IA · por rever" — ver
+// af_gerarPerguntasBonusIA()/"✓ Revisto" no Studio.
 function preencherPainelBonus(chave, faixa) {
   const col = COLLECTIONS[chave];
   const pb = (col.perguntas_bonus || {})[faixa];
   const elPergunta = document.getElementById('bonus-pergunta');
   const elResposta = document.getElementById('bonus-resposta');
-  if (pb && pb.pergunta) {
-    elPergunta.textContent = 'P: ' + pb.pergunta;
-    elResposta.textContent = pb.resposta ? 'R: ' + pb.resposta : '';
+  const elIndicador = document.getElementById('bonus-indicador');
+  if (pb && pb.pergunta_bonus) {
+    elPergunta.textContent = 'P: ' + pb.pergunta_bonus;
+    elResposta.textContent = pb.resposta_bonus ? 'R: ' + pb.resposta_bonus : '';
+    elIndicador.style.display = pb.revisto === false ? '' : 'none';
   } else {
     elPergunta.textContent = '(sem pergunta bónus definida para esta faixa)';
     elResposta.textContent = '';
+    elIndicador.style.display = 'none';
   }
 }
 
