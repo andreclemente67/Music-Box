@@ -407,6 +407,8 @@
   <!-- Atalho discreto para o Studio (curação de catálogo/playlists) — abre
        numa nova aba, não interfere com o jogo em curso nesta aba. -->
   <button class="btn-secundario" onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" style="font-size:11px;opacity:0.7;display:inline-flex;align-items:center;gap:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>Music Box Editor</button>
+  <!-- Toggle de narração do descritivo (2026-10-05) — ver atualizarUINarracao(). -->
+  <button class="btn-secundario btn-narracao" onclick="alternarNarracao()" style="font-size:11px;opacity:0.7;display:inline-flex;align-items:center;gap:8px;"></button>
   <p>Clica para autorizar o som (obrigatório uma vez, por causa das regras dos browsers).</p>
   <div id="teste-lista"></div>
 </div>
@@ -429,6 +431,9 @@
          partir de qualquer ecrã principal, não só do arranque. -->
     <button onclick="window.open('http://localhost:8002/musicbox_studio.html', '_blank')" title="Abre o Studio numa nova aba"
       style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M19.14 12.94a7.07 7.07 0 000-1.88l2.03-1.58a.5.5 0 00.12-.64l-1.92-3.32a.5.5 0 00-.6-.22l-2.39.96a7.26 7.26 0 00-1.62-.94l-.36-2.54a.5.5 0 00-.5-.42h-3.84a.5.5 0 00-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 00-.6.22L2.71 8.84a.5.5 0 00.12.64l2.03 1.58a7.07 7.07 0 000 1.88l-2.03 1.58a.5.5 0 00-.12.64l1.92 3.32c.14.24.42.32.6.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.24.1.5 0 .6-.22l1.92-3.32a.5.5 0 00-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1112 8.5a3.5 3.5 0 010 7z"/></svg> Studio</button>
+    <!-- Toggle de narração (2026-10-05) — sempre visível durante o jogo (inclui pausa), ver atualizarUINarracao(). -->
+    <button class="btn-narracao" onclick="alternarNarracao()"
+      style="background:var(--bg2);color:var(--text2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:11px;cursor:pointer;opacity:0.7;display:inline-flex;align-items:center;gap:6px;"></button>
   </div>
 </div>
 <!-- BUILD 2026-07-30-P13 — CINEMA corrigido · temBonus off · Lawrence of Arabia -->
@@ -722,6 +727,47 @@ function fadeVolume(el, alvo, ms, aoTerminar) {
 function fadeVolumePromise(el, alvo, ms) {
   return new Promise(resolve => fadeVolume(el, alvo, ms, resolve));
 }
+
+// ─────────────────────────────────────────────────────────────
+// TOGGLE DE NARRAÇÃO (2026-10-05, pedido do utilizador) — preparado para
+// a narração do descritivo_apresentador ao abrir uma playlist (tarefa
+// ainda não implementada: gerar_vozes_descritivo.py + wiring da
+// reprodução). Este toggle já fica funcional e persistente (localStorage,
+// ligado por defeito) para o utilizador poder ligar/desligar desde já;
+// quando a narração em si for ligada, deve consultar narracaoActiva()
+// antes de tocar o áudio — nunca afecta o nome do artista nem o "In the
+// Box!!" pós-acerto, só a narração do descritivo. Botão duplicado em
+// #start-overlay (ecrã inicial) e .topo (sempre visível durante o jogo,
+// incluindo pausa) — mesmo padrão já usado para o botão "Music Box
+// Editor"/Studio, actualizados em conjunto por atualizarUINarracao().
+const NARRACAO_STORAGE_KEY = 'mb_narracao_on';
+const NARRACAO_ICON_ON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>';
+const NARRACAO_ICON_OFF = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>';
+
+function narracaoActiva() {
+  try {
+    const v = localStorage.getItem(NARRACAO_STORAGE_KEY);
+    return v === null ? true : v === '1'; // por defeito ligada
+  } catch (e) {
+    return true; // localStorage indisponível (ex. modo privado) — assume ligada
+  }
+}
+
+function atualizarUINarracao() {
+  const activa = narracaoActiva();
+  document.querySelectorAll('.btn-narracao').forEach(btn => {
+    btn.innerHTML = (activa ? NARRACAO_ICON_ON : NARRACAO_ICON_OFF) + ' Narração: ' + (activa ? 'ON' : 'OFF');
+    btn.title = activa ? 'Narração do descritivo ligada — clica para desligar' : 'Narração do descritivo desligada — clica para ligar';
+  });
+}
+
+function alternarNarracao() {
+  const novoEstado = !narracaoActiva();
+  try { localStorage.setItem(NARRACAO_STORAGE_KEY, novoEstado ? '1' : '0'); } catch (e) {}
+  atualizarUINarracao();
+}
+
+document.addEventListener('DOMContentLoaded', atualizarUINarracao);
 
 // COLLECTIONS — reaproveita os catálogos reais já construídos.
 // NOTA: os títulos/artistas de "Música Portuguesa" foram confirmados (22 Jul).
