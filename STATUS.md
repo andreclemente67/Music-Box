@@ -6,6 +6,17 @@
 ## À espera de decisão do André
 
 - **Apóstrofos (catalogo.json)**: scan completo confirma **0 entradas afectadas** — o bug (`escapeAttr` a cortar apóstrofos em `value="..."`) era só de visualização no ecrã de revisão da IA, nunca chegou a ser gravado no catálogo. Nada para aprovar nem escrever; já corrigido (ver commit "Fix(studio): preservar apóstrofos nas sugestões da IA").
+- **Repositório remoto — push pendente**: `origin` = `https://github.com/andreclemente67/Music-Box.git`, branch `main` está **91 commits à frente** de `origin/main` (nada enviado ainda, nenhum push feito). Tamanho dos ficheiros LFS (`.mp3`) nesses 91 commits: ~25MB em 80 ficheiros — não é um problema de tamanho. **Bloqueio real: sem credenciais configuradas** — `git credential-osxkeychain get` para `github.com` não devolve nada (nunca foi guardada password/token neste Mac para este repositório) e o `gh` CLI não está instalado. Um push real falharia logo a pedir utilizador/token de forma não-interactiva. Por resolver antes de qualquer push: configurar uma credencial (Personal Access Token guardado no keychain, ou `gh auth login`, ou trocar o remoto para SSH com uma chave já configurada).
+
+## 2026-10-05 (continuação pós-fecho) — Fototeca aplicada, Disney, filtros, Mosaico redesenhado
+
+**Commits** (`84e2d08`..`HEAD`, mais antigo → mais recente):
+- `02dac22` — Fototeca: 10 faixas herdam `imagem`+campos de licença da faixa de origem (proposta aprovada).
+- `54c1992`/`5c26e4b` — playlist Disney (modo Elo, `STD.INT.ALL.POP.002`): feedback (`fb_045`) + índice de áudio + os 16 `.mp3` (via Git LFS) — trabalho da outra sessão, revisto e commitado por esta a pedido explícito do utilizador.
+- `6a34808` — Studio: filtros activos da sidebar (Década/Estilo/Geo/Dificuldade/Tipo/Estado) e "✕ Limpar filtros" destacados a amarelo (`var(--accent)`); lista vazia mostra quais filtros estão a esconder resultados.
+- `c7ea11c` — **Mosaico deixa de estar ligado às respostas certas** (Bíblia §5.11/§27.7, §9.8/§3.8 revistas): revelação automática dos 16 quadrados a intervalos regulares ao longo de 30s (`MOSAICO_DURACAO_MS`, finalmente alinhado com a Bíblia); acerto antes do fim = cascata de ~1s; ninguém acerta = fim automático aos 30s com rede de segurança que garante a imagem completa. Diagnóstico confirmou que a ligação visual Faixa→quadrado já não existia na grelha — só textos ("quadrado X conquistado") é que ainda a sugeriam, agora removidos. Pontuação/dinheiro não dependiam de quadrados — inalterados.
+
+**Repositório remoto**: ver "À espera de decisão do André" acima — push nunca feito, falta credencial.
 
 ## 2026-10-05 (fecho de sessão) — Bíblia, curadoria, vozes por língua, Mosaico, Studio
 
