@@ -6,22 +6,6 @@
 ## À espera de decisão do André
 
 - **Apóstrofos (catalogo.json)**: scan completo confirma **0 entradas afectadas** — o bug (`escapeAttr` a cortar apóstrofos em `value="..."`) era só de visualização no ecrã de revisão da IA, nunca chegou a ser gravado no catálogo. Nada para aprovar nem escrever; já corrigido (ver commit "Fix(studio): preservar apóstrofos nas sugestões da IA").
-- **Fototeca — proposta de preenchimento por herança de artista** (10 faixas sem imagem podem herdar a imagem de outra faixa do mesmo artista já no catálogo; `catalogo.json` não tocado):
-
-  | Artista | Faixa destino (sem imagem) | Faixa origem (com imagem) |
-  |---|---|---|
-  | Rui Veloso | `rui_veloso_electrico_28` — Eléctrico 28 | `pt80_01` — Porto Sentido |
-  | Sérgio Godinho | `sergio_godinho_rosa_rezada` — Rosa Rezada | `sergio_godinho_venham_mais_cinco` — Venham Mais Cinco |
-  | Sting | `sting_desert_rose` — Desert Rose | `sting_desert_rose_3` — Desert Rose |
-  | Sting | `sting_desert_rose_2` — Desert Rose | `sting_desert_rose_3` — Desert Rose |
-  | America | `america_horse_with_no_name` — Horse With No Name | `ame_06` — A Horse With No Name |
-  | Oasis | `oasis_wonderwall` — Wonderwall | `oasis_wonderwall_3` — Wonderwall |
-  | Oasis | `oasis_wonderwall_2` — Wonderwall | `oasis_wonderwall_3` — Wonderwall |
-  | Queen | `queen_a_kind_of_magic` — A Kind of Magic | `queen_bohemian_rhapsody` — Bohemian Rhapsody |
-  | Maurice Jarre | `maurice_jarre_lawrence_of_arabia_main_` — Lawrence of Arabia (Main Theme) | `cinema_07` — Lawrence of Arabia |
-  | GNR | `gnr_dunas_2` — Dunas | `pt_04` — Pronúncia do Norte |
-
-  Restantes 12/22 faixas sem imagem **não têm candidata a herdar** (nenhuma outra faixa do mesmo artista no catálogo tem imagem): `fausto_topic_lembra_me_um_sonho_lindo`, `madredeus_povo_que_lavas_no_rio`, `peret_al_alba`, `francisco_fanhais_menino_do_bairro_negro`, `luis_cilia_trova_do_vento_que_passa`, `nightwish_sahara`, `the_doors_riders_on_the_storm`, `the_doors_riders_on_the_storm_2`, `tinariwen_touareg`, `tinariwen_cler_achel`, `chris_rea_the_road_to_hell`, `tame_impala_sahara` — precisam de pesquisa de imagem nova, não de herança.
 
 ## 2026-10-05 (fecho de sessão) — Bíblia, curadoria, vozes por língua, Mosaico, Studio
 
@@ -36,6 +20,7 @@
 - `cf9370e` — apóstrofos preservados nas sugestões da IA no Studio (`escapeAttr`→`escapeHtml` em 21 campos `value=`); confirmado 0 entradas de `catalogo.json` realmente afectadas.
 - `4ed1e91` — pré-escuta de voz (▶) junto ao artista/Mosaico na Mesa de Montagem, novo endpoint `/listar-voz`.
 - `e65568d` — Fototeca: candidatas (faixas fora de playlists prontas) escondidas por defeito, filtro "Sem imagem".
+- (Fototeca, herança de imagem, aprovada) — 10 faixas copiaram `imagem`+campos de licença da faixa de origem (`imagem_licenca_estado:"confirmar"` em todas, para a revisão de licenças antes do piloto). Restantes 12/22 faixas sem imagem não têm candidata a herdar — precisam de pesquisa de imagem nova: `fausto_topic_lembra_me_um_sonho_lindo`, `madredeus_povo_que_lavas_no_rio`, `peret_al_alba`, `francisco_fanhais_menino_do_bairro_negro`, `luis_cilia_trova_do_vento_que_passa`, `nightwish_sahara`, `the_doors_riders_on_the_storm`, `the_doors_riders_on_the_storm_2`, `tinariwen_touareg`, `tinariwen_cler_achel`, `chris_rea_the_road_to_hell`, `tame_impala_sahara`.
 
 **À espera de decisão do André**: ver secção própria abaixo (apóstrofos — nada a aprovar; proposta de herança de imagem na Fototeca — 10 faixas).
 
