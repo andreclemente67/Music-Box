@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>MUSIC BOX ®</title>
+<!-- 2026-10-05, pedido do utilizador: o browser pede /favicon.ico
+     automaticamente mesmo sem link nenhum (404 "fantasma" invisível aos
+     eventos de rede do Playwright, só aparecia na consola) — confirmado
+     com eventos 'response'/'requestfailed' a nível do contexto, ver
+     DECISIONS.md. Favicon inline, sem pedido de rede nenhum. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 <style>
   :root {
     --bg:        #0a0a0c;
