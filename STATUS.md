@@ -3,7 +3,45 @@
 ## Última actualização
 2026-10-05
 
-## Revisão de conteúdo para o piloto definitivo (pendentes, sem prazo)
+## À espera de decisão do André
+
+- **Apóstrofos (catalogo.json)**: scan completo confirma **0 entradas afectadas** — o bug (`escapeAttr` a cortar apóstrofos em `value="..."`) era só de visualização no ecrã de revisão da IA, nunca chegou a ser gravado no catálogo. Nada para aprovar nem escrever; já corrigido (ver commit "Fix(studio): preservar apóstrofos nas sugestões da IA").
+- **Fototeca — proposta de preenchimento por herança de artista** (10 faixas sem imagem podem herdar a imagem de outra faixa do mesmo artista já no catálogo; `catalogo.json` não tocado):
+
+  | Artista | Faixa destino (sem imagem) | Faixa origem (com imagem) |
+  |---|---|---|
+  | Rui Veloso | `rui_veloso_electrico_28` — Eléctrico 28 | `pt80_01` — Porto Sentido |
+  | Sérgio Godinho | `sergio_godinho_rosa_rezada` — Rosa Rezada | `sergio_godinho_venham_mais_cinco` — Venham Mais Cinco |
+  | Sting | `sting_desert_rose` — Desert Rose | `sting_desert_rose_3` — Desert Rose |
+  | Sting | `sting_desert_rose_2` — Desert Rose | `sting_desert_rose_3` — Desert Rose |
+  | America | `america_horse_with_no_name` — Horse With No Name | `ame_06` — A Horse With No Name |
+  | Oasis | `oasis_wonderwall` — Wonderwall | `oasis_wonderwall_3` — Wonderwall |
+  | Oasis | `oasis_wonderwall_2` — Wonderwall | `oasis_wonderwall_3` — Wonderwall |
+  | Queen | `queen_a_kind_of_magic` — A Kind of Magic | `queen_bohemian_rhapsody` — Bohemian Rhapsody |
+  | Maurice Jarre | `maurice_jarre_lawrence_of_arabia_main_` — Lawrence of Arabia (Main Theme) | `cinema_07` — Lawrence of Arabia |
+  | GNR | `gnr_dunas_2` — Dunas | `pt_04` — Pronúncia do Norte |
+
+  Restantes 12/22 faixas sem imagem **não têm candidata a herdar** (nenhuma outra faixa do mesmo artista no catálogo tem imagem): `fausto_topic_lembra_me_um_sonho_lindo`, `madredeus_povo_que_lavas_no_rio`, `peret_al_alba`, `francisco_fanhais_menino_do_bairro_negro`, `luis_cilia_trova_do_vento_que_passa`, `nightwish_sahara`, `the_doors_riders_on_the_storm`, `the_doors_riders_on_the_storm_2`, `tinariwen_touareg`, `tinariwen_cler_achel`, `chris_rea_the_road_to_hell`, `tame_impala_sahara` — precisam de pesquisa de imagem nova, não de herança.
+
+## 2026-10-05 (fecho de sessão) — Bíblia, curadoria, vozes por língua, Mosaico, Studio
+
+**Commits** (`b965a4b`..`HEAD`, mais antigo → mais recente):
+- `21ea7bc`/`8ba2757` — Bíblia (`BIBLIA.md`) entra no repositório (V3.29) e é reconciliada com `DECISIONS.md`, sobe a V3.30 (§30.9).
+- `efc91ea`/`36401ea` — corrige entrada Alex/Oliver em `DECISIONS.md`; dicionário de pronúncia da narração do descritivo (`voz/pronuncia_descritivo.json`), 20 vozes regeneradas.
+- `11aecfc` — escala de dificuldade 1-5 confirmada como oficial (§15.5), §27.13 marcada revista.
+- `ca73de6`/`bab5a85` — `CLAUDE.md` com regras de poupança de contexto; dois blobs base64 (BEATLES_02) removidos de `musicbox.html` (515KB→249KB).
+- `5f9c4bd`/`bbad1b3` — regra "unicidade de artista conta membros de banda" (Bíblia §27.2) + aviso não-bloqueante na Mesa de Montagem; corrige o caso real (Queen × 2 em "Anos 70 — Rock", `bat_02`→`bat_08`/Keith Moon).
+- `3857622`/`0c47dc9` — nomes de artista por língua (`voz/pronuncia.json`: Duarte/Antonio/fr/es/it/de/ru/Vangelis+japoneses também em Duarte), 79 vozes regeneradas. **Bug real corrigido**: 1ª versão do índice de regeneração (`nome_index.json`) sem baseline prévio tinha regenerado as 348 vozes em vez de só as afectadas — corrigido antes de aplicar.
+- `3ee3bed` — anúncio de voz no acerto do Mosaico (`voz/mosaico_<código>.wav`, 38 gerados) + wiring em `confirmarMosaicoAcerto()`. **Bug real corrigido**: playlists com chave legada em `COLLECTIONS` (ex. "ANOS80") usavam o nome de ficheiro errado — corrigido para `playlistCodigo`.
+- `cf9370e` — apóstrofos preservados nas sugestões da IA no Studio (`escapeAttr`→`escapeHtml` em 21 campos `value=`); confirmado 0 entradas de `catalogo.json` realmente afectadas.
+- `4ed1e91` — pré-escuta de voz (▶) junto ao artista/Mosaico na Mesa de Montagem, novo endpoint `/listar-voz`.
+- `e65568d` — Fototeca: candidatas (faixas fora de playlists prontas) escondidas por defeito, filtro "Sem imagem".
+
+**À espera de decisão do André**: ver secção própria abaixo (apóstrofos — nada a aprovar; proposta de herança de imagem na Fototeca — 10 faixas).
+
+**Confirmado alinhado**: `DECISIONS.md` e `BIBLIA.md` têm entrada para cada decisão de formato desta sessão (Encore/volumes, voz pós-acerto, Pergunta Bónus Décadas/Estilos, Géneros→Estilos, descritivos sem spoilers, dificuldade 1-5, unicidade de artista, vozes por língua, Mosaico) — nenhuma pendente de registo.
+
+## À espera de decisão do André
 
 - Rever os descritivos reescritos sem spoilers (commit `b075be2`) — tom e conteúdo.
 - Rever as perguntas bónus geradas por IA (quando existirem).

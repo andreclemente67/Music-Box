@@ -30,3 +30,14 @@ _revisao_regeneracao.json
 # retroactivamente: o commit af9406b ("Anos 2000") já tinha incluído
 # ficheiros desta pasta antes desta regra existir — não mexido.
 _backup_pre_regeneracao/
+
+# backups locais de voz (gerar_vozes_*.py, --todos ou regeneração
+# parcial) — cópia de segurança antes de sobrescrever, nunca definitiva;
+# os ficheiros de produção vivem em voz/ (esses continuam no repositório)
+_backup_voz_*/
+
+# propostas/ — scratch de audição (comparações A/B/C de efeitos, vozes,
+# sinais sonoros) gerado localmente durante a decisão; nada aqui é
+# definitivo até à aprovação, que copia para o caminho de produção
+# normal (efeitos/, voz/, etc.)
+propostas/
