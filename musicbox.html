@@ -623,7 +623,7 @@
        "▶ Iniciar Playlist" (ver setInterval abaixo). Desactivado + title
        "Apresentação por gerar" se a playlist não tiver o ficheiro — ver
        prepararApresentacaoDescritivo()/apresentacaoDisponivel(). -->
-  <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;" disabled></button>
+  <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;align-items:center;gap:4px;" disabled></button>
   <button onclick="iniciarPlaylistManual()" id="btn-iniciar-playlist" title="Carrega e arranca o áudio da Faixa 1 desta Playlist — o motor fica à espera deste clique desde que a Playlist foi seleccionada" style="display:none;"><span style="color:var(--green);">▶</span> Iniciar Playlist</button>
   <!-- Apresentador: um único toggle manual pelo operador — ver
        alternarApresentador()/renderApresentador(). Escondido quando não há
@@ -771,7 +771,6 @@ function fadeVolumePromise(el, alvo, ms) {
 let apresentacaoAudioAtual = null;
 let apresentacaoTocando = false;
 const apresentacaoDisponivelCache = new Map();
-const APRESENTACAO_ICON_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>';
 
 async function apresentacaoDisponivel(codigo) {
   if (apresentacaoDisponivelCache.has(codigo)) return apresentacaoDisponivelCache.get(codigo);
@@ -784,10 +783,18 @@ async function apresentacaoDisponivel(codigo) {
   return ok;
 }
 
+// Ícone/texto (2026-10-05, pedido do utilizador): mesmo glyph ▶/cor azul
+// de "Iniciar Playlist" — <span>▶</span> Texto, exactamente o mesmo
+// padrão de markup, só a cor (var(--blue), não var(--green)) e o
+// caracter (■ enquanto toca) diferentes — garante tamanho/forma/
+// alinhamento idênticos (mesma fonte, mesmo baseline), sem precisar de
+// medir nada à parte.
 function atualizarBotaoApresentacao() {
   const btn = document.getElementById('btn-apresentacao');
   if (!btn) return;
-  btn.innerHTML = apresentacaoTocando ? '■ Parar apresentação' : APRESENTACAO_ICON_SVG + ' Apresentação';
+  btn.innerHTML = apresentacaoTocando
+    ? '<span style="color:var(--blue);">■</span> Parar apresentação'
+    : '<span style="color:var(--blue);">▶</span> Apresentação';
 }
 
 // Chamado em confirmarCollection() — não bloqueia nada, só prepara o
@@ -3272,7 +3279,7 @@ setInterval(() => {
   const btnIniciar = document.getElementById('btn-iniciar-playlist');
   if (btnIniciar) btnIniciar.style.display = (faseGeral === 'aguardando_inicio_playlist') ? '' : 'none';
   const btnApresentacao = document.getElementById('btn-apresentacao');
-  if (btnApresentacao) btnApresentacao.style.display = (faseGeral === 'aguardando_inicio_playlist') ? '' : 'none';
+  if (btnApresentacao) btnApresentacao.style.display = (faseGeral === 'aguardando_inicio_playlist') ? 'inline-flex' : 'none';
 }, 300);
 
 function acertouFaixa(i) {
