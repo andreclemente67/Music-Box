@@ -1,6 +1,11 @@
 originais/
 yt-dlp
 
+# arrumação do repositório (2026-10-06) — ficheiros antigos/superados
+# guardados localmente, fora do git (docx superados pela Bíblia em
+# Markdown, backups antigos sem referência, testes soltos)
+_arquivo/
+
 # ambiente virtual Python (só para _servidor_librosa.py — ver DECISIONS.md)
 .venv_librosa/
 
