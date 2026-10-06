@@ -8,26 +8,7 @@
 - **Apóstrofos (catalogo.json)**: scan completo confirma **0 entradas afectadas** — o bug (`escapeAttr` a cortar apóstrofos em `value="..."`) era só de visualização no ecrã de revisão da IA, nunca chegou a ser gravado no catálogo. Nada para aprovar nem escrever; já corrigido (ver commit "Fix(studio): preservar apóstrofos nas sugestões da IA").
 - **Repositório remoto — push pendente**: `origin` = `https://github.com/andreclemente67/Music-Box.git`, branch `main` continua à frente de `origin/main` (nada enviado ainda). Credenciais **já configuradas** (`gh auth login` + `gh auth setup-git`, confirmado a funcionar) — o bloqueio agora é só o classificador de segurança do Claude Code, que recusa `git push` mesmo com autorização dada na conversa. Precisa de um push manual do André, ou de uma regra de permissão para `git push` nas definições do Claude Code.
 
-- **Arrumação do repositório** (diagnóstico, nada apagado/movido ainda):
-
-  | Grupo | Contagem | Tamanho | Rastreado pelo git? | Referenciado em JSON/HTML/script? |
-  |---|---|---|---|---|
-  | `*_BACKUP*`/`*_backup*` na raiz (6 `.mp3` + 2 `catalogo_backup_*.json`) | 8 | ~2,9MB | **Sim** (committed) | Não — 0 referências |
-  | `backups/` (2 `.json`) | 2 | 108K | **Sim** (committed) | Não |
-  | `backups_catalogo/` (`.json.bak`) | muitos | **751MB** | Não (`*.bak` já no `.gitignore`) | Não |
-  | `_backup_voz_*/` + `_backup_pre_regeneracao/` | — | 206MB | Não (já ignorados) | Não (backups de segurança, já cumpriram o papel) |
-  | `.wav` de teste na raiz + `preview_som_correcto/` (4 + 8 ficheiros) | 12 | ~2,6MB | Não (untracked) | Não |
-  | `.docx` (`MusicBox_Format_Bible_V3_28.docx`, `"NOTAS -  POR FAZER.docx"`, `"Notas Music Box/ Music Box.docx"`) | 3 | ~8,9MB | 1 de 3 rastreado (`NOTAS - POR FAZER.docx`) | Não — `MusicBox_Format_Bible_V3_28.docx` está superado por `BIBLIA.md` (agora V3.30) |
-  | `"Notas Music Box/"` (pasta) | 1 ficheiro | 16K | Não | Não |
-  | Scripts `.py` soltos na raiz (10: `gerar_faixa.py`/`gerar_faixa_v2.py`/`aplicar_artwork.py`/`analisar_trechos_a.py`/`sugerir_trechos.py`/`_batch_fotos_artista.py`/`_fundir_catalogo.py`/`_gerar_preview_revisao.py`/`_aplicar_regeneracao_playlist.py`/`popular_feedback_inicial.py`) | 10 | — | **Sim**, todos committed | Ferramentas pontuais (última alteração Ago-Set 2026), não importadas por outro código — não é o mesmo que "não usadas", podem voltar a ser invocadas manualmente |
-  | `creditos_imagem.md` | 1 | 44K | Não (untracked) | **Sim** — é o alvo de download do botão "Exportar créditos de imagem" no Studio (`musicbox_studio.html:9612`) |
-
-  **Proposta**:
-  - **Apagar** (`git rm`, 0 referências, cópias de segurança já antigas e superadas): os 6 `.mp3` + 2 `catalogo_backup_*.json` da raiz, e `backups/`. Nota: isto remove do working tree e de commits futuros, mas o conteúdo continua no histórico do git a menos que haja uma reescrita de histórico — decisão separada, mais invasiva, só se o tamanho do `.git` vier a ser um problema real.
-  - **`.gitignore`** (nunca chegaram a ser ignorados, apesar de serem claramente scratch): `preview_som_correcto/`, os 4 `.wav` de teste soltos na raiz (`_preview_som_correcto_A.wav`, `_teste_frase_unica_versao*_80_01.wav`, `propostas_in_the_box_tunado_80_01.wav`), `backups_catalogo/` (reforça o `*.bak` já existente, por clareza).
-  - **Mover para `_arquivo/` (fora do git)**: `MusicBox_Format_Bible_V3_28.docx` (documento histórico, superado pela Bíblia em Markdown) e `"Notas Music Box/"`.
-  - **Commitar** (tem valor documental real): `creditos_imagem.md` — é o export oficial de créditos/licenças de imagem, hoje só local.
-  - **Sem alteração**: `"NOTAS -  POR FAZER.docx"` (já rastreado, pequeno, notas pessoais em curso) e os 10 scripts `.py` (ferramentas reutilizáveis, mesmo que pontuais — arquivar exigiria confirmar uma a uma que nenhuma ainda é precisa).
+- **Arrumação do repositório — aplicada (6 Out 2026)**: `creditos_imagem.md` commitado; `MusicBox_Format_Bible_V3_28.docx` e `"Notas Music Box/"` movidos para `_arquivo/` (sem decisões por copiar — o docx só chega ao Capítulo 28 com datas até 8 Ago 2026, tudo já reflectido na Bíblia actual; a pasta de notas só tinha um link do YouTube); os 8 ficheiros de backup committed sem referência (`git rm --cached`) + 2381 `.bak` mais antigos de `backups_catalogo/` (mantidos os 10 mais recentes) + `.wav` de teste antigos também movidos para `_arquivo/` (fora do git, `_arquivo/` agora no `.gitignore`) — nada apagado do disco. `NOTAS -  POR FAZER.docx` tem um pedido ainda em aberto, não registado em nenhum lado: "quero auditoria total a todas as faixas Trechos, Imagens etc em todo o catálogo" — fica aqui assinalado, não movido. Tamanho do projecto antes/depois: 2,1GB/2,1GB (nada apagado, só reorganizado); `git status` limpo (só `mp3_index.json`, outra sessão); jogo e Studio testados a carregar sem erros.
 
 ## 2026-10-05 (continuação pós-fecho) — Fototeca aplicada, Disney, filtros, Mosaico redesenhado
 
