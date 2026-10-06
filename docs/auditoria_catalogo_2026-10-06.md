@@ -1,0 +1,96 @@
+# Auditoria ao catálogo e às playlists — 2026-10-06
+
+Gerado por `_auditoria_catalogo.py` — só leitura, nada alterado em `catalogo.json`/`playlists.json`.
+
+## Resumo
+
+- Faixas auditadas (usadas em alguma playlist): **320**
+- Playlists auditadas: **41**
+- Problemas encontrados: **83** — 🔴 bloqueia o jogo: 0 · 🟠 afecta o piloto: 0 · ⚪ cosmético: 83
+- Imagens com `imagem_licenca_estado:"confirmar"`: **327/348** (não listadas uma a uma abaixo — já no checklist "Revisão de conteúdo" do STATUS.md)
+
+## ⚪ Cosmético (83)
+
+- **[faixa] bat_03** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] bra001_03** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] christina_aguilera_reflection** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] darude_sand_storm_2** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] ennio_morricone_son_of_a_desert_wind** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] fausto_topic_lembra_me_um_sonho_lindo** — sem imagem
+- **[faixa] francisco_fanhais_menino_do_bairro_negro** — Trecho A: sem ficheiro definido
+- **[faixa] francisco_fanhais_menino_do_bairro_negro** — Trecho B: sem ficheiro definido
+- **[faixa] francisco_fanhais_menino_do_bairro_negro** — sem imagem
+- **[faixa] jerry_orbach_be_our_guest** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] logo_01** — Trecho A (LOGO_01.mp3): ficheiro não existe
+- **[faixa] logo_03** — Trecho A (LOGO_03.mp3): ficheiro não existe
+- **[faixa] logo_04** — Trecho A (LOGO_04.mp3): ficheiro não existe
+- **[faixa] logo_05** — Trecho A (LOGO_05.mp3): ficheiro não existe
+- **[faixa] logo_06** — Trecho A (LOGO_06.mp3): ficheiro não existe
+- **[faixa] logo_07** — Trecho A (LOGO_07.mp3): ficheiro não existe
+- **[faixa] logo_08** — Trecho A (LOGO_08.mp3): ficheiro não existe
+- **[faixa] luis_cilia_trova_do_vento_que_passa** — Trecho A: sem ficheiro definido
+- **[faixa] luis_cilia_trova_do_vento_que_passa** — sem imagem
+- **[faixa] madredeus_povo_que_lavas_no_rio** — Trecho A: sem ficheiro definido
+- **[faixa] madredeus_povo_que_lavas_no_rio** — Trecho B: sem ficheiro definido
+- **[faixa] madredeus_povo_que_lavas_no_rio** — sem imagem
+- **[faixa] peret_al_alba** — Trecho A: sem ficheiro definido
+- **[faixa] peret_al_alba** — Trecho B: sem ficheiro definido
+- **[faixa] peret_al_alba** — sem imagem
+- **[faixa] phil_collins_you_ll_be_in_my_heart** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] randy_newman_you_ve_got_a_friend_in_m** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] ret_01** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[faixa] rui_veloso_electrico_28** — Trecho A: sem ficheiro definido
+- **[faixa] rui_veloso_electrico_28** — Trecho B: sem ficheiro definido
+- **[faixa] sergio_godinho_rosa_rezada** — Trecho A: sem ficheiro definido
+- **[faixa] sergio_godinho_rosa_rezada** — Trecho B: sem ficheiro definido
+- **[faixa] solo_05** — imagem não verificada (servidor remoto limitou os pedidos — confirmar manualmente)
+- **[playlist] STD.BR.ALL.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.00.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.10.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.10.SYN.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.10.SYN.001** — artista repetido: Future Islands (Faixa 1, Mosaico)
+- **[playlist] STD.INT.10.SYN.002** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.20.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.50.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.60.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.70.ROC.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.80.MIX.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.90.DNC.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.BAT.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.BLU.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.CLA.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.GAM.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.GAM.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.GTR.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.HIP.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.JAZ.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.LAT.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.MET.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.MIX.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.MIX.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.MIX.001** — artista repetido: The Durutti Column (Faixa 1, Mosaico)
+- **[playlist] STD.INT.ALL.MIX.001** — artista repetido: Brian Eno (Faixa 3, Faixa 6)
+- **[playlist] STD.INT.ALL.MIX.005** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.MIX.005** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.NAT.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.NAT.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.POP.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.POP.002** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.ROC.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.SOU.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.SYN.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.TV.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.INT.ALL.TV.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.70.WLD.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.70.WLD.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.80.MIX.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.80.MIX.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.BAT.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.FAD.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.FAD.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.MIX.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.MIX.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.WLD.001** — Mosaico sem imagem
+- **[playlist] STD.PT.ALL.WLD.001** — Faixa 3: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.PT.ALL.WLD.001** — Faixa 6: Pergunta Bónus ainda "por rever" (IA)
+- **[playlist] STD.US.ALL.AME.001** — Faixa 4: Pergunta Bónus ainda "por rever" (IA)
