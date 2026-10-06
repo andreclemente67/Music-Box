@@ -8,3 +8,4 @@
 - Não editar `catalogo.json`/`playlists.json` sem aprovação.
 - Cada decisão de formato actualiza `DECISIONS.md` e `BIBLIA.md` no mesmo commit.
 - Commits pequenos.
+- `mp3_index.json` e `feedback.json` são escritos pelo Studio; alterações não commitadas são trabalho do André no Studio, não de outra sessão.
