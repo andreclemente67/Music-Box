@@ -2915,6 +2915,7 @@
     "estado": "ativo",
     "curador": "André Clemente",
     "data": "2026-08-10",
+    "fonte_audio": "https://www.youtube.com/watch?v=fHI8X4OXluQ",
     "video": "https://www.youtube.com/watch?v=4NRXx6U8ABQ",
     "imagem": "https://r2.theaudiodb.com/images/media/artist/thumb/a49x1j1673778621.jpg",
     "imagem_fonte": "theaudiodb",
@@ -2923,7 +2924,7 @@
     "imagem_data_captura": "2026-08-26",
     "imagem_licenca_estado": "confirmar",
     "sources": {
-      "audio": "https://www.youtube.com/watch?v=fHI8X4OXluQ",
+      "audio": null,
       "imagem": "theaudiodb",
       "data_recolha": "2026-08-26"
     }
