@@ -9,12 +9,23 @@ modo (opcional, default "skip"):
            avisa em stderr). Usado para catalogo_adicionar.json — faixas
            novas da "Adicionar Faixa"; um id já existente aí é sinal de
            conflito, não deve apagar dados curados.
-  upsert — se o id já existir em catalogo.json, SUBSTITUI essa entrada pela
-           versão nova; senão adiciona. Usado para catalogo_patch.json —
-           esse ficheiro existe precisamente para gravar EDIÇÕES a faixas já
-           existentes (ex.: trecho_a.inicio/fim via "Definir início",
-           `imagem` via pesquisa Wikimedia/URL manual), por isso "skip"
-           descartaria essas edições silenciosamente.
+  upsert — se o id já existir em catalogo.json, FUNDE essa entrada com a
+           versão nova campo a campo (deep merge: os campos presentes no
+           patch substituem, os campos ausentes do patch mantêm-se tal
+           como estavam) — senão adiciona a entrada nova por completo.
+           Usado para catalogo_patch.json — esse ficheiro existe
+           precisamente para gravar EDIÇÕES a faixas já existentes (ex.:
+           trecho_a.inicio/fim via "Definir início", `imagem` via pesquisa
+           Wikimedia/URL manual), por isso "skip" descartaria essas
+           edições silenciosamente. Antes, o upsert substituía a entrada
+           INTEIRA — um patch gerado a partir de uma cópia antiga do
+           catálogo podia apagar silenciosamente campos escritos
+           directamente em catalogo.json depois dessa cópia (ex.:
+           `fonte_audio`, 2026-10-08) sem o patch saber que existiam;
+           corrigido nesta versão (2026-10-08) para fusão campo a campo.
+           Sempre que o patch altera `fonte_audio`, `trecho_a` ou
+           `trecho_b` de uma entrada já existente, avisa em stderr (não
+           bloqueia — só torna a alteração visível).
 
 Faz backup timestamped de catalogo.json antes de o reescrever, e só o
 reescreve se houver pelo menos uma alteração. Imprime SÓ o número de faixas
@@ -26,6 +37,22 @@ import datetime
 import json
 import shutil
 import sys
+
+CAMPOS_SENSIVEIS = ("fonte_audio", "trecho_a", "trecho_b")
+
+
+def fundir_campos(actual, novo):
+    """Deep merge: campos presentes em `novo` substituem os de `actual`
+    (recursivamente, se ambos forem dict); campos ausentes em `novo`
+    mantêm-se de `actual`. Devolve um dict novo, não modifica os
+    argumentos."""
+    resultado = dict(actual)
+    for chave, valor in novo.items():
+        if isinstance(valor, dict) and isinstance(resultado.get(chave), dict):
+            resultado[chave] = fundir_campos(resultado[chave], valor)
+        else:
+            resultado[chave] = valor
+    return resultado
 
 
 def main():
@@ -57,6 +84,7 @@ def main():
     adicionadas = []
     substituidas = []
     saltadas = []
+    avisos_campos_sensiveis = []
 
     for entrada in novas:
         cid = entrada.get("id") if isinstance(entrada, dict) else None
@@ -65,7 +93,13 @@ def main():
             continue
         if cid in indice_por_id:
             if modo == "upsert":
-                catalogo[indice_por_id[cid]] = entrada
+                i = indice_por_id[cid]
+                actual = catalogo[i]
+                for campo in CAMPOS_SENSIVEIS:
+                    if campo in entrada and entrada[campo] != actual.get(campo):
+                        avisos_campos_sensiveis.append(
+                            f"{cid}.{campo}: {actual.get(campo)!r} -> {entrada[campo]!r}")
+                catalogo[i] = fundir_campos(actual, entrada)
                 substituidas.append(cid)
             else:
                 saltadas.append(cid)
@@ -83,7 +117,9 @@ def main():
             f.write("\n")
 
     if substituidas:
-        print(f"ids substituídos (upsert): {', '.join(substituidas)}", file=sys.stderr)
+        print(f"ids substituídos (upsert, fusão campo a campo): {', '.join(substituidas)}", file=sys.stderr)
+    for aviso in avisos_campos_sensiveis:
+        print(f"AVISO campo sensível alterado pelo patch — {aviso}", file=sys.stderr)
     if saltadas:
         print(f"ids saltados (já existiam ou sem id): {', '.join(saltadas)}", file=sys.stderr)
 

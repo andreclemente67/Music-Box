@@ -46,3 +46,10 @@ _backup_voz_*/
 # definitivo até à aprovação, que copia para o caminho de produção
 # normal (efeitos/, voz/, etc.)
 propostas/
+
+# scripts/verificar_trechos.py — ambiente Python próprio (numpy/scipy;
+# `pip install -r scripts/requirements.txt`) e cache de downloads das
+# fontes de áudio (reconstrói-se sozinha, nunca repete download do que
+# já lá está) — nenhum dos dois é para versionar.
+scripts/.venv/
+scripts/_cache_verificacao/
