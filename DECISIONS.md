@@ -1759,7 +1759,7 @@ problema — só ouvir a pré-audição antes de aprovar o corte.
 **Nunca o videoclipe** ("Official Video"/"Music Video"), mesmo que seja
 o resultado mais visível numa pesquisa. O URL usado fica registado no
 novo campo `fonte_audio` (string, nível de topo da faixa no
-`catalogo.json`) — campo introduzido nesta decisão, só preenchido para
-`dec00_01` por agora. `a10_04` foi corrigido antes desta regra ficar
-definida e usa `sources.audio` em vez de `fonte_audio` — reconciliar os
-dois campos fica para uma próxima sessão, não bloqueia esta decisão.
+`catalogo.json`) — campo introduzido nesta decisão. `a10_04` tinha sido
+corrigido antes desta regra ficar definida e usava `sources.audio`;
+uniformizado no mesmo dia para `fonte_audio` — é o único campo a usar
+daqui para a frente, `sources.audio` volta a ficar sempre `null`.
