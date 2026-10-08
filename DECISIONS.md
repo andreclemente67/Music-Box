@@ -1744,3 +1744,22 @@ necessária. Testado com Playwright: acerto a meio da revelação (4/16
 visíveis aos ~8s, cascata completa os 16 após o acerto) e ninguém
 acertar (fim automático aos 30s, imagem completa via a rede de
 segurança) — zero erros de JS nos dois cenários.
+
+## 2026-10-08 — Fonte de áudio dos trechos: sempre Official Audio, registada em `fonte_audio`
+
+Confirmados dois casos reais de Trecho A cortado de um videoclipe oficial
+em vez do áudio (`a10_04` "Blinding Lights" — ruído de carros da cena por
+cima da música; `dec00_01` "Hey Ya!" — Trecho A começava com diálogo do
+videoclipe). `volumedetect`/análise de volume não detecta este tipo de
+problema — só ouvir a pré-audição antes de aprovar o corte.
+
+**Regra**: a fonte de um trecho (re)gerado é sempre o **Official Audio**
+— por ordem de preferência, canal "Topic"/upload direto da editora
+("Provided to YouTube by ...") primeiro, "Official Audio" depois.
+**Nunca o videoclipe** ("Official Video"/"Music Video"), mesmo que seja
+o resultado mais visível numa pesquisa. O URL usado fica registado no
+novo campo `fonte_audio` (string, nível de topo da faixa no
+`catalogo.json`) — campo introduzido nesta decisão, só preenchido para
+`dec00_01` por agora. `a10_04` foi corrigido antes desta regra ficar
+definida e usa `sources.audio` em vez de `fonte_audio` — reconciliar os
+dois campos fica para uma próxima sessão, não bloqueia esta decisão.
