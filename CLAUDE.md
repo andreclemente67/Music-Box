@@ -9,3 +9,5 @@
 - Cada decisão de formato actualiza `DECISIONS.md` e `BIBLIA.md` no mesmo commit.
 - Commits pequenos.
 - `mp3_index.json` e `feedback.json` são escritos pelo Studio; alterações não commitadas são trabalho do André no Studio, não de outra sessão.
+- No início de cada sessão, lê a secção de pendentes do STATUS.md.
+- No fim de cada tarefa, actualiza STATUS/DECISIONS/BÍBLIA quando houver decisões de formato.
