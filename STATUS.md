@@ -5,6 +5,95 @@
 
 ## À espera de decisão do André
 
+- **Verificador de trechos — reavaliação com múltiplos candidatos concluída (9 Out 2026)**: substitui a 1ª corrida (que só testava o 1º resultado do `ytsearch5`). Para as 128 "NÃO encontrado"/"ruído/diálogo" e as 31 "erro" da 1ª corrida, passou a testar até 5-6 candidatos por faixa (mesmo filtro de título, agora também rejeita "Movie"/"Trailer"/"Scene"/"Teaser") e as `*_mosaico` (formato `full`, sem `trecho_b`) passam a excluídas como "formato especial". Totais finais (323 faixas): **156 OK confirmado, 95 defeito real, 22 inconclusivo, 50 formato especial**. Tabela completa: `relatorios/reavaliacao_falhas.csv`; propostas de fonte alternativa das 43 faixas só OK num candidato diferente do 1º: `relatorios/propostas_fonte_audio.json` — **não aplicadas a catalogo.json**, ficam para revisão/aprovação.
+
+  | pack | OK confirmado | defeito real | inconclusivo | formato especial |
+  |---|---|---|---|---|
+  | `(sem playlist)` | 11 | 10 | 4 | 27 |
+  | `LOGO-001` | 7 | 1 | 0 | 0 |
+  | `RET.INT.ALL.VOZ.001` | 0 | 0 | 0 | 8 |
+  | `RET.PT.90.VOZ.001` | 4 | 3 | 0 | 1 |
+  | `STD.BR.ALL.MIX.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.00.MIX.001` | 4 | 3 | 0 | 0 |
+  | `STD.INT.10.MIX.001` | 6 | 1 | 0 | 0 |
+  | `STD.INT.10.SYN.001` | 4 | 2 | 0 | 0 |
+  | `STD.INT.10.SYN.002` | 5 | 2 | 0 | 0 |
+  | `STD.INT.20.MIX.001` | 4 | 3 | 0 | 0 |
+  | `STD.INT.50.MIX.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.60.MIX.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.70.ROC.001` | 6 | 1 | 0 | 0 |
+  | `STD.INT.80.MIX.001` | 2 | 4 | 1 | 0 |
+  | `STD.INT.90.DNC.001` | 7 | 0 | 0 | 0 |
+  | `STD.INT.ALL.BAT.001` | 0 | 0 | 0 | 7 |
+  | `STD.INT.ALL.BLU.001` | 4 | 2 | 1 | 0 |
+  | `STD.INT.ALL.CIN.001` | 0 | 0 | 0 | 7 |
+  | `STD.INT.ALL.CLA.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.ALL.GAM.001` | 4 | 3 | 0 | 0 |
+  | `STD.INT.ALL.GTR.001` | 1 | 3 | 2 | 0 |
+  | `STD.INT.ALL.HIP.001` | 2 | 5 | 0 | 0 |
+  | `STD.INT.ALL.JAZ.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.ALL.LAT.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.ALL.MET.001` | 3 | 4 | 0 | 0 |
+  | `STD.INT.ALL.MIX.001` | 3 | 3 | 1 | 0 |
+  | `STD.INT.ALL.MIX.005` | 3 | 1 | 3 | 0 |
+  | `STD.INT.ALL.NAT.001` | 3 | 3 | 1 | 0 |
+  | `STD.INT.ALL.POP.001` | 2 | 5 | 0 | 0 |
+  | `STD.INT.ALL.POP.002` | 4 | 1 | 2 | 0 |
+  | `STD.INT.ALL.ROC.001` | 2 | 5 | 0 | 0 |
+  | `STD.INT.ALL.SOU.001` | 5 | 2 | 0 | 0 |
+  | `STD.INT.ALL.SYN.001` | 7 | 0 | 0 | 0 |
+  | `STD.INT.ALL.TV.001` | 5 | 2 | 0 | 0 |
+  | `STD.PT.70.WLD.001` | 3 | 1 | 3 | 0 |
+  | `STD.PT.80.MIX.001` | 4 | 3 | 0 | 0 |
+  | `STD.PT.ALL.BAT.001` | 2 | 2 | 1 | 0 |
+  | `STD.PT.ALL.FAD.001` | 3 | 1 | 1 | 0 |
+  | `STD.PT.ALL.MIX.001` | 2 | 3 | 0 | 0 |
+  | `STD.PT.ALL.WLD.001` | 2 | 0 | 2 | 0 |
+  | `STD.US.ALL.AME.001` | 2 | 4 | 0 | 0 |
+  | **TOTAL** | **156** | **95** | **22** | **50** |
+
+  **2 bugs reais do verificador, encontrados e corrigidos a meio desta reavaliação**: 1) só gravava resultados no fim — um `TimeoutExpired` não tratado a meio matou o processo e perdeu 58 faixas já calculadas (corrigido: grava a cada faixa, retoma sozinho sem repetir trabalho); 2) o YouTube começou a bloquear com "Sign in to confirm you're not a bot" a meio da corrida (volume de pedidos desta sessão), contaminando 27 resultados com falsos "defeito"/"inconclusivo" (corrigido: retentativa automática com `--cookies-from-browser chrome`, mesmo padrão já usado em `gerar_faixa.py`; as 27 foram todas reprocessadas depois da correcção).
+
+  **Caso especial**: `logo_01` não é "defeito de conteúdo" — o `trecho_a.ficheiro` está mesmo em falta no disco.
+
+  **22 inconclusivo**: sem candidato fiável para concluir nada (pesquisa sem resultados, timeout, ou download bloqueado em todos os candidatos) — não são "sem problema", só não há dados suficientes. Lista em `relatorios/reavaliacao_falhas.csv` (categoria "inconclusivo").
+
+  **defeito real (95, por pack — todos os candidatos testados falharam):**
+  - `(sem playlist)`: beatles_03, beatles_04, beatles_05, beatles_06, beatles_08, beatles_recap, donna_summer_i_feel_love, gnr_dunas, maurice_jarre_lara_s_theme_somewhere_m, rush_tom_sawyer
+  - `LOGO-001`: logo_01
+  - `RET.PT.90.VOZ.001`: pt_07, ptbat_02, ptbat_04
+  - `STD.BR.ALL.MIX.001`: bra001_04, bra001_06
+  - `STD.INT.00.MIX.001`: dec00_03, dec00_05, dec00_06
+  - `STD.INT.10.MIX.001`: a10_06
+  - `STD.INT.10.SYN.001`: new_order_blue_monday, talk_talk_it_s_my_life
+  - `STD.INT.10.SYN.002`: future_islands_seasons_waiting_on_you, hurts_miracle
+  - `STD.INT.20.MIX.001`: dec20_02, dec20_05, dec20_06
+  - `STD.INT.50.MIX.001`: dec50_05, dec50_06
+  - `STD.INT.60.MIX.001`: dec60_01, dec60_03
+  - `STD.INT.70.ROC.001`: bat_08
+  - `STD.INT.80.MIX.001`: 80_03, 80_04, 80_05, 80_07
+  - `STD.INT.ALL.BLU.001`: blues_01, blues_05
+  - `STD.INT.ALL.CLA.001`: cla_02, cla_06
+  - `STD.INT.ALL.GAM.001`: gam_01, gam_02, gam_07
+  - `STD.INT.ALL.GTR.001`: solo_01, solo_05, solo_07
+  - `STD.INT.ALL.HIP.001`: hip_01, hip_02, hip_03, hip_04, hip_07
+  - `STD.INT.ALL.JAZ.001`: jazz_04, jazz_06
+  - `STD.INT.ALL.LAT.001`: lat_04, lat_05
+  - `STD.INT.ALL.MET.001`: metal_02, metal_03, metal_06, metal_07
+  - `STD.INT.ALL.MIX.001`: buena_vista_social_club_tres_palabras, sarah_mclachlan_surfacing, thelonious_monk_crepuscule_avec_pauline
+  - `STD.INT.ALL.MIX.005`: america_a_horse_with_no_name
+  - `STD.INT.ALL.NAT.001`: nat_02, nat_03, nat_04
+  - `STD.INT.ALL.POP.001`: pop_01, pop_02, pop_03, pop_04, pop_05
+  - `STD.INT.ALL.POP.002`: christina_aguilera_reflection
+  - `STD.INT.ALL.ROC.001`: rock_03, rock_04, rock_05, rock_06, rock_07
+  - `STD.INT.ALL.SOU.001`: soul_01, soul_07
+  - `STD.INT.ALL.TV.001`: tv_01, tv_05
+  - `STD.PT.70.WLD.001`: zeca_afonso_grandola_vila_morena
+  - `STD.PT.80.MIX.001`: pt80_02, pt80_04, pt80_06
+  - `STD.PT.ALL.BAT.001`: ptbat_03, ptbat_07
+  - `STD.PT.ALL.FAD.001`: amalia_rodrigues_estranha_forma_de_vida
+  - `STD.PT.ALL.MIX.001`: pt_02, pt_03, pt_05
+  - `STD.US.ALL.AME.001`: ame_03, ame_05, ame_06, ame_07
 - **Varrimento do catálogo por fontes "videoclipe" (8 Out 2026, diagnóstico, só metadados)**: motivado por `a10_04` e por **dec00_01** ("Hey Ya!", OutKast — Faixa 1 do pack "Anos 2000"/`STD.INT.00.MIX.001`, `trecho_a.ficheiro = "dec00_01_a.mp3"`, inicio 0/fim 12), cujo Trecho A o André reportou começar com conversa. `dec00_01` tem `video: null` — veio da "Revisão YouTube" de Ago/Set (backup committado em `_backup_pre_regeneracao/dec00_01_a.mp3`) e a fonte usada nessa altura não ficou registada no catálogo, por isso **não aparece neste varrimento** (que só consegue avaliar faixas com campo `video` preenchido) — ponto a investigar à parte. Varridos os 348 ids do catálogo: 88 têm `video` preenchido; destes, **53 estão com o vídeo indisponível/privado no YouTube** (confirmado por `yt-dlp --skip-download`, repetido em série — não é falha de rede/concorrência), sobram 35 com metadados válidos. Dessas 35, **27 têm título "Official Video"/"Music Video" e/ou duração bem acima do habitual para um single** — candidatas a ter sido cortadas do videoclipe em vez do áudio, tal como `a10_04`:
   - `STD.INT.10.MIX.001` (Anos 2010): `a10_01` Work (454s!), `a10_02` Shape of You, `a10_03` Uptown Funk, `a10_05` Rolling in the Deep, `a10_06` Old Town Road — só `a10_07` (Bad Guy) e `a10_04` (já corrigido) ficam de fora.
   - `STD.INT.80.MIX.001` (Anos 80): `80_01/02/04/05/06/07` — praticamente o pack todo.
