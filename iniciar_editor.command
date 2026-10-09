@@ -57,9 +57,13 @@ fi
 if lsof -i :8002 -sTCP:LISTEN >/dev/null 2>&1; then
   echo "✓ _servidor_escrita.py já estava em execução (porta 8002)"
 else
-  nohup python3 "$APP_DIR/_servidor_escrita.py" >> "$APP_DIR/_servidor_escrita.log" 2>&1 &
-  disown
-  echo "✓ _servidor_escrita.py iniciado em background — porta 8002"
+  # source ~/.zshrc antes de arrancar — senão o processo fica com o
+  # ambiente de quando este .command foi aberto (duplo-clique no Finder
+  # não corre o ~/.zshrc), podendo herdar uma ANTHROPIC_API_KEY antiga se
+  # o ficheiro tiver sido editado depois. Bug real, 2026-10-09: servidor
+  # a correr há horas ficou com a chave errada; só se notou ao testar.
+  zsh -lc "source ~/.zshrc 2>/dev/null; cd '$APP_DIR'; nohup python3 _servidor_escrita.py >> _servidor_escrita.log 2>&1 &"
+  echo "✓ _servidor_escrita.py iniciado em background — porta 8002 (ambiente de ~/.zshrc)"
 fi
 
 # "✦ Gerar faixas com IA" (modal Nova Playlist, POST /gerar-faixas) precisa
