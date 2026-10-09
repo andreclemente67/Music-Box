@@ -5,6 +5,49 @@
 
 ## À espera de decisão do André
 
+- **Pré-audições dos 95 "defeito real" geradas e carregadas no ecrã Revisão (9 Out 2026)**: para cada faixa, o motor novo (Topic > Official Audio, nunca Video/MV/Live/Movie/Trailer/Scene/Teaser) escolheu UMA fonte, gerou Trecho A/B de 15s e correu o verificador — **95/95 passaram** (0 "por rever"), carregadas em `_revisao_regeneracao.json` com `estado: "pendente"`, agrupadas por pack (ordem: playlists "prontas" com mais defeitos primeiro, depois rascunho/protótipo, depois sem playlist). **Nenhum ficheiro de produção foi tocado** — só `_preview_revisao/*_proposta.mp3`. Progresso faixa a faixa (retomável): `relatorios/previews_defeitos_progresso.csv`.
+
+  | pack | previews prontas |
+  |---|---|
+  | `(sem playlist)` | 10 |
+  | `STD.INT.ALL.ROC.001` | 5 |
+  | `STD.INT.ALL.POP.001` | 5 |
+  | `STD.INT.ALL.HIP.001` | 5 |
+  | `STD.INT.80.MIX.001` | 4 |
+  | `STD.US.ALL.AME.001` | 4 |
+  | `STD.INT.ALL.MET.001` | 4 |
+  | `STD.PT.ALL.MIX.001` | 3 |
+  | `RET.PT.90.VOZ.001` | 3 |
+  | `STD.INT.ALL.GTR.001` | 3 |
+  | `STD.PT.80.MIX.001` | 3 |
+  | `STD.INT.ALL.MIX.001` | 3 |
+  | `STD.INT.ALL.GAM.001` | 3 |
+  | `STD.INT.ALL.NAT.001` | 3 |
+  | `STD.INT.00.MIX.001` | 3 |
+  | `STD.INT.20.MIX.001` | 3 |
+  | `STD.BR.ALL.MIX.001` | 2 |
+  | `STD.PT.ALL.BAT.001` | 2 |
+  | `STD.INT.10.SYN.001` | 2 |
+  | `STD.INT.10.SYN.002` | 2 |
+  | `STD.INT.ALL.TV.001` | 2 |
+  | `STD.INT.50.MIX.001` | 2 |
+  | `STD.INT.60.MIX.001` | 2 |
+  | `STD.INT.ALL.BLU.001` | 2 |
+  | `STD.INT.ALL.SOU.001` | 2 |
+  | `STD.INT.ALL.CLA.001` | 2 |
+  | `STD.INT.ALL.LAT.001` | 2 |
+  | `STD.INT.ALL.JAZ.001` | 2 |
+  | `STD.INT.10.MIX.001` | 1 |
+  | `STD.INT.ALL.MIX.005` | 1 |
+  | `STD.INT.70.ROC.001` | 1 |
+  | `STD.PT.70.WLD.001` | 1 |
+  | `STD.INT.ALL.POP.002` | 1 |
+  | `STD.PT.ALL.FAD.001` | 1 |
+  | `LOGO-001` | 1 |
+  | **TOTAL** | **95** |
+
+  **⚠ 3 faixas passaram o verificador automático mas a fonte escolhida não é áudio puro — ouvir com atenção extra antes de aprovar**: `solo_01` (documentário BBC "How Stairway to Heaven was written", não a música), `beatles_04` (vídeo de ensaio "The Beatles: Get Back"), `beatles_03` ("The End Lesson by Mike Pachelli", vídeo de aula de guitarra). O filtro de título não apanha estes casos (sem "Video"/"Movie"/etc. literal no título) — o verificador passou porque o excerto de 15s escolhido calhou a soar parecido, não porque a fonte seja apropriada.
+
 - **Verificador de trechos — reavaliação com múltiplos candidatos concluída (9 Out 2026)**: substitui a 1ª corrida (que só testava o 1º resultado do `ytsearch5`). Para as 128 "NÃO encontrado"/"ruído/diálogo" e as 31 "erro" da 1ª corrida, passou a testar até 5-6 candidatos por faixa (mesmo filtro de título, agora também rejeita "Movie"/"Trailer"/"Scene"/"Teaser") e as `*_mosaico` (formato `full`, sem `trecho_b`) passam a excluídas como "formato especial". Totais finais (323 faixas): **156 OK confirmado, 95 defeito real, 22 inconclusivo, 50 formato especial**. Tabela completa: `relatorios/reavaliacao_falhas.csv`; propostas de fonte alternativa das 43 faixas só OK num candidato diferente do 1º: `relatorios/propostas_fonte_audio.json` — **não aplicadas a catalogo.json**, ficam para revisão/aprovação.
 
   | pack | OK confirmado | defeito real | inconclusivo | formato especial |
