@@ -6122,7 +6122,18 @@ async function af_gerarTrechoCore(id, url) {
 
   t.trecho_a = { ficheiro: dados.ficheiro_a, inicio: null, fim: null };
   t.trecho_b = { ficheiro: dados.ficheiro_b, inicio: null, fim: null };
+  // fonte_audio (DECISIONS.md 2026-10-08/09): URL real usado por
+  // gerar_faixa.py — Topic/Official Audio preferido, nunca o
+  // videoclipe; só vem no modo YouTube, não no iTunes (preview próprio).
+  if (dados.fonte_audio) t.fonte_audio = dados.fonte_audio;
   CATALOGO_PATCH.set(t.id, t);
+
+  if (dados.aviso_fonte) {
+    notify(`"${t.titulo}": ${dados.aviso_fonte}`, 'aviso');
+  }
+  if (dados.verificacao && dados.verificacao !== 'OK') {
+    notify(`"${t.titulo}": verificador detectou "${dados.verificacao}" — ouve antes de aprovar`, 'aviso');
+  }
 
   // Auto-cascata de imagem (pedido do utilizador, 2026-08-28): faixas
   // novas adicionadas por URL só tinham áudio tratado aqui, a imagem

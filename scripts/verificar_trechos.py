@@ -548,9 +548,39 @@ def reavaliar_erros(csv_in):
     return _reavaliar(csv_in, filtro, _obter_candidatos_erro, 'reavaliar_erros')
 
 
+def verificar_um(id_faixa, fonte_url):
+    """Verifica UMA faixa já cortada (<id>_a.mp3/<id>_b.mp3 na raiz,
+    convenção de gerar_faixa.py/_servidor_escrita.py) contra `fonte_url`
+    — sem tocar em catalogo.json nem fazer pesquisa nenhuma; usado logo
+    depois de uma geração (ver `_verificar_trecho_gerado` em
+    _servidor_escrita.py:/gerar-faixa, DECISIONS.md 2026-10-09). Imprime
+    uma linha de resumo (a última linha de stdout) e devolve o estado."""
+    ficheiro_a = os.path.join(APP_DIR, f'{id_faixa}_a.mp3')
+    ficheiro_b = os.path.join(APP_DIR, f'{id_faixa}_b.mp3')
+    if not os.path.exists(ficheiro_a):
+        print(f'{id_faixa}: ficheiro em falta ({ficheiro_a})')
+        return 'ficheiro em falta'
+    try:
+        caminho_fonte = descarregar_para_cache(fonte_url)
+        dur_fonte, fp_fonte = fingerprint_fpcalc(caminho_fonte, fonte_completa=True)
+    except Exception as e:
+        print(f'{id_faixa}: não avaliado (erro a obter a fonte: {e})')
+        return 'não avaliado'
+
+    res_a = verificar_trecho(f'{id_faixa}_a.mp3', caminho_fonte, dur_fonte, fp_fonte)
+    res_b = (verificar_trecho(f'{id_faixa}_b.mp3', caminho_fonte, dur_fonte, fp_fonte)
+             if os.path.exists(ficheiro_b) else {'estado': '(sem trecho_b)'})
+    limpo = res_a['estado'] == 'OK' and res_b['estado'] in ('OK', '(sem trecho_b)')
+    resumo = 'OK' if limpo else f"A={res_a['estado']} B={res_b['estado']}"
+    print(f'{id_faixa}: {resumo}')
+    return resumo
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--packs', help='lista de playlistCodigo separados por vírgula (default: catálogo todo)')
+    ap.add_argument('--id', help='verifica só esta faixa (<id>_a.mp3/<id>_b.mp3), precisa de --fonte-url')
+    ap.add_argument('--fonte-url', help='URL a usar com --id, sem pesquisar nada')
     ap.add_argument('--reavaliar-falhas', metavar='CSV',
                      help='em vez da corrida normal, reavalia as faixas "NÃO encontrado"/"ruído/diálogo" '
                           'de uma corrida anterior (CSV), testando até 5 candidatos por faixa')
@@ -567,6 +597,13 @@ def main():
               'scripts/bin/)', file=sys.stderr)
         sys.exit(1)
     print(f'fpcalc: {FPCALC_BIN}')
+
+    if args.id:
+        if not args.fonte_url:
+            print('ERRO: --id precisa de --fonte-url', file=sys.stderr)
+            sys.exit(1)
+        verificar_um(args.id, args.fonte_url)
+        return
 
     if args.reavaliar_erros:
         resultados = reavaliar_erros(args.reavaliar_erros)

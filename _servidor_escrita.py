@@ -184,9 +184,98 @@ APLICAR_REGENERACAO_TIMEOUT = 30  # segundos — só move ficheiros já em disco
 GERAR_VOZ_DESCRITIVO_SCRIPT = os.path.join(APP_DIR, 'gerar_vozes_descritivo.py')
 GERAR_VOZ_DESCRITIVO_TIMEOUT = 40  # segundos — edge-tts precisa de rede (ver DECISIONS.md, "edge-tts é só protótipo")
 GERAR_FAIXA_TIMEOUT = 600  # segundos (10min) — download + análise + corte; músicas longas (ex. "Weightless", Marconi Union) podem demorar mais
-YT_SEARCH_TIMEOUT = 60  # segundos — yt-dlp --get-url só resolve o URL, não descarrega áudio
+YT_SEARCH_TIMEOUT = 90  # segundos — ytsearch5 + filtro de título (ver _escolher_fonte_youtube), não só --get-url do 1º resultado
 GERAR_FAIXA_ITUNES_TIMEOUT = 60  # segundos — pesquisa + download do preview de 30s + corte ffmpeg (ficheiro pequeno, bem mais rápido que o modo YouTube)
 ID_FAIXA_REGEX = re.compile(r'^[A-Za-z0-9_]+$')
+
+# ── Escolha de fonte para /gerar-faixa (modo YouTube) — DECISIONS.md
+# 2026-10-08/09: nunca o videoclipe, preferir canal Topic ("Provided to
+# YouTube by...") > título "Official Audio" > resto; nunca um candidato
+# com "Video"/"MV"/"Live"/"Movie"/"Trailer"/"Scene"/"Teaser" no título.
+# Mesma regra (e lista de títulos rejeitados) de scripts/verificar_trechos.py
+# — mantidas em paralelo porque este ficheiro usa só o Python de sistema
+# (sem numpy/scipy do ambiente do verificador) para a pesquisa, que não
+# precisa dessas dependências.
+TITULO_FONTE_PROIBIDO = re.compile(
+    r'\bvideo\b|\bmv\b|\blive\b|música\s*video|\bmovie\b|\btrailer\b|\bscene\b|\bteaser\b', re.I)
+TITULO_FONTE_OFFICIAL_AUDIO = re.compile(r'official\s*audio', re.I)
+VERIFICAR_TRECHOS_VENV_PY = os.path.join(APP_DIR, 'scripts', '.venv', 'bin', 'python3')
+VERIFICAR_TRECHOS_SCRIPT = os.path.join(APP_DIR, 'scripts', 'verificar_trechos.py')
+VERIFICAR_TRECHOS_TIMEOUT = 120  # segundos — download da fonte (já em cache se for a mesma do passo anterior) + fingerprint + ruído de 2 trechos de 15s
+
+
+def _escolher_fonte_youtube(consulta, timeout):
+    """Pesquisa ytsearch5:`consulta`, filtra títulos proibidos e prefere
+    canal Topic/"Official Audio" (mesma regra de
+    scripts/verificar_trechos.py:_pesquisar_candidatos). Devolve
+    (url, titulo_yt, aviso|None) ou (None, None, erro) se falhar."""
+    try:
+        r = subprocess.run(
+            ['yt-dlp', 'ytsearch5:' + consulta, '--skip-download', '--no-playlist',
+             '--print', '%(id)s|||%(title)s|||%(description)s'],
+            cwd=APP_DIR, capture_output=True, text=True, timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        return None, None, f'pesquisa no YouTube excedeu {timeout}s para {consulta!r}'
+    except Exception as e:
+        return None, None, f'falha a correr yt-dlp para pesquisar {consulta!r}: {e}'
+
+    if 'sign in to confirm' in (r.stderr or '').lower():
+        try:
+            r = subprocess.run(
+                ['yt-dlp', 'ytsearch5:' + consulta, '--skip-download', '--no-playlist',
+                 '--cookies-from-browser', 'chrome',
+                 '--print', '%(id)s|||%(title)s|||%(description)s'],
+                cwd=APP_DIR, capture_output=True, text=True, timeout=timeout,
+            )
+        except Exception:
+            pass  # mantém o resultado (vazio) da 1ª tentativa
+
+    linhas = [l for l in (r.stdout or '').strip().splitlines() if l]
+    candidatos = []
+    for linha in linhas:
+        partes = linha.split('|||', 2)
+        if len(partes) == 3:
+            candidatos.append(partes)
+    if not candidatos:
+        return None, None, f'yt-dlp não encontrou resultados para {consulta!r}: {(r.stderr or r.stdout or "").strip()[-500:]}'
+
+    validos = [c for c in candidatos if not TITULO_FONTE_PROIBIDO.search(c[1] or '')]
+    if not validos:
+        vid, tit, _ = candidatos[0]
+        return f'https://www.youtube.com/watch?v={vid}', tit, \
+            'ATENÇÃO: todos os candidatos pareciam Video/MV/Live/Movie/Trailer/Scene/Teaser — usado o 1º sem filtro'
+
+    topic = [c for c in validos if 'provided to youtube' in (c[2] or '').lower()]
+    oficial = [c for c in validos if TITULO_FONTE_OFFICIAL_AUDIO.search(c[1] or '')]
+    vid, tit, _ = (topic or oficial or validos)[0]
+    aviso = None if (topic or oficial) else 'sem canal Topic nem título "Official Audio" — usado o 1º candidato não-Video/MV/Live/Movie/Trailer/Scene/Teaser'
+    return f'https://www.youtube.com/watch?v={vid}', tit, aviso
+
+
+def _verificar_trecho_gerado(id_faixa, fonte_url):
+    """Corre scripts/verificar_trechos.py --id/--fonte-url sobre os
+    ficheiros que `gerar_faixa.py` acabou de cortar, reaproveitando a
+    MESMA fonte já descarregada (nunca procura de novo). Best-effort: se
+    o ambiente do verificador (scripts/.venv) não existir, ou a análise
+    falhar/demorar, devolve None — nunca bloqueia a geração em si, só
+    enriquece a resposta quando disponível."""
+    if not os.path.exists(VERIFICAR_TRECHOS_VENV_PY):
+        return None
+    try:
+        r = subprocess.run(
+            [VERIFICAR_TRECHOS_VENV_PY, VERIFICAR_TRECHOS_SCRIPT, '--id', id_faixa, '--fonte-url', fonte_url],
+            cwd=APP_DIR, capture_output=True, text=True, timeout=VERIFICAR_TRECHOS_TIMEOUT,
+        )
+        if r.returncode != 0:
+            return None
+        if not r.stdout.strip():
+            return None
+        ultima_linha = r.stdout.strip().splitlines()[-1]
+        prefixo = f'{id_faixa}: '
+        return ultima_linha[len(prefixo):] if ultima_linha.startswith(prefixo) else ultima_linha
+    except Exception:
+        return None
 
 # User-Agent identificando a app — MusicBrainz E Wikipedia/Wikimedia
 # exigem um User-Agent próprio nos pedidos server-to-server (bloqueiam o
@@ -1049,6 +1138,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         url = (pedido.get('url') or '').strip()
+        aviso_fonte = None
         id_faixa = (pedido.get('id') or '').strip()
         artista = (pedido.get('artista') or '').strip()
         titulo = (pedido.get('titulo') or pedido.get('title') or '').strip()
@@ -1091,24 +1181,15 @@ class Handler(BaseHTTPRequestHandler):
                     # ficheiros não apareceram apesar do returncode 0 — cai para YouTube também
 
             # Fallback: pesquisa no YouTube (sem preview iTunes disponível,
-            # ou só veio 'artista' ou só 'titulo').
+            # ou só veio 'artista' ou só 'titulo') — Topic/Official Audio
+            # preferido, Video/MV/Live/Movie/Trailer/Scene/Teaser nunca
+            # (DECISIONS.md 2026-10-08/09; antes era só o 1º resultado
+            # sem filtro nenhum).
             consulta = ' '.join(p for p in (artista, titulo) if p)
-            try:
-                pesquisa = subprocess.run(
-                    ['yt-dlp', f'ytsearch1:{consulta}', '--get-url', '--no-playlist'],
-                    cwd=APP_DIR, capture_output=True, text=True, timeout=YT_SEARCH_TIMEOUT,
-                )
-            except subprocess.TimeoutExpired:
-                self._enviar_json(504, {"erro": f"pesquisa no YouTube excedeu {YT_SEARCH_TIMEOUT}s para {consulta!r}"})
+            url, titulo_fonte_yt, aviso_fonte = _escolher_fonte_youtube(consulta, YT_SEARCH_TIMEOUT)
+            if not url:
+                self._enviar_json(500, {"erro": aviso_fonte})
                 return
-            except Exception as e:
-                self._enviar_json(500, {"erro": f"falha a correr yt-dlp para pesquisar {consulta!r}: {e}"})
-                return
-            if pesquisa.returncode != 0 or not pesquisa.stdout.strip():
-                detalhe = (pesquisa.stderr or pesquisa.stdout or '').strip()
-                self._enviar_json(500, {"erro": f"yt-dlp não encontrou resultados para {consulta!r}: {detalhe[-500:]}"})
-                return
-            url = pesquisa.stdout.strip().splitlines()[0].strip()
 
         # limpar URL — remover parâmetros de playlist
         from urllib.parse import urlparse, parse_qs
@@ -1143,7 +1224,20 @@ class Handler(BaseHTTPRequestHandler):
             self._enviar_json(500, {"erro": "gerar_faixa.py terminou sem erro mas os ficheiros não apareceram em app/"})
             return
 
-        self._enviar_json(200, {"ok": True, "ficheiro_a": ficheiro_a, "ficheiro_b": ficheiro_b, "fonte": "youtube"})
+        # Verificador automático (scripts/verificar_trechos.py) sobre o que
+        # acabou de ser cortado, reaproveitando a MESMA fonte — nunca
+        # bloqueia a resposta (best-effort, ver _verificar_trecho_gerado);
+        # dá ao curador um primeiro sinal antes de ouvir, não substitui
+        # ouvir (ver DECISIONS.md 2026-10-08, caso real a10_04/dec00_01).
+        verificacao = _verificar_trecho_gerado(id_faixa, url)
+
+        resposta = {"ok": True, "ficheiro_a": ficheiro_a, "ficheiro_b": ficheiro_b,
+                    "fonte": "youtube", "fonte_audio": url}
+        if aviso_fonte:
+            resposta["aviso_fonte"] = aviso_fonte
+        if verificacao:
+            resposta["verificacao"] = verificacao
+        self._enviar_json(200, resposta)
 
     def _gerar_preview_revisao(self):
         """POST /gerar-preview-revisao — corpo {"url":..., "id":...}. Gera uma
