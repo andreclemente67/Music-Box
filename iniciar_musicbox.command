@@ -22,7 +22,7 @@ else
   # source ~/.zshrc antes de arrancar — ver iniciar_editor.command para o
   # porquê (bug real 2026-10-09: servidor arrancado sem isto ficou preso
   # a uma ANTHROPIC_API_KEY desactualizada).
-  zsh -lc "source ~/.zshrc 2>/dev/null; cd '$APP_DIR'; nohup python3 _servidor_escrita.py >> _servidor_escrita.log 2>&1 &"
+  zsh -lc "source ~/.zshrc 2>/dev/null; cd '$APP_DIR'; nohup python3 -u _servidor_escrita.py >> _servidor_escrita.log 2>&1 &"
   sleep 0.8
   echo "✓ _servidor_escrita.py iniciado em background — porta 8002 (ambiente de ~/.zshrc)"
 fi

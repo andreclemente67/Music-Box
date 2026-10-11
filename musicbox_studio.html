@@ -1556,6 +1556,8 @@
   .revisao-acoes { display:flex; gap:8px; margin-top:12px; align-items:center; flex-wrap:wrap; }
   .revisao-url-manual { display:flex; gap:6px; margin-top:8px; }
   .revisao-url-manual input { flex:1; background:var(--bg); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:11px; }
+  .revisao-url-status { font-size:11px; margin-top:6px; min-height:14px; }
+  .revisao-url-status:not(:empty) { color:var(--text3); }
   .revisao-banner { margin:16px 20px 0; padding:14px 18px; border-radius:8px; font-size:12px; }
   .revisao-banner-acao { background:rgba(232,197,71,0.1); border:1px solid var(--accent); }
   .revisao-banner-feita { background:rgba(78,201,142,0.1); border:1px solid var(--green); color:var(--green); }
@@ -9862,19 +9864,25 @@ async function revisaoGuardar() {
 function revisaoPlaylistsAgrupadas(entradas) {
   const porPlaylist = new Map();
   entradas.forEach(e => {
-    if (!porPlaylist.has(e.playlistCodigo)) {
-      porPlaylist.set(e.playlistCodigo, {
-        codigo: e.playlistCodigo,
-        nome: (PLAYLISTS[e.playlistCodigo] && PLAYLISTS[e.playlistCodigo].nome) || e.playlistCodigo,
+    // playlistCodigo pode vir null/undefined (faixas sem playlist, ex.
+    // Elo "Deserto" em curso) — chave e nome têm de ficar sempre uma
+    // string estável, senão o .sort() abaixo rebenta (bug real,
+    // 2026-10-10: sidebar "Playlists a rever" ficava vazia em silêncio,
+    // só visível na consola do browser).
+    const codigo = e.playlistCodigo || '(sem playlist)';
+    if (!porPlaylist.has(codigo)) {
+      porPlaylist.set(codigo, {
+        codigo,
+        nome: (PLAYLISTS[codigo] && PLAYLISTS[codigo].nome) || codigo,
         faixas: [],
       });
     }
-    porPlaylist.get(e.playlistCodigo).faixas.push(e);
+    porPlaylist.get(codigo).faixas.push(e);
   });
   return [...porPlaylist.values()].map(p => {
     const revistas = p.faixas.filter(f => (f.estado || 'pendente') !== 'pendente').length;
     return { ...p, revistas, total: p.faixas.length, completa: revistas === p.faixas.length };
-  }).sort((a, b) => a.nome.localeCompare(b.nome));
+  }).sort((a, b) => (a.nome || '').localeCompare(b.nome || ''));
 }
 
 // Só a sidebar (barato, sem elementos <audio> — seguro re-renderizar a
@@ -10129,8 +10137,9 @@ function revisaoCardHtml(e) {
     </div>
     <div class="revisao-url-manual" id="revisao-url-manual-${e.id}" style="display:none;">
       <input type="text" placeholder="https://www.youtube.com/watch?v=..." id="revisao-url-input-${e.id}">
-      <button class="btn" style="font-size:11px;" onclick="revisaoAplicarUrlManual('${e.id}')">Gerar pré-audição desta URL</button>
+      <button class="btn" style="font-size:11px;" onclick="revisaoAplicarUrlManual('${e.id}')" id="revisao-gerar-manual-${e.id}">Gerar pré-audição desta URL</button>
     </div>
+    <div class="revisao-url-status" id="revisao-url-status-${e.id}"></div>
   </div>`;
 }
 
@@ -10151,30 +10160,49 @@ async function revisaoGerarPreview(id, urlOverride) {
   if (REVISAO_A_GERAR.has(id)) return;
   const e = REVISAO_DADOS[id];
   const url = urlOverride || e.url_manual || e.url;
-  if (!url) { notify('Sem URL para esta faixa', 'erro'); return; }
+  const statusEl = document.getElementById('revisao-url-status-' + id);
+  if (!url) {
+    notify('Sem URL para esta faixa', 'erro');
+    if (statusEl) statusEl.textContent = '✗ sem URL para esta faixa';
+    return;
+  }
   REVISAO_A_GERAR.add(id);
-  const btn = document.getElementById('revisao-gerar-' + id);
-  if (btn) { btn.textContent = '⏳ a gerar… (pode demorar até alguns minutos)'; btn.disabled = true; }
+  // Dois botões podem disparar isto (o automático "revisao-gerar-" só
+  // existe antes de haver proposta; o manual "revisao-gerar-manual-"
+  // está sempre presente) — desactiva os dois, já que é a mesma faixa.
+  [document.getElementById('revisao-gerar-' + id), document.getElementById('revisao-gerar-manual-' + id)]
+    .forEach(b => { if (b) { b.textContent = '⏳ a gerar…'; b.disabled = true; } });
+  if (statusEl) statusEl.textContent = '⏳ a gerar pré-audição… (pode demorar até alguns minutos)';
   try {
     const r = await fetch(`${SERVIDOR_ESCRITA_URL}/gerar-preview-revisao`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url, id }),
     });
-    const corpo = await r.json();
-    if (!r.ok || !corpo.ok) {
-      notify(`Falhou a pré-audição de "${e.titulo}": ${corpo.erro || r.status}`, 'erro');
+    const corpo = await r.json().catch(() => null);
+    if (!r.ok || !corpo || !corpo.ok) {
+      const motivo = (corpo && corpo.erro) || `HTTP ${r.status}`;
+      notify(`Falhou a pré-audição de "${e.titulo}": ${motivo}`, 'erro');
+      if (statusEl) statusEl.textContent = `✗ falhou: ${motivo}`;
       return;
     }
     Object.assign(e, corpo);
     e.estado = e.estado || 'pendente';
     await revisaoGuardar();
     notify(`Pré-audição gerada para "${e.titulo}"`, 'ok');
+    // Só re-renderiza o cartão (via outerHTML) no sucesso — isto substitui
+    // todo o cartão, incluindo o status acima, por isso um erro NUNCA
+    // chama revisaoAtualizarLeve: a mensagem de erro tem de sobreviver,
+    // não há mais nenhum sítio visível para ela (bug real 2026-10-10: sem
+    // isto, nenhum feedback de falha era visível).
+    revisaoAtualizarLeve(id);
   } catch (err) {
     notify(`Erro de rede a gerar pré-audição: ${err.message}`, 'erro');
+    if (statusEl) statusEl.textContent = `✗ erro de rede: ${err.message}`;
   } finally {
     REVISAO_A_GERAR.delete(id);
-    revisaoAtualizarLeve(id);
+    [document.getElementById('revisao-gerar-' + id), document.getElementById('revisao-gerar-manual-' + id)]
+      .forEach(b => { if (b) { b.disabled = false; if (b.id.startsWith('revisao-gerar-manual-')) b.textContent = 'Gerar pré-audição desta URL'; else b.textContent = '▶ Gerar pré-audição'; } });
   }
 }
 

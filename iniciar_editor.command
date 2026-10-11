@@ -62,7 +62,7 @@ else
   # não corre o ~/.zshrc), podendo herdar uma ANTHROPIC_API_KEY antiga se
   # o ficheiro tiver sido editado depois. Bug real, 2026-10-09: servidor
   # a correr há horas ficou com a chave errada; só se notou ao testar.
-  zsh -lc "source ~/.zshrc 2>/dev/null; cd '$APP_DIR'; nohup python3 _servidor_escrita.py >> _servidor_escrita.log 2>&1 &"
+  zsh -lc "source ~/.zshrc 2>/dev/null; cd '$APP_DIR'; nohup python3 -u _servidor_escrita.py >> _servidor_escrita.log 2>&1 &"
   echo "✓ _servidor_escrita.py iniciado em background — porta 8002 (ambiente de ~/.zshrc)"
 fi
 

@@ -204,6 +204,16 @@ VERIFICAR_TRECHOS_SCRIPT = os.path.join(APP_DIR, 'scripts', 'verificar_trechos.p
 VERIFICAR_TRECHOS_TIMEOUT = 120  # segundos — download da fonte (já em cache se for a mesma do passo anterior) + fingerprint + ruído de 2 trechos de 15s
 
 
+def _limpar_url_youtube(url):
+    """Remove parâmetros extra de URLs do YouTube (&list=, &start_radio=,
+    &t=, etc.) — fica só `v=`. Sem isto, colar um URL copiado de dentro de
+    uma playlist/rádio do YouTube (muito comum) podia confundir o yt-dlp
+    ou cortar a partir do `&t=` errado. Usado em /gerar-faixa e
+    /gerar-preview-revisao (bug real 2026-10-10: só o 1º tinha isto)."""
+    v = parse_qs(urlparse(url).query).get('v')
+    return f'https://www.youtube.com/watch?v={v[0]}' if v else url
+
+
 def _escolher_fonte_youtube(consulta, timeout):
     """Pesquisa ytsearch5:`consulta`, filtra títulos proibidos e prefere
     canal Topic/"Official Audio" (mesma regra de
@@ -1191,12 +1201,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._enviar_json(500, {"erro": aviso_fonte})
                 return
 
-        # limpar URL — remover parâmetros de playlist
-        from urllib.parse import urlparse, parse_qs
-        _p = urlparse(url)
-        _v = parse_qs(_p.query).get('v')
-        if _v:
-            url = f'https://www.youtube.com/watch?v={_v[0]}'
+        url = _limpar_url_youtube(url)
         if not url:
             self._enviar_json(400, {"erro": "não foi possível obter um url válido"})
             return
@@ -1263,6 +1268,7 @@ class Handler(BaseHTTPRequestHandler):
         if not url or not YOUTUBE_URL_REGEX.match(url):
             self._enviar_json(400, {"erro": f"url inválido ou em falta: {url!r}"})
             return
+        url = _limpar_url_youtube(url)
 
         try:
             resultado = subprocess.run(

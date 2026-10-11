@@ -142,7 +142,7 @@ def processar_faixa(tid, pack, catalogo_por_id):
     manifesto = carregar_manifesto()
     manifesto[tid] = {
         'id': tid,
-        'playlistCodigo': pack if pack != '(sem playlist)' else None,
+        'playlistCodigo': pack,  # nunca None — "(sem playlist)" é uma string estável (bug real 2026-10-10: null rebentava o .sort() da sidebar do Studio)
         'titulo': titulo,
         'artista': artista,
         'ficheiro_a': trecho_a.get('ficheiro'),
