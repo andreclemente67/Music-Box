@@ -1,0 +1,77 @@
+faixa,pack,resultado,motivo
+pop_05,STD.INT.ALL.POP.001,aprovado,canal Topic (Elton John)
+gam_07,STD.INT.ALL.GAM.001,aprovado,canal Topic (Release - Topic)
+nat_03,STD.INT.ALL.NAT.001,pendente,"título da fonte rejeitado: ""1942 HITS ARCHIVE: White Christmas - Bing Crosby (1942 version) (a #1 record)"""
+rock_04,STD.INT.ALL.ROC.001,pendente,duração da fonte muito alta (391s > 320s) — por confirmar
+rock_07,STD.INT.ALL.ROC.001,aprovado,"""Official Audio"" (Journey - Don't Stop Believin' (Official Audio))"
+dec60_01,STD.INT.60.MIX.001,aprovado,canal Topic (Aretha Franklin)
+blues_05,STD.INT.ALL.BLU.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Gustavo Freire', título: 'Albert King and Stevie Ray Vaughan - Born Under A Bad Sign   (HD)')"
+metal_03,STD.INT.ALL.MET.001,aprovado,canal Topic (Judas Priest)
+hurts_miracle,STD.INT.10.SYN.002,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Hurts', título: 'Hurts - Miracle (Audio)')"
+dec20_06,STD.INT.20.MIX.001,pendente,"título da fonte rejeitado: ""Beyoncé - CUFF IT (WETTER REMIX) - EXPLICIT - Official Visualizer"""
+hip_03,STD.INT.ALL.HIP.001,aprovado,canal Topic (The Notorious B.I.G.)
+nat_04,STD.INT.ALL.NAT.001,aprovado,canal Topic (Release - Topic)
+lat_05,STD.INT.ALL.LAT.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Gipsy Kings', título: 'Gipsy Kings - Bamboléo (Audio)')"
+hip_01,STD.INT.ALL.HIP.001,pendente,"título da fonte rejeitado: ""Rapper's Delight (Long Version)"""
+hip_02,STD.INT.ALL.HIP.001,aprovado,canal Topic (Channel ZERO)
+dec60_03,STD.INT.60.MIX.001,aprovado,canal Topic (The Beach Boys)
+pop_03,STD.INT.ALL.POP.001,aprovado,canal Topic (Whitney Houston)
+metal_02,STD.INT.ALL.MET.001,aprovado,canal Topic (Black Sabbath)
+metal_06,STD.INT.ALL.MET.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Jaspedood666', título: 'Pantera - Walk')"
+dec20_05,STD.INT.20.MIX.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: '7clouds Rock', título: 'Miley Cyrus - Flowers (Lyrics)')"
+pop_01,STD.INT.ALL.POP.001,aprovado,canal Topic (Michael Jackson)
+cla_02,STD.INT.ALL.CLA.001,pendente,duração da fonte muito alta (656s > 320s) — por confirmar
+pop_04,STD.INT.ALL.POP.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Young Pilgrim Music', título: 'ABBA - Dancing Queen (Lyrics)')"
+metal_07,STD.INT.ALL.MET.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'riot wav', título: 'Slipknot - Duality | Lyrics')"
+tv_01,STD.INT.ALL.TV.001,aprovado,canal Topic (Ramin Djawadi - Topic)
+rock_05,STD.INT.ALL.ROC.001,pendente,duração da fonte muito alta (340s > 320s) — por confirmar
+dec20_02,STD.INT.20.MIX.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Rap Samurai', título: 'Olivia Rodrigo - drivers license (Lyrics)')"
+lat_04,STD.INT.ALL.LAT.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Musica Milagrosa', título: 'Marc Anthony - Vivir Mi Vida (Letra / Lyrics)')"
+pop_02,STD.INT.ALL.POP.001,pendente,"título da fonte rejeitado: ""Like a Prayer (7"" Version)"""
+hip_04,STD.INT.ALL.HIP.001,aprovado,canal Topic (50 Cent)
+nat_02,STD.INT.ALL.NAT.001,aprovado,canal Topic (WHAM!)
+dec00_06,STD.INT.00.MIX.001,aprovado,canal Topic (Linkin Park)
+gam_01,STD.INT.ALL.GAM.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Geek Music', título: 'THE LEGEND OF ZELDA - Main Theme By Koji Kondo | Nintendo')"
+soul_01,STD.INT.ALL.SOU.001,aprovado,canal Topic (Earth Wind & Fire)
+blues_01,STD.INT.ALL.BLU.001,pendente,duração da fonte muito alta (324s > 320s) — por confirmar
+hip_07,STD.INT.ALL.HIP.001,aprovado,canal Topic (Kendrick Lamar)
+rock_03,STD.INT.ALL.ROC.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Wind Music', título: 'AC/DC - Highway to Hell (lyrics)')"
+rock_06,STD.INT.ALL.ROC.001,aprovado,canal Topic (TheWho)
+80_03,STD.INT.80.MIX.001,pendente,duração da fonte muito alta (330s > 320s) — por confirmar
+80_04,STD.INT.80.MIX.001,aprovado,canal Topic (The Human League)
+80_07,STD.INT.80.MIX.001,aprovado,canal Topic (Michael Jackson)
+80_05,STD.INT.80.MIX.001,aprovado,canal Topic (Europe)
+pt_02,STD.PT.ALL.MIX.001,aprovado,canal Topic (Xutos & Pontapés)
+pt_03,STD.PT.ALL.MIX.001,aprovado,canal Topic (Rádio Macau - Topic)
+pt_05,STD.PT.ALL.MIX.001,aprovado,canal Topic (Dina - Topic)
+pt_07,RET.PT.90.VOZ.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Shogun', título: 'Da Weasel Re-Tratamento')"
+ptbat_02,RET.PT.90.VOZ.001,aprovado,canal Topic (Xutos & Pontapés)
+ptbat_04,RET.PT.90.VOZ.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Elísio Donas', título: ""Ornatos Violeta - 'Capitão Romance', ao vivo no North Music Festival '22"")"
+solo_01,STD.INT.ALL.GTR.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'BBC News', título: 'Jimmy Page: How Stairway to Heaven was written - BBC News')"
+solo_05,STD.INT.ALL.GTR.001,aprovado,canal Topic (Jimi Hendrix)
+solo_07,STD.INT.ALL.GTR.001,aprovado,canal Topic (Joe Satriani)
+pt80_02,STD.PT.80.MIX.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'RTP', título: '1981 - Carlos Paião - Play Back')"
+pt80_04,STD.PT.80.MIX.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Rui Lopes', título: 'Trovante - 125 Azul')"
+pt80_06,STD.PT.80.MIX.001,aprovado,canal Topic (José Cid - Topic)
+gam_02,STD.INT.ALL.GAM.001,aprovado,canal Topic (Shankar Sharma)
+bra001_04,STD.BR.ALL.MIX.001,aprovado,canal Topic (Caetano Veloso)
+bra001_06,STD.BR.ALL.MIX.001,aprovado,"""Official Audio"" (Sérgio Mendes - Mas Que Nada (Official Audio))"
+ptbat_03,STD.PT.ALL.BAT.001,aprovado,canal Topic (GNR - Topic)
+ptbat_07,STD.PT.ALL.BAT.001,aprovado,canal Topic (Capitão Fausto)
+new_order_blue_monday,STD.INT.10.SYN.001,pendente,duração da fonte muito alta (450s > 320s) — por confirmar
+talk_talk_it_s_my_life,STD.INT.10.SYN.001,aprovado,canal Topic (Talk Talk band)
+future_islands_seasons_waiting_on_you,STD.INT.10.SYN.002,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'BBC', título: 'Future Islands perform Seasons (Waiting On You) | Later... with Jools Holland - BBC')"
+tv_05,STD.INT.ALL.TV.001,aprovado,canal Topic (The Simpsons - Topic)
+dec50_05,STD.INT.50.MIX.001,aprovado,canal Topic (Buddy Holly - Topic)
+dec50_06,STD.INT.50.MIX.001,aprovado,canal Topic (Bobby Darin)
+soul_07,STD.INT.ALL.SOU.001,aprovado,"""Official Audio"" (Otis Redding - Try a Little Tenderness (Official Audio))"
+cla_06,STD.INT.ALL.CLA.001,aprovado,canal Topic (Classical Hits - Topic)
+jazz_04,STD.INT.ALL.JAZ.001,pendente,duração da fonte muito alta (563s > 320s) — por confirmar
+jazz_06,STD.INT.ALL.JAZ.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Cancano Cancano', título: 'Nina Simone  Feeling Good')"
+a10_06,STD.INT.10.MIX.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'Golden Network', título: 'Lil Nas X - Old Town Road (Lyrics) feat Billy Ray Cyrus')"
+america_a_horse_with_no_name,STD.INT.ALL.MIX.005,aprovado,canal Topic (America)
+bat_08,STD.INT.70.ROC.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'TheWho', título: ""The Who - Baba O'Riley (Shepperton Studios / 1978)"")"
+zeca_afonso_grandola_vila_morena,STD.PT.70.WLD.001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: 'luiisfdias', título: 'Zeca Afonso - Grândola, Vila Morena')"
+christina_aguilera_reflection,STD.INT.ALL.POP.002,aprovado,canal Topic (Christina Aguilera)
+logo_01,LOGO-001,pendente,"fonte ""fallback"" — nem canal Topic nem ""Official Audio"" (canal: '7clouds Rock', título: 'Nirvana - Smells Like Teen Spirit (Lyrics)')"
+beatles_04,TRB.UK.ALL.ROC.001,pendente,"posição especial de playlist tributo (tipo ""foto"")"
