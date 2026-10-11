@@ -1,0 +1,22 @@
+{
+  "B1": {
+    "metodo": "controlo_volume",
+    "offset": 186,
+    "detalhe": "pico de volume após Trecho A (sugerir_trechos.py, método actual)"
+  },
+  "B2": {
+    "metodo": "itunes_alinhamento",
+    "offset": 31.6,
+    "detalhe": "alinhamento do preview iTunes de 30s (confiança=0.99)"
+  },
+  "B3": {
+    "metodo": "chroma_repeticao",
+    "offset": 66.5,
+    "detalhe": "repetição mais semelhante por chroma (similaridade=1.00), maior energia"
+  },
+  "B4": {
+    "metodo": "lrclib_refrao",
+    "offset": 101.0,
+    "detalhe": "linha mais repetida na letra (2x): \"gotta gotta be down because i want it al\""
+  }
+}

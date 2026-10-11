@@ -1,0 +1,22 @@
+{
+  "B1": {
+    "metodo": "controlo_volume",
+    "offset": 66,
+    "detalhe": "pico de volume após Trecho A (sugerir_trechos.py, método actual)"
+  },
+  "B2": {
+    "metodo": "chroma_repeticao",
+    "offset": 220.5,
+    "detalhe": "repetição mais semelhante por chroma (similaridade=1.00), maior energia"
+  },
+  "B3": {
+    "metodo": "lrclib_refrao",
+    "offset": 21.2,
+    "detalhe": "linha mais repetida na letra (7x): \"uh oh uh oh uh oh oh no no\""
+  },
+  "B4": {
+    "metodo": "itunes_alinhamento",
+    "offset": 48.0,
+    "detalhe": "alinhamento do preview iTunes de 30s (confiança=0.91)"
+  }
+}

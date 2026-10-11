@@ -1,0 +1,16 @@
+{
+  "dec00_01": {
+    "video_offset_s": 68.3,
+    "confianca": 0.935,
+    "janela_usada_video_s": 120,
+    "correspondente_fonte_s": 51.7,
+    "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (vídeo tem este tanto de conteúdo extra antes do áudio corresponder à fonte_audio)"
+  },
+  "dec00_03": {
+    "video_offset_s": 3.3,
+    "confianca": 0.975,
+    "janela_usada_video_s": 180,
+    "correspondente_fonte_s": 176.7,
+    "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (vídeo tem este tanto de conteúdo extra antes do áudio corresponder à fonte_audio)"
+  }
+}

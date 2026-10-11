@@ -1,0 +1,78 @@
+{
+  "dec00_01": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "titulo": "Hey Ya!",
+    "artista": "OutKast"
+  },
+  "dec00_02": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "titulo": "Crazy in Love",
+    "artista": "Beyoncé"
+  },
+  "dec00_03": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "titulo": "Mr. Brightside",
+    "artista": "The Killers"
+  },
+  "dec00_04": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3"
+    ],
+    "titulo": "Seven Nation Army",
+    "artista": "The White Stripes"
+  },
+  "dec00_05": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "titulo": "Toxic",
+    "artista": "Britney Spears"
+  },
+  "dec00_06": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "titulo": "In the End",
+    "artista": "Linkin Park"
+  },
+  "dec00_07": {
+    "completo": true,
+    "labels": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "titulo": "Umbrella",
+    "artista": "Rihanna"
+  }
+}

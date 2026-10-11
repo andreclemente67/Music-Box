@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>Estudo — Trecho B = expoente da música</title>
+<style>
+  :root {
+    --bg: #0a0a0c; --bg2: #111116; --bg3: #1a1a22;
+    --accent: #e8c547; --accent2: #c4a030;
+    --red: #e05555; --green: #4ec98e; --blue: #5599ee;
+    --text: #e8e8f0; --text2: #b8b8c8; --text3: #78788a;
+    --border: #2a2a35;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 24px; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--text3); font-size: 13px; margin-bottom: 24px; }
+  .faixa { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 18px; }
+  .faixa-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .faixa-titulo { font-size: 16px; font-weight: 600; }
+  .faixa-artista { color: var(--text2); font-size: 13px; }
+  .candidatos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+  .candidato { background: var(--bg3); border: 2px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .candidato.escolhido { border-color: var(--accent); background: rgba(232,197,71,0.08); }
+  .candidato-label { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
+  audio { width: 100%; height: 32px; margin-bottom: 8px; }
+  button { background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: 11px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primaria { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+  button.encore { background: var(--blue); color: #000; border-color: var(--blue); font-weight: 600; margin-top: 10px; width: 100%; display: none; }
+  button.encore.visivel { display: block; }
+  .video-sync { margin-top: 10px; display: none; }
+  .video-sync.visivel { display: block; }
+  .video-sync video { width: 100%; border-radius: 6px; }
+  #resumo { background: var(--bg2); border: 1px solid var(--accent); border-radius: 10px; padding: 18px 20px; margin-top: 24px; }
+  #resumo h2 { font-size: 15px; margin: 0 0 10px; }
+  #resumo-texto { width: 100%; min-height: 100px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 10px; font-family: monospace; font-size: 12px; }
+  .progresso { font-size: 12px; color: var(--text3); margin-top: 6px; }
+  .nota { font-size: 11px; color: var(--text3); margin-top: 16px; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <h1>Estudo — Trecho B = "expoente" da música</h1>
+  <div class="sub">
+    Para cada faixa, 4 candidatos a Trecho B (B1–B4, ordem aleatória, sem indicação do método). Ouve às cegas e escolhe o que achas que melhor representa o auge/refrão da música.
+    Nunca substitui nada em produção — isto é só um estudo em <code>estudos/trecho_b_expoente/</code>.
+  </div>
+
+  <div id="faixas"></div>
+
+  <div id="resumo">
+    <h2>Resumo das tuas escolhas</h2>
+    <div class="progresso" id="progresso-texto"></div>
+    <textarea id="resumo-texto" readonly></textarea>
+  </div>
+
+  <div class="nota">
+    Os métodos usados (não revelados aqui) ficam em <code>dados/chave_&lt;id&gt;.json</code> — só depois de escolheres é que faz sentido olhar lá e ver qual método "ganhou" em cada faixa.
+    "Encore" (quando disponível) toca o candidato escolhido com som, com o videoclipe sem som por cima, sincronizado — só demonstrativo, nenhuma destas 7 faixas tem campo <code>video</code> no catálogo, por isso só 2 (Hey Ya!, Mr. Brightside) têm vídeo de demonstração associado manualmente para este estudo.
+  </div>
+
+<script>
+const CHAVE_LOCALSTORAGE = 'estudo_trecho_b_escolhas';
+
+async function carregar() {
+  const dados = await (await fetch('dados/publico.json')).json();
+  const escolhas = JSON.parse(localStorage.getItem(CHAVE_LOCALSTORAGE) || '{}');
+  const container = document.getElementById('faixas');
+
+  Object.entries(dados).forEach(([tid, info]) => {
+    const div = document.createElement('div');
+    div.className = 'faixa';
+    const labels = Object.keys(info.labels).sort();
+
+    div.innerHTML = `
+      <div class="faixa-header">
+        <div><div class="faixa-titulo">${info.titulo}</div><div class="faixa-artista">${info.artista}</div></div>
+        <div style="font-size:11px;color:var(--text3)">${tid}</div>
+      </div>
+      <div class="candidatos">
+        ${labels.map(label => `
+          <div class="candidato" id="cand-${tid}-${label}">
+            <div class="candidato-label">${label}</div>
+            <audio controls src="${info.labels[label].ficheiro}" preload="none"></audio>
+            <button onclick="escolher('${tid}','${label}')">✓ Este é o melhor</button>
+            ${info.video ? `<button class="encore" id="encore-${tid}-${label}" onclick="encore('${tid}','${label}')">▶ Encore (vídeo sincronizado)</button>` : ''}
+          </div>`).join('')}
+      </div>
+      ${info.video ? `<div class="video-sync" id="videosync-${tid}">
+        <video id="video-${tid}" src="${info.video.ficheiro}" muted></video>
+        <audio id="audiosync-${tid}"></audio>
+      </div>` : ''}
+    `;
+    container.appendChild(div);
+
+    if (escolhas[tid]) marcarEscolhido(tid, escolhas[tid]);
+  });
+
+  window.DADOS = dados;
+  atualizarResumo();
+}
+
+function marcarEscolhido(tid, label) {
+  document.querySelectorAll(`[id^="cand-${tid}-"]`).forEach(el => el.classList.remove('escolhido'));
+  const el = document.getElementById(`cand-${tid}-${label}`);
+  if (el) el.classList.add('escolhido');
+  document.querySelectorAll(`[id^="encore-${tid}-"]`).forEach(el => el.classList.remove('visivel'));
+  const btnEncore = document.getElementById(`encore-${tid}-${label}`);
+  if (btnEncore) btnEncore.classList.add('visivel');
+}
+
+function escolher(tid, label) {
+  const escolhas = JSON.parse(localStorage.getItem(CHAVE_LOCALSTORAGE) || '{}');
+  escolhas[tid] = label;
+  localStorage.setItem(CHAVE_LOCALSTORAGE, JSON.stringify(escolhas));
+  marcarEscolhido(tid, label);
+  atualizarResumo();
+}
+
+function encore(tid, label) {
+  const info = window.DADOS[tid];
+  const offsetCandidato = info.labels[label].offset_fonte_s;
+  const offsetVideo = info.video.offset_video_menos_fonte_s;
+  const tempoVideo = offsetCandidato + offsetVideo;
+
+  const video = document.getElementById(`video-${tid}`);
+  const audio = document.getElementById(`audiosync-${tid}`);
+  audio.src = info.labels[label].ficheiro;
+  document.getElementById(`videosync-${tid}`).classList.add('visivel');
+
+  video.currentTime = Math.max(tempoVideo, 0);
+  audio.currentTime = 0;
+  const arrancar = () => { video.play(); audio.play(); };
+  if (video.readyState >= 1) arrancar(); else video.addEventListener('loadedmetadata', arrancar, { once: true });
+}
+
+function atualizarResumo() {
+  const escolhas = JSON.parse(localStorage.getItem(CHAVE_LOCALSTORAGE) || '{}');
+  const total = window.DADOS ? Object.keys(window.DADOS).length : 0;
+  const feitas = Object.keys(escolhas).length;
+  document.getElementById('progresso-texto').textContent = `${feitas}/${total} faixas escolhidas`;
+  const linhas = Object.entries(escolhas).map(([tid, label]) => `${tid}: ${label}`);
+  document.getElementById('resumo-texto').value = linhas.join('\n');
+}
+
+carregar();
+</script>
+</body>
+</html>

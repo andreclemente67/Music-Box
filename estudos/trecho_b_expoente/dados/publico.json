@@ -1,0 +1,160 @@
+{
+  "dec00_01": {
+    "titulo": "Hey Ya!",
+    "artista": "OutKast",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_01_B1.mp3",
+        "offset_fonte_s": 105.4
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_01_B2.mp3",
+        "offset_fonte_s": 142
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_01_B3.mp3",
+        "offset_fonte_s": 51.5
+      },
+      "B4": {
+        "ficheiro": "audio/dec00_01_B4.mp3",
+        "offset_fonte_s": 48.5
+      }
+    },
+    "video": {
+      "ficheiro": "video/dec00_01_video.mp4",
+      "offset_video_menos_fonte_s": 68.3
+    }
+  },
+  "dec00_02": {
+    "titulo": "Crazy in Love",
+    "artista": "Beyoncé",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_02_B1.mp3",
+        "offset_fonte_s": 66
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_02_B2.mp3",
+        "offset_fonte_s": 220.5
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_02_B3.mp3",
+        "offset_fonte_s": 21.2
+      },
+      "B4": {
+        "ficheiro": "audio/dec00_02_B4.mp3",
+        "offset_fonte_s": 48.0
+      }
+    }
+  },
+  "dec00_03": {
+    "titulo": "Mr. Brightside",
+    "artista": "The Killers",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_03_B1.mp3",
+        "offset_fonte_s": 186
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_03_B2.mp3",
+        "offset_fonte_s": 31.6
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_03_B3.mp3",
+        "offset_fonte_s": 66.5
+      },
+      "B4": {
+        "ficheiro": "audio/dec00_03_B4.mp3",
+        "offset_fonte_s": 101.0
+      }
+    },
+    "video": {
+      "ficheiro": "video/dec00_03_video.mp4",
+      "offset_video_menos_fonte_s": 3.3
+    }
+  },
+  "dec00_04": {
+    "titulo": "Seven Nation Army",
+    "artista": "The White Stripes",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_04_B1.mp3",
+        "offset_fonte_s": 84.0
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_04_B2.mp3",
+        "offset_fonte_s": 136
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_04_B3.mp3",
+        "offset_fonte_s": 47.5
+      }
+    }
+  },
+  "dec00_05": {
+    "titulo": "Toxic",
+    "artista": "Britney Spears",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_05_B1.mp3",
+        "offset_fonte_s": 55.0
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_05_B2.mp3",
+        "offset_fonte_s": 48.9
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_05_B3.mp3",
+        "offset_fonte_s": 170
+      },
+      "B4": {
+        "ficheiro": "audio/dec00_05_B4.mp3",
+        "offset_fonte_s": 75.1
+      }
+    }
+  },
+  "dec00_06": {
+    "titulo": "In the End",
+    "artista": "Linkin Park",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_06_B1.mp3",
+        "offset_fonte_s": 68.7
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_06_B2.mp3",
+        "offset_fonte_s": 68
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_06_B3.mp3",
+        "offset_fonte_s": 170.5
+      },
+      "B4": {
+        "ficheiro": "audio/dec00_06_B4.mp3",
+        "offset_fonte_s": 45.5
+      }
+    }
+  },
+  "dec00_07": {
+    "titulo": "Umbrella",
+    "artista": "Rihanna",
+    "labels": {
+      "B1": {
+        "ficheiro": "audio/dec00_07_B1.mp3",
+        "offset_fonte_s": 212.0
+      },
+      "B2": {
+        "ficheiro": "audio/dec00_07_B2.mp3",
+        "offset_fonte_s": 90.6
+      },
+      "B3": {
+        "ficheiro": "audio/dec00_07_B3.mp3",
+        "offset_fonte_s": 178.7
+      },
+      "B4": {
+        "ficheiro": "audio/dec00_07_B4.mp3",
+        "offset_fonte_s": 134
+      }
+    }
+  }
+}

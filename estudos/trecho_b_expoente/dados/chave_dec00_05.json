@@ -1,0 +1,22 @@
+{
+  "B1": {
+    "metodo": "chroma_repeticao",
+    "offset": 55.0,
+    "detalhe": "repetição mais semelhante por chroma (similaridade=1.00), maior energia"
+  },
+  "B2": {
+    "metodo": "itunes_alinhamento",
+    "offset": 48.9,
+    "detalhe": "alinhamento do preview iTunes de 30s (confiança=0.92)"
+  },
+  "B3": {
+    "metodo": "controlo_volume",
+    "offset": 170,
+    "detalhe": "pico de volume após Trecho A (sugerir_trechos.py, método actual)"
+  },
+  "B4": {
+    "metodo": "lrclib_refrao",
+    "offset": 75.1,
+    "detalhe": "linha mais repetida na letra (7x): \"dont you know that youre toxic\""
+  }
+}

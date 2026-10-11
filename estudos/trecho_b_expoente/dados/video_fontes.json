@@ -1,0 +1,12 @@
+{
+  "dec00_01": {
+    "url": "https://www.youtube.com/watch?v=PWgvGjAhvIw",
+    "titulo_yt": "Outkast - Hey Ya! (Official HD Video)",
+    "nota": "videoclipe de demonstração, NÃO está no catalogo.json — correr: scripts/.venv/bin/python3 estudos/trecho_b_expoente/video_offset.py dec00_01 <este url>"
+  },
+  "dec00_03": {
+    "url": "https://www.youtube.com/watch?v=gGdGFtwCNBE",
+    "titulo_yt": "The Killers - Mr. Brightside (Official Music Video)",
+    "nota": "videoclipe de demonstração, NÃO está no catalogo.json — correr: scripts/.venv/bin/python3 estudos/trecho_b_expoente/video_offset.py dec00_03 <este url>"
+  }
+}

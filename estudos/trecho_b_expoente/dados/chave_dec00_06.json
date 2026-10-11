@@ -1,0 +1,22 @@
+{
+  "B1": {
+    "metodo": "lrclib_refrao",
+    "offset": 68.7,
+    "detalhe": "linha mais repetida na letra (6x): \"but in the end it doesnt even matter\""
+  },
+  "B2": {
+    "metodo": "controlo_volume",
+    "offset": 68,
+    "detalhe": "pico de volume após Trecho A (sugerir_trechos.py, método actual)"
+  },
+  "B3": {
+    "metodo": "chroma_repeticao",
+    "offset": 170.5,
+    "detalhe": "repetição mais semelhante por chroma (similaridade=1.00), maior energia"
+  },
+  "B4": {
+    "metodo": "itunes_alinhamento",
+    "offset": 45.5,
+    "detalhe": "alinhamento do preview iTunes de 30s (confiança=0.96)"
+  }
+}

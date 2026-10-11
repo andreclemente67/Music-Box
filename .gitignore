@@ -53,3 +53,13 @@ propostas/
 # já lá está) — nenhum dos dois é para versionar.
 scripts/.venv/
 scripts/_cache_verificacao/
+
+# estudos/trecho_b_expoente/ (11 Out 2026) — cache das faixas completas
+# descarregadas para análise, reconstrói-se sozinha correndo analisar.py
+# de novo. Os candidatos B1-B4 (audio/, mp3 pequenos, passam por LFS)
+# ficam versionados — são o resultado em si. video/ (.mp4, NÃO coberto
+# por LFS — ver .gitattributes — ~36MB a mais no histórico sem ganho)
+# fica de fora; reconstrói-se com video_offset.py + os URLs em
+# dados/video_fontes.json.
+estudos/trecho_b_expoente/cache/
+estudos/trecho_b_expoente/video/
