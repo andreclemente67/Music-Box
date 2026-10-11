@@ -1,0 +1,107 @@
+{
+  "80_02": {
+    "titulo": "Sweet Child O' Mine",
+    "artista": "Guns N' Roses",
+    "b2": {
+      "ficheiro": "estudos/trecho_b_regra_energia/80_02_b2.mp3",
+      "inicio": 131.0,
+      "fim": 146.0,
+      "intensidade": 0.356,
+      "onset_norm": 0.4937,
+      "alta_norm": 0.356,
+      "repeticao": 20.83,
+      "linhas_refrao": 2
+    },
+    "b_actual": {
+      "ficheiro": "02_b.mp3",
+      "inicio": 110.91,
+      "fim": 125.899,
+      "origem_tempos": "correlação"
+    },
+    "criterio": "maior intensidade entre ocorrências confirmadas pela letra (LRCLIB)"
+  },
+  "80_04": {
+    "titulo": "Don't You Want Me",
+    "artista": "The Human League",
+    "b2": {
+      "ficheiro": "estudos/trecho_b_regra_energia/80_04_b2.mp3",
+      "inicio": 188.0,
+      "fim": 203.0,
+      "intensidade": 0.0739,
+      "onset_norm": 0.0739,
+      "alta_norm": 1.0,
+      "repeticao": 16.91,
+      "linhas_refrao": 4
+    },
+    "b_actual": {
+      "ficheiro": "04_b.mp3",
+      "inicio": 92.032,
+      "fim": 107.021,
+      "origem_tempos": "correlação"
+    },
+    "criterio": "maior intensidade entre ocorrências confirmadas pela letra (LRCLIB)"
+  },
+  "80_05": {
+    "titulo": "The Final Countdown",
+    "artista": "Europe",
+    "b2": {
+      "ficheiro": "estudos/trecho_b_regra_energia/80_05_b2.mp3",
+      "inicio": 120.0,
+      "fim": 135.0,
+      "intensidade": 0.328,
+      "onset_norm": 0.328,
+      "alta_norm": 0.5048,
+      "repeticao": 25.81,
+      "linhas_refrao": 2
+    },
+    "b_actual": {
+      "ficheiro": "05_b.mp3",
+      "inicio": 114.01,
+      "fim": 128.999,
+      "origem_tempos": "correlação"
+    },
+    "criterio": "maior intensidade entre ocorrências confirmadas pela letra (LRCLIB)"
+  },
+  "80_06": {
+    "titulo": "Every Breath You Take",
+    "artista": "The Police",
+    "b2": {
+      "ficheiro": "estudos/trecho_b_regra_energia/80_06_b2.mp3",
+      "inicio": 149.0,
+      "fim": 164.0,
+      "intensidade": 0.3457,
+      "onset_norm": 0.3457,
+      "alta_norm": 0.6127,
+      "repeticao": 16.38,
+      "linhas_refrao": 6
+    },
+    "b_actual": {
+      "ficheiro": "06_b.mp3",
+      "inicio": 50.12,
+      "fim": 65.12,
+      "origem_tempos": "correlação"
+    },
+    "criterio": "maior intensidade entre ocorrências confirmadas pela letra (LRCLIB)"
+  },
+  "80_07": {
+    "titulo": "Billie Jean",
+    "artista": "Michael Jackson",
+    "b2": {
+      "ficheiro": "estudos/trecho_b_regra_energia/80_07_b2.mp3",
+      "inicio": 213.0,
+      "fim": 228.0,
+      "intensidade": 0.3913,
+      "onset_norm": 0.3913,
+      "alta_norm": 0.5516,
+      "repeticao": 15.38,
+      "linhas_refrao": 2
+    },
+    "b_actual": {
+      "ficheiro": "07_b.mp3",
+      "inicio": 84.01,
+      "fim": 98.999,
+      "origem_tempos": "correlação"
+    },
+    "criterio": "maior intensidade entre ocorrências confirmadas pela letra (LRCLIB)"
+  }
+}

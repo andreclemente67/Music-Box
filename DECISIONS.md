@@ -1859,3 +1859,70 @@ proposta de integração em separado). Detalhes aprovados pelo André:
   acerto (duração da sequência de voz + pausa), toca os 15s completos e
   avança sozinho no fim; Espaço a meio do clip esconde o overlay e
   avança em <350ms.
+
+## 2026-10-11 — Regra "refrão mais intenso" para o Trecho B (EM ESTUDO, não adoptada)
+
+Proposta de regra automática para escolher o Trecho B — o "expoente" da
+música, usado no Encore depois de alguém acertar. **Não está adoptada**:
+existe para ser ouvida às cegas contra o Trecho B actual antes de
+qualquer decisão (ver STATUS.md para a página de audição e o estado).
+Nada nesta entrada alterou produção, `catalogo.json` ou `playlists.json`.
+
+Critério, tal como aprovado passo a passo pelo André ao longo de quatro
+iterações (implementado em `analise_refrao.py`):
+
+1. **Ocorrências do refrão por repetição harmónica** — `chroma_cens`
+   agregada por beat + matriz de recorrência (afinidade, cosseno). Uma
+   janela de 15s (a duração real do Trecho B) pontua alto se se parecer
+   com partes *distantes* da música; é isso que distingue refrão de
+   verso. Ocorrências sobrepostas reduzem-se à de maior score, com 15s
+   de separação mínima.
+2. **Filtro de repetição: só concorrem janelas com ≥70% da repetição
+   máxima da faixa.** Sem este filtro, a intensidade escolhia a secção
+   mais percussiva em vez do refrão — no Hey Ya! ganhava a coda do
+   "shake it like a Polaroid picture" (186–201s), com o onset mais alto
+   da faixa e a repetição **mais baixa** (6.0 contra 12–14.3 das zonas
+   de refrão). A intensidade é para desempatar entre ocorrências do
+   refrão, não para as escolher.
+3. **Intensidade = MÍNIMO entre força de ataques (`onset_strength`) e
+   energia acima de 2 kHz**, ambas normalizadas dentro da faixa. O
+   mínimo e não a média, para exigir confluência nos dois eixos: com
+   média 50/50, 3 dos 4 vencedores nos Anos 80 tinham uma componente a
+   1.00 e a outra a ~0.05 — uma "intensidade 0.52" que era máximo num
+   eixo e mínimo no outro. O valor do mínimo vencedor funciona como
+   medida de confiança (Hey Ya! 0.93; Anos 80 entre 0.07 e 0.39).
+4. **Cross-check pela letra sincronizada (LRCLIB)** — conta as linhas
+   repetidas do tema que caem dentro da janela; havendo janelas
+   confirmadas pela letra, a escolha restringe-se a essas. Conta
+   **todas** as linhas repetidas (≥2 ocorrências), não só a mais
+   frequente: um tema pode ter vários hooks, e usar só o mais frequente
+   marcava 3 de 12 janelas no Hey Ya! (ignorando as 10 ocorrências de
+   "hey ya" e as 2 de "alright alright...", esta última precisamente
+   onde está o Trecho B actual) e fazia o cross-check decidir em vez da
+   energia.
+5. **Exclusões** — janelas que se sobreponham ao Trecho A, ou que
+   deixem menos de 30s de música depois.
+
+**RMS puro foi descartado** (era a métrica da primeira versão da regra):
+em masterizações comprimidas não discrimina. No Hey Ya!, todos os
+candidatos ficaram entre 0.3056 e 0.3415 (~11%) e o vencedor ganhava por
+1.3% — ruído do limiter, não sinal.
+
+**Tempos em falta no catálogo.** Metade das faixas tem
+`trecho_a/b.inicio` e `.fim` a `null` apesar de os mp3 existirem (todo o
+pack dos Anos 80, por exemplo), e sem eles não há filtro de sobreposição
+com o A nem comparação com o B actual. `localizar_trecho()` recupera-os
+por correlação do envelope de energia (RMS) do trecho contra o do
+source: o envelope aguenta as diferenças de encoding e de volume entre o
+mp3 de produção e o source re-descarregado, que uma correlação de
+amostras não perdoaria. Devolve também a nitidez do pico (pico/mediana),
+para se desconfiar quando o trecho não veio daquele source — medido em
+`80_02` com o source certo: 9.8x (A) e 8.9x (B). **Por decisão do André
+(11 Out), estes tempos só são usados em memória: gravá-los no catálogo
+fica para um commit próprio, quando ele pedir.**
+
+**Ambiente.** `librosa` não instala no Python 3.14 do sistema (o
+`llvmlite` não compila nesta máquina). Os dois scripts correm com
+`~/.venvs/musicbox-audio/bin/python` (3.12, com numpy/scipy/librosa) —
+venv fora do repositório, como o `scripts/.venv/` do verificador de
+trechos.

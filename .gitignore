@@ -64,6 +64,12 @@ scripts/_cache_verificacao/
 estudos/trecho_b_expoente/cache/
 estudos/trecho_b_expoente/video/
 
+# Claude Code — permissões/preferências locais desta máquina. Já estava
+# coberto pelo ignore global (~/.config/git/ignore), repetido aqui para
+# o repositório não depender da configuração da máquina. O
+# .claude/settings.json (partilhado) não entra nesta regra.
+.claude/settings.local.json
+
 # tmp_dl/ — faixas completas descarregadas pelo gerar_faixa.py (e pelo
 # analise_refrao.py, que as reutiliza como cache em vez de repetir o
 # download). MP3s inteiros, reconstroem-se sozinhos a partir de
