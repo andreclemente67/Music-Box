@@ -89,14 +89,35 @@ def carregar_catalogo():
         return json.load(f)
 
 
+# Playlists "tributo" (só TRB.UK.ALL.ROC.001 até 2026-10-11, ver ordem_packs
+# em gerar_previews_defeitos.py / diagnóstico 2026-10-11): em vez de
+# `musicas` (lista plana de ids), têm `posicoes` (um objecto por posição,
+# com `tipo` próprio — audio/trivia/solo/foto/cover/riff/capa/bateria) e um
+# `mosaico` ao nível da playlist. Só as posições `tipo == "audio"` seguem o
+# fluxo normal de fonte (Topic > Official Audio); as outras não são
+# trechos A/B comparáveis a uma música normal — ficam "formato especial".
+TIPOS_POSICAO_ESPECIAL = {'trivia', 'solo', 'cover', 'riff', 'bateria', 'capa', 'mosaico'}
+
+
 def carregar_mapa_playlists():
+    """Devolve {id: (playlistCodigo, tipo_posicao)}. `tipo_posicao` é None
+    para playlists 'standard'/'retrato'/'video' (campo `musicas`) — só as
+    'tributo' (campo `posicoes`) têm um tipo por posição; o id do
+    `mosaico` de uma tributo entra com tipo_posicao='mosaico'."""
     with open(os.path.join(APP_DIR, 'playlists.json'), encoding='utf-8') as f:
         pl = json.load(f)
     mapa = {}
     for codigo, p in pl.items():
         for tid in (p.get('musicas') or []):
             if tid:
-                mapa[tid] = codigo
+                mapa[tid] = (codigo, None)
+        for pos in (p.get('posicoes') or []):
+            tid = pos.get('id')
+            if tid:
+                mapa[tid] = (codigo, pos.get('tipo'))
+        mosaico = p.get('mosaico')
+        if isinstance(mosaico, dict) and mosaico.get('id'):
+            mapa[mosaico['id']] = (codigo, 'mosaico')
     return mapa
 
 
@@ -634,7 +655,7 @@ def main():
 
     for faixa in catalogo:
         tid = faixa.get('id')
-        pack = mapa_playlists.get(tid, '')
+        pack, tipo_posicao = mapa_playlists.get(tid, ('', None))
         if packs_filtro is not None and pack not in packs_filtro:
             continue
         trecho_a = faixa.get('trecho_a') or {}
@@ -642,8 +663,13 @@ def main():
         if not trecho_a.get('ficheiro'):
             continue  # sem trecho_a — fora do âmbito deste verificador (ex.: Retrato sem A/B)
 
-        if pack in PACKS_FORMATO_ESPECIAL or tid.endswith('_mosaico'):
-            motivo = 'mosaico (full, sem trecho_b)' if tid.endswith('_mosaico') else PACKS_FORMATO_ESPECIAL[pack]
+        if pack in PACKS_FORMATO_ESPECIAL or tid.endswith('_mosaico') or tipo_posicao in TIPOS_POSICAO_ESPECIAL:
+            if tipo_posicao in TIPOS_POSICAO_ESPECIAL:
+                motivo = f'posição "{tipo_posicao}" de playlist tributo'
+            elif tid.endswith('_mosaico'):
+                motivo = 'mosaico (full, sem trecho_b)'
+            else:
+                motivo = PACKS_FORMATO_ESPECIAL[pack]
             linhas_csv.append([tid, pack, '', '', '', '', '', f'formato especial ({motivo}) — rever na BÍBLIA'])
             resumo['formato especial'] += 1
             print(f'{tid:16} [{pack}] — formato especial ({motivo}), não avaliado')

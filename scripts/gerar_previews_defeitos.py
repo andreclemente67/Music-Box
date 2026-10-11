@@ -107,10 +107,18 @@ def apagar_preview(resultado):
                 os.remove(caminho_abs)
 
 
-def processar_faixa(tid, pack, catalogo_por_id):
+def processar_faixa(tid, pack, catalogo_por_id, mapa_playlists):
     faixa = catalogo_por_id.get(tid)
     if not faixa:
         return 'por rever', 'id não encontrado no catalogo.json actual'
+
+    # Playlists "tributo" (ver vt.TIPOS_POSICAO_ESPECIAL): só as posições
+    # tipo "audio" são trechos A/B comparáveis a uma música normal — as
+    # outras (trivia/solo/cover/riff/bateria/capa/mosaico) não seguem o
+    # motor de fonte automático (diagnóstico 2026-10-11).
+    _, tipo_posicao = mapa_playlists.get(tid, (pack, None))
+    if tipo_posicao in vt.TIPOS_POSICAO_ESPECIAL:
+        return 'formato especial', f'posição "{tipo_posicao}" de playlist tributo — rever na BÍBLIA'
 
     titulo = faixa.get('titulo', '')
     artista = ' '.join(faixa.get('artista') or [])
@@ -171,6 +179,7 @@ def main():
     print(f'{total} faixas a processar, em {len(grupos)} packs (ordem: prontas > rascunho/protótipo > sem playlist)')
 
     catalogo_por_id = {t['id']: t for t in vt.carregar_catalogo()}
+    mapa_playlists = vt.carregar_mapa_playlists()
 
     for pack, ids in grupos:
         print(f'\n=== {pack} ({len(ids)} faixas) ===')
@@ -179,7 +188,7 @@ def main():
                 print(f'{tid:16} — já processado ({progresso[tid]["resultado"]}), a saltar')
                 continue
             try:
-                resultado, motivo = processar_faixa(tid, pack, catalogo_por_id)
+                resultado, motivo = processar_faixa(tid, pack, catalogo_por_id, mapa_playlists)
             except Exception as e:
                 resultado, motivo = 'por rever', f'erro inesperado: {e}'
             progresso[tid] = {'faixa': tid, 'pack': pack, 'resultado': resultado, 'motivo': motivo}
@@ -188,7 +197,8 @@ def main():
 
     ok = sum(1 for r in progresso.values() if r['resultado'] == 'ok')
     rever = sum(1 for r in progresso.values() if r['resultado'] == 'por rever')
-    print(f'\n— resumo — OK (pré-audição pronta): {ok} | por rever: {rever}')
+    especial = sum(1 for r in progresso.values() if r['resultado'] == 'formato especial')
+    print(f'\n— resumo — OK (pré-audição pronta): {ok} | por rever: {rever} | formato especial: {especial}')
     print(f'progresso: {PROGRESSO_PATH}')
     print(f'manifesto: {MANIFESTO}')
 
