@@ -1763,3 +1763,39 @@ novo campo `fonte_audio` (string, nível de topo da faixa no
 corrigido antes desta regra ficar definida e usava `sources.audio`;
 uniformizado no mesmo dia para `fonte_audio` — é o único campo a usar
 daqui para a frente, `sources.audio` volta a ficar sempre `null`.
+
+## 2026-10-11 — Playlists "tributo": só posições tipo "audio" seguem o motor de fonte automático
+
+Diagnóstico pedido pelo André: as 8 faixas `beatles_*` (playlist "Tribute
+Beatles", `TRB.UK.ALL.ROC.001`, único universo do catálogo tipo
+`"tributo"`) apareciam sempre como "(sem playlist)" no ecrã Revisão e nos
+relatórios do verificador. Causa: `playlists.json` guarda as faixas de
+playlists `"tipo": "tributo"` num campo `posicoes` (um objecto por
+posição, com `tipo` próprio — `audio`/`trivia`/`solo`/`foto`/`cover`/
+`riff`/`capa`/`bateria` — e um `mosaico` ao nível da playlist), não no
+`musicas` (lista plana de ids) que todas as outras playlists (standard/
+retrato/video) usam. `carregar_mapa_playlists()` (`scripts/
+verificar_trechos.py`, usada também por `scripts/
+gerar_previews_defeitos.py`) só lia `musicas` — corrigido para ler
+também `posicoes[].id` e `mosaico.id`, devolvendo também o `tipo` da
+posição.
+
+**Regra**: numa playlist tributo, só as posições `tipo == "audio"`
+(e, por extensão, `"foto"` — não está na lista de exclusão porque
+`beatles_04` ="Don't Let Me Down" tem áudio real, só o contexto da
+pergunta é uma foto) seguem o motor de fonte automático (Topic >
+Official Audio, verificador, etc.). As posições `trivia`/`solo`/`cover`/
+`riff`/`bateria`/`capa`, e o `mosaico` da playlist, ficam "formato
+especial — rever na BÍBLIA" — nunca recebem proposta automática (não são
+trechos A/B comparáveis a uma música normal). Verificado que nenhuma
+outra playlist do catálogo usa `posicoes` — standard/retrato/video usam
+todas `musicas` normalmente; `tributo` é, para já, um caso único.
+
+Corrigido retroactivamente em `_revisao_regeneracao.json`: `beatles_04`
+(tipo `foto`) manteve-se com `playlistCodigo` corrigido para
+`TRB.UK.ALL.ROC.001`; `beatles_03/05/06/08/recap` (solo/cover/riff/
+bateria/mosaico) removidos do ecrã Revisão (as pré-audições já geradas
+ficam órfãs em `_preview_revisao/`, não apagadas, sem efeito). Nota:
+`beatles_02` (tipo `trivia`) já tinha `fonte_audio` escrito em
+`catalogo.json` antes desta regra existir (lote dos 43, 9 Out) — não
+revertido, fica para decisão à parte.
