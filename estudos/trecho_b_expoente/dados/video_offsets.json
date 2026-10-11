@@ -1,9 +1,9 @@
 {
   "dec00_01": {
-    "video_offset_s": 68.012,
-    "confianca": 0.934,
+    "video_offset_s": 68.049,
+    "confianca": 0.931,
     "janela_usada_video_s": 120,
-    "correspondente_fonte_s": 51.988,
+    "correspondente_fonte_s": 51.951,
     "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (offset refinado por correlação de amostra)",
     "candidatos": {
       "B1": {
@@ -25,26 +25,26 @@
     }
   },
   "dec00_03": {
-    "video_offset_s": 3.576,
-    "confianca": 0.975,
-    "janela_usada_video_s": 180,
-    "correspondente_fonte_s": 176.424,
+    "video_offset_s": 3.597,
+    "confianca": 0.981,
+    "janela_usada_video_s": 105,
+    "correspondente_fonte_s": 101.403,
     "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (offset refinado por correlação de amostra)",
     "candidatos": {
       "B1": {
-        "desvio_s": 0.011,
+        "desvio_s": 0.005,
         "sincronizado": true
       },
       "B2": {
-        "desvio_s": 0.036,
+        "desvio_s": 0.02,
         "sincronizado": true
       },
       "B3": {
-        "desvio_s": 0.032,
+        "desvio_s": 0.016,
         "sincronizado": true
       },
       "B4": {
-        "desvio_s": 0.012,
+        "desvio_s": 0.003,
         "sincronizado": true
       }
     }

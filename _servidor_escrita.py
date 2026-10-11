@@ -751,16 +751,50 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         tipo, _ = mimetypes.guess_type(caminho)
+        tamanho_total = os.path.getsize(caminho)
+
+        # Suporte a "Range" (bytes=inicio-fim) — obrigatório para <audio>/
+        # <video> conseguirem fazer seek (ex.: o botão "Encore" do estudo
+        # Trecho B posiciona o <video> num ponto a meio de um ficheiro de
+        # 80+MB). Sem isto o browser só "chega" a esse ponto por download
+        # sequencial desde o byte 0 — na prática o vídeo só aparecia
+        # quando o áudio já tinha acabado (bug real 2026-10-11).
+        intervalo = self.headers.get('Range')
+        inicio, fim = 0, tamanho_total - 1
+        parcial = False
+        if intervalo:
+            m = re.match(r'bytes=(\d*)-(\d*)', intervalo)
+            if m and (m.group(1) or m.group(2)):
+                if m.group(1):
+                    inicio = int(m.group(1))
+                    fim = int(m.group(2)) if m.group(2) else tamanho_total - 1
+                else:
+                    sufixo = int(m.group(2))
+                    inicio = max(tamanho_total - sufixo, 0)
+                    fim = tamanho_total - 1
+                fim = min(fim, tamanho_total - 1)
+                if inicio > fim or inicio >= tamanho_total:
+                    self.send_response(416)
+                    self.send_header('Content-Range', f'bytes */{tamanho_total}')
+                    self.end_headers()
+                    return
+                parcial = True
+
+        a_enviar = fim - inicio + 1
+
         try:
-            with open(caminho, 'rb') as f:
-                dados = f.read()
+            f = open(caminho, 'rb')
+            f.seek(inicio)
         except Exception as e:
             self._enviar_texto(500, f'falha a ler ficheiro: {e}')
             return
 
-        self.send_response(200)
+        self.send_response(206 if parcial else 200)
         self.send_header('Content-Type', tipo or 'application/octet-stream')
-        self.send_header('Content-Length', str(len(dados)))
+        self.send_header('Accept-Ranges', 'bytes')
+        self.send_header('Content-Length', str(a_enviar))
+        if parcial:
+            self.send_header('Content-Range', f'bytes {inicio}-{fim}/{tamanho_total}')
         # Sem cache nenhuma — sem isto o Chrome por vezes fica agarrado a
         # uma versão antiga do musicbox.html/musicbox_studio.html mesmo
         # depois de reiniciar este servidor com ficheiro já corrigido no
@@ -769,7 +803,49 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
         self.send_header('Pragma', 'no-cache')
         self.end_headers()
-        self.wfile.write(dados)
+
+        # Transmite em blocos (nunca lê o ficheiro inteiro para memória) —
+        # essencial para ficheiros grandes (vídeos de 80+MB do estudo
+        # Trecho B): um pedido Range "bytes=0-" (preload inicial do
+        # <video>) ao ler tudo de uma vez antes de escrever qualquer byte
+        # dava tempo ao Chromium para abortar a ligação primeiro; como
+        # nenhum byte tinha chegado ainda, o browser marcava o vídeo como
+        # falhado (NETWORK_NO_SOURCE) e nunca mais voltava a pedir nada,
+        # nem depois do seek do Encore (bug real 2026-10-11). Com
+        # streaming, os cabeçalhos e os primeiros blocos saem de imediato.
+        BLOCO = 262144
+        try:
+            restantes = a_enviar
+            while restantes > 0:
+                bloco = f.read(min(BLOCO, restantes))
+                if not bloco:
+                    break
+                self.wfile.write(bloco)
+                restantes -= len(bloco)
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        finally:
+            f.close()
+
+    def do_HEAD(self):
+        parsed = urlparse(self.path)
+        caminho_pedido = unquote(parsed.path)
+        relativo = caminho_pedido.lstrip('/')
+        caminho = os.path.realpath(os.path.join(APP_DIR, relativo))
+        if caminho != APP_DIR and not caminho.startswith(APP_DIR + os.sep):
+            self.send_response(403)
+            self.end_headers()
+            return
+        if not os.path.isfile(caminho):
+            self.send_response(404)
+            self.end_headers()
+            return
+        tipo, _ = mimetypes.guess_type(caminho)
+        self.send_response(200)
+        self.send_header('Content-Type', tipo or 'application/octet-stream')
+        self.send_header('Accept-Ranges', 'bytes')
+        self.send_header('Content-Length', str(os.path.getsize(caminho)))
+        self.end_headers()
 
     def _versao_ficheiro(self, parsed):
         # GET /versao?ficheiro=playlists.json -> {"ok":true,"existe":bool,"mtime":float|null}

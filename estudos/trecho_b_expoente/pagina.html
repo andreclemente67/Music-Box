@@ -99,7 +99,7 @@ async function carregar() {
         }).join('')}
       </div>
       ${info.video ? `<div class="video-sync" id="videosync-${tid}">
-        <video id="video-${tid}" src="${info.video.ficheiro}" muted preload="auto"></video>
+        <video id="video-${tid}" src="${info.video.ficheiro}" muted preload="metadata"></video>
         <img id="foto-${tid}" src="${info.imagem_artista || ''}" alt="${info.artista}">
         <audio id="audiosync-${tid}"></audio>
         <div class="desvio-ao-vivo" id="desvio-${tid}"></div>
@@ -164,20 +164,33 @@ function encore(tid, label) {
   audio.src = l.ficheiro;
   document.getElementById(`videosync-${tid}`).classList.add('visivel');
 
-  // Espera pelo "seeked" antes de arrancar os dois juntos — currentTime
-  // só garante o frame exacto depois do seek concluir (keyframes a cada
-  // ~0.5s no ficheiro, ver video_offset.py); arrancar logo a seguir ao
-  // pedido de seek (como antes) podia tocar um frame desalinhado por
-  // décimas de segundo mesmo com o offset calculado correctamente —
-  // bug real reportado 2026-10-12.
-  const aoSeek = () => {
-    video.removeEventListener('seeked', aoSeek);
+  // Espera pelo vídeo estar REALMENTE pronto (seek concluído + dados
+  // suficientes para tocar sem pausar) antes de arrancar os dois juntos
+  // — o áudio nunca arranca primeiro. "seeked" por si só só garante o
+  // frame exacto; com preload="none" o vídeo pode não ter dados
+  // suficientes ainda nesse momento (ficava a tocar só o áudio até o
+  // vídeo "apanhar" — bug real reportado 2026-10-11/12). Por isso espera
+  // também por "canplay" (readyState >= HAVE_FUTURE_DATA) a seguir ao
+  // seek, só então dá play aos dois.
+  let seekConcluido = false;
+  const arrancarOsDois = () => {
+    video.removeEventListener('seeked', aoSeeked);
+    video.removeEventListener('canplay', aoCanplay);
     audio.currentTime = 0;
     Promise.all([video.play(), audio.play()]).then(() => {
       iniciarLoopSincronizacao(tid, video, audio, tempoVideo, desvioEl);
     });
   };
-  video.addEventListener('seeked', aoSeek);
+  const aoCanplay = () => { if (seekConcluido) arrancarOsDois(); };
+  const aoSeeked = () => {
+    seekConcluido = true;
+    if (video.readyState >= 3) {
+      arrancarOsDois();
+    } else {
+      video.addEventListener('canplay', aoCanplay);
+    }
+  };
+  video.addEventListener('seeked', aoSeeked);
   const jaLa = Math.abs(video.currentTime - tempoVideo) < 0.01;
   video.currentTime = tempoVideo;
   if (jaLa) {

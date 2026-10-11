@@ -65,25 +65,25 @@
         "ficheiro": "audio/dec00_03_B1.mp3",
         "offset_fonte_s": 186,
         "video_sincronizado": true,
-        "video_desvio_s": 0.011
+        "video_desvio_s": 0.005
       },
       "B2": {
         "ficheiro": "audio/dec00_03_B2.mp3",
         "offset_fonte_s": 31.6,
         "video_sincronizado": true,
-        "video_desvio_s": 0.036
+        "video_desvio_s": 0.02
       },
       "B3": {
         "ficheiro": "audio/dec00_03_B3.mp3",
         "offset_fonte_s": 66.5,
         "video_sincronizado": true,
-        "video_desvio_s": 0.032
+        "video_desvio_s": 0.016
       },
       "B4": {
         "ficheiro": "audio/dec00_03_B4.mp3",
         "offset_fonte_s": 101.0,
         "video_sincronizado": true,
-        "video_desvio_s": 0.012
+        "video_desvio_s": 0.003
       }
     },
     "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/c6vkgx1760737306.jpg",
