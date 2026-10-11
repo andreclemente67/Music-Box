@@ -1,16 +1,52 @@
 {
   "dec00_01": {
-    "video_offset_s": 68.3,
-    "confianca": 0.935,
+    "video_offset_s": 68.012,
+    "confianca": 0.934,
     "janela_usada_video_s": 120,
-    "correspondente_fonte_s": 51.7,
-    "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (vídeo tem este tanto de conteúdo extra antes do áudio corresponder à fonte_audio)"
+    "correspondente_fonte_s": 51.988,
+    "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (offset refinado por correlação de amostra)",
+    "candidatos": {
+      "B1": {
+        "desvio_s": 0.023,
+        "sincronizado": true
+      },
+      "B2": {
+        "desvio_s": 0.026,
+        "sincronizado": true
+      },
+      "B3": {
+        "desvio_s": 0.008,
+        "sincronizado": true
+      },
+      "B4": {
+        "desvio_s": 0.008,
+        "sincronizado": true
+      }
+    }
   },
   "dec00_03": {
-    "video_offset_s": 3.3,
-    "confianca": 0.975,
+    "video_offset_s": 3.576,
+    "confianca": 0.977,
     "janela_usada_video_s": 180,
-    "correspondente_fonte_s": 176.7,
-    "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (vídeo tem este tanto de conteúdo extra antes do áudio corresponder à fonte_audio)"
+    "correspondente_fonte_s": 176.424,
+    "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (offset refinado por correlação de amostra)",
+    "candidatos": {
+      "B1": {
+        "desvio_s": 0.011,
+        "sincronizado": true
+      },
+      "B2": {
+        "desvio_s": 0.036,
+        "sincronizado": true
+      },
+      "B3": {
+        "desvio_s": 0.032,
+        "sincronizado": true
+      },
+      "B4": {
+        "desvio_s": 0.012,
+        "sincronizado": true
+      }
+    }
   }
 }

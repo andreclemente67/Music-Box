@@ -5,24 +5,33 @@
     "labels": {
       "B1": {
         "ficheiro": "audio/dec00_01_B1.mp3",
-        "offset_fonte_s": 105.4
+        "offset_fonte_s": 105.4,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.023
       },
       "B2": {
         "ficheiro": "audio/dec00_01_B2.mp3",
-        "offset_fonte_s": 142
+        "offset_fonte_s": 142,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.026
       },
       "B3": {
         "ficheiro": "audio/dec00_01_B3.mp3",
-        "offset_fonte_s": 51.5
+        "offset_fonte_s": 51.5,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.008
       },
       "B4": {
         "ficheiro": "audio/dec00_01_B4.mp3",
-        "offset_fonte_s": 48.5
+        "offset_fonte_s": 48.5,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.008
       }
     },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/yvxyvs1340499440.jpg",
     "video": {
       "ficheiro": "video/dec00_01_video.mp4",
-      "offset_video_menos_fonte_s": 68.3
+      "offset_video_menos_fonte_s": 68.012
     }
   },
   "dec00_02": {
@@ -45,7 +54,8 @@
         "ficheiro": "audio/dec00_02_B4.mp3",
         "offset_fonte_s": 48.0
       }
-    }
+    },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/1347b11737198631.jpg"
   },
   "dec00_03": {
     "titulo": "Mr. Brightside",
@@ -53,24 +63,33 @@
     "labels": {
       "B1": {
         "ficheiro": "audio/dec00_03_B1.mp3",
-        "offset_fonte_s": 186
+        "offset_fonte_s": 186,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.011
       },
       "B2": {
         "ficheiro": "audio/dec00_03_B2.mp3",
-        "offset_fonte_s": 31.6
+        "offset_fonte_s": 31.6,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.036
       },
       "B3": {
         "ficheiro": "audio/dec00_03_B3.mp3",
-        "offset_fonte_s": 66.5
+        "offset_fonte_s": 66.5,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.032
       },
       "B4": {
         "ficheiro": "audio/dec00_03_B4.mp3",
-        "offset_fonte_s": 101.0
+        "offset_fonte_s": 101.0,
+        "video_sincronizado": true,
+        "video_desvio_s": 0.012
       }
     },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/c6vkgx1760737306.jpg",
     "video": {
       "ficheiro": "video/dec00_03_video.mp4",
-      "offset_video_menos_fonte_s": 3.3
+      "offset_video_menos_fonte_s": 3.576
     }
   },
   "dec00_04": {
@@ -89,7 +108,8 @@
         "ficheiro": "audio/dec00_04_B3.mp3",
         "offset_fonte_s": 47.5
       }
-    }
+    },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/white-stripes-the-4fabbf088c81d.jpg"
   },
   "dec00_05": {
     "titulo": "Toxic",
@@ -111,7 +131,8 @@
         "ficheiro": "audio/dec00_05_B4.mp3",
         "offset_fonte_s": 75.1
       }
-    }
+    },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/o4jre41658456037.jpg"
   },
   "dec00_06": {
     "titulo": "In the End",
@@ -133,7 +154,8 @@
         "ficheiro": "audio/dec00_06_B4.mp3",
         "offset_fonte_s": 45.5
       }
-    }
+    },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/usspxq1347996993.jpg"
   },
   "dec00_07": {
     "titulo": "Umbrella",
@@ -155,6 +177,7 @@
         "ficheiro": "audio/dec00_07_B4.mp3",
         "offset_fonte_s": 134
       }
-    }
+    },
+    "imagem_artista": "https://r2.theaudiodb.com/images/media/artist/thumb/1k2c431756300759.jpg"
   }
 }

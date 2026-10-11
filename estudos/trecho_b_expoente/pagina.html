@@ -31,7 +31,8 @@
   button.encore.visivel { display: block; }
   .video-sync { margin-top: 10px; display: none; }
   .video-sync.visivel { display: block; }
-  .video-sync video { width: 100%; border-radius: 6px; }
+  .video-sync video { width: 100%; border-radius: 6px; display: none; background: #000; }
+  .video-sync img { width: 100%; border-radius: 6px; display: none; object-fit: cover; max-height: 320px; }
   #resumo { background: var(--bg2); border: 1px solid var(--accent); border-radius: 10px; padding: 18px 20px; margin-top: 24px; }
   #resumo h2 { font-size: 15px; margin: 0 0 10px; }
   #resumo-texto { width: 100%; min-height: 100px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 10px; font-family: monospace; font-size: 12px; }
@@ -78,16 +79,23 @@ async function carregar() {
         <div style="font-size:11px;color:var(--text3)">${tid}</div>
       </div>
       <div class="candidatos">
-        ${labels.map(label => `
+        ${labels.map(label => {
+          const l = info.labels[label];
+          const temVideoSincronizado = info.video && l.video_sincronizado === true;
+          const temVideoFalhado = info.video && l.video_sincronizado === false;
+          return `
           <div class="candidato" id="cand-${tid}-${label}">
             <div class="candidato-label">${label}</div>
-            <audio controls src="${info.labels[label].ficheiro}" preload="none"></audio>
+            <audio controls src="${l.ficheiro}" preload="none"></audio>
             <button onclick="escolher('${tid}','${label}')">✓ Este é o melhor</button>
-            ${info.video ? `<button class="encore" id="encore-${tid}-${label}" onclick="encore('${tid}','${label}')">▶ Encore (vídeo sincronizado)</button>` : ''}
-          </div>`).join('')}
+            ${temVideoSincronizado ? `<button class="encore" id="encore-${tid}-${label}" onclick="encore('${tid}','${label}')">▶ Encore (vídeo sincronizado)</button>` : ''}
+            ${temVideoFalhado ? `<button class="encore" id="encore-${tid}-${label}" onclick="encore('${tid}','${label}')">▶ Encore (sem vídeo — desvio ${l.video_desvio_s}s &gt; 0.1s, mostra foto)</button>` : ''}
+          </div>`;
+        }).join('')}
       </div>
       ${info.video ? `<div class="video-sync" id="videosync-${tid}">
         <video id="video-${tid}" src="${info.video.ficheiro}" muted></video>
+        <img id="foto-${tid}" src="${info.imagem_artista || ''}" alt="${info.artista}">
         <audio id="audiosync-${tid}"></audio>
       </div>` : ''}
     `;
@@ -119,18 +127,35 @@ function escolher(tid, label) {
 
 function encore(tid, label) {
   const info = window.DADOS[tid];
-  const offsetCandidato = info.labels[label].offset_fonte_s;
-  const offsetVideo = info.video.offset_video_menos_fonte_s;
-  const tempoVideo = offsetCandidato + offsetVideo;
-
+  const l = info.labels[label];
   const video = document.getElementById(`video-${tid}`);
+  const foto = document.getElementById(`foto-${tid}`);
   const audio = document.getElementById(`audiosync-${tid}`);
-  audio.src = info.labels[label].ficheiro;
+
+  if (l.video_sincronizado !== true) {
+    // Desvio medido acima da tolerância (0.1s) para este candidato —
+    // nunca mostra vídeo desalinhado, cai para a foto do artista.
+    video.style.display = 'none';
+    foto.style.display = 'block';
+    document.getElementById(`videosync-${tid}`).classList.add('visivel');
+    audio.src = l.ficheiro;
+    audio.currentTime = 0;
+    audio.play();
+    return;
+  }
+  video.style.display = 'block';
+  foto.style.display = 'none';
+
+  const offsetVideo = info.video.offset_video_menos_fonte_s;
+  const tempoVideo = Math.max(l.offset_fonte_s + offsetVideo, 0);
+  audio.src = l.ficheiro;
   document.getElementById(`videosync-${tid}`).classList.add('visivel');
 
-  video.currentTime = Math.max(tempoVideo, 0);
-  audio.currentTime = 0;
-  const arrancar = () => { video.play(); audio.play(); };
+  // video.currentTime só "cola" depois de haver metadados (readyState>=1)
+  // — definir antes disso é ignorado em silêncio (bug real 2026-10-12:
+  // às vezes arrancava do fim anterior em vez do ponto certo). Por isso
+  // o currentTime é sempre definido dentro de `arrancar`, nunca antes.
+  const arrancar = () => { video.currentTime = tempoVideo; audio.currentTime = 0; video.play(); audio.play(); };
   if (video.readyState >= 1) arrancar(); else video.addEventListener('loadedmetadata', arrancar, { once: true });
 }
 
