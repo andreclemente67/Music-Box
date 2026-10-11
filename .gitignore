@@ -63,3 +63,9 @@ scripts/_cache_verificacao/
 # dados/video_fontes.json.
 estudos/trecho_b_expoente/cache/
 estudos/trecho_b_expoente/video/
+
+# tmp_dl/ — faixas completas descarregadas pelo gerar_faixa.py (e pelo
+# analise_refrao.py, que as reutiliza como cache em vez de repetir o
+# download). MP3s inteiros, reconstroem-se sozinhos a partir de
+# fonte_audio; nunca para versionar.
+tmp_dl/
