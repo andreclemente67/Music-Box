@@ -1799,3 +1799,63 @@ ficam órfãs em `_preview_revisao/`, não apagadas, sem efeito). Nota:
 `beatles_02` (tipo `trivia`) já tinha `fonte_audio` escrito em
 `catalogo.json` antes desta regra existir (lote dos 43, 9 Out) — não
 revertido, fica para decisão à parte.
+
+## 2026-10-11 — Sequência pós-acerto com vídeo do Trecho B em ecrã inteiro (decisão de formato, implementação por aprovar)
+
+Decisão do André: depois de um acerto, a sequência passa a ser (1)
+anúncio da solução (título/artista) + resposta + stinger "Music Box";
+(2) entra o vídeo do Trecho B (o "expoente" da música, mesmo conceito
+testado em `estudos/trecho_b_expoente/`) em **ecrã inteiro**,
+sincronizado com o áudio limpo do Trecho B; (3) o vídeo pára quando o
+Trecho B termina; (4) sem vídeo associado à faixa, ou sem sincronização
+aprovada, cai sempre na foto do artista em ecrã inteiro (comportamento
+actual, inalterado nesse caso).
+
+Substitui a janela de decisão "▶ Encore" (verde/vermelho, 1,5s, nunca
+tocava o Trecho B automaticamente — ver §5.4b, 2026-09-17) por um
+Encore sempre com vídeo quando disponível.
+
+**Implementado e ligado ao jogo no mesmo dia** (depois de diagnóstico e
+proposta de integração em separado). Detalhes aprovados pelo André:
+
+- Campos novos no `catalogo.json` (nível de topo da faixa, via
+  `catalogo_patch.json`): `video_local` (ficheiro-fonte do vídeo, só
+  para regenerar `clip_b` — nunca lido em jogo), `video_offset_s`
+  (offset vídeo↔fonte, idem), `clip_b` (o mp4 de 15s já com vídeo+áudio
+  combinados e verificados — o único campo que o jogo lê), e
+  `video_sincronizado` (bool — `false` nunca mostra vídeo, cai sempre
+  na foto).
+- `musicbox.html`: `testeMostrarJanelaDecisaoTrechoB()`/
+  `testeCliqueTrechoB()`/`testeArrancarTrechoBSemFF()` e o botão
+  "▶ Encore" (`#btn-teste-trecho-b`) **removidos**. Nova função
+  `iniciarEncoreComVideo(entradaCatalogo)`, chamada automaticamente no
+  fim da sequência de voz (nome→"In the Box!!"→roar, depois da pausa
+  `PAUSA_ANTES_ENCORE_MS`) — já não há botão nenhum para o operador
+  clicar. `clip_b` + `video_sincronizado!==false` → vídeo em ecrã
+  inteiro (`#encore-video-overlay`, novo, `z-index:700`, acima do
+  `#momento-resposta`), áudio do próprio clip, avança no `ended`. Sem
+  `clip_b` → foto do artista em ecrã inteiro por
+  `ENCORE_FOTO_FALLBACK_MS` (4000ms). Nem `clip_b` nem foto → avança de
+  imediato (como antes de existir Encore). Música de fundo (`audio`)
+  desce a 0 com fade de `FADE_ENCORE_VIDEO_MS` (500ms) quando o Encore
+  aparece, volta a `VOL_MUSICA` sozinha na Faixa seguinte
+  (`iniciarFaixa()`, inalterado). A régie salta o Encore (vídeo ou foto)
+  a qualquer momento com Esc ou Espaço, um só evento — sem precisar de
+  clicar em nada. Pergunta Bónus (quando há) continua a disparar depois
+  do Encore terminar (fluxo inalterado, `avancarParaProximaFaixaOuMosaico()`).
+  Separação régie/ecrã de saída: **não entrou nesta decisão**, fica para
+  uma decisão de arquitectura à parte — hoje é tudo a mesma página.
+- Geradas as 2 primeiras `clip_b` (`assets/clips_b/dec00_01.mp4`,
+  `assets/clips_b/dec00_03.mp4`, H.264/AAC, 15s) a partir do **Trecho B
+  de produção, inalterado**, de "Hey Ya!"/"Mr. Brightside" + o vídeo de
+  demonstração do estudo `estudos/trecho_b_expoente/` — alinhados por
+  correlação de forma de onda directamente contra o áudio do próprio
+  vídeo (não contra a fonte usada no estudo: `dec00_03` não tem
+  `fonte_audio` registada em produção, não é garantido ser a mesma
+  fonte que o estudo descarregou). Testado com Google Chrome real via
+  Playwright directamente em `musicbox.html` (`mostrarMomentoResposta`
+  com estado minimamente montado — sem passar pelo fluxo completo de
+  UI): nas duas faixas, o vídeo aparece em ecrã inteiro ~4s depois do
+  acerto (duração da sequência de voz + pausa), toca os 15s completos e
+  avança sozinho no fim; Espaço a meio do clip esconde o overlay e
+  avança em <350ms.

@@ -203,11 +203,12 @@
   .rodape button { background:var(--bg3); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:8px 14px; font-size:11px; cursor:pointer; }
   .rodape button:disabled { background:var(--accent); color:#1a1508; border-color:var(--accent); cursor:default; }
   .rodape button.activo { background:var(--accent); color:#1a1508; border-color:var(--accent); }
-  /* TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
-     estado do botão "▶ Encore" — verde enquanto o Trecho B toca,
-     vermelho quando termina (ver testeArrancarTrechoBSemFF()). */
-  .rodape button.teste-trecho-b-verde { background:var(--green); color:#0a2015; border-color:var(--green); }
-  .rodape button.teste-trecho-b-vermelho { background:var(--red); color:#2a0d0d; border-color:var(--red); }
+  /* Encore com vídeo em ecrã inteiro (decisão de formato, 11 Out 2026 —
+     ver BIBLIA.md §5.4b): z-index 700, acima do #momento-resposta (600)
+     — cobre-o por completo enquanto o clip/foto do Encore está visível. */
+  #encore-video-overlay { position:fixed; inset:0; z-index:700; background:#000; display:none; align-items:center; justify-content:center; }
+  #encore-video-overlay.visivel { display:flex; }
+  #encore-video-overlay video, #encore-video-overlay img { width:100%; height:100%; object-fit:contain; }
   .hp-concorrente { margin-bottom:16px; }
   .hp-nome { font-weight:700; color:var(--text); margin-bottom:4px; }
   .hp-linha { color:var(--text2); padding:2px 0; }
@@ -581,16 +582,10 @@
      anterior), volta a fluxo normal, mas agora ANTES das boxes dos
      concorrentes em vez de depois. -->
 <div class="rodape" id="rodape-controlo">
-  <!-- TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO
-       COMMITAR: visível sempre a partir do acerto (mostrado logo no
-       início de testeTocarSequenciaSom(), antes até do "in the box"
-       tocar) — verde enquanto o Trecho B está a tocar
-       (testeArrancarTrechoBSemFF()), vermelho quando termina. Um clique,
-       em qualquer estado, corta o que estiver a tocar (revelação ou
-       Trecho B) e avança logo para a Faixa seguinte — ver
-       testeCliqueTrechoB(). Escondido de novo em qualquer NEW_SLOT
-       (esconderMomentoResposta()). -->
-  <button onclick="testeCliqueTrechoB()" id="btn-teste-trecho-b" style="display:none;">▶ Encore</button>
+  <!-- Encore com vídeo (decisão 11 Out 2026, ver BIBLIA.md §5.4b):
+       dispara automático no fim da sequência de voz, sem botão — a
+       régie salta o clip/foto a qualquer momento com Esc ou Espaço (ver
+       aoTeclaSaltarEncore() dentro de iniciarEncoreComVideo()). -->
   <button onclick="alternarPausa()" id="btn-pausa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar</button>
   <!-- RETROCEDER_FAIXA (pedido do utilizador, 2026-09-02, simétrico ao
        MANUAL_ADVANCE §19.1) — corrige avanços indevidos da régie: volta à
@@ -668,6 +663,16 @@
   </div>
 </div>
 
+<!-- Encore com vídeo em ecrã inteiro (decisão 11 Out 2026, ver
+     BIBLIA.md §5.4b) — ver iniciarEncoreComVideo(). clip_b (vídeo+áudio
+     já combinados e verificados) em ecrã inteiro quando a faixa tem um;
+     foto do artista em ecrã inteiro como único fallback (sem clip_b, ou
+     video_sincronizado:false). -->
+<div id="encore-video-overlay">
+  <video id="encore-video" playsinline></video>
+  <img id="encore-foto-fallback" alt="">
+</div>
+
 <!-- Painel lateral — evolução progressiva da pontuação, não só o total
      final (ver historico[i][].pontosApos, gravado em cada acerto/erro).
      2026-09-17, pedido do utilizador: escondido por defeito — os pontos
@@ -705,21 +710,27 @@
 // transições suaves (não saltos instantâneos) — FADE_DOWN_MS é reusado
 // tanto para o duck inicial (VOL_MUSICA→VOL_DUCK) como para a descida a
 // VOL_ENCORE (VOL_DUCK→VOL_ENCORE), FADE_UP_MS só para a subida final a
-// VOL_MUSICA quando o Trecho B arranca. Ver fadeVolume()/acertouFaixa()/
-// testeTocarSequenciaSom()/testeArrancarTrechoBSemFF().
+// VOL_MUSICA quando a Faixa seguinte arranca a sério. Ver fadeVolume()/
+// acertouFaixa()/testeTocarSequenciaSom()/iniciarEncoreComVideo().
 const VOL_MUSICA = 0.75;
 const VOL_DUCK = 0.25;
 const VOL_ENCORE = 0.45;
 const FADE_DOWN_MS = 300;
 const FADE_UP_MS = 600;
 // 2026-10-05, pedido do utilizador: pausa entre o fim do "In the Box!!"
-// (ou do roar, se existir) e o que vier a seguir — hoje só há um "a
-// seguir" possível (a janela de decisão do Encore, SEMPRE mostrada por
-// testeMostrarJanelaDecisaoTrechoB() — não há hoje nenhum caminho "sem
-// Encore" que vá direito para a Faixa seguinte); a música mantém-se a
-// tocar (em VOL_ENCORE) durante esta pausa, nunca pára. Ver
-// testeTocarSequenciaSom()/testeTimeoutPreEncore.
+// (ou do roar, se existir) e o Encore (ver iniciarEncoreComVideo()); a
+// música mantém-se a tocar (em VOL_ENCORE) durante esta pausa, nunca
+// pára. Ver testeTocarSequenciaSom()/testeTimeoutPreEncore.
 const PAUSA_ANTES_ENCORE_MS = 1500;
+// Decisão de formato 11 Out 2026 (BIBLIA.md §5.4b) — substitui a janela
+// de decisão "▶ Encore" verde/vermelho: no fim da sequência de voz, se a
+// faixa tiver `clip_b` (vídeo+áudio do Trecho B já combinados e
+// verificados, ver estudos/trecho_b_expoente/), mostra-o em ecrã
+// inteiro com fade de FADE_ENCORE_VIDEO_MS na música de fundo; sem
+// clip_b (ou video_sincronizado:false), mostra a foto do artista em
+// ecrã inteiro por ENCORE_FOTO_FALLBACK_MS. Ver iniciarEncoreComVideo().
+const FADE_ENCORE_VIDEO_MS = 500;
+const ENCORE_FOTO_FALLBACK_MS = 4000;
 
 // Fade de volume com requestAnimationFrame — cancelável: cada chamada
 // gera um "token" novo; um fade anterior ainda em curso vê que o seu
@@ -1726,14 +1737,12 @@ function fotoConcorrenteHtml(i) {
 // §5.4b revisto, avança pelo fim real do áudio/Encore).
 const MOMENTO_RESPOSTA_MS = 4000;
 let momentoRespostaTimer = null;
-// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
-// testeTimeoutCorteTrechoB: reaproveitado para o corte do Trecho B (7s —
-// ver testeArrancarTrechoBSemFF()) E para a pausa antes do avanço no
-// caminho "vermelho" (TESTE_PAUSA_VERMELHO_MS — só um dos dois activo de
-// cada vez, por ciclo de acerto). testeAudioRevelacaoActual: referência
-// ao Audio() da revelação ("in the box"/voz) actualmente a tocar (ver
-// testeTocarSequenciaSom()). Ambos precisam de ficar acessíveis fora da
-// função onde nascem para testeCliqueTrechoB() os poder cortar.
+// testeTimeoutCorteTrechoB: reaproveitado para a pausa fixa do fallback
+// foto-sem-vídeo (ENCORE_FOTO_FALLBACK_MS, ver iniciarEncoreComVideo()).
+// testeAudioRevelacaoActual: referência ao Audio() da revelação ("in the
+// box"/voz) actualmente a tocar (ver testeTocarSequenciaSom()). Ambos
+// precisam de ficar acessíveis fora da função onde nascem para
+// esconderMomentoResposta() os poder cortar num reset.
 let testeTimeoutCorteTrechoB = null;
 let testeAudioRevelacaoActual = null;
 
@@ -1746,25 +1755,14 @@ let testeAudioRevelacaoActual = null;
 // acertou, terminarFaixaSemVencedor()).
 function esconderMomentoResposta() {
   clearTimeout(momentoRespostaTimer);
-  // TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
-  // cancela os timeouts da janela de decisão/corte do Trecho B e
-  // esconde/repõe "▶ Encore" (ver testeMostrarJanelaDecisaoTrechoB()/
-  // testeArrancarTrechoBSemFF()) — evita um segundo avanço se o NEW_SLOT
-  // já aconteceu por outra via (ex.: MANUAL_ADVANCE do operador)
-  // enquanto a janela/Trecho B ainda estava em curso.
-  clearTimeout(testeTimeoutJanelaDecisao);
+  // Cancela a pausa fixa do fallback foto-sem-vídeo e a pausa de 1,5s
+  // antes do Encore (PAUSA_ANTES_ENCORE_MS) — evita um segundo avanço se
+  // o NEW_SLOT já aconteceu por outra via (ex.: MANUAL_ADVANCE do
+  // operador) enquanto o Encore ainda estava em curso.
   clearTimeout(testeTimeoutCorteTrechoB);
-  // 2026-10-05, pedido do utilizador: cancela também a pausa de 1,5s
-  // antes do Encore (PAUSA_ANTES_ENCORE_MS) — sem isto, a janela podia
-  // aparecer depois de o jogador já ter avançado por outra via.
   clearTimeout(testeTimeoutPreEncore);
-  testeTrechoBEscolhido = false;
   testeAudioRevelacaoActual = null;
-  const btnTrechoB = document.getElementById('btn-teste-trecho-b');
-  if (btnTrechoB) {
-    btnTrechoB.style.display = 'none';
-    btnTrechoB.classList.remove('teste-trecho-b-verde', 'teste-trecho-b-vermelho');
-  }
+  pararEncoreComVideo();
   const overlay = document.getElementById('momento-resposta');
   if (overlay) overlay.style.display = 'none';
 }
@@ -1812,13 +1810,13 @@ function mostrarMomentoResposta(i, tipo) {
       blocoArtista.classList.remove('momento-resposta-entrada-teste');
       void blocoArtista.offsetWidth;
       blocoArtista.classList.add('momento-resposta-entrada-teste');
-      // TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — NÃO
-      // COMMITAR: dispara a sequência "in the box" → voz do nome →
-      // Trecho B em sincronia com esta mesma animação (mesmo ponto de
-      // entrada). entradaCatalogo.id é o id do catalogo.json (ex.
-      // "dec50_01") — ver testeTocarSequenciaSom().
+      // Dispara a sequência "in the box" → voz do nome → Encore em
+      // sincronia com esta mesma animação (mesmo ponto de entrada) — ver
+      // testeTocarSequenciaSom(). Passa a entrada completa do
+      // catalogo.json (não só o id) — iniciarEncoreComVideo() precisa de
+      // clip_b/video_sincronizado/imagem no fim da sequência.
       if (TESTE_SOM_CONTROLA_TRECHO_B && entradaCatalogo && entradaCatalogo.id) {
-        testeTocarSequenciaSom(entradaCatalogo.id);
+        testeTocarSequenciaSom(entradaCatalogo);
       }
     }
     clearTimeout(momentoRespostaTimer);
@@ -2917,7 +2915,7 @@ function iniciarFaixa() {
   // VOL_MUSICA (0.75, introduzido só em 2026-10-04) — a música de fundo
   // normal de cada Faixa nova tocava sempre a volume máximo, não ao
   // nível "normal" pretendido; só a reposição pós-Encore usava VOL_MUSICA
-  // correctamente (ver testeArrancarTrechoBSemFF()).
+  // correctamente.
   cancelarFadeVolume();
   audio.volume = VOL_MUSICA;
   trechoAtual = 'A';
@@ -3098,104 +3096,96 @@ function aguardarFimTrechoBAposAcerto() {
   }
 }
 
-// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
-// redesenho — "▶ Encore" passa a ser uma JANELA DE DECISÃO de 1.5s
-// (verde), não um indicador de "Trecho B a tocar". O Trecho B NUNCA toca
-// sozinho — só se o operador clicar no verde dentro da janela:
-//   clique no verde  → testeTrechoBEscolhido=true → toca Trecho B (~7s)
-//                       → avança automaticamente no fim (sem vermelho).
-//   sem clique (1.5s) → fica vermelho → avança automaticamente pouco
-//                       depois (TESTE_PAUSA_VERMELHO_MS, só para o
-//                       vermelho ser mesmo visível, não um flash de 0ms).
-// Ver testeMostrarJanelaDecisaoTrechoB()/testeCliqueTrechoB()/
-// testeArrancarTrechoBSemFF().
-const TESTE_JANELA_DECISAO_TRECHO_B_MS = 1500;
-const TESTE_PAUSA_VERMELHO_MS = 400;
-let testeTimeoutJanelaDecisao = null;
-let testeTrechoBEscolhido = false;
-// Timer da pausa de 1,5s antes da janela do Encore aparecer (ver
+// Timer da pausa de 1,5s antes do Encore aparecer (ver
 // PAUSA_ANTES_ENCORE_MS) — cancelado em esconderMomentoResposta() se o
 // jogador avançar/houver reset antes de disparar.
 let testeTimeoutPreEncore = null;
+// Listener de teclado activo enquanto o Encore está visível (Esc/Espaço
+// salta para a Faixa seguinte) — guardado para o poder remover sempre
+// que o Encore termina, por qualquer via (ended/timeout/tecla/reset).
+let encoreAoTeclaSaltarActual = null;
 
-function testeMostrarJanelaDecisaoTrechoB() {
-  testeTrechoBEscolhido = false;
-  const btn = document.getElementById('btn-teste-trecho-b');
-  btn.style.display = '';
-  btn.classList.remove('teste-trecho-b-vermelho');
-  btn.classList.add('teste-trecho-b-verde');
-  console.log('[TESTE SOM] janela de decisão do Trecho B (verde) — ' + (TESTE_JANELA_DECISAO_TRECHO_B_MS / 1000) + 's para o operador clicar');
-  clearTimeout(testeTimeoutJanelaDecisao);
-  testeTimeoutJanelaDecisao = setTimeout(() => {
-    if (testeTrechoBEscolhido) return; // já foi escolhido entretanto — testeCliqueTrechoB() já cancelou isto, guarda extra
-    btn.classList.remove('teste-trecho-b-verde');
-    btn.classList.add('teste-trecho-b-vermelho');
-    console.log('[TESTE SOM] janela de decisão terminou sem clique — vermelho — Trecho B fica por tocar, avança em ' + TESTE_PAUSA_VERMELHO_MS + 'ms');
-    testeTimeoutCorteTrechoB = setTimeout(() => {
-      if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
-    }, TESTE_PAUSA_VERMELHO_MS);
-  }, TESTE_JANELA_DECISAO_TRECHO_B_MS);
-}
+// Encore com vídeo em ecrã inteiro (decisão de formato 11 Out 2026, ver
+// BIBLIA.md §5.4b) — chamado no fim da sequência de voz (nome→"In the
+// Box!!"→roar), substitui a antiga janela de decisão "▶ Encore"
+// verde/vermelho. `entradaCatalogo` é a entrada do catalogo.json (a
+// mesma usada em mostrarMomentoResposta() para a foto do artista).
+//   - clip_b existe e video_sincronizado!==false → mostra o clip (vídeo+
+//     áudio já combinados e verificados, ver estudos/trecho_b_expoente/)
+//     em ecrã inteiro; avança no 'ended' do próprio vídeo.
+//   - caso contrário → foto do artista em ecrã inteiro (único fallback,
+//     nunca o pequeno overlay lado-a-lado), por ENCORE_FOTO_FALLBACK_MS.
+//   - nem clip_b nem imagem → nada para mostrar, avança de imediato
+//     (mesmo comportamento de antes de existir Encore).
+// Em qualquer dos dois primeiros casos, a régie pode saltar com Esc ou
+// Espaço (aoTeclaSaltarEncore) — um só evento, sem precisar de clicar em
+// nada primeiro.
+function iniciarEncoreComVideo(entradaCatalogo) {
+  const temClip = entradaCatalogo && entradaCatalogo.clip_b && entradaCatalogo.video_sincronizado !== false;
+  const temFoto = entradaCatalogo && entradaCatalogo.imagem;
 
-// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
-// clique no botão "▶ Encore" — comportamento depende de já ter sido
-// escolhido ou não (testeTrechoBEscolhido): dentro da janela de decisão
-// (verde, ainda não escolhido), o clique ESCOLHE tocar o Trecho B; depois
-// disso (Trecho B já a tocar, ou já vermelho à espera do avanço), o
-// clique só acelera o avanço, cortando o que estiver a tocar.
-function testeCliqueTrechoB() {
-  if (!testeTrechoBEscolhido) {
-    clearTimeout(testeTimeoutJanelaDecisao);
-    testeTrechoBEscolhido = true;
-    testeArrancarTrechoBSemFF();
+  if (!temClip && !temFoto) {
+    if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
     return;
   }
-  clearTimeout(testeTimeoutCorteTrechoB);
-  if (testeAudioRevelacaoActual) {
-    testeAudioRevelacaoActual.pause();
-    testeAudioRevelacaoActual = null;
-  }
-  // Rede de segurança do ducking (2026-10-04, pedido do utilizador):
-  // corte manual aqui pode acontecer com a música ainda em VOL_DUCK (ou
-  // a meio de um fade) se o operador cortar antes da sequência nome→
-  // in_the_box→roar terminar sozinha — repõe VOL_MUSICA de imediato
-  // (sem fade, é um corte manual) em vez de depender só do próximo
-  // iniciarFaixa().
-  cancelarFadeVolume();
-  audio.volume = VOL_MUSICA;
-  audio.onended = null;
-  audio.pause();
-  avancarParaProximaFaixaOuMosaico();
-}
 
-// TESTE TEMPORÁRIO (2026-09-17, pedido do utilizador) — NÃO COMMITAR:
-// só corre depois de testeCliqueTrechoB() escolher tocar o Trecho B (não
-// arranca sozinho). Arranca o Trecho B directamente (sem "⏩ FF"), corta
-// aos 7s ou ao fim natural, avança automaticamente no fim — sem passar
-// por vermelho (essa cor é só para o caminho "não escolheu", ver
-// testeMostrarJanelaDecisaoTrechoB()).
-function testeArrancarTrechoBSemFF() {
-  // 2026-10-05, pedido do utilizador ("meio-termo"): sobe de VOL_ENCORE
-  // para VOL_MUSICA aqui — só quando o Trecho B é mesmo escolhido e
-  // arranca a sério (antes era em terminarSequencia(), logo depois do
-  // "In the Box!!", sem esperar pela decisão do Encore).
-  fadeVolume(audio, VOL_MUSICA, FADE_UP_MS);
-  trechoAtual = 'B';
-  tempoRestante = JANELA_TRECHO;
-  carregarTrecho();
-  atualizarTimerUI();
-  const TEMPO_TRECHO_B_APOS_ACERTO_MS = 7000;
-  let avancouTrechoBTeste = false;
-  const avancarUmaVezTeste = () => {
-    if (avancouTrechoBTeste) return;
-    avancouTrechoBTeste = true;
-    audio.onended = null;
-    clearTimeout(testeTimeoutCorteTrechoB);
+  const overlay = document.getElementById('encore-video-overlay');
+  const video = document.getElementById('encore-video');
+  const foto = document.getElementById('encore-foto-fallback');
+
+  const avancar = () => {
+    pararEncoreComVideo();
     if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
   };
-  audio.onended = avancarUmaVezTeste;
-  testeTimeoutCorteTrechoB = setTimeout(avancarUmaVezTeste, TEMPO_TRECHO_B_APOS_ACERTO_MS);
-  console.log('[TESTE SOM] Trecho B escolhido — a tocar (verde) — corta aos 7s ou ao fim natural, depois avança sozinho');
+  encoreAoTeclaSaltarActual = (ev) => {
+    if (ev.key !== 'Escape' && ev.key !== ' ') return;
+    console.log('[Encore] saltado pela régie (' + ev.key + ')');
+    avancar();
+  };
+  document.addEventListener('keydown', encoreAoTeclaSaltarActual);
+
+  overlay.classList.add('visivel');
+  // Música de fundo desce a 0 (fade, não corte seco) — o clip/foto do
+  // Encore tem o seu próprio áudio (clip_b já vem com som embutido);
+  // volta a VOL_MUSICA sozinha na Faixa seguinte (iniciarFaixa()).
+  fadeVolume(audio, 0, FADE_ENCORE_VIDEO_MS, () => audio.pause());
+
+  if (temClip) {
+    foto.style.display = 'none';
+    video.style.display = 'block';
+    video.onended = avancar;
+    video.src = entradaCatalogo.clip_b;
+    video.currentTime = 0;
+    video.play().catch((err) => {
+      console.log('[Encore] clip_b play() rejeitado: ' + err.message);
+      avancar();
+    });
+  } else {
+    video.style.display = 'none';
+    foto.style.display = 'block';
+    foto.src = entradaCatalogo.imagem;
+    testeTimeoutCorteTrechoB = setTimeout(avancar, ENCORE_FOTO_FALLBACK_MS);
+  }
+}
+
+// Esconde/limpa o overlay do Encore e o listener de teclado — chamado
+// tanto pelo avanço normal (iniciarEncoreComVideo()) como pelo reset de
+// segurança (esconderMomentoResposta()). Seguro chamar mesmo sem Encore
+// em curso (ex.: faixa sem clip_b nem imagem, ou NEW_SLOT via outra
+// via) — todas as operações são no-ops nesse caso.
+function pararEncoreComVideo() {
+  if (encoreAoTeclaSaltarActual) {
+    document.removeEventListener('keydown', encoreAoTeclaSaltarActual);
+    encoreAoTeclaSaltarActual = null;
+  }
+  clearTimeout(testeTimeoutCorteTrechoB);
+  const overlay = document.getElementById('encore-video-overlay');
+  const video = document.getElementById('encore-video');
+  overlay.classList.remove('visivel');
+  video.onended = null;
+  video.pause();
+  video.removeAttribute('src');
+  video.load();
 }
 
 // TESTE TEMPORÁRIO (2026-10-04, pedido do utilizador) — NÃO COMMITAR.
@@ -3215,9 +3205,10 @@ function testeArrancarTrechoBSemFF() {
 // música sobe de volta a VOL_MUSICA com fade suave. Falha em qualquer
 // passo (ficheiro em falta, play() rejeitado) nunca trava o jogo nem
 // deixa o volume preso em VOL_DUCK — cai sempre em frente até
-// testeMostrarJanelaDecisaoTrechoB(), sempre pelo mesmo caminho de saída
+// iniciarEncoreComVideo(), sempre pelo mesmo caminho de saída
 // (terminarSequencia()).
-function testeTocarSequenciaSom(trackId) {
+function testeTocarSequenciaSom(entradaCatalogo) {
+  const trackId = entradaCatalogo.id;
   const __t0 = performance.now();
   const PAUSA_NOME_ITB_MS = 120;
   let sequenciaTerminada = false;
@@ -3225,23 +3216,21 @@ function testeTocarSequenciaSom(trackId) {
   const terminarSequencia = (motivo) => {
     if (sequenciaTerminada) return; // guarda contra 'ended'+catch duplicados
     sequenciaTerminada = true;
-    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade para VOL_ENCORE + pausa de ' + PAUSA_ANTES_ENCORE_MS + 'ms antes da janela do Encore');
+    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade para VOL_ENCORE + pausa de ' + PAUSA_ANTES_ENCORE_MS + 'ms antes do Encore');
     testeAudioRevelacaoActual = null;
-    // 2026-10-05, pedido do utilizador ("meio-termo"): já não sobe logo a
-    // VOL_MUSICA aqui — fica em VOL_ENCORE (intermédio) durante a pausa e
-    // toda a janela de decisão (testeMostrarJanelaDecisaoTrechoB()). Só
-    // sobe a VOL_MUSICA quando o Trecho B realmente arranca (ver
-    // testeArrancarTrechoBSemFF()) — se não for escolhido, a próxima
-    // Faixa repõe VOL_MUSICA directamente em iniciarFaixa(), sem fade.
+    // Fica em VOL_ENCORE (intermédio) durante a pausa — o Encore
+    // (iniciarEncoreComVideo()) é que decide se há clip/foto a mostrar;
+    // sem nenhum dos dois, avança de imediato e a próxima Faixa repõe
+    // VOL_MUSICA directamente em iniciarFaixa(), sem fade.
     fadeVolume(audio, VOL_ENCORE, FADE_DOWN_MS);
-    // 2026-10-05, pedido do utilizador: a janela do Encore só aparece
-    // PAUSA_ANTES_ENCORE_MS depois do fim do último som — a música
-    // (já em VOL_ENCORE) continua a tocar normalmente durante esta
-    // pausa, nunca pára. Cancelado em esconderMomentoResposta() se o
-    // jogador avançar/houver reset antes de disparar (ver
-    // testeTimeoutPreEncore) — a janela nunca aparece depois disso.
+    // O Encore só aparece PAUSA_ANTES_ENCORE_MS depois do fim do último
+    // som — a música (já em VOL_ENCORE) continua a tocar normalmente
+    // durante esta pausa, nunca pára. Cancelado em
+    // esconderMomentoResposta() se o jogador avançar/houver reset antes
+    // de disparar (ver testeTimeoutPreEncore) — o Encore nunca aparece
+    // depois disso.
     testeTimeoutPreEncore = setTimeout(() => {
-      testeMostrarJanelaDecisaoTrechoB();
+      iniciarEncoreComVideo(entradaCatalogo);
     }, PAUSA_ANTES_ENCORE_MS);
   };
 
@@ -3387,17 +3376,14 @@ function acertouFaixa(i) {
   // pontos[i] outra vez. Antes disto nunca acontecia na prática porque
   // faseGeral saía de 'faixa' de imediato.
   if (mutados[i] || faseGeral !== 'faixa' || vencedorFaixa !== null) return;
-  // TESTE TEMPORÁRIO (2026-09-03b, pedido do utilizador) — redesenho
-  // completo da sequência pós-acerto, substitui o bloco anterior
-  // (2026-09-02k...p, com atraso inicial de 1s e o efeito "⏩ FF" — já
-  // não fazem sentido nesta sequência). NÃO COMMITAR. Sequência: corte
-  // imediato do Trecho A (aqui) → imagem do artista em ecrã inteiro
-  // (animação maior, ver @keyframes) + "in the box" (synth+eco) → voz limpa
-  // a dizer o nome (disparada em sincronia com a animação — ver
-  // abrirOverlay() dentro de mostrarMomentoResposta()) → Trecho B
-  // (sempre, automático — 2026-09-17, ver testeArrancarTrechoBSemFF()),
-  // tudo encadeado por 'ended', sem pausas artificiais. Ver
-  // testeTocarSequenciaSom() mais abaixo.
+  // Sequência pós-acerto (revista 11 Out 2026, ver BIBLIA.md §5.4b):
+  // corte imediato do Trecho A (aqui) → imagem do artista em ecrã
+  // inteiro (animação maior, ver @keyframes) + "in the box" (synth+eco)
+  // → voz limpa a dizer o nome (disparada em sincronia com a animação —
+  // ver abrirOverlay() dentro de mostrarMomentoResposta()) → Encore com
+  // vídeo/foto em ecrã inteiro (sempre, automático, ver
+  // iniciarEncoreComVideo()), tudo encadeado por 'ended', sem pausas
+  // artificiais. Ver testeTocarSequenciaSom() mais abaixo.
   TESTE_SOM_CONTROLA_TRECHO_B = true;
   // Continuidade Sonora Pós-Acerto (Bíblia §5.4b, 2026-09-01): NÃO parar o
   // áudio corrente aqui — continua a tocar a partir do ponto exacto onde
@@ -3418,10 +3404,9 @@ function acertouFaixa(i) {
   // a música de fundo estava mesmo a ser cortada, não só a continuar a
   // baixo volume. Corrigido: reduz o volume (não pára) durante a
   // revelação; volta a VOL_MUSICA quando a Faixa seguinte arranca (ver
-  // iniciarFaixa()) — cobre tanto o caminho automático como o Encore
-  // (que só chama carregarTrecho(), nunca iniciarFaixa(), por isso o
-  // volume continua reduzido durante o Trecho B do Encore, como deve
-  // ser — só volta ao normal na Faixa seguinte a sério).
+  // iniciarFaixa()) — o Encore (iniciarEncoreComVideo()) nunca chama
+  // iniciarFaixa(), por isso a música de fundo (já a 0, ver
+  // FADE_ENCORE_VIDEO_MS) só volta ao normal na Faixa seguinte a sério.
   // 2026-10-04, pedido do utilizador: ducking em duas fases com fade
   // suave (antes: salto instantâneo para 0.75, fixo durante toda a
   // revelação). Agora: desce para VOL_DUCK (mais baixo, 0.25) só

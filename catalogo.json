@@ -10528,7 +10528,11 @@
       "audio": null,
       "imagem": "theaudiodb",
       "data_recolha": "2026-08-28"
-    }
+    },
+    "video_local": "estudos/trecho_b_expoente/video/dec00_01_video.mp4",
+    "video_offset_s": 68.049,
+    "clip_b": "assets/clips_b/dec00_01.mp4",
+    "video_sincronizado": true
   },
   {
     "id": "dec00_02",
@@ -10622,7 +10626,11 @@
       "audio": null,
       "imagem": "theaudiodb",
       "data_recolha": "2026-08-28"
-    }
+    },
+    "video_local": "estudos/trecho_b_expoente/video/dec00_03_video.mp4",
+    "video_offset_s": 3.597,
+    "clip_b": "assets/clips_b/dec00_03.mp4",
+    "video_sincronizado": true
   },
   {
     "id": "dec00_04",
