@@ -33,6 +33,8 @@
   .video-sync.visivel { display: block; }
   .video-sync video { width: 100%; border-radius: 6px; display: none; background: #000; }
   .video-sync img { width: 100%; border-radius: 6px; display: none; object-fit: cover; max-height: 320px; }
+  .desvio-ao-vivo { font-family: monospace; font-size: 12px; margin-top: 6px; color: var(--green); }
+  .desvio-ao-vivo.aviso { color: var(--red); }
   #resumo { background: var(--bg2); border: 1px solid var(--accent); border-radius: 10px; padding: 18px 20px; margin-top: 24px; }
   #resumo h2 { font-size: 15px; margin: 0 0 10px; }
   #resumo-texto { width: 100%; min-height: 100px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 10px; font-family: monospace; font-size: 12px; }
@@ -57,11 +59,14 @@
 
   <div class="nota">
     Os métodos usados (não revelados aqui) ficam em <code>dados/chave_&lt;id&gt;.json</code> — só depois de escolheres é que faz sentido olhar lá e ver qual método "ganhou" em cada faixa.
-    "Encore" (quando disponível) toca o candidato escolhido com som, com o videoclipe sem som por cima, sincronizado — só demonstrativo, nenhuma destas 7 faixas tem campo <code>video</code> no catálogo, por isso só 2 (Hey Ya!, Mr. Brightside) têm vídeo de demonstração associado manualmente para este estudo.
+    "Encore" (quando disponível) toca o candidato escolhido com som, com o videoclipe sem som por cima, sincronizado — espera pelo "seeked" antes de arrancar os dois juntos e depois mantém-nos presos (verifica a cada 250ms, corrige se o desvio passar 40ms — vês o desvio ao vivo por baixo do vídeo). Só demonstrativo, nenhuma destas 7 faixas tem campo <code>video</code> no catálogo, por isso só 2 (Hey Ya!, Mr. Brightside) têm vídeo de demonstração associado manualmente para este estudo.
   </div>
 
 <script>
 const CHAVE_LOCALSTORAGE = 'estudo_trecho_b_escolhas';
+const LIMIAR_CORRECAO_MS = 40;
+const LIMIAR_REPOSICIONAR_MS = 300;
+const SYNC_LOOP_INTERVALOS = {};
 
 async function carregar() {
   const dados = await (await fetch('dados/publico.json')).json();
@@ -94,9 +99,10 @@ async function carregar() {
         }).join('')}
       </div>
       ${info.video ? `<div class="video-sync" id="videosync-${tid}">
-        <video id="video-${tid}" src="${info.video.ficheiro}" muted></video>
+        <video id="video-${tid}" src="${info.video.ficheiro}" muted preload="auto"></video>
         <img id="foto-${tid}" src="${info.imagem_artista || ''}" alt="${info.artista}">
         <audio id="audiosync-${tid}"></audio>
+        <div class="desvio-ao-vivo" id="desvio-${tid}"></div>
       </div>` : ''}
     `;
     container.appendChild(div);
@@ -131,12 +137,19 @@ function encore(tid, label) {
   const video = document.getElementById(`video-${tid}`);
   const foto = document.getElementById(`foto-${tid}`);
   const audio = document.getElementById(`audiosync-${tid}`);
+  const desvioEl = document.getElementById(`desvio-${tid}`);
+
+  if (SYNC_LOOP_INTERVALOS[tid]) { clearInterval(SYNC_LOOP_INTERVALOS[tid]); delete SYNC_LOOP_INTERVALOS[tid]; }
+  video.playbackRate = 1;
+  video.pause();
+  audio.pause();
 
   if (l.video_sincronizado !== true) {
     // Desvio medido acima da tolerância (0.1s) para este candidato —
     // nunca mostra vídeo desalinhado, cai para a foto do artista.
     video.style.display = 'none';
     foto.style.display = 'block';
+    if (desvioEl) desvioEl.textContent = '';
     document.getElementById(`videosync-${tid}`).classList.add('visivel');
     audio.src = l.ficheiro;
     audio.currentTime = 0;
@@ -151,12 +164,59 @@ function encore(tid, label) {
   audio.src = l.ficheiro;
   document.getElementById(`videosync-${tid}`).classList.add('visivel');
 
-  // video.currentTime só "cola" depois de haver metadados (readyState>=1)
-  // — definir antes disso é ignorado em silêncio (bug real 2026-10-12:
-  // às vezes arrancava do fim anterior em vez do ponto certo). Por isso
-  // o currentTime é sempre definido dentro de `arrancar`, nunca antes.
-  const arrancar = () => { video.currentTime = tempoVideo; audio.currentTime = 0; video.play(); audio.play(); };
-  if (video.readyState >= 1) arrancar(); else video.addEventListener('loadedmetadata', arrancar, { once: true });
+  // Espera pelo "seeked" antes de arrancar os dois juntos — currentTime
+  // só garante o frame exacto depois do seek concluir (keyframes a cada
+  // ~0.5s no ficheiro, ver video_offset.py); arrancar logo a seguir ao
+  // pedido de seek (como antes) podia tocar um frame desalinhado por
+  // décimas de segundo mesmo com o offset calculado correctamente —
+  // bug real reportado 2026-10-12.
+  const aoSeek = () => {
+    video.removeEventListener('seeked', aoSeek);
+    audio.currentTime = 0;
+    Promise.all([video.play(), audio.play()]).then(() => {
+      iniciarLoopSincronizacao(tid, video, audio, tempoVideo, desvioEl);
+    });
+  };
+  video.addEventListener('seeked', aoSeek);
+  const jaLa = Math.abs(video.currentTime - tempoVideo) < 0.01;
+  video.currentTime = tempoVideo;
+  if (jaLa) {
+    // alguns browsers não disparam "seeked" se o valor pedido for igual
+    // ao currentTime actual (ex.: Encore repetido no mesmo candidato) —
+    // força um pequeno deslocamento antes para garantir o evento.
+    video.currentTime = Math.max(tempoVideo - 0.3, 0);
+    requestAnimationFrame(() => { video.currentTime = tempoVideo; });
+  }
+}
+
+function iniciarLoopSincronizacao(tid, video, audio, tempoVideoInicial, desvioEl) {
+  // tempo_video_esperado = audio.currentTime + offsetBase, sempre — o
+  // offset entre os dois relógios não muda durante a reprodução.
+  const offsetBase = tempoVideoInicial - audio.currentTime;
+  const intervalo = setInterval(() => {
+    if (audio.paused || audio.ended || video.ended) {
+      clearInterval(intervalo);
+      delete SYNC_LOOP_INTERVALOS[tid];
+      return;
+    }
+    const esperado = audio.currentTime + offsetBase;
+    const desvioMs = Math.round((video.currentTime - esperado) * 1000);
+    if (desvioEl) {
+      desvioEl.textContent = `desvio ao vivo: ${desvioMs >= 0 ? '+' : ''}${desvioMs}ms`;
+      desvioEl.classList.toggle('aviso', Math.abs(desvioMs) > LIMIAR_CORRECAO_MS);
+    }
+    if (Math.abs(desvioMs) <= LIMIAR_CORRECAO_MS) {
+      if (video.playbackRate !== 1) video.playbackRate = 1;
+    } else if (Math.abs(desvioMs) > LIMIAR_REPOSICIONAR_MS) {
+      // deriva grande — reposiciona em vez de só ajustar velocidade
+      video.currentTime = esperado;
+      video.playbackRate = 1;
+    } else {
+      // ajuste fino: acelera/atrasa ligeiramente o vídeo até convergir
+      video.playbackRate = desvioMs > 0 ? 0.92 : 1.08;
+    }
+  }, 250);
+  SYNC_LOOP_INTERVALOS[tid] = intervalo;
 }
 
 function atualizarResumo() {

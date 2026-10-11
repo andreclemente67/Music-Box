@@ -26,7 +26,7 @@
   },
   "dec00_03": {
     "video_offset_s": 3.576,
-    "confianca": 0.977,
+    "confianca": 0.975,
     "janela_usada_video_s": 180,
     "correspondente_fonte_s": 176.424,
     "nota": "tempo_no_video = tempo_na_fonte_audio + video_offset_s (offset refinado por correlação de amostra)",
