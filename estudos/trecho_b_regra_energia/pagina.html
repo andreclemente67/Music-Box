@@ -48,7 +48,9 @@
     Por faixa, dois candidatos a Trecho B em <strong>ordem aleatória</strong>: um é o Trecho B
     que está em produção hoje, o outro é o que a regra nova escolheu. Não há indicação de qual é
     qual até decidires. Ouve os dois e escolhe o que funciona melhor como "expoente" da música —
-    o momento que se usa no Encore, depois de alguém acertar. Nada aqui altera produção.
+    o momento que se usa no Encore, depois de alguém acertar. Cada audição sorteia uma ordem
+    nova e <strong>equilibrada</strong> (metade das faixas com cada método em primeiro), e o
+    resumo acumula o total de todas as audições. Nada aqui altera produção.
   </div>
 
   <div id="faixas"></div>
@@ -59,7 +61,8 @@
     <textarea id="resumo-texto" readonly></textarea>
     <div class="acoes">
       <button onclick="copiarResumo()">Copiar resumo</button>
-      <button onclick="limpar()">Apagar escolhas e recomeçar</button>
+      <button onclick="novaAudicao()">Nova audição (sorteia nova ordem)</button>
+      <button onclick="limpar()">Apagar tudo e recomeçar</button>
     </div>
   </div>
 
@@ -73,35 +76,92 @@
   </div>
 
 <script>
-const CHAVE = 'estudo_b2_regra_energia';
+const CHAVE = 'estudo_b2_regra_energia_v2';
 
+// Estado: uma lista de audições, cada uma com a SUA ordem sorteada e as
+// suas escolhas. Na primeira versão desta página a ordem era sorteada
+// uma vez por faixa e ficava congelada para sempre, por isso a segunda
+// audição repetia exactamente o mesmo arranjo — 10 observações que na
+// prática eram 5 sorteios. Corrigido 11 Out 2026, ver DECISIONS.md.
 function estado() {
-  try { return JSON.parse(localStorage.getItem(CHAVE) || '{}'); }
-  catch (e) { return {}; }
-}
-function gravar(e) {
-  try { localStorage.setItem(CHAVE, JSON.stringify(e)); } catch (e) {}
+  try {
+    const e = JSON.parse(localStorage.getItem(CHAVE) || '{}');
+    return Array.isArray(e.audicoes) ? e : { audicoes: [] };
+  } catch (err) { return { audicoes: [] }; }
 }
 
-// A ordem é sorteada uma vez por faixa e guardada, para o teste continuar
-// cego (e estável) entre recargas da página.
-function ordemDe(tid) {
-  const e = estado();
-  if (!e[tid]) e[tid] = {};
-  if (!e[tid].ordem) {
-    e[tid].ordem = Math.random() < 0.5 ? ['b_actual', 'b2'] : ['b2', 'b_actual'];
-    gravar(e);
+function gravar(e) {
+  try { localStorage.setItem(CHAVE, JSON.stringify(e)); } catch (err) {}
+}
+
+// Inteiro em [0, n), com crypto quando existe (rejeição do resto para
+// não enviesar) — não depende da qualidade do Math.random do browser.
+function aleatorio(n) {
+  if (window.crypto && window.crypto.getRandomValues) {
+    const limite = Math.floor(0x100000000 / n) * n;
+    const buf = new Uint32Array(1);
+    let v;
+    do { window.crypto.getRandomValues(buf); v = buf[0]; } while (v >= limite);
+    return v % n;
   }
-  return e[tid].ordem;
+  return Math.floor(Math.random() * n);
+}
+
+function embaralhar(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = aleatorio(i + 1);
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// Ordens EQUILIBRADAS, não moeda ao ar faixa a faixa: com 5 faixas, cinco
+// lançamentos independentes dão 4-1 ou 5-0 em cerca de 37% das vezes, e um
+// teste cego com tão poucos itens não aguenta esse desequilíbrio. Reparte-se
+// metade para cada lado (o ímpar fica para um lado à sorte) e embaralha-se a
+// quem toca cada lado.
+function sortearOrdens(tids) {
+  const lados = [];
+  for (let i = 0; i < Math.floor(tids.length / 2); i++) { lados.push(true, false); }
+  if (tids.length % 2) lados.push(aleatorio(2) === 0);
+  embaralhar(lados);
+  const ordens = {};
+  tids.forEach((tid, i) => {
+    ordens[tid] = lados[i] ? ['b2', 'b_actual'] : ['b_actual', 'b2'];
+  });
+  return ordens;
+}
+
+function audicaoActual(tids) {
+  const e = estado();
+  const ultima = e.audicoes[e.audicoes.length - 1];
+  if (ultima && tids.every(t => ultima.ordens && ultima.ordens[t])) return ultima;
+  const nova = { criada: new Date().toISOString(), ordens: sortearOrdens(tids), escolhas: {} };
+  // audição sem escolhas nenhumas é substituída, para não acumular vazias
+  if (ultima && !Object.keys(ultima.escolhas || {}).length) {
+    e.audicoes[e.audicoes.length - 1] = nova;
+  } else {
+    e.audicoes.push(nova);
+  }
+  gravar(e);
+  return nova;
+}
+
+function ultima() {
+  const e = estado();
+  return e.audicoes[e.audicoes.length - 1] || { ordens: {}, escolhas: {} };
 }
 
 async function carregar() {
   const dados = await (await fetch('mp3_index_b2.json')).json();
   window.DADOS = dados;
+  const tids = Object.keys(dados);
+  const audicao = audicaoActual(tids);
   const container = document.getElementById('faixas');
 
-  Object.entries(dados).forEach(([tid, info]) => {
-    const ordem = ordemDe(tid);
+  tids.forEach(tid => {
+    const info = dados[tid];
+    const ordem = audicao.ordens[tid];
     const div = document.createElement('div');
     div.className = 'faixa';
     div.id = `faixa-${tid}`;
@@ -136,23 +196,29 @@ async function carregar() {
 
 function escolher(tid, escolha) {
   const e = estado();
-  e[tid] = { ...(e[tid] || {}), escolha };
+  const a = e.audicoes[e.audicoes.length - 1];
+  a.escolhas = a.escolhas || {};
+  a.escolhas[tid] = escolha;
   gravar(e);
   pintar(tid);
   atualizarResumo();
 }
 
+function nomeDe(qual) { return qual === 'b2' ? 'regra nova' : 'B actual'; }
+
 function pintar(tid) {
-  const e = estado()[tid] || {};
+  const a = ultima();
+  const escolha = (a.escolhas || {})[tid];
+  const ordem = a.ordens[tid] || [];
   const info = window.DADOS[tid];
-  const ordem = e.ordem || [];
-  document.querySelectorAll(`[id^="cand-${tid}-"]`)
-          .forEach(el => el.classList.remove('escolhido'));
   const faixa = document.getElementById(`faixa-${tid}`);
   const veredicto = document.getElementById(`veredicto-${tid}`);
   const revelado = document.getElementById(`revelado-${tid}`);
 
-  if (e.escolha === undefined) {
+  document.querySelectorAll(`[id^="cand-${tid}-"]`)
+          .forEach(el => el.classList.remove('escolhido'));
+
+  if (escolha === undefined) {
     faixa.classList.remove('decidida');
     veredicto.textContent = '';
     revelado.textContent = '';
@@ -160,46 +226,66 @@ function pintar(tid) {
   }
 
   faixa.classList.add('decidida');
-  if (e.escolha === 'iguais') {
+  if (escolha === 'iguais') {
     veredicto.textContent = 'escolhido: iguais';
   } else {
-    document.getElementById(`cand-${tid}-${e.escolha}`).classList.add('escolhido');
-    const qual = ordem[e.escolha];
-    veredicto.textContent = `escolhido: candidato ${e.escolha + 1} — ${qual === 'b2' ? 'regra nova' : 'B actual'}`;
+    document.getElementById(`cand-${tid}-${escolha}`).classList.add('escolhido');
+    veredicto.textContent = `escolhido: candidato ${escolha + 1} — ${nomeDe(ordem[escolha])}`;
   }
   // só depois de decidir é que se revela o que era cada um
   revelado.textContent = ordem.map((qual, i) => {
     const d = info[qual];
-    const nome = qual === 'b2' ? 'regra nova' : 'B actual';
-    return `cand ${i + 1} = ${nome} (${d.inicio != null ? d.inicio.toFixed(0) + '–' + d.fim.toFixed(0) + 's' : '?'})`;
+    const t = d.inicio != null ? `${d.inicio.toFixed(0)}–${d.fim.toFixed(0)}s` : '?';
+    return `cand ${i + 1} = ${nomeDe(qual)} (${t})`;
   }).join('   |   ');
 }
 
 function atualizarResumo() {
   const e = estado();
   const tids = Object.keys(window.DADOS || {});
-  const feitas = tids.filter(t => (e[t] || {}).escolha !== undefined);
-  document.getElementById('progresso').textContent =
-    `${feitas.length}/${tids.length} faixas decididas`;
+  const a = e.audicoes[e.audicoes.length - 1] || { ordens: {}, escolhas: {} };
+  const n = e.audicoes.length;
+  const decididas = tids.filter(t => (a.escolhas || {})[t] !== undefined);
 
-  const linhas = ['faixa\tescolha\tordem real (cand 1, cand 2)'];
+  document.getElementById('progresso').textContent =
+    `audição ${n} — ${decididas.length}/${tids.length} faixas decididas`;
+
+  const linhas = [`audição ${n} (${(a.criada || '').slice(0, 16).replace('T', ' ')})`, '',
+                  'faixa\tescolha\tordem real (cand 1, cand 2)'];
   tids.forEach(tid => {
-    const d = e[tid] || {};
-    if (d.escolha === undefined) return;
-    const ordem = (d.ordem || []).map(q => q === 'b2' ? 'regra' : 'actual');
-    const escolha = d.escolha === 'iguais'
+    const escolha = (a.escolhas || {})[tid];
+    if (escolha === undefined) return;
+    const ordem = (a.ordens[tid] || []).map(q => q === 'b2' ? 'regra' : 'actual');
+    const texto = escolha === 'iguais'
       ? 'iguais'
-      : (ordem[d.escolha] === 'regra' ? 'REGRA NOVA' : 'B ACTUAL');
-    linhas.push(`${tid}\t${escolha}\t${ordem.join(', ')}`);
+      : (ordem[escolha] === 'regra' ? 'REGRA NOVA' : 'B ACTUAL');
+    linhas.push(`${tid}\t${texto}\t${ordem.join(', ')}`);
   });
 
-  const contagem = { 'REGRA NOVA': 0, 'B ACTUAL': 0, iguais: 0 };
-  linhas.slice(1).forEach(l => { contagem[l.split('\t')[1]]++; });
-  if (feitas.length) {
-    linhas.push('');
-    linhas.push(`total: regra nova ${contagem['REGRA NOVA']}, ` +
-                `B actual ${contagem['B ACTUAL']}, iguais ${contagem.iguais}`);
+  // Verificação do equilíbrio da ordem — se isto voltar a ficar
+  // desalinhado, vê-se logo aqui em vez de só no fim das audições.
+  const regraPrimeiro = tids.filter(t => (a.ordens[t] || [])[0] === 'b2').length;
+  linhas.push('');
+  linhas.push(`balanço da ordem nesta audição: regra em 1º ${regraPrimeiro}/${tids.length}, ` +
+              `B actual em 1º ${tids.length - regraPrimeiro}/${tids.length}`);
+
+  // Total acumulado de todas as audições, já traduzido de posição para
+  // método — é a conta que de outra forma é preciso fazer à mão.
+  const total = { regra: 0, actual: 0, iguais: 0 };
+  let escolhasTotais = 0;
+  e.audicoes.forEach(s => {
+    Object.entries(s.escolhas || {}).forEach(([tid, esc]) => {
+      escolhasTotais++;
+      if (esc === 'iguais') total.iguais++;
+      else if (((s.ordens || {})[tid] || [])[esc] === 'b2') total.regra++;
+      else total.actual++;
+    });
+  });
+  if (escolhasTotais) {
+    linhas.push(`TOTAL (${n} audiç${n === 1 ? 'ão' : 'ões'}, ${escolhasTotais} escolhas): ` +
+                `regra nova ${total.regra}, B actual ${total.actual}, iguais ${total.iguais}`);
   }
+
   document.getElementById('resumo-texto').value = linhas.join('\n');
 }
 
@@ -209,9 +295,20 @@ function copiarResumo() {
   navigator.clipboard.writeText(t.value);
 }
 
+function novaAudicao() {
+  const e = estado();
+  const a = e.audicoes[e.audicoes.length - 1];
+  if (a && !Object.keys(a.escolhas || {}).length &&
+      !confirm('A audição actual ainda não tem escolhas. Sortear nova ordem?')) return;
+  e.audicoes.push({ criada: new Date().toISOString(),
+                    ordens: sortearOrdens(Object.keys(window.DADOS)), escolhas: {} });
+  gravar(e);
+  location.reload();
+}
+
 function limpar() {
-  if (!confirm('Apagar todas as escolhas (e sortear nova ordem)?')) return;
-  try { localStorage.removeItem(CHAVE); } catch (e) {}
+  if (!confirm('Apagar TODAS as audições e escolhas?')) return;
+  try { localStorage.removeItem(CHAVE); } catch (err) {}
   location.reload();
 }
 

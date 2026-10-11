@@ -1926,3 +1926,56 @@ fica para um commit próprio, quando ele pedir.**
 `~/.venvs/musicbox-audio/bin/python` (3.12, com numpy/scipy/librosa) —
 venv fora do repositório, como o `scripts/.venv/` do verificador de
 trechos.
+
+## 2026-10-11 — Regra "refrão mais intenso" ADOPTADA, mas só onde não há Trecho B validado
+
+Resultado do teste cego da regra (ver entrada anterior para o critério):
+**2 audições do André nas 5 faixas dos Anos 80 — regra nova 4, B actual
+4, iguais 2.** Empate técnico: a regra não é melhor do que o Trecho B
+que já existe, mas também não é pior.
+
+**Decisão do André**: a regra passa a ser o método para gerar o Trecho B
+automaticamente **apenas nas faixas sem B definido ou sem B validado**.
+Onde o Trecho B actual já foi ouvido e aprovado, mantém-se — o empate
+não justifica mexer no que já está ouvido e aceite, e a regra deixa de
+ser uma candidata a substituir trabalho feito para passar a ser a forma
+de preencher o que falta.
+
+Dois avisos registados com a decisão, para a fase de aplicação:
+
+- **A regra tende a escolher ocorrências tardias.** Nas 7 faixas
+  analisadas até agora (5 dos Anos 80 + Hey Ya! + In the End), o B2 caiu
+  **sempre** depois do Trecho B actual, de +2s a +129s: 80_02 +20s,
+  80_04 +96s, 80_05 +6s, 80_06 +99s, 80_07 +129s, `dec00_01` +2s,
+  `dec00_06` +88s. É coerente com o critério (os últimos refrões são
+  normalmente os mais cheios — arranjo completo, vozes dobradas,
+  ad-libs), mas traz risco próprio: um refrão final pode já estar em
+  fade, trazer outro por cima ou ser menos "canónico" para
+  reconhecimento do que o primeiro. A regra de ≥30s de música depois
+  limita o caso extremo, não o resolve.
+- **Confluência baixa = revisão manual, não geração.** Em `80_04`
+  (Don't You Want Me) a janela vencedora tinha confluência 0.074, ou
+  seja nenhuma janela da faixa é intensa nos dois eixos ao mesmo tempo e
+  ganhou "a menos má" — contra 0.33–0.39 nas outras dos Anos 80 e 0.93
+  no Hey Ya!. Abaixo de um limiar **a definir** (com diagnóstico sobre
+  mais faixas, não escolhido no ar), a faixa é marcada para revisão
+  manual em vez de gerar Trecho B automaticamente.
+
+**A aplicação aos packs fica para depois**, com diagnóstico primeiro e
+aprovação do André. Esta entrada fecha o método, não autoriza nenhuma
+geração. `catalogo.json` e `playlists.json` continuam intocados.
+
+**Nota metodológica (e correcção da página de teste).** Na primeira
+versão de `estudos/trecho_b_regra_energia/pagina.html` a ordem dos dois
+candidatos era sorteada uma vez por faixa e ficava congelada em
+`localStorage`, por isso a segunda audição repetiu exactamente o mesmo
+arranjo: as 10 observações valem na prática 5 sorteios, e a regra saiu
+como candidato 1 em 9 de 10. Corrigido: cada audição sorteia ordem nova
+e **equilibrada** — em vez de uma moeda ao ar por faixa (que com 5
+faixas dá 4-1 ou 5-0 em ~37% das vezes), reparte-se metade para cada
+lado e embaralha-se a quem toca cada lado, com `crypto.getRandomValues`.
+A página passa a guardar as audições todas e a somar o total por método,
+que antes era preciso contar à mão, e mostra o balanço da ordem para
+qualquer desequilíbrio futuro ser visível de imediato. O empate 4-4-2
+mantém-se como está: é o que o André ouviu, e a correcção só vale para
+as audições seguintes.
