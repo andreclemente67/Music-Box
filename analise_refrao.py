@@ -357,15 +357,22 @@ def analisar_refrao(
     url_youtube: str,
     trecho_a_inicio: Optional[float] = None,
     trecho_a_fim: Optional[float] = None,
+    trecho_b_inicio: Optional[float] = None,
+    trecho_b_fim: Optional[float] = None,
     ficheiro_trecho_a: Optional[str] = None,
     ficheiro_trecho_b: Optional[str] = None,
 ) -> dict:
     """Análise completa de uma faixa. Não escreve nada em produção.
 
-    `trecho_a_inicio/fim` podem vir a None (catálogo sem tempos): nesse
-    caso, e havendo `ficheiro_trecho_a`, os tempos são recuperados por
-    correlação contra o source — ver localizar_trecho(). `ficheiro_trecho_b`
-    é opcional e só serve para localizar o B actual, para comparação.
+    Os tempos de cada trecho vêm do catálogo quando lá estão; só quando
+    estão a None (metade das faixas) é que são recuperados por correlação
+    contra o source, a partir do `ficheiro_trecho_*` — ver
+    localizar_trecho(). O catálogo tem precedência nos dois trechos
+    (decisão do André, 14 Out 2026): antes disso o B era SEMPRE
+    correlacionado mesmo com tempos no catálogo, e no Hey Ya! isso
+    substituiu o valor correcto (142–157s, corroborado pelo offset de
+    vídeo do clip_b) por uma repetição errada do mesmo refrão (167–182s).
+    O B actual serve só para comparar com o B2 proposto.
     """
     saida = {
         'ok': False,
@@ -405,8 +412,14 @@ def analisar_refrao(
     trecho_a_inicio = saida['trecho_a_usado']['inicio_s']
     trecho_a_fim = saida['trecho_a_usado']['fim_s']
 
-    # Trecho B actual: só para comparar com o B2 proposto
-    if ficheiro_trecho_b:
+    # Trecho B actual: mesma precedência do A — catálogo primeiro,
+    # correlação só quando o catálogo está a null
+    if trecho_b_inicio is not None and trecho_b_fim is not None:
+        saida['trecho_b_actual'] = {
+            'inicio_s': float(trecho_b_inicio), 'fim_s': float(trecho_b_fim),
+            'origem': 'catálogo',
+        }
+    elif ficheiro_trecho_b:
         loc_b = localizar_trecho(ficheiro_trecho_b, y, sr)
         if loc_b:
             saida['trecho_b_actual'] = {**loc_b, 'origem': 'correlação'}

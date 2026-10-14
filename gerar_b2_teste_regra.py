@@ -53,6 +53,8 @@ def analisar(entrada: dict) -> dict:
         url_youtube=url,
         trecho_a_inicio=a.get('inicio'),
         trecho_a_fim=a.get('fim'),
+        trecho_b_inicio=b.get('inicio'),
+        trecho_b_fim=b.get('fim'),
         ficheiro_trecho_a=os.path.join(APP_DIR, a['ficheiro']),
         ficheiro_trecho_b=os.path.join(APP_DIR, b['ficheiro']),
     )
