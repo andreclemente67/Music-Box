@@ -216,10 +216,15 @@
      Activado via overlay.classList.add('encore-ext') em iniciarEncoreExt() —
      a regra de 100% acima só se aplica sem esta classe (Encore antigo,
      clip_b, inalterado). Sem película escura de fundo (fica transparente,
-     mostra a página do jogo por trás) — só a caixa 16:9 em si. */
+     mostra a página do jogo por trás) — só a caixa 16:9 em si. Outline
+     amarelo com cantos arredondados (14 Out 2026, André testou e pediu) —
+     mesma cor/espessura/raio da foto do artista/banda em
+     #momento-resposta-artista (border:3px solid var(--accent);
+     border-radius:16px), reutilizados tal e qual, sem valores novos. */
   #encore-video-overlay.encore-ext { background: transparent; }
   #encore-video-overlay.encore-ext video, #encore-video-overlay.encore-ext img {
     width: min(75vw, 133.3vh); height: auto; aspect-ratio: 16/9;
+    border: 3px solid var(--accent); border-radius: 16px;
     animation: encoreExtEntrada 500ms ease-out;
   }
   #encore-ext-info { display:none; }
@@ -770,8 +775,9 @@ const ENCORE_FOTO_FALLBACK_MS = 4000;
 
 // Encore com áudio estendido (decisão de formato 14 Out 2026, BIBLIA.md
 // §5.4b) — substitui por completo o acima SÓ para faixas com
-// `ficheiro_ext` (ver temAudioExtendido(), hoje só dec00_01): o vídeo
-// entra já no acerto (não espera a voz), o áudio (já a tocar desde o
+// `ficheiro_ext` (ver temAudioExtendido(), hoje só dec00_01): o vídeo não
+// espera a voz para entrar, só PAUSA_ANTES_ENCORE_MS depois do acerto
+// (ver iniciarEncoreExt()); o áudio (já a tocar desde o
 // início do trecho, ver carregarTrecho()) continua a decidir o fim do
 // Encore (contador/stopTime), e o Encore acaba em
 // max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S) — nunca por 'ended' do
@@ -1833,6 +1839,11 @@ let encoreExtHitTrecho = 'A';
 let encoreExtHitTempo = 0;
 let encoreExtIntervaloContador = null;
 let encoreExtTeclaSaltar = null;
+// Pausa de PAUSA_ANTES_ENCORE_MS antes de iniciarEncoreExt() aparecer (14
+// Out 2026) — cancelado em esconderMomentoResposta() se o jogador
+// avançar/houver reset antes de disparar, mesmo padrão de
+// testeTimeoutPreEncore (Encore antigo).
+let encoreExtTimeoutPreEncore = null;
 
 // Esconde o overlay de acerto (foto do concorrente + artista/banda) no
 // NEW_SLOT real — ver nota em abrirOverlay() dentro de
@@ -1844,11 +1855,13 @@ let encoreExtTeclaSaltar = null;
 function esconderMomentoResposta() {
   clearTimeout(momentoRespostaTimer);
   // Cancela a pausa fixa do fallback foto-sem-vídeo e a pausa de 1,5s
-  // antes do Encore (PAUSA_ANTES_ENCORE_MS) — evita um segundo avanço se
-  // o NEW_SLOT já aconteceu por outra via (ex.: MANUAL_ADVANCE do
-  // operador) enquanto o Encore ainda estava em curso.
+  // antes do Encore (PAUSA_ANTES_ENCORE_MS, Encore antigo e, desde 14 Out
+  // 2026, também o Encore ext — encoreExtTimeoutPreEncore) — evita um
+  // segundo avanço se o NEW_SLOT já aconteceu por outra via (ex.:
+  // MANUAL_ADVANCE do operador) enquanto o Encore ainda estava em curso.
   clearTimeout(testeTimeoutCorteTrechoB);
   clearTimeout(testeTimeoutPreEncore);
+  clearTimeout(encoreExtTimeoutPreEncore);
   testeAudioRevelacaoActual = null;
   pararEncoreComVideo();
   pararEncoreExt();
@@ -1910,8 +1923,20 @@ function mostrarMomentoResposta(i, tipo) {
         // ficheiro_ext (hoje só dec00_01); todas as outras seguem
         // exactamente como antes.
         if (temAudioExtendido(entradaCatalogo)) {
-          iniciarEncoreExt(entradaCatalogo, encoreExtHitTrecho, encoreExtHitTempo);
-          tocarSequenciaSomExt(entradaCatalogo);
+          // Pausa de PAUSA_ANTES_ENCORE_MS antes da janela do Encore
+          // aparecer (14 Out 2026, André testou e pediu — a janela a 75%
+          // tapava a foto do concorrente/banda em #momento-resposta,
+          // mostrada 2 linhas acima; não cabe reduzida nem subida, ver
+          // DECISIONS.md): a música continua normal (VOL_MUSICA, sem
+          // duck) durante esta pausa — tempo para o André ver a
+          // confirmação antes da janela cobrir o ecrã. Cancelável em
+          // esconderMomentoResposta() (mesmo padrão de
+          // testeTimeoutPreEncore, para o Encore antigo).
+          const _entradaParaEncoreExt = entradaCatalogo;
+          encoreExtTimeoutPreEncore = setTimeout(() => {
+            iniciarEncoreExt(_entradaParaEncoreExt, encoreExtHitTrecho, encoreExtHitTempo);
+            tocarSequenciaSomExt(_entradaParaEncoreExt);
+          }, PAUSA_ANTES_ENCORE_MS);
         } else {
           testeTocarSequenciaSom(entradaCatalogo);
         }
@@ -3311,8 +3336,11 @@ function pararEncoreComVideo() {
 // §5.4b) — só faixas com `ficheiro_ext` (hoje só dec00_01). Diferenças
 // chave face a iniciarEncoreComVideo() acima (que continua inalterado
 // para todas as outras faixas):
-//   - entra já no acerto, não espera o fim da sequência de voz (ver
-//     chamada em abrirOverlay() dentro de mostrarMomentoResposta());
+//   - não espera o fim da sequência de voz para entrar (ver chamada em
+//     abrirOverlay() dentro de mostrarMomentoResposta()) — só
+//     PAUSA_ANTES_ENCORE_MS (1,5s) depois do acerto (14 Out 2026, ver
+//     DECISIONS.md: a janela a 75% tapava a foto do concorrente/banda
+//     antes disso; a música continua normal, sem duck, durante a pausa);
 //   - o áudio (ficheiro_ext, já a tocar desde o início do Trecho, ver
 //     carregarTrecho()) nunca pára — decide o fim do Encore (contador/
 //     stopTime); termina em max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S),
@@ -3372,7 +3400,13 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
     const trechoInicio = (trechoInfo && trechoInfo.inicio) || 0;
     const offsetBase = videoOffsetS + trechoInicio;
     const arrancarVideo = () => {
-      const tempoVideo = offsetBase + tHit;
+      // audio.currentTime (lido agora, não tHit) — desde a pausa de
+      // PAUSA_ANTES_ENCORE_MS antes da entrada (14 Out 2026, ver
+      // DECISIONS.md), tHit já está desactualizado por ~1,5s quando esta
+      // função corre; o áudio nunca parou nesse intervalo, por isso a
+      // posição certa do vídeo é sempre a posição ACTUAL do áudio, não a
+      // do instante do acerto (essa só serve para o Dmin/stopTime acima).
+      const tempoVideo = offsetBase + audio.currentTime;
       // Espera o seek do vídeo terminar (+ dados suficientes para tocar,
       // "canplay") antes de dar play — evita arrancar num frame antigo
       // enquanto o seek ainda está em curso (mesma técnica validada em

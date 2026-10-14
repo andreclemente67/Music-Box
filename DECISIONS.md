@@ -2112,3 +2112,17 @@ Decisão do André sobre o ponto (b) em aberto (ver entrada anterior "Sincroniza
 - O áudio (`ficheiro_ext`) continua a decidir o fim do Encore (contador/`stopTime`, `audio.currentTime`/`.paused`/`.ended`) — não mudado; aceita-se que áudio e vídeo possam divergir ligeiramente ao longo do Encore (10-25s) sem correcção mútua, troca deliberada do André.
 
 BIBLIA.md §5.4b (b)/(c) actualizada no mesmo commit. Validado só com `node --check` (sintaxe) — não testado no browser, Playwright indisponível nesta máquina (ver STATUS.md).
+
+## 2026-10-14 — Ajuste visual: janela do Encore ext tapava a foto do concorrente/banda
+
+André testou a sincronização (boa) e reportou um problema visual: a janela do vídeo/foto a 75% cobre `#momento-resposta` (foto do concorrente + foto da banda com o nome, outline amarelo), que fica visível até ao NEW_SLOT real (ver BIBLIA.md §5.4b) — a janela do Encore ext, centrada no viewport (`position:fixed;inset:0`), sobrepõe-se-lhe.
+
+Inspeccionado antes de editar (`#momento-resposta` fica no fluxo normal da página, logo abaixo de `.cabines`, que fica abaixo do cabeçalho/régie — não é `position:fixed`, ao contrário do que um comentário antigo e desactualizado no CSS sugeria). Contas feitas (ecrã 1920×1080): cabeçalho + régie + `.cabines` ≈ 320–530px (depende de 4 ou 8 concorrentes); a janela a 75% mede ≈810px de altura — mesmo encostada ao topo do ecrã, o fundo da janela fica a ≈810px, sempre abaixo de onde a foto do concorrente/banda começa. **Não cabia a 75% nem subida.** Apresentadas as duas alternativas ao André (reduzir a janela vs. atrasar a entrada ~1,5s) — **escolhida: atrasar a entrada**.
+
+Implementado em `musicbox.html`:
+- A chamada a `iniciarEncoreExt()`/`tocarSequenciaSomExt()` (antes síncrona, no instante do acerto) passa a um `setTimeout` de `PAUSA_ANTES_ENCORE_MS` (1,5s, constante já existente, reutilizada — mesmo valor/padrão do Encore antigo, `testeTimeoutPreEncore`). Durante a pausa, a música toca normal (`VOL_MUSICA`, sem duck) e a foto do concorrente/banda fica visível sem nada por cima. Novo `encoreExtTimeoutPreEncore`, cancelado em `esconderMomentoResposta()` (mesmo padrão de segurança do `testeTimeoutPreEncore`, evita um Encore a aparecer depois de um reset/avanço manual).
+- **Corrigido de caminho**: a posição do vídeo (`tempoVideo = offsetBase + audio.currentTime`) passou a ler `audio.currentTime` no momento em que o vídeo de facto arranca, não o `tHit` do instante do acerto — com a pausa de 1,5s, `tHit` já estava desactualizado nesse momento (o áudio nunca parou), o que teria reintroduzido um desvio de ~1,5s. `tHit` continua a ser usado só para o cálculo de Dmin/`stopTime` (esse sim é medido a partir do instante do acerto, por desenho).
+- **Efeito secundário aceite**: a duração VISÍVEL do vídeo/foto encolhe ~1,5s (o fim continua ancorado a `tHit + Dmin`, não ao instante em que a janela aparece) — o áudio continua a tocar a duração toda, só a parte visual é que é mais curta. Não ajustado Dmin para compensar; fica como está até haver queixa.
+- **Outline amarelo** (pedido no mesmo lote): a janela de 75% (vídeo e foto) passa a ter `border:3px solid var(--accent); border-radius:16px` — exactamente os valores já usados na foto do artista/banda em `#momento-resposta-artista`, sem inventar novos.
+
+BIBLIA.md §5.4b (b)/(f) actualizada no mesmo commit. Validado só com `node --check` — por testar no browser pelo André.
