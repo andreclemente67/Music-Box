@@ -2157,3 +2157,7 @@ Implementado em `musicbox.html`:
 - Sem alterações ao Trecho A/B, som do vídeo, ducking, pausa de entrada (`PAUSA_ANTES_ENCORE_EXT_MS`, 0,5s) nem ao Encore antigo — só o cálculo do limite inferior da janela.
 
 BIBLIA.md §5.4b (f) actualizada no mesmo commit (4ª revisão desta secção no mesmo dia) — revoga a frase "nunca tapa... a própria grelha" da entrada anterior. STATUS.md também. Validado só com `node --check` — por confirmar visualmente pelo André, idealmente com 2, 3 e 4 concorrentes para testar o cálculo dinâmico.
+
+## 2026-10-14 (23h09) — Nome do concorrente no cartão de acerto, mesmo tamanho do nome da banda
+
+Pedido do André (viu captura de ecrã): `font-size` do nome do concorrente em `#momento-resposta-concorrente` passa de 15px para 20px — igual ao de `#momento-resposta-artista-nome` (banda). Resto do estilo (peso 900, letter-spacing, cor) inalterado. Só `musicbox.html`.
