@@ -6,7 +6,7 @@
 ## À espera de decisão do André
 
 - **+5 `fonte_audio` gravadas, aprovação do André (14 Out 2026, tag `antes-fontes-5b`)**: `80_03`, `dec00_02`, `dec00_04`, `dec00_07`, `dec60_04` — 4 URLs vindos de `_revisao_regeneracao.json` (já confirmados nessa revisão) e `dec00_02` de `scripts/propostas_fonte_4packs.json` (fonte "fallback", canal oficial Beyoncé). Diff cirúrgico de 5 linhas em `catalogo.json`, nada reformatado; `playlists.json`/`mp3_index.json`/`feedback.json` intocados. Cobertura geral sobe de 92 para **97/348 faixas (28%)**.
-  - **`80_01` (Take On Me) continua por gravar** — a proposta anterior era "Take On Me (MTV Unplugged / Edit)" (acústica, rejeitada). Alternativa encontrada com o motor de fontes, **por aprovar**: canal `a-ha` (auto-gerado/Topic, "provided to youtube"), título "Take on Me", 229s, `https://www.youtube.com/watch?v=MIgK3zOk0zg`.
+  - **`80_01` (Take On Me) resolvida (14 Out 2026)**: aprovada pelo André a alternativa Topic "Take on Me" (229s), `fonte_audio` gravada — `https://www.youtube.com/watch?v=MIgK3zOk0zg`. Cobertura sobe de 97 para **98/348 faixas (28%)**.
 
 - **Implementada a vista "Início — O que falta fazer" no Studio (14 Out 2026)**: esboço aprovado pelo André (`Início — O que falta fazer-html.zip`, Downloads — guardado em `_obsoleto/esboco_inicio/`), implementado em `musicbox_studio.html` como **primeiro separador do menu**, sem tocar nos outros 8 nem na barra lateral (só acrescentada 1 linha de filtro, ver abaixo). Só leitura/navegação — nenhum botão escreve em `catalogo.json`/`playlists.json`.
 
