@@ -2143,3 +2143,17 @@ Implementado em `musicbox.html` (CSS de `#encore-video-overlay.encore-ext`):
 Mesma regra para vídeo e foto do artista (`#encore-video-overlay.encore-ext video, ... img`, selector único, inalterado desde a ronda anterior) — não foi preciso duplicar nada.
 
 BIBLIA.md §5.4b (b)/(f) actualizada no mesmo commit; STATUS.md também. Validado só com `node --check` — por confirmar visualmente pelo André (ecrã 1920×1080 ou o que usar para a demonstração).
+
+## 2026-10-14 (22h58) — Janela do Encore ext cresce por cima da grelha; limite medido no layout real (revoga "nunca tapa a grelha")
+
+André achou a janela da entrada anterior (confinada a ~17vh fixo, para nunca tapar `.cabines`) "ridícula de pequena". Nova decisão, que **revoga explicitamente** a regra "nunca tapa a grelha de concorrentes" da entrada anterior: a janela pode crescer para baixo, por cima de `.cabines` (grelha de concorrentes/pontuações) e de `#rodape-controlo` (régie) — só não pode tapar o cabeçalho "TRECHO A/B" nem as duas fotos em `#momento-resposta` (concorrente e banda), que continuam a ser o limite absoluto.
+
+Diagnóstico pedido antes de implementar: hoje (entrada anterior) o limite é 100% estático em CSS — topo via `padding-top:16vh` (aproximação de onde acaba "TRECHO A/B"), fundo via `max-height:15vh` fixo (aproximação de onde começa `.cabines`). Nenhum dos dois é medido no DOM real — por isso não se ajusta ao nº de concorrentes (2, 3 ou 4 mudam quantas linhas `.cabines` tem, e por isso onde `#momento-resposta` acaba por ficar).
+
+Implementado em `musicbox.html`:
+- **Topo inalterado**: continua `padding-top:16vh` em CSS (`#encore-video-overlay.encore-ext`) — "fica onde está hoje", como pedido.
+- **Fundo passa a ser calculado em JS**, dentro de `iniciarEncoreExt()`, logo depois de `overlay.classList.add('visivel','encore-ext')`: mede `getBoundingClientRect().top` da foto do concorrente (`#momento-resposta-concorrente img` — sempre presente e sem animação de entrada; a foto da banda, `#momento-resposta-artista img`, tem entrada animada por `momento-resposta-entrada-teste` e podia estar a meio da transição de escala/opacidade neste instante, dando uma medição instável), subtrai uma margem de 20px (`MARGEM_ANTES_FOTOS_PX`, dentro do intervalo 16-24px pedido) e o topo da janela (`window.innerHeight*0.16`, mesmo valor do `padding-top:16vh` do CSS, para o cálculo bater certo com o que está realmente a ser desenhado). O resultado (em px — `getBoundingClientRect()` não dá outra unidade) é escrito via `video.style.maxHeight`/`foto.style.maxHeight`, substituindo por inline style o `max-height:15vh` do CSS (que fica só como valor de recurso, nunca usado em condições normais). A altura de `#encore-ext-info` (contador + nome da faixa) é ajustada ao mesmo valor, para continuar a sobrepor-se ao fundo da janela nova, maior.
+- **Largura (`max-width:60vw`) inalterada** — este pedido não tocava na largura, só na altura/posição vertical; continua em CSS, estático.
+- Sem alterações ao Trecho A/B, som do vídeo, ducking, pausa de entrada (`PAUSA_ANTES_ENCORE_EXT_MS`, 0,5s) nem ao Encore antigo — só o cálculo do limite inferior da janela.
+
+BIBLIA.md §5.4b (f) actualizada no mesmo commit (4ª revisão desta secção no mesmo dia) — revoga a frase "nunca tapa... a própria grelha" da entrada anterior. STATUS.md também. Validado só com `node --check` — por confirmar visualmente pelo André, idealmente com 2, 3 e 4 concorrentes para testar o cálculo dinâmico.

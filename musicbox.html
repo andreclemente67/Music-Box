@@ -235,16 +235,19 @@
     background: transparent; align-items: flex-start; padding-top: 16vh;
   }
   #encore-video-overlay.encore-ext video, #encore-video-overlay.encore-ext img {
+    /* max-height:15vh é só o valor de recurso antes de iniciarEncoreExt()
+       o substituir por um cálculo em px via getBoundingClientRect() da
+       foto do concorrente (ver JS) — revisto 14 Out 2026, 22h58: a janela
+       pode agora crescer para baixo, por cima de .cabines/régie, até
+       quase ao topo das fotos (já não limitada a ~15vh fixo). */
     max-width: 60vw; max-height: 15vh; width: auto; height: auto;
     border: 3px solid var(--accent); border-radius: 16px;
     animation: encoreExtEntrada 500ms ease-out;
   }
   #encore-ext-info { display:none; }
   #encore-video-overlay.encore-ext #encore-ext-info {
-    /* Sobreposto ao fundo da própria janela (mesma faixa 16vh-31vh, não
-       por baixo — aí já não há espaço livre antes de .cabines, só
-       ~2vh). Texto mais pequeno que na versão a 75%, proporcional à
-       janela bem menor (~15vh). */
+    /* Sobreposto ao fundo da própria janela — altura também substituída
+       em px pelo JS (ver iniciarEncoreExt()), 15vh é só o recurso. */
     display:flex; position:absolute; top:16vh; height:15vh; left:0; right:0;
     flex-direction:column; justify-content:flex-end; align-items:center;
     padding-bottom:4px; text-align:center; color:#fff; pointer-events:none;
@@ -3365,9 +3368,11 @@ function pararEncoreComVideo() {
 //     abrirOverlay() dentro de mostrarMomentoResposta()) — só
 //     PAUSA_ANTES_ENCORE_EXT_MS (0,5s) depois do acerto (14 Out 2026, ver
 //     DECISIONS.md: a música continua normal, sem duck, durante a pausa);
-//     a janela em si fica confinada ao espaço livre (ver CSS
-//     #encore-video-overlay.encore-ext), nunca tapa o cabeçalho do
-//     Trecho, as fotos nem a grelha de concorrentes;
+//     a janela pode crescer por cima de .cabines/régie (14 Out 2026,
+//     22h58, ver DECISIONS.md — revoga "nunca tapa a grelha"); só não
+//     tapa o cabeçalho "TRECHO A/B" nem as duas fotos em
+//     #momento-resposta, medido no layout real, não por vh fixo (ver
+//     cálculo logo a seguir a overlay.classList.add(), abaixo);
 //   - o áudio (ficheiro_ext, já a tocar desde o início do Trecho, ver
 //     carregarTrecho()) nunca pára — decide o fim do Encore (contador/
 //     stopTime); termina em max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S),
@@ -3406,6 +3411,29 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
   document.addEventListener('keydown', encoreExtTeclaSaltar);
 
   overlay.classList.add('visivel', 'encore-ext');
+
+  // Altura disponível, medida no layout real (14 Out 2026, 22h58 —
+  // revoga a regra anterior "nunca tapa a grelha de concorrentes": a
+  // janela pode agora crescer por cima de .cabines/régie, só não pode
+  // tapar o cabeçalho "TRECHO A/B" nem as duas fotos em
+  // #momento-resposta). O topo mantém-se onde já estava
+  // (padding-top:16vh, CSS, inalterado); o fundo passa a ser medido via
+  // getBoundingClientRect() da foto do concorrente (sempre presente,
+  // sem animação de entrada — a da banda tem e podia estar a meio da
+  // transição neste instante), menos uma margem de segurança — em vez
+  // de um max-height fixo em vh, que não se ajustava ao nº de
+  // concorrentes (2, 3 ou 4 — mais ou menos linhas em .cabines mudam
+  // onde #momento-resposta começa). Em px porque getBoundingClientRect()
+  // só dá px — não há unidade relativa que descreva "o que sobra do
+  // layout actual sem recalcular à mão".
+  const MARGEM_ANTES_FOTOS_PX = 20;
+  const topoJanelaPx = window.innerHeight * 0.16; // padding-top:16vh, ver CSS
+  const fotoConcorrente = document.querySelector('#momento-resposta-concorrente img');
+  const topoFotosPx = fotoConcorrente ? fotoConcorrente.getBoundingClientRect().top : topoJanelaPx + 150;
+  const alturaDisponivelPx = Math.max(40, topoFotosPx - MARGEM_ANTES_FOTOS_PX - topoJanelaPx);
+  video.style.maxHeight = alturaDisponivelPx + 'px';
+  foto.style.maxHeight = alturaDisponivelPx + 'px';
+  document.getElementById('encore-ext-info').style.height = alturaDisponivelPx + 'px';
 
   if (entradaCatalogo.video_local) {
     foto.style.display = 'none';
@@ -3466,9 +3494,10 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
     if (video.readyState >= 1) arrancarVideo();
     else video.addEventListener('loadedmetadata', arrancarVideo, { once: true });
   } else {
-    // Sem video_local: a foto do artista cresce com efeito até aos 75%
-    // (mesma animação encoreExtEntrada, ver CSS) — já não é a foto fixa
-    // em ecrã inteiro por ENCORE_FOTO_FALLBACK_MS do Encore antigo.
+    // Sem video_local: a foto do artista cresce com efeito até ao espaço
+    // disponível calculado acima (mesma animação encoreExtEntrada, ver
+    // CSS) — já não é a foto fixa em ecrã inteiro por
+    // ENCORE_FOTO_FALLBACK_MS do Encore antigo.
     video.style.display = 'none';
     foto.style.display = 'block';
     foto.src = entradaCatalogo.imagem || '';
