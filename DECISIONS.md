@@ -2045,3 +2045,33 @@ Os limiares ficam **registados, não implementados**: nenhuma geração
 automática está autorizada, e a aplicação aos packs continua a depender
 de diagnóstico e aprovação. `catalogo.json` e `playlists.json`
 intocados.
+
+## 2026-10-14 — Encore redesenhado: vídeo entra no instante do acerto, duração mínima Dmin, substitui a decisão de 11 Out
+
+Decisão do André. **Substitui** a "Sequência pós-acerto com vídeo do Trecho B em ecrã inteiro" de 11 Out 2026 (ver acima) — essa entrada e o §5.4b correspondente ficam como histórico, já não descrevem o comportamento actual.
+
+Nova sequência pós-acerto:
+
+a) Acerto → ROAR → "In the Box!!" → nome da música, com a música a tocar sem corte (continuidade sonora, ver 5.4b original, inalterada). Ordem **inverte** a de 5 Out 2026 (que era nome do artista → "In the Box!!" → roar).
+
+b) Som contínuo a partir do instante exacto do acerto — a música é o relógio mestre. O vídeo (quando há `clip_b`) entra nesse mesmo instante, mudo, e acompanha a música usando `video_offset_s` para se alinhar com o ponto certo do Trecho B (não começa do seu próprio início) — com correcção de desvio ao longo da reprodução, não só no arranque.
+
+c) Durante ROAR / "In the Box!!" / nome, o som faz ducking (mesma lógica de volumes já fechada em 5.4b); terminada essa sequência, volta ao volume normal do vídeo com uma rampa de ~0,5s.
+
+d) O monitor da régie mostra um contador visual com os segundos restantes até à próxima música = tempo restante do vídeo.
+
+e) **Regra Dmin**: o Encore termina no fim do Trecho B, mas dura sempre pelo menos Dmin = 10s (provisório) a partir do instante do acerto. Se o acerto acontecer perto do fim do Trecho B, a música e o vídeo continuam para além do fim do trecho para cumprir Dmin — o contador do monitor começa a contar a partir de Dmin. Isto exige que `clip_b` passe a ter uma "cauda": Trecho B + Dmin, ~25s no total (hoje tem 15s, só o Trecho B).
+
+f) Sem `clip_b`: já não há foto fixa em ecrã inteiro por 4s — a imagem pequena do artista (o overlay lado-a-lado do momento do acerto) cresce com efeito de transição até ecrã inteiro, e a música continua a tocar.
+
+g) Pergunta Bónus (quando dispara): sem efeito sonoro associado ao Encore; um efeito visual é opcional e fica activável pela régie, não automático.
+
+**Por confirmar (não decidido nesta sessão)**:
+
+i. A voz no acerto diz só o nome da música, ou também o nome da banda/artista — ligado directamente ao ponto (a), que já inverteu a ordem mas não fechou o conteúdo.
+ii. Sem `clip_b`, se o áudio do Trecho B toca até ao fim do trecho respeitando também o Dmin mínimo, ou se o Dmin só se aplica quando há vídeo.
+iii. Se a Pergunta Bónus (quando existe) só pode começar depois do fim do Encore, isto é, com o contador do monitor a chegar a 0.
+iv. O valor de Dmin = 10s é provisório — fica por medir a duração real de ROAR + "In the Box!!" + nome da música e somar uma margem de ~3s, para fechar o valor definitivo.
+v. O que acontece quando ninguém acerta a Faixa (sem Encore a disparar) não foi abordado nesta decisão.
+
+Nada de código foi alterado nesta entrada — é só registo da decisão; a implementação em `musicbox.html` fica para tarefa à parte (ver STATUS.md). `catalogo.json` e `playlists.json` não tocados.
