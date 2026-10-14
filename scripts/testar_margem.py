@@ -5,7 +5,7 @@ Para cada faixa com source em cache, localiza o Trecho B pelo ficheiro de
 produção e mostra a margem para o segundo pico distinto — o Hey Ya! tem
 de sair marcado como ambíguo (142s vs 167s).
 
-Correr com:  ~/.venvs/musicbox-audio/bin/python tmp/testar_margem.py
+Correr com:  ~/.venvs/musicbox-audio/bin/python scripts/testar_margem.py
 """
 import json
 import os

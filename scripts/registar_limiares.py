@@ -2,7 +2,7 @@
 """Acrescenta a DECISIONS.md e STATUS.md os limiares de revisão manual
 do B2 fechados em 14 Out 2026. Só documentação, não toca em dados.
 
-Correr com:  python3 tmp/registar_limiares.py
+Correr com:  python3 scripts/registar_limiares.py
 """
 import os
 
