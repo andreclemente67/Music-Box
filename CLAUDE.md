@@ -11,3 +11,10 @@
 - `mp3_index.json` e `feedback.json` são escritos pelo Studio; alterações não commitadas são trabalho do André no Studio, não de outra sessão.
 - No início de cada sessão, lê a secção de pendentes do STATUS.md.
 - No fim de cada tarefa, actualiza STATUS/DECISIONS/BÍBLIA quando houver decisões de formato.
+
+# Gasto de utilização (regra do André, 14 Out 2026) — AVISAR SEMPRE
+
+- Uma tarefa por sessão. No fim da tarefa, lembra o André: "Tarefa feita — faz /clear ou abre New session antes da próxima."
+- Modelo por defeito: Sonnet. Se a sessão estiver noutro modelo, avisa no início.
+- AVISA SEMPRE, em destaque, quando a sessão ficar comprida (muitas trocas, contexto grande ou várias tarefas seguidas): "⚠ Sessão longa — gasta muito. Faz /compact agora ou /clear e começa sessão nova."
+- Nunca propor retomar sessões antigas; preferir sessão nova + STATUS.md.
