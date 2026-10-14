@@ -2165,3 +2165,13 @@ Pedido do André (viu captura de ecrã): `font-size` do nome do concorrente em `
 ## 2026-10-14 (23h~) — Ordem e cor dos botões da régie
 
 Pedido do André: nova ordem (Iniciar Playlist → Pausar → Apresentação → Apresentador → Pontuação → Efeito Bónus) e ícone do botão Pausar/Retomar a amarelo (`var(--accent)`, mesma cor do outline do Encore — texto inalterado). Retroceder/Avançar Faixa (escondidos por omissão) mantidos junto a Pausar, não fizeram parte da lista pedida. Só HTML (ordem dos `<button>`) e `fill`/`<span>` de cor nos ícones — nenhum id, handler ou atalho de teclado tocado. `.rodape` já tinha `flex-wrap:wrap`, layout não parte com 6 botões.
+
+## 2026-10-14 (23h~) — Contador do Encore em falta (bug na entrada anterior)
+
+André reportou o contador de segundos em falta. Diagnóstico (musicbox.html): o elemento (`#encore-ext-info`/`#encore-ext-contador`) sempre esteve a ser actualizado (`encoreExtIntervaloContador`, inalterado) — o bug era de posição/dimensão, introduzido na entrada "janela cresce por cima da grelha" (commit `0611629`): o contador ficou com `top:16vh; height:15vh` (valores antigos, da janela fixa anterior), sem acompanhar a nova altura calculada em px — podia ficar fora da área visível da janela ou com uma caixa de altura errada consoante o caso.
+
+Corrigido com uma mudança estrutural, não só numérica, para não voltar a desalinhar da próxima vez que a janela mudar de tamanho: `<video>`/`<img>`/`#encore-ext-info` passam a viver dentro de um wrapper novo, `#encore-ext-janela` — neutro (100% do overlay) no Encore antigo, mas `display:inline-block` (encolhe ao tamanho real do conteúdo) no Encore ext, o que faz dele o contexto de posicionamento do contador. `#encore-ext-info` passa a `position:absolute; right:10px; bottom:10px;` relativo a esse wrapper — ancorado ao canto real da janela, seja ela qual for o tamanho (já não a uma fracção fixa do ecrã). `z-index:10` acrescentado (sem necessidade comprovada, mas sem custo — garante que fica por cima mesmo que o `<video>` crie a sua própria camada de composição nalgum browser).
+
+Visual revisto a pedido (mesmo lote): pílula amarela (`var(--accent)`) com fundo escuro semi-opaco (`rgba(10,10,12,0.78)`), só o número inteiro de segundos — já não mostra o nome da faixa (`#encore-ext-titulo` removido do HTML/JS). `pararEncoreExt()` repõe `video.style.maxHeight`/`foto.style.maxHeight` a vazio no fim — bug apanhado ao rever: sem isto, o `max-height` em px calculado para uma faixa com `ficheiro_ext` ficava preso nos elementos (inline, vence sobre CSS) e encolhia por engano o Encore antigo (`clip_b`, 100% do ecrã) na vez seguinte, mesmo sem a classe `encore-ext`.
+
+BIBLIA.md §5.4b (d)/(f) actualizada no mesmo commit. `node --check` ok — por confirmar no browser.

@@ -208,6 +208,13 @@
      — cobre-o por completo enquanto o clip/foto do Encore está visível. */
   #encore-video-overlay { position:fixed; inset:0; z-index:700; background:#000; display:none; align-items:center; justify-content:center; }
   #encore-video-overlay.visivel { display:flex; }
+  /* #encore-ext-janela (14 Out 2026) — por omissão (Encore antigo, sem a
+     classe "encore-ext") fica neutro: 100% do overlay, para o vídeo/img
+     lá dentro (width/height:100%, ver já a seguir) continuar a preencher
+     o ecrã inteiro como sempre. Só ganha forma própria — e vira o
+     contexto de posicionamento do contador — com "encore-ext" (ver
+     abaixo). */
+  #encore-ext-janela { width:100%; height:100%; position:relative; }
   #encore-video-overlay video, #encore-video-overlay img { width:100%; height:100%; object-fit:contain; }
   /* Encore com áudio estendido (14 Out 2026, ver BIBLIA.md §5.4b) — só
      faixas com ficheiro_ext (hoje só dec00_01). Revisto de novo em 14 Out
@@ -234,6 +241,14 @@
   #encore-video-overlay.encore-ext {
     background: transparent; align-items: flex-start; padding-top: 16vh;
   }
+  /* Encolhe ao tamanho do vídeo/foto lá dentro (em vez de 100%) — é o
+     que permite ao contador (abaixo) ancorar-se ao canto REAL da
+     janela, não a uma posição fixa do ecrã; o tamanho varia (proporção
+     do vídeo, altura livre calculada), por isso não dava para prever em
+     CSS puro. */
+  #encore-video-overlay.encore-ext #encore-ext-janela {
+    width: auto; height: auto; display: inline-block;
+  }
   #encore-video-overlay.encore-ext video, #encore-video-overlay.encore-ext img {
     /* max-height:15vh é só o valor de recurso antes de iniciarEncoreExt()
        o substituir por um cálculo em px via getBoundingClientRect() da
@@ -242,18 +257,28 @@
        quase ao topo das fotos (já não limitada a ~15vh fixo). */
     max-width: 60vw; max-height: 15vh; width: auto; height: auto;
     border: 3px solid var(--accent); border-radius: 16px;
+    display: block;
     animation: encoreExtEntrada 500ms ease-out;
   }
+  /* Contador — só o número de segundos restantes (14 Out 2026, ver
+     DECISIONS.md "Contador do Encore em falta"): pílula amarela/fundo
+     escuro semi-opaco, canto inferior direito da JANELA (não do ecrã —
+     ancorada a #encore-ext-janela, que encolhe ao tamanho real do
+     vídeo/foto, ver acima), sempre por cima (z-index maior que o
+     outline/vídeo, que não têm z-index próprio — qualquer valor positivo
+     já chega, mas um valor alto evita surpresas se o vídeo criar a sua
+     própria camada de composição, como acontece nalguns browsers). */
   #encore-ext-info { display:none; }
   #encore-video-overlay.encore-ext #encore-ext-info {
-    /* Sobreposto ao fundo da própria janela — altura também substituída
-       em px pelo JS (ver iniciarEncoreExt()), 15vh é só o recurso. */
-    display:flex; position:absolute; top:16vh; height:15vh; left:0; right:0;
-    flex-direction:column; justify-content:flex-end; align-items:center;
-    padding-bottom:4px; text-align:center; color:#fff; pointer-events:none;
+    display:block; position:absolute; right:10px; bottom:10px; z-index:10;
+    pointer-events:none;
   }
-  #encore-ext-info .encore-ext-contador { font-size:22px; font-weight:900; text-shadow:0 2px 12px rgba(0,0,0,0.8); }
-  #encore-ext-info .encore-ext-titulo { font-size:11px; opacity:0.85; margin-top:2px; text-shadow:0 2px 10px rgba(0,0,0,0.8); }
+  #encore-ext-contador {
+    display:flex; align-items:center; justify-content:center;
+    min-width:34px; height:34px; padding:0 8px; border-radius:17px;
+    background:rgba(10,10,12,0.78); color:var(--accent);
+    font-size:18px; font-weight:900; font-variant-numeric:tabular-nums;
+  }
   @keyframes encoreExtEntrada { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
   /* Pergunta Bónus — efeito visual opcional (versão simples, 14 Out
      2026, ver BIBLIA.md §5.4b), substitui a sirene sonora removida. */
@@ -729,14 +754,23 @@
      foto do artista em ecrã inteiro como único fallback (sem clip_b, ou
      video_sincronizado:false). -->
 <div id="encore-video-overlay">
-  <video id="encore-video" playsinline></video>
-  <img id="encore-foto-fallback" alt="">
-  <!-- Só visível com a classe "encore-ext" (ver CSS acima) — contador de
-       segundos restantes + nome da faixa, na margem livre dos 25% que o
-       vídeo/foto (75%) não ocupa. Ver iniciarEncoreExt(). -->
-  <div id="encore-ext-info">
-    <div class="encore-ext-contador" id="encore-ext-contador"></div>
-    <div class="encore-ext-titulo" id="encore-ext-titulo"></div>
+  <!-- #encore-ext-janela (14 Out 2026, ver BIBLIA.md §5.4b/DECISIONS.md):
+       só existe para o Encore ext (classe "encore-ext") — envolve
+       vídeo/foto + contador para o contador se poder ancorar ao canto da
+       janela REAL (tamanho variável, calculado em iniciarEncoreExt()),
+       não a uma posição fixa do ecrã. Para o Encore antigo (sem a
+       classe) fica neutro (width/height:100%, ver CSS), vídeo/img
+       continuam a preencher o ecrã inteiro como sempre. -->
+  <div id="encore-ext-janela">
+    <video id="encore-video" playsinline></video>
+    <img id="encore-foto-fallback" alt="">
+    <!-- Só visível com a classe "encore-ext" (ver CSS acima) — contador
+         de segundos restantes, sempre por cima da janela (z-index),
+         pílula amarela/fundo escuro no canto inferior direito. Ver
+         iniciarEncoreExt(). -->
+    <div id="encore-ext-info">
+      <div id="encore-ext-contador"></div>
+    </div>
   </div>
 </div>
 
@@ -3393,16 +3427,16 @@ function pararEncoreComVideo() {
 //     tocarSequenciaSomExt()); corrigir o playbackRate de um vídeo com
 //     som audível soa a "chipmunk", por isso deixou de fazer sentido.
 //   - caixa 16:9 a ~75% do ecrã (classe CSS "encore-ext"), não 100% —
-//     com contador (segundos restantes) + nome da faixa na margem.
+//     com contador de segundos restantes em pílula no canto inferior
+//     direito (14 Out 2026 — já não mostra o nome da faixa, ver
+//     DECISIONS.md "Contador do Encore em falta").
 function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
   const overlay = document.getElementById('encore-video-overlay');
   const video = document.getElementById('encore-video');
   const foto = document.getElementById('encore-foto-fallback');
   const contadorEl = document.getElementById('encore-ext-contador');
-  const tituloEl = document.getElementById('encore-ext-titulo');
 
   const stopTime = Math.max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S);
-  tituloEl.textContent = entradaCatalogo.titulo || '';
 
   const avancar = () => {
     audio.pause();
@@ -3439,7 +3473,6 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
   const alturaDisponivelPx = Math.max(40, topoFotosPx - MARGEM_ANTES_FOTOS_PX - topoJanelaPx);
   video.style.maxHeight = alturaDisponivelPx + 'px';
   foto.style.maxHeight = alturaDisponivelPx + 'px';
-  document.getElementById('encore-ext-info').style.height = alturaDisponivelPx + 'px';
 
   if (entradaCatalogo.video_local) {
     foto.style.display = 'none';
@@ -3535,12 +3568,19 @@ function pararEncoreExt() {
   encoreExtIntervaloContador = null;
   const overlay = document.getElementById('encore-video-overlay');
   const video = document.getElementById('encore-video');
+  const foto = document.getElementById('encore-foto-fallback');
   overlay.classList.remove('visivel', 'encore-ext');
   video.pause();
   video.muted = false;
   video.volume = 1; // repõe o normal do Encore antigo (clip_b, sem gestão própria de volume)
   video.removeAttribute('src');
   video.load();
+  // Repõe o max-height inline (calculado em px por iniciarEncoreExt()) —
+  // senão ficava preso no vídeo/foto e, sem a classe "encore-ext", teria
+  // prioridade sobre o height:100% do Encore antigo (inline vence sobre
+  // CSS externo), encolhendo-o por engano na próxima vez que correr.
+  video.style.maxHeight = '';
+  foto.style.maxHeight = '';
 }
 
 // Sequência de voz do Encore com áudio estendido — ordem invertida face
