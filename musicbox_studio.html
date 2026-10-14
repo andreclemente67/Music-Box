@@ -1697,6 +1697,28 @@
   .img-manual-row { display: flex; gap: 6px; }
   .img-manual-row input { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 5px 8px; color: var(--text); font-size: 12px; }
   .img-manual-row input:focus { outline: none; border-color: var(--accent); }
+
+  /* INÍCIO — "O que falta fazer" (dashboard, 14 Out 2026). Proporções e
+     cores do esboço aprovado (Main.dc.html), adaptadas aos tokens já
+     usados no resto do Studio (--bg3/--border2/--accent/--text*) em vez
+     da paleta solta do esboço, para não destoar das outras vistas. */
+  .inicio-scroll { flex: 1; overflow-y: auto; padding: 28px 32px; display: flex; flex-direction: column; gap: 28px; }
+  .inicio-vazio { color: var(--text3); font-size: 13px; padding: 20px; }
+  .inicio-titulo { margin: 0; font-size: 26px; font-weight: 700; color: var(--text); }
+  .inicio-sub { margin: 8px 0 0; color: var(--text2); font-size: 13px; }
+  .inicio-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .inicio-card { background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .inicio-card-label { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
+  .inicio-card-num { font-size: 36px; font-weight: 700; color: var(--text); line-height: 1; }
+  .inicio-card-desc { font-size: 14px; color: var(--text); }
+  .inicio-card-nota { color: var(--text3); font-size: 12px; }
+  .inicio-card .btn { margin-top: 4px; align-self: flex-start; }
+  .inicio-secao-titulo { margin: 0 0 10px; font-size: 16px; font-weight: 700; color: var(--text); }
+  .inicio-lista { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--bg2); }
+  .inicio-linha { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 13px 18px; border-bottom: 1px solid var(--border); cursor: pointer; color: var(--text); font-size: 13px; }
+  .inicio-linha:last-child { border-bottom: none; }
+  .inicio-linha:hover { background: var(--bg3); }
+  .inicio-linha-valor { color: var(--accent); font-family: var(--mono); font-size: 13px; }
 </style>
 </head>
 <body>
@@ -1716,7 +1738,8 @@
 <header>
   <div class="logo">MUSIC BOX <span>EDITOR</span></div>
   <div class="header-tabs">
-    <button class="tab active" onclick="switchTab('biblioteca')">Biblioteca</button>
+    <button class="tab active" onclick="switchTab('inicio')">🏠 Início</button>
+    <button class="tab" onclick="switchTab('biblioteca')">Biblioteca</button>
     <button class="tab" onclick="switchTab('montagem')">Montagem</button>
     <button class="tab" onclick="switchTab('assets')">Assets</button>
     <button class="tab" onclick="switchTab('adicionar')">Adicionar Faixa</button>
@@ -1791,6 +1814,7 @@
         <li class="sidebar-item" onclick="filterByAsset('nao-utilizadas')"><span class="dot"></span> Não utilizadas em nenhuma playlist</li>
         <li class="sidebar-item" onclick="filterByAsset('sem-b')"><span class="dot"></span> Sem Trecho B</li>
         <li class="sidebar-item" onclick="filterByAsset('sem-imagem')"><span class="dot"></span> Sem Imagem</li>
+        <li class="sidebar-item" onclick="filterByAsset('sem-fonte')"><span class="dot"></span> Sem fonte de áudio</li>
         <li class="sidebar-item" onclick="filterByAsset('arquivadas')"><span class="dot"></span> Arquivadas</li>
       </ul>
     </div>
@@ -1799,8 +1823,19 @@
   <!-- CONTENT -->
   <div class="content">
 
+    <!-- INÍCIO VIEW (dashboard "O que falta fazer", 14 Out 2026 — ver
+         STATUS.md/DECISIONS.md. Só leitura/navegação: nenhum botão aqui
+         escreve em catalogo.json/playlists.json, reaproveita sempre o
+         fluxo já existente de cada coisa — Revisão para aplicar/ouvir,
+         filterByAsset() para "ver lista") -->
+    <div class="view active" id="view-inicio">
+      <div class="inicio-scroll" id="inicio-conteudo">
+        <div class="inicio-vazio">A calcular…</div>
+      </div>
+    </div>
+
     <!-- BIBLIOTECA VIEW (catálogo real, só leitura) -->
-    <div class="view active" id="view-biblioteca">
+    <div class="view" id="view-biblioteca">
       <div class="biblioteca-toolbar">
         <input class="search-input" type="text" placeholder="Pesquisar título, artista, id..." id="search-input" oninput="renderBiblioteca()">
         <select class="filter-select" id="filter-playlist" onchange="renderBiblioteca()">
@@ -2774,6 +2809,7 @@ function renderAll() {
   renderSidebar();
   renderBiblioteca();
   updateStats();
+  if (document.getElementById('view-inicio').classList.contains('active')) renderInicio();
   if (document.getElementById('view-assets').classList.contains('active')) renderAssets();
   if (document.getElementById('view-exportar').classList.contains('active')) refreshExportPreview();
 }
@@ -3452,6 +3488,8 @@ function filterByAsset(type) {
     if (type === 'nao-utilizadas') return playlistsUsing(t.id).length === 0;
     if (type === 'sem-b') return !(t.trecho_b && t.trecho_b.ficheiro);
     if (type === 'sem-imagem') return !t.imagem;
+    if (type === 'sem-fonte') return !t.fonte_audio; // ver view-inicio, cartão "Completar"
+    if (type === 'inconclusivos') return INCONCLUSIVOS_IDS.has(t.id); // idem, "Outras pendências"
     if (type === 'arquivadas') return t.estado === 'arquivado';
     return true;
   });
@@ -3522,6 +3560,7 @@ function switchTab(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   event.target.classList.add('active');
   document.getElementById('view-' + name).classList.add('active');
+  if (name === 'inicio') renderInicio();
   if (name === 'assets') renderAssets();
   if (name === 'exportar') refreshExportPreview();
   if (name === 'concorrentes') { renderConcorrentes(); renderApresentadorCampo(); }
@@ -10210,6 +10249,142 @@ async function revisaoDefinirEstado(id, estado) {
   REVISAO_DADOS[id].estado = estado;
   await revisaoGuardar();
   revisaoAtualizarLeve(id);
+}
+
+// ─── INÍCIO — "O que falta fazer" (dashboard, 14 Out 2026) ──────────
+// Só leitura: nenhuma destas contas escreve em catalogo.json/
+// playlists.json. Reaproveita o que já existe em vez de inventar — os
+// mesmos CATALOGO/PLAYLISTS carregados no arranque, carregarRevisao()
+// (secção Revisão acima) e playlistsUsing() (secção Assets). Os botões
+// nunca criam um fluxo novo de aplicação em massa: "Aplicar" e "Ouvir"
+// só levam à vista Revisão, onde o fluxo por playlist já existe;
+// "Completar" só abre o filtro novo da Biblioteca (ver filterByAsset,
+// caso 'sem-fonte'). Ver STATUS.md/DECISIONS.md 14 Out 2026 e
+// scripts/diagnostico_studio_pendentes.py (mesmos números, calculados
+// em Python para o André conferir à parte).
+let INCONCLUSIVOS_IDS = new Set();
+
+// Parser CSV mínimo mas correcto (RFC4180: aspas, "" como aspas literal,
+// vírgulas e quebras de linha dentro de campo citado) — os relatórios
+// têm motivo/detalhe com vírgulas dentro de aspas (ex.: "canal: 'Shogun',
+// título: '...'"), um split(',') ingénuo desalinhava as colunas.
+function parseCSV(texto) {
+  const linhas = [];
+  let campo = '', linha = [], dentroAspas = false;
+  for (let i = 0; i < texto.length; i++) {
+    const c = texto[i];
+    if (dentroAspas) {
+      if (c === '"') { if (texto[i + 1] === '"') { campo += '"'; i++; } else dentroAspas = false; }
+      else campo += c;
+    } else if (c === '"') dentroAspas = true;
+    else if (c === ',') { linha.push(campo); campo = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && texto[i + 1] === '\n') i++;
+      linha.push(campo); campo = '';
+      if (linha.length > 1 || linha[0] !== '') linhas.push(linha);
+      linha = [];
+    } else campo += c;
+  }
+  if (campo !== '' || linha.length) { linha.push(campo); linhas.push(linha); }
+  const cab = linhas.shift() || [];
+  return linhas.map(l => { const o = {}; cab.forEach((h, i) => o[h] = l[i]); return o; });
+}
+
+async function renderInicio() {
+  const container = document.getElementById('inicio-conteudo');
+
+  // (a)/(b) manifesto da Revisão — carregarRevisao() já existe e já
+  // tem cache própria (não refaz o fetch se outra vista já o chamou)
+  const revisaoDados = await carregarRevisao();
+  const entradasRevisao = Object.values(revisaoDados);
+  const aprovadas = entradasRevisao.filter(v => v.estado === 'aprovado');
+  const packsAprovadas = new Set(aprovadas.map(v => v.playlistCodigo || '(sem playlist)'));
+  const pendentesRevisaoIds = new Set(entradasRevisao.filter(v => v.estado === 'pendente').map(v => v.id));
+
+  // aprovação em lote (relatorios/aprovacao_lote_progresso.csv) — ficheiro
+  // estático, servido pela mesma rota GET genérica de _servidor_escrita.py
+  // que já serve _revisao_regeneracao.json/concorrentes.json/etc.
+  let pendentesLoteIds = new Set();
+  try {
+    const r = await fetch('relatorios/aprovacao_lote_progresso.csv?v=' + Date.now());
+    if (r.ok) {
+      parseCSV(await r.text())
+        .filter(row => row.resultado === 'pendente')
+        .forEach(row => pendentesLoteIds.add(row.faixa));
+    }
+  } catch (e) { /* sem este CSV, "por rever" fica só com o manifesto da Revisão */ }
+  const porReverIds = new Set([...pendentesRevisaoIds, ...pendentesLoteIds]);
+
+  // (c) sem fonte_audio — CATALOGO já carregado
+  const semFonte = CATALOGO.filter(t => !t.fonte_audio).length;
+
+  // (d) sem imagem
+  const semImagem = CATALOGO.filter(t => !t.imagem).length;
+
+  // (g) não usadas em nenhuma playlist — reaproveita playlistsUsing()
+  const naoUtilizadas = CATALOGO.filter(t => playlistsUsing(t.id).length === 0).length;
+
+  // (f) inconclusivos do verificador (relatorios/reavaliacao_falhas.csv) —
+  // só entra na lista "Outras pendências" se o ficheiro existir e abrir;
+  // sem isso, omite a linha em vez de mostrar um número errado.
+  let inconclusivos = null;
+  try {
+    const r = await fetch('relatorios/reavaliacao_falhas.csv?v=' + Date.now());
+    if (r.ok) {
+      const linhas = parseCSV(await r.text()).filter(row => row.categoria_final === 'inconclusivo');
+      INCONCLUSIVOS_IDS = new Set(linhas.map(row => row.faixa));
+      inconclusivos = linhas.length;
+    }
+  } catch (e) { /* omite a linha abaixo */ }
+
+  const outrasPendencias = [
+    { label: 'Faixas sem imagem', valor: semImagem, accao: () => { switchTabProgrammatic('biblioteca'); filterByAsset('sem-imagem'); } },
+    ...(inconclusivos !== null ? [{ label: 'Trechos inconclusivos no verificador', valor: inconclusivos, accao: () => { switchTabProgrammatic('biblioteca'); filterByAsset('inconclusivos'); } }] : []),
+    { label: 'Faixas não usadas em nenhuma playlist', valor: naoUtilizadas, accao: () => { switchTabProgrammatic('biblioteca'); filterByAsset('nao-utilizadas'); } },
+  ];
+  // handlers em window para os onclick inline (gerados como string abaixo)
+  outrasPendencias.forEach((p, i) => { window['_inicioLinha' + i] = p.accao; });
+
+  container.innerHTML = `
+    <div>
+      <h1 class="inicio-titulo">O que falta fazer</h1>
+      <p class="inicio-sub">Catálogo: ${CATALOGO.length} faixas · ${Object.keys(PLAYLISTS).length} playlists.</p>
+    </div>
+    <div class="inicio-cards">
+      <div class="inicio-card">
+        <div class="inicio-card-label">1 · Aplicar</div>
+        <div class="inicio-card-num">${aprovadas.length}</div>
+        <div class="inicio-card-desc">faixas aprovadas por aplicar, em ${packsAprovadas.size} playlist${packsAprovadas.size === 1 ? '' : 's'}</div>
+        <div class="inicio-card-nota">Já ouvidas. Aplica-se playlist a playlist na Revisão — fica backup.</div>
+        ${aprovadas.length ? `<button class="btn btn-primary" onclick="switchTabProgrammatic('revisao')">Ver na Revisão →</button>` : ''}
+      </div>
+      <div class="inicio-card">
+        <div class="inicio-card-label">2 · Ouvir</div>
+        <div class="inicio-card-num">${porReverIds.size}</div>
+        <div class="inicio-card-desc">faixas por rever</div>
+        <div class="inicio-card-nota">${porReverIds.size ? 'À tua espera para ouvir e decidir aprovar/rejeitar.' : 'Nada à tua espera para ouvir.'}</div>
+        ${porReverIds.size ? `<button class="btn" onclick="switchTabProgrammatic('revisao')">Ver na Revisão →</button>` : ''}
+      </div>
+      <div class="inicio-card">
+        <div class="inicio-card-label">3 · Completar</div>
+        <div class="inicio-card-num">${semFonte}</div>
+        <div class="inicio-card-desc">faixas sem fonte de áudio (de ${CATALOGO.length})</div>
+        <div class="inicio-card-nota">Sem fonte, o Trecho B automático não corre.</div>
+        <button class="btn" onclick="switchTabProgrammatic('biblioteca'); filterByAsset('sem-fonte')">Ver lista →</button>
+      </div>
+    </div>
+
+    <section>
+      <h2 class="inicio-secao-titulo">Outras pendências</h2>
+      <div class="inicio-lista">
+        ${outrasPendencias.map((p, i) => `
+          <div class="inicio-linha" onclick="_inicioLinha${i}()">
+            <span>${escapeAttr(p.label)}</span>
+            <span class="inicio-linha-valor">${p.valor} →</span>
+          </div>`).join('')}
+      </div>
+    </section>
+  `;
 }
 
 // ─── VÍDEO INLINE (embed directo no painel de detalhe, sem modal) ──

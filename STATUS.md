@@ -1,9 +1,16 @@
 # Music Box — Status
 
 ## Última actualização
-2026-10-14
+2026-10-14 (vista "Início" do Studio)
 
 ## À espera de decisão do André
+
+- **Implementada a vista "Início — O que falta fazer" no Studio (14 Out 2026)**: esboço aprovado pelo André (`Início — O que falta fazer-html.zip`, Downloads — guardado em `_obsoleto/esboco_inicio/`), implementado em `musicbox_studio.html` como **primeiro separador do menu**, sem tocar nos outros 8 nem na barra lateral (só acrescentada 1 linha de filtro, ver abaixo). Só leitura/navegação — nenhum botão escreve em `catalogo.json`/`playlists.json`.
+
+  - **3 cartões**: "Aplicar" (faixas com `estado:"aprovado"` no manifesto da Revisão, por pack) → botão leva à vista Revisão (fluxo de aplicar já existente, por playlist — **não** foi criado "aplicar todas"); "Ouvir" (união de pendentes do manifesto + da aprovação em lote, `relatorios/aprovacao_lote_progresso.csv`) → idem, Revisão; "Completar" (faixas sem `fonte_audio` no catálogo) → **filtro novo** "Sem fonte de áudio" na barra lateral da Biblioteca (`filterByAsset('sem-fonte')`, mesma função já existente, só mais um `case`).
+  - **"Outras pendências"**: sem imagem, inconclusivos do verificador (`relatorios/reavaliacao_falhas.csv` — só aparece se o fetch responder 200, senão a linha é omitida), não usadas em nenhuma playlist (reutiliza `playlistsUsing()`, já existente). A linha "Trecho B para revisão manual" foi **omitida de propósito** — só há amostra de 7 faixas analisadas, não o catálogo, mostrar um número aí seria enganador.
+  - Números calculados no browser a partir dos mesmos dados/lógica de `scripts/diagnostico_studio_pendentes.py` (reutiliza `CATALOGO`/`PLAYLISTS`/`carregarRevisao()`/`playlistsUsing()`, já carregados no arranque do Studio) — não há endpoint novo no `_servidor_escrita.py`, os CSVs são lidos pela mesma rota GET genérica que já serve `_revisao_regeneracao.json`/`concorrentes.json`.
+  - Testado: JS sem erros de sintaxe (`node --check`), estrutura HTML consistente (9 separadores ↔ 9 `view-*`, só "Início" com `active`), e os 4 ficheiros que a vista lê (`musicbox_studio.html`, `_revisao_regeneracao.json`, `relatorios/aprovacao_lote_progresso.csv`, `relatorios/reavaliacao_falhas.csv`) confirmados a responder 200 no servidor real. **Sem Playwright** — por pedido do André, a verificação visual/consola fica para ele no browser.
 
 - **DECIDIDO — regra "refrão mais intenso" adoptada só onde não há Trecho B validado (11 Out 2026)**: teste cego feito pelo André na página do estudo, **2 audições nas 5 faixas dos Anos 80: regra nova 4, B actual 4, iguais 2** — empate técnico. **Decisão**: a regra passa a ser o método para gerar o Trecho B automaticamente **apenas nas faixas sem B definido ou sem B validado**; onde o B actual já foi ouvido e aprovado, mantém-se. Ver DECISIONS.md (critério completo e as duas ressalvas) e BIBLIA.md §13.2.
 
