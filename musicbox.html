@@ -636,7 +636,21 @@
        dispara automático no fim da sequência de voz, sem botão — a
        régie salta o clip/foto a qualquer momento com Esc ou Espaço (ver
        aoTeclaSaltarEncore() dentro de iniciarEncoreComVideo()). -->
-  <button onclick="alternarPausa()" id="btn-pausa"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar</button>
+  <!-- Ordem dos botões revista em 14 Out 2026 (pedido do André, só
+       ordem/cor, nenhuma lógica tocada): Iniciar Playlist → Pausar →
+       Apresentação → Apresentador → Pontuação → Efeito Bónus.
+       Retroceder/Avançar Faixa (escondidos por omissão, atalhos raros de
+       régie) mantidos junto a Pausar, sua posição relativa de sempre —
+       não fizeram parte da lista pedida. -->
+  <!-- Pausa de entrada de Playlist (2026-09-02) — ao entrar numa Playlist
+       nova (Blind Draw/Motor/Escolha, Rondas 1-3 ou Ronda 4), o motor
+       revela título+universo e espera este clique antes de carregar a
+       Faixa 1 — ver confirmarCollection()/iniciarPlaylistManual(). Não se
+       aplica ao NEW_SLOT entre Faixas dentro da mesma Playlist, que
+       continua automático. Visibilidade sincronizada com faseGeral, mesmo
+       poll de manualAdvanceSync() (ver abaixo). -->
+  <button onclick="iniciarPlaylistManual()" id="btn-iniciar-playlist" title="Carrega e arranca o áudio da Faixa 1 desta Playlist — o motor fica à espera deste clique desde que a Playlist foi seleccionada" style="display:none;"><span style="color:var(--green);">▶</span> Iniciar Playlist</button>
+  <button onclick="alternarPausa()" id="btn-pausa"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar</button>
   <!-- RETROCEDER_FAIXA (pedido do utilizador, 2026-09-02, simétrico ao
        MANUAL_ADVANCE §19.1) — corrige avanços indevidos da régie: volta à
        Faixa anterior da mesma Playlist. Só nas Rondas 1-3 (faseGeral
@@ -652,13 +666,6 @@
        por manualAdvanceSync() (setInterval) — ver nota aí sobre porquê de
        não ser um toggle explícito como o do Apresentador. -->
   <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg> Avançar Faixa</button>
-  <!-- Pausa de entrada de Playlist (2026-09-02) — ao entrar numa Playlist
-       nova (Blind Draw/Motor/Escolha, Rondas 1-3 ou Ronda 4), o motor
-       revela título+universo e espera este clique antes de carregar a
-       Faixa 1 — ver confirmarCollection()/iniciarPlaylistManual(). Não se
-       aplica ao NEW_SLOT entre Faixas dentro da mesma Playlist, que
-       continua automático. Visibilidade sincronizada com faseGeral, mesmo
-       poll de manualAdvanceSync() (ver abaixo). -->
   <!-- "🔊 Apresentação" (2026-10-05, pedido do utilizador) — toca
        voz/descritivo_<codigo>.wav manualmente, a pedido do operador
        (substituiu a narração automática + toggle ON/OFF, removidos). Não
@@ -669,7 +676,6 @@
        "Apresentação por gerar" se a playlist não tiver o ficheiro — ver
        prepararApresentacaoDescritivo()/apresentacaoDisponivel(). -->
   <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;align-items:center;gap:4px;" disabled></button>
-  <button onclick="iniciarPlaylistManual()" id="btn-iniciar-playlist" title="Carrega e arranca o áudio da Faixa 1 desta Playlist — o motor fica à espera deste clique desde que a Playlist foi seleccionada" style="display:none;"><span style="color:var(--green);">▶</span> Iniciar Playlist</button>
   <!-- Apresentador: um único toggle manual pelo operador — ver
        alternarApresentador()/renderApresentador(). Escondido quando não há
        foto configurada (apresentador.json, Studio → tab "Concorrentes"). -->
@@ -4491,8 +4497,8 @@ function alternarPausa() {
     enviarComandoYoutube('playVideo');
   }
   document.getElementById('btn-pausa').innerHTML = pausado
-    ? '▶ Retomar'
-    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar';
+    ? '<span style="color:var(--accent);">▶</span> Retomar'
+    : '<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar';
 }
 
 // Repõe o estado de pausa sempre que uma nova faixa/fase arranca (mesmo
@@ -4503,7 +4509,7 @@ function alternarPausa() {
 function reporPausa() {
   pausado = false;
   const btn = document.getElementById('btn-pausa');
-  if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar';
+  if (btn) btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="var(--accent)" style="vertical-align:-2px;margin-right:2px;"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg> Pausar';
 }
 
 // Apresentador: um único botão-toggle junto a "⏸ Pausar" — mostra/esconde

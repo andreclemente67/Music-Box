@@ -2161,3 +2161,7 @@ BIBLIA.md §5.4b (f) actualizada no mesmo commit (4ª revisão desta secção no
 ## 2026-10-14 (23h09) — Nome do concorrente no cartão de acerto, mesmo tamanho do nome da banda
 
 Pedido do André (viu captura de ecrã): `font-size` do nome do concorrente em `#momento-resposta-concorrente` passa de 15px para 20px — igual ao de `#momento-resposta-artista-nome` (banda). Resto do estilo (peso 900, letter-spacing, cor) inalterado. Só `musicbox.html`.
+
+## 2026-10-14 (23h~) — Ordem e cor dos botões da régie
+
+Pedido do André: nova ordem (Iniciar Playlist → Pausar → Apresentação → Apresentador → Pontuação → Efeito Bónus) e ícone do botão Pausar/Retomar a amarelo (`var(--accent)`, mesma cor do outline do Encore — texto inalterado). Retroceder/Avançar Faixa (escondidos por omissão) mantidos junto a Pausar, não fizeram parte da lista pedida. Só HTML (ordem dos `<button>`) e `fill`/`<span>` de cor nos ícones — nenhum id, handler ou atalho de teclado tocado. `.rodape` já tinha `flex-wrap:wrap`, layout não parte com 6 botões.
