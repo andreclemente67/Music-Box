@@ -1,7 +1,7 @@
 # Music Box — Status
 
 ## Última actualização
-2026-10-11
+2026-10-14
 
 ## À espera de decisão do André
 
@@ -11,7 +11,7 @@
   - **Confluência baixa → revisão manual, não geração**: em `80_04` a janela vencedora tinha confluência 0.074 (contra 0.33–0.39 nas outras e 0.93 no Hey Ya!) — nenhuma janela dessa faixa é intensa nos dois eixos. Abaixo de um limiar **ainda a definir** (com diagnóstico, não escolhido no ar), a faixa fica marcada para revisão manual.
   - **Limiares de revisão manual fechados (14 Out 2026)**: o B2 **não** é gerado e a faixa vai para revisão manual se **acabar depois de 80% da duração** da música (zona de saída), se a **confluência for inferior a 0,15**, ou se a **localização do A/B por correlação for ambígua**. Nos dois packs diagnosticados só o `80_04` é apanhado pelos dois primeiros (acaba a 84%, confluência 0,074); o `80_07` fica à beira, a acabar a 77% — foi por isso que o limiar ficou no fim do trecho e não no início. **Registado, não implementado**: nenhuma geração está autorizada. Ver DECISIONS.md e BIBLIA.md §13.2.
   - **Três dos cinco desvios dos Anos 80 ficam sem base confirmada**: o teste de margem (14 Out) classifica como ambíguas as localizações do B actual de `80_04`, `80_06` e `80_07` — e o `80_06` já trazia aviso de pico fraco (2,6x) na corrida de 11 Out, que não foi trazido para a tabela na altura. Os desvios +96s, +99s e +129s dependem dessas localizações. Mantêm-se confirmados `80_02` +20s, `80_05` +6s, `dec00_01` +2s (do catálogo) e `dec00_06` +1s.
-  - **PENDENTE — aplicação aos packs**: fica para depois, com diagnóstico primeiro e aprovação do André. `catalogo.json` e `playlists.json` continuam intocados, e a decisão não autoriza nenhuma geração.
+  - **FECHADO POR AGORA, 14 Out 2026 — aplicação em massa adiada**: o método está decidido e os limiares fechados, mas **só 87 das 348 faixas do catálogo têm `fonte_audio`** (25%), e sem source a regra não corre. Das 87, só 51 têm o Trecho A no catálogo — as outras 36 precisariam de localização por correlação, que é precisamente onde está o risco de repetição errada. A cobertura também está espalhada: o melhor pack tem 5/7 (Anos 80, Anos 60, Anos 50) e seis packs têm 0, incluindo os dois de 8 faixas (`RET.INT.ALL.VOZ.001`, `LOGO-001`). Aplicar a regra agora tratava um quarto do catálogo e deixava o resto como está, por isso **o pré-requisito é a cobertura de `fonte_audio`, não a regra**. `catalogo.json` e `playlists.json` continuam intocados e nenhuma geração está autorizada. Contagem reproduzível: `python3 scripts/contar_fonte_audio.py`.
   - Página do estudo (continua disponível para mais audições, agora com ordem nova e equilibrada a cada audição e total acumulado automático): `http://localhost:8002/estudos/trecho_b_regra_energia/pagina.html`. A ordem estava a ser sorteada uma vez por faixa e congelada — a 2ª audição repetia o mesmo arranjo (a regra saiu em 1º lugar em 9 de 10), corrigido; o empate 4-4-2 mantém-se porque é o que foi ouvido.
   - Fica também em aberto, só a pedido: **gravar no catálogo os tempos de Trecho A/B recuperados por correlação** — 12 das 14 faixas dos dois packs vistos têm `inicio`/`fim` a `null` apesar de os mp3 existirem.
 
