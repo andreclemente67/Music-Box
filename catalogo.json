@@ -10511,12 +10511,14 @@
     "trecho_a": {
       "ficheiro": "dec00_01_a.mp3",
       "inicio": 0,
-      "fim": 15
+      "fim": 15,
+      "ficheiro_ext": "assets/audio_ext/dec00_01_a_ext.mp3"
     },
     "trecho_b": {
       "ficheiro": "dec00_01_b.mp3",
       "inicio": 142,
-      "fim": 157
+      "fim": 157,
+      "ficheiro_ext": "assets/audio_ext/dec00_01_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
