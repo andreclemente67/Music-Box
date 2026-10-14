@@ -5,6 +5,8 @@
 
 ## À espera de decisão do André
 
+- **B2 aplicado no catálogo — Anos 2000, pack a pack (14 Out 2026, tag `antes-b2-00`)**: aprovação do André, só `STD.INT.00.MIX.001`, só `trecho_b.inicio/fim` (ficheiro `.mp3` de produção não tocado — regeneração do áudio é tarefa à parte). **5 aplicadas** (todas "OK" no diagnóstico, `relatorios/diagnostico_b2_4packs_demo.md`): `dec00_02` 18–30→100–115, `dec00_04` 18–30→106–121, `dec00_05` 18–30→77–92, `dec00_06` 18–30→69–84, `dec00_07` 18–30→71–86. **2 não tocadas**: `dec00_01` e `dec00_03` — têm `clip_b`/`video_sincronizado` (Encore com vídeo sincronizado ao Trecho B actual), saltadas por regra explícita do pedido, não por bandeira do diagnóstico (ambas estavam "OK"). Nenhuma faixa do pack tinha bandeira de intensidade `<0,15` ou zona de saída. Diff cirúrgico de 10 linhas; `playlists.json`/`mp3_index.json`/`feedback.json` intocados.
+
 - **+5 `fonte_audio` gravadas, aprovação do André (14 Out 2026, tag `antes-fontes-5b`)**: `80_03`, `dec00_02`, `dec00_04`, `dec00_07`, `dec60_04` — 4 URLs vindos de `_revisao_regeneracao.json` (já confirmados nessa revisão) e `dec00_02` de `scripts/propostas_fonte_4packs.json` (fonte "fallback", canal oficial Beyoncé). Diff cirúrgico de 5 linhas em `catalogo.json`, nada reformatado; `playlists.json`/`mp3_index.json`/`feedback.json` intocados. Cobertura geral sobe de 92 para **97/348 faixas (28%)**.
   - **`80_01` (Take On Me) resolvida (14 Out 2026)**: aprovada pelo André a alternativa Topic "Take on Me" (229s), `fonte_audio` gravada — `https://www.youtube.com/watch?v=MIgK3zOk0zg`. Cobertura sobe de 97 para **98/348 faixas (28%)**.
 
