@@ -772,33 +772,43 @@ const ENCORE_FOTO_FALLBACK_MS = 4000;
 // §5.4b) — substitui por completo o acima SÓ para faixas com
 // `ficheiro_ext` (ver temAudioExtendido(), hoje só dec00_01): o vídeo
 // entra já no acerto (não espera a voz), o áudio (já a tocar desde o
-// início do trecho, ver carregarTrecho()) é o relógio mestre, e o
-// Encore acaba em max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S) — nunca
-// por 'ended' do vídeo. Ver iniciarEncoreExt()/tocarSequenciaSomExt().
+// início do trecho, ver carregarTrecho()) continua a decidir o fim do
+// Encore (contador/stopTime), e o Encore acaba em
+// max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S) — nunca por 'ended' do
+// vídeo. Ver iniciarEncoreExt()/tocarSequenciaSomExt().
 const DMIN_ENCORE_S = 10; // provisório, ver BIBLIA §5.4b
 const FIM_TRECHO_NORMAL_S = 15; // trecho_a/b.fim - .inicio de uma faixa "normal"
-// Mesmos limiares já testados em estudos/trecho_b_expoente/pagina.html
-// (iniciarLoopSincronizacao()) — ajuste fino por playbackRate dentro do
-// limiar de correcção, reposicionamento acima do limiar maior.
-const ENCORE_EXT_LIMIAR_CORRECAO_MS = 40;
-const ENCORE_EXT_LIMIAR_REPOSICIONAR_MS = 300;
+// Com vídeo (video_local), é o vídeo que fica com som (passa a ser o
+// relógio mestre, decisão 14 Out 2026 — antes era o mp3 do jogo, com o
+// vídeo mudo a seguir por playbackRate, ver DECISIONS.md): no acerto, o
+// mp3 sai e o som do vídeo entra, os dois num crossfade de
+// FADE_CROSSFADE_VIDEO_MS; o ducking/rampa da voz (VOL_DUCK/VOL_MUSICA,
+// FADE_DOWN_MS/FADE_UP_MS) passa a aplicar-se ao vídeo em vez do mp3.
+// Sem vídeo (foto), nada disto se aplica — o mp3 continua a ser o som,
+// como antes.
+const FADE_CROSSFADE_VIDEO_MS = 150;
 
 // Fade de volume com requestAnimationFrame — cancelável: cada chamada
-// gera um "token" novo; um fade anterior ainda em curso vê que o seu
-// token deixou de ser o actual e pára-se sozinho no próximo frame, sem
-// nunca deixar o volume preso a meio de uma transição. Só há um
-// elemento <audio> global nesta app (`audio`), por isso um único token
-// module-level chega — não precisa de um Map por elemento.
-let audioFadeToken = 0;
-function cancelarFadeVolume() {
-  audioFadeToken++;
+// gera um "token" novo PARA O ELEMENTO (`el`); um fade anterior ainda em
+// curso no MESMO elemento vê que o seu token deixou de ser o actual e
+// pára-se sozinho no próximo frame, sem nunca deixar o volume preso a
+// meio de uma transição. Token por elemento (WeakMap), não module-level
+// — desde 14 Out 2026 há dois elementos a fazer fade em simultâneo
+// (`audio` e, no Encore ext com vídeo, `video`), um único contador
+// global cancelaria um fade ao arrancar o outro. `cancelarFadeVolume()`
+// sem argumento continua a assumir `audio` (único uso histórico, antes
+// de existir `video`).
+const fadeVolumeTokens = new WeakMap();
+function cancelarFadeVolume(el = audio) {
+  fadeVolumeTokens.set(el, (fadeVolumeTokens.get(el) || 0) + 1);
 }
 function fadeVolume(el, alvo, ms, aoTerminar) {
-  const meuToken = ++audioFadeToken;
+  const meuToken = (fadeVolumeTokens.get(el) || 0) + 1;
+  fadeVolumeTokens.set(el, meuToken);
   const inicio = el.volume;
   const t0 = performance.now();
   function passo(agora) {
-    if (meuToken !== audioFadeToken) return; // cancelado por um fade mais recente
+    if (fadeVolumeTokens.get(el) !== meuToken) return; // cancelado por um fade mais recente no mesmo elemento
     // Math.max(0, ...) é necessário, não só decoração: o timestamp que o
     // rAF passa a "agora" reflecte o início do frame, que pode ser
     // ligeiramente ANTERIOR ao performance.now() capturado em t0 (lido
@@ -1822,7 +1832,6 @@ let testeAudioRevelacaoActual = null;
 let encoreExtHitTrecho = 'A';
 let encoreExtHitTempo = 0;
 let encoreExtIntervaloContador = null;
-let encoreExtIntervaloSync = null;
 let encoreExtTeclaSaltar = null;
 
 // Esconde o overlay de acerto (foto do concorrente + artista/banda) no
@@ -3305,15 +3314,18 @@ function pararEncoreComVideo() {
 //   - entra já no acerto, não espera o fim da sequência de voz (ver
 //     chamada em abrirOverlay() dentro de mostrarMomentoResposta());
 //   - o áudio (ficheiro_ext, já a tocar desde o início do Trecho, ver
-//     carregarTrecho()) nunca pára — é o relógio mestre; o Encore
-//     termina em max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S), medido
-//     a partir do início do Trecho, nunca por 'ended' de vídeo/áudio;
-//   - lê `video_local` (mudo), não `clip_b` — só este precisa de ficar
-//     sincronizado em tempo real ao áudio (clip_b já vem com som
-//     embutido, não serve para isto). Sincronizado em qualquer dos dois
+//     carregarTrecho()) nunca pára — decide o fim do Encore (contador/
+//     stopTime); termina em max(FIM_TRECHO_NORMAL_S, tHit + DMIN_ENCORE_S),
+//     medido a partir do início do Trecho, nunca por 'ended' de vídeo/áudio;
+//   - lê `video_local`, não `clip_b` (clip_b já vem com som embutido, é
+//     o que o Encore antigo lê). Posicionado em qualquer dos dois
 //     trechos (offset = video_offset_s + inicio do trecho do acerto,
-//     calibrado contra a fonte áudio completa) — ver
-//     iniciarSincronizacaoEncoreExt().
+//     calibrado contra a fonte áudio completa), um só seek — SEM
+//     correcção contínua de playbackRate (removida 14 Out 2026, ver
+//     DECISIONS.md): o vídeo tem o seu próprio som e passa a ser o
+//     relógio mestre do que se OUVE (o mp3 do jogo sai, ver
+//     tocarSequenciaSomExt()); corrigir o playbackRate de um vídeo com
+//     som audível soa a "chipmunk", por isso deixou de fazer sentido.
 //   - caixa 16:9 a ~75% do ecrã (classe CSS "encore-ext"), não 100% —
 //     com contador (segundos restantes) + nome da faixa na margem.
 function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
@@ -3343,7 +3355,8 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
   if (entradaCatalogo.video_local) {
     foto.style.display = 'none';
     video.style.display = 'block';
-    video.muted = true;
+    video.muted = false;
+    video.volume = 0; // entra em silêncio — ver fade-in em tocarSequenciaSomExt()
     video.src = entradaCatalogo.video_local;
     const videoOffsetS = entradaCatalogo.video_offset_s || 0;
     // video_offset_s é calibrado contra a fonte áudio completa (ver
@@ -3368,9 +3381,7 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
       const arrancarVideoPronto = () => {
         video.removeEventListener('seeked', aoSeeked);
         video.removeEventListener('canplay', aoCanplay);
-        video.play().then(() => {
-          iniciarSincronizacaoEncoreExt(video, offsetBase);
-        }).catch((err) => {
+        video.play().catch((err) => {
           console.log('[Encore ext] video_local play() rejeitado: ' + err.message);
         });
       };
@@ -3414,33 +3425,6 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
   }, 200);
 }
 
-// Loop de sincronização vídeo↔áudio (mesma técnica testada e validada em
-// estudos/trecho_b_expoente/pagina.html, iniciarLoopSincronizacao()) —
-// corre em qualquer acerto, Trecho A ou B (ver iniciarEncoreExt()).
-// offsetBase (video_offset_s + inicio do trecho do acerto) é constante
-// durante toda a reprodução; o tempo esperado do vídeo é sempre
-// audio.currentTime + offsetBase.
-function iniciarSincronizacaoEncoreExt(video, offsetBase) {
-  clearInterval(encoreExtIntervaloSync);
-  encoreExtIntervaloSync = setInterval(() => {
-    if (audio.paused || audio.ended || video.ended || !encoreExtIntervaloContador) {
-      clearInterval(encoreExtIntervaloSync);
-      encoreExtIntervaloSync = null;
-      return;
-    }
-    const esperado = audio.currentTime + offsetBase;
-    const desvioMs = Math.round((video.currentTime - esperado) * 1000);
-    if (Math.abs(desvioMs) <= ENCORE_EXT_LIMIAR_CORRECAO_MS) {
-      if (video.playbackRate !== 1) video.playbackRate = 1;
-    } else if (Math.abs(desvioMs) > ENCORE_EXT_LIMIAR_REPOSICIONAR_MS) {
-      video.currentTime = esperado;
-      video.playbackRate = 1;
-    } else {
-      video.playbackRate = desvioMs > 0 ? 0.92 : 1.08;
-    }
-  }, 250);
-}
-
 // Esconde/limpa o Encore com áudio estendido — chamado tanto pelo avanço
 // normal (iniciarEncoreExt()) como por esconderMomentoResposta() (reset
 // de segurança, MANUAL_ADVANCE, etc.). Seguro chamar mesmo sem Encore ext
@@ -3453,13 +3437,12 @@ function pararEncoreExt() {
   }
   clearInterval(encoreExtIntervaloContador);
   encoreExtIntervaloContador = null;
-  clearInterval(encoreExtIntervaloSync);
-  encoreExtIntervaloSync = null;
   const overlay = document.getElementById('encore-video-overlay');
   const video = document.getElementById('encore-video');
   overlay.classList.remove('visivel', 'encore-ext');
   video.pause();
   video.muted = false;
+  video.volume = 1; // repõe o normal do Encore antigo (clip_b, sem gestão própria de volume)
   video.removeAttribute('src');
   video.load();
 }
@@ -3473,12 +3456,16 @@ function pararEncoreExt() {
 function tocarSequenciaSomExt(entradaCatalogo) {
   const trackId = entradaCatalogo.id;
   const PAUSA_MS = 120;
+  // Com vídeo, é ele que fica com som (ver iniciarEncoreExt(), 14 Out
+  // 2026) — o ducking/rampa da voz aplica-se ao vídeo, não ao mp3.
+  const temVideo = !!entradaCatalogo.video_local;
+  const volAlvo = temVideo ? document.getElementById('encore-video') : audio;
   let terminou = false;
   const terminarSequencia = (motivo) => {
     if (terminou) return;
     terminou = true;
     console.log('[Encore ext] voz terminou (' + motivo + ') — rampa para VOL_MUSICA');
-    fadeVolume(audio, VOL_MUSICA, FADE_UP_MS);
+    fadeVolume(volAlvo, VOL_MUSICA, FADE_UP_MS);
   };
   const tocarNome = () => {
     try {
@@ -3511,7 +3498,15 @@ function tocarSequenciaSomExt(entradaCatalogo) {
       });
     } catch (e) { tocarItb(); }
   };
-  fadeVolumePromise(audio, VOL_DUCK, FADE_DOWN_MS).then(tocarRoarOuSaltar);
+  if (temVideo) {
+    // Crossfade do acerto (~150ms): o mp3 do jogo sai, o som do vídeo
+    // entra já no nível de duck (0 → VOL_DUCK — o vídeo arrancou a
+    // volume 0 em iniciarEncoreExt()), pronto para a voz por cima.
+    fadeVolume(audio, 0, FADE_CROSSFADE_VIDEO_MS);
+    fadeVolumePromise(volAlvo, VOL_DUCK, FADE_CROSSFADE_VIDEO_MS).then(tocarRoarOuSaltar);
+  } else {
+    fadeVolumePromise(volAlvo, VOL_DUCK, FADE_DOWN_MS).then(tocarRoarOuSaltar);
+  }
 }
 
 // TESTE TEMPORÁRIO (2026-10-04, pedido do utilizador) — NÃO COMMITAR.
