@@ -5,6 +5,9 @@
 
 ## À espera de decisão do André
 
+- **+5 `fonte_audio` gravadas, aprovação do André (14 Out 2026, tag `antes-fontes-5b`)**: `80_03`, `dec00_02`, `dec00_04`, `dec00_07`, `dec60_04` — 4 URLs vindos de `_revisao_regeneracao.json` (já confirmados nessa revisão) e `dec00_02` de `scripts/propostas_fonte_4packs.json` (fonte "fallback", canal oficial Beyoncé). Diff cirúrgico de 5 linhas em `catalogo.json`, nada reformatado; `playlists.json`/`mp3_index.json`/`feedback.json` intocados. Cobertura geral sobe de 92 para **97/348 faixas (28%)**.
+  - **`80_01` (Take On Me) continua por gravar** — a proposta anterior era "Take On Me (MTV Unplugged / Edit)" (acústica, rejeitada). Alternativa encontrada com o motor de fontes, **por aprovar**: canal `a-ha` (auto-gerado/Topic, "provided to youtube"), título "Take on Me", 229s, `https://www.youtube.com/watch?v=MIgK3zOk0zg`.
+
 - **Implementada a vista "Início — O que falta fazer" no Studio (14 Out 2026)**: esboço aprovado pelo André (`Início — O que falta fazer-html.zip`, Downloads — guardado em `_obsoleto/esboco_inicio/`), implementado em `musicbox_studio.html` como **primeiro separador do menu**, sem tocar nos outros 8 nem na barra lateral (só acrescentada 1 linha de filtro, ver abaixo). Só leitura/navegação — nenhum botão escreve em `catalogo.json`/`playlists.json`.
 
   - **3 cartões**: "Aplicar" (faixas com `estado:"aprovado"` no manifesto da Revisão, por pack) → botão leva à vista Revisão (fluxo de aplicar já existente, por playlist — **não** foi criado "aplicar todas"); "Ouvir" (união de pendentes do manifesto + da aprovação em lote, `relatorios/aprovacao_lote_progresso.csv`) → idem, Revisão; "Completar" (faixas sem `fonte_audio` no catálogo) → **filtro novo** "Sem fonte de áudio" na barra lateral da Biblioteca (`filterByAsset('sem-fonte')`, mesma função já existente, só mais um `case`).
