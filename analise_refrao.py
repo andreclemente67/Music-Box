@@ -75,10 +75,22 @@ CORTE_BANDA_ALTA_HZ = 2000.0
 # para desempatar entre ocorrências do refrão, não para as escolher
 # (decisão do André, 11 Out 2026).
 LIMIAR_REPETICAO_REL = 0.70
-# Nitidez mínima do pico de correlação (pico / mediana) para aceitar a
-# localização de um trecho no source. Medido 11 Out 2026 em 80_02, com o
-# source certo: 9.8x (Trecho A) e 8.9x (Trecho B).
+# Nitidez do pico de correlação (pico / mediana). Continua a ser medida e
+# reportada — detecta "este trecho não é deste source" — mas NÃO decide
+# se a localização serve: não apanha o erro que interessa, que é "source
+# certo, repetição errada". No Hey Ya! havia cinco picos dentro de 19%
+# uns dos outros (142s, 158.6s, 166.9s, 175.2s, 183.5s, espaçados ~8.3s —
+# o período da frase) e todos passavam folgadamente este teste.
 NITIDEZ_MINIMA = 4.0
+# O que decide é a margem do melhor pico para o melhor pico RIVAL
+# distinto (decisão do André, 14 Out 2026): abaixo disto a localização
+# diz-se ambígua e o tempo não é usado — a faixa vai para revisão
+# manual em vez de arriscar o refrão errado. Hey Ya!: margem de 0.4%.
+MARGEM_RIVAL_MINIMA = 0.25
+# Dois picos só contam como rivais distintos se estiverem a esta
+# distância um do outro; mais perto do que isto é o mesmo match a
+# oscilar, não outra repetição.
+SEPARACAO_RIVAIS_S = 5.0
 
 
 def obter_audio_source(url_youtube: str, id_faixa: str) -> Optional[str]:
@@ -209,14 +221,33 @@ def localizar_trecho(caminho_trecho: str, y_source: np.ndarray, sr: int) -> Opti
     env_s = (env_s - env_s.mean()) / (env_s.std() + 1e-9)
 
     c = correlate(env_s, env_t, mode='valid')
-    i = int(np.argmax(c))
-    nitidez = float(c[i] / (np.median(np.abs(c)) + 1e-9))
-    inicio = i * hop / sr
+    mediana = float(np.median(np.abs(c)) + 1e-9)
+    por_segundo = hop / sr
+
+    # melhor pico e melhor pico rival distinto (>= SEPARACAO_RIVAIS_S de
+    # distância), para medir a margem entre os dois
+    ordem = np.argsort(c)[::-1]
+    picos = []
+    for idx in ordem:
+        s = float(idx) * por_segundo
+        if all(abs(s - outro) >= SEPARACAO_RIVAIS_S for outro, _ in picos):
+            picos.append((s, float(c[idx])))
+        if len(picos) >= 4:
+            break
+
+    inicio, valor = picos[0]
+    rival_s, rival_valor = picos[1] if len(picos) > 1 else (None, 0.0)
+    margem = (valor - rival_valor) / valor if valor > 0 else 0.0
+    ambiguo = margem < MARGEM_RIVAL_MINIMA
     duracao = len(t) / sr
     return {
-        'inicio_s': inicio, 'fim_s': inicio + duracao,
-        'duracao_s': duracao, 'nitidez_pico': nitidez,
-        'fiavel': nitidez >= NITIDEZ_MINIMA,
+        'inicio_s': inicio, 'fim_s': inicio + duracao, 'duracao_s': duracao,
+        'nitidez_pico': float(valor / mediana),
+        'margem_rival': float(margem),
+        'rival_s': rival_s,
+        'alternativas_s': [s for s, _ in picos[1:]],
+        'ambiguo': ambiguo,
+        'fiavel': (not ambiguo) and (valor / mediana) >= NITIDEZ_MINIMA,
     }
 
 
@@ -384,6 +415,7 @@ def analisar_refrao(
         'criterio_escolha': '',
         'trecho_a_usado': None,
         'trecho_b_actual': None,
+        'trecho_b_nota': '',
         'mensagem': '',
     }
 
@@ -404,6 +436,16 @@ def analisar_refrao(
         }
     elif ficheiro_trecho_a:
         loc = localizar_trecho(ficheiro_trecho_a, y, sr)
+        if loc and loc['ambiguo']:
+            # sem saber onde está o A não há como garantir que o B2 não
+            # cai por cima dele — a faixa vai para revisão manual em vez
+            # de se arriscar a comparação
+            saida['mensagem'] = (
+                f'Trecho A com repetição ambígua: {loc["inicio_s"]:.0f}s e '
+                f'{loc["rival_s"]:.0f}s empatam (margem {loc["margem_rival"]:.1%} '
+                f'< {MARGEM_RIVAL_MINIMA:.0%}) — revisão manual'
+            )
+            return saida
         if loc:
             saida['trecho_a_usado'] = {**loc, 'origem': 'correlação'}
     if saida['trecho_a_usado'] is None:
@@ -421,7 +463,17 @@ def analisar_refrao(
         }
     elif ficheiro_trecho_b:
         loc_b = localizar_trecho(ficheiro_trecho_b, y, sr)
-        if loc_b:
+        if loc_b and loc_b['ambiguo']:
+            # localização ambígua: o tempo NÃO é usado (nem para
+            # comparar), só fica a nota do que empatou
+            saida['trecho_b_nota'] = (
+                f'repetição ambígua: {loc_b["inicio_s"]:.0f}s e '
+                f'{loc_b["rival_s"]:.0f}s empatam (margem '
+                f'{loc_b["margem_rival"]:.1%} < {MARGEM_RIVAL_MINIMA:.0%}); '
+                f'alternativas {", ".join(f"{s:.0f}s" for s in loc_b["alternativas_s"])}'
+                ' — tempo não usado'
+            )
+        elif loc_b:
             saida['trecho_b_actual'] = {**loc_b, 'origem': 'correlação'}
 
     chroma_sync, beat_times = chroma_beat_sync(y, sr)
