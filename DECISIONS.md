@@ -1945,14 +1945,28 @@ Dois avisos registados com a decisão, para a fase de aplicação:
 
 - **A regra tende a escolher ocorrências tardias.** Nas 7 faixas
   analisadas até agora (5 dos Anos 80 + Hey Ya! + In the End), o B2 caiu
-  **sempre** depois do Trecho B actual, de +2s a +129s: 80_02 +20s,
-  80_04 +96s, 80_05 +6s, 80_06 +99s, 80_07 +129s, `dec00_01` +2s,
-  `dec00_06` +88s. É coerente com o critério (os últimos refrões são
-  normalmente os mais cheios — arranjo completo, vozes dobradas,
-  ad-libs), mas traz risco próprio: um refrão final pode já estar em
-  fade, trazer outro por cima ou ser menos "canónico" para
-  reconhecimento do que o primeiro. A regra de ≥30s de música depois
-  limita o caso extremo, não o resolve.
+  sempre depois do Trecho B actual, mas a magnitude separa dois grupos:
+  **cinco claramente mais tarde** — 80_02 +20s, 80_04 +96s, 80_05 +6s,
+  80_06 +99s, 80_07 +129s — e **dois que praticamente coincidem com o B
+  existente**: `dec00_01` +2s e `dec00_06` +1s. É coerente com o
+  critério (os últimos refrões são normalmente os mais cheios — arranjo
+  completo, vozes dobradas, ad-libs), mas traz risco próprio: um refrão
+  final pode já estar em fade, trazer outro por cima ou ser menos
+  "canónico" para reconhecimento do que o primeiro. A regra de ≥30s de
+  música depois limita o caso extremo, não o resolve.
+
+  **Correcção, 14 Out 2026** — esta lista dizia antes `dec00_06` +88s, o
+  que estava errado por duas razões: comparava o B2 com os tempos do
+  catálogo dessa faixa (18–30s), que estão desactualizados (dizem 12s
+  quando o mp3 em produção tem 15s — o ficheiro foi regenerado e o
+  catálogo não acompanhou), e usava um B2 calculado com a versão
+  anterior da regra, a da média das componentes. Com o critério actual e
+  o B actual localizado no source, dá +1s: nessa faixa a regra reproduz
+  o que já lá está. **Ressalva que fica com os números**: nas cinco
+  faixas dos Anos 80 o "B actual" vem todo de correlação, sem tempos no
+  catálogo que o confirmem, por isso estes cinco desvios valem o que
+  valer a localização — e ela é ambígua em temas muito repetitivos (ver
+  a entrada do teste de margem, 14 Out).
 - **Confluência baixa = revisão manual, não geração.** Em `80_04`
   (Don't You Want Me) a janela vencedora tinha confluência 0.074, ou
   seja nenhuma janela da faixa é intensa nos dois eixos ao mesmo tempo e
