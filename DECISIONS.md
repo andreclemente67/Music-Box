@@ -2126,3 +2126,20 @@ Implementado em `musicbox.html`:
 - **Outline amarelo** (pedido no mesmo lote): a janela de 75% (vídeo e foto) passa a ter `border:3px solid var(--accent); border-radius:16px` — exactamente os valores já usados na foto do artista/banda em `#momento-resposta-artista`, sem inventar novos.
 
 BIBLIA.md §5.4b (b)/(f) actualizada no mesmo commit. Validado só com `node --check` — por testar no browser pelo André.
+
+## 2026-10-14 — Ajuste visual: janela do Encore ext só no espaço livre (substitui os 75%/pausa de 1,5s)
+
+André viu o resultado da entrada anterior (pausa de 1,5s + janela a 75%, outline a abraçar uma caixa 16:9 fixa) e pediu mais um ajuste, com contexto novo: **este ecrã é mostrado a potenciais interessados**, não só à régie — por isso a grelha de concorrentes (pontuações) tem de ficar **sempre** visível, não só "aceitável tapar durante o Encore" como a entrada anterior assumia.
+
+Diagnóstico (sem editar, pedido antes de implementar): posições no layout de `musicbox.html` (`.topo`+`.progresso-faixas`+`.playlist-nome` ≈82px; `.palco` com título/artista/`#trecho-label`("TRECHO A/B")/timer/barra/chave-resposta ≈210px, terminando ≈292px; `#rodape-controlo` ≈60px; `.cabines` — grelha de concorrentes, 4 colunas, sem buraco no meio — começa logo depois, ≈352px num ecrã 1080px de alto; `#momento-resposta`, com as fotos do concorrente/banda, só aparece DEPOIS de `.cabines`). Perguntado ao André se a janela podia atravessar a régie/grelha (desde que o vídeo, mais estreito que o espaço todo, acabasse por não lhes tocar) — resposta: não, a grelha tem de ficar visível sempre; o espaço livre real é só entre o fim de "TRECHO A/B" e o topo de `.cabines`, ≈182px ≈17vh num ecrã 1080p, **independente do número de concorrentes** (ao contrário do espaço até às fotos, que a entrada anterior tinha calculado mal ao assumir — esse dependia de quantas linhas a grelha tinha).
+
+Implementado em `musicbox.html` (CSS de `#encore-video-overlay.encore-ext`):
+- Janela ancorada com `padding-top:16vh` (fim de `.palco`/"TRECHO A/B") em vez de centrada no ecrã inteiro (`align-items:flex-start`, não `center`).
+- Vídeo/foto: `max-width:60vw; max-height:15vh; width:auto; height:auto` — **sem `aspect-ratio` fixo** (removida a caixa 16:9 forçada que causava faixas pretas dentro do contorno com um vídeo 4:3 real, como o da `dec00_01` — pedido do André nesta mesma ronda). Com `width`/`height:auto`, o elemento usa a SUA proporção intrínseca; o `max-height:15vh` é quase sempre o limite real (para 4:3 ou 16:9 num ecrã 16:9, a altura disponível é sempre o mais restritivo), a largura encolhe proporcionalmente para caber — exactamente o comportamento pedido ("se a altura livre não chegar, reduz a largura"), sem cálculo nenhum em JS, só CSS.
+- Outline amarelo (`border:3px solid var(--accent); border-radius:16px`, já na ronda anterior) passa automaticamente a abraçar o conteúdo real, sem película preta — consequência directa de já não haver `aspect-ratio` forçado.
+- `#encore-ext-info` (contador + nome da faixa) deixou de ficar numa margem fixa a 28px do topo (isso ficava por cima do cabeçalho da página com a janela tão mais pequena) — passa a sobrepor-se ao fundo da própria janela (mesma faixa 16vh-31vh), texto reduzido (contador 52px→22px, título 18px→11px) proporcional ao tamanho novo, muito menor.
+- `PAUSA_ANTES_ENCORE_MS` (1,5s) **não foi alterada** — é partilhada com o Encore antigo (`testeTocarSequenciaSom()`/`iniciarEncoreComVideo()`), fora do âmbito deste pedido. Nova constante dedicada `PAUSA_ANTES_ENCORE_EXT_MS = 500` só para o Encore ext — com a janela já confinada ao espaço livre, sem tapar nada, já não precisa de 1,5s só para dar tempo de ver a confirmação.
+
+Mesma regra para vídeo e foto do artista (`#encore-video-overlay.encore-ext video, ... img`, selector único, inalterado desde a ronda anterior) — não foi preciso duplicar nada.
+
+BIBLIA.md §5.4b (b)/(f) actualizada no mesmo commit; STATUS.md também. Validado só com `node --check` — por confirmar visualmente pelo André (ecrã 1920×1080 ou o que usar para a demonstração).
