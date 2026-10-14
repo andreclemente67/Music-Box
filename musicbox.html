@@ -215,7 +215,9 @@
      entrada; contador + nome da faixa na margem livre (25% restante).
      Activado via overlay.classList.add('encore-ext') em iniciarEncoreExt() —
      a regra de 100% acima só se aplica sem esta classe (Encore antigo,
-     clip_b, inalterado). */
+     clip_b, inalterado). Sem película escura de fundo (fica transparente,
+     mostra a página do jogo por trás) — só a caixa 16:9 em si. */
+  #encore-video-overlay.encore-ext { background: transparent; }
   #encore-video-overlay.encore-ext video, #encore-video-overlay.encore-ext img {
     width: min(75vw, 133.3vh); height: auto; aspect-ratio: 16/9;
     animation: encoreExtEntrada 500ms ease-out;
@@ -3308,10 +3310,10 @@ function pararEncoreComVideo() {
 //     a partir do início do Trecho, nunca por 'ended' de vídeo/áudio;
 //   - lê `video_local` (mudo), não `clip_b` — só este precisa de ficar
 //     sincronizado em tempo real ao áudio (clip_b já vem com som
-//     embutido, não serve para isto). Sincronizado só quando o acerto
-//     foi no Trecho B (video_offset_s é relativo ao Trecho B); no
-//     Trecho A arranca em video_offset_s sem corrigir — ver
-//     iniciarSincronizacaoEncoreExt() e o `log()` abaixo.
+//     embutido, não serve para isto). Sincronizado em qualquer dos dois
+//     trechos (offset = video_offset_s + inicio do trecho do acerto,
+//     calibrado contra a fonte áudio completa) — ver
+//     iniciarSincronizacaoEncoreExt().
 //   - caixa 16:9 a ~75% do ecrã (classe CSS "encore-ext"), não 100% —
 //     com contador (segundos restantes) + nome da faixa na margem.
 function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
@@ -3343,20 +3345,51 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
     video.style.display = 'block';
     video.muted = true;
     video.src = entradaCatalogo.video_local;
-    const offsetBase = entradaCatalogo.video_offset_s || 0;
+    const videoOffsetS = entradaCatalogo.video_offset_s || 0;
+    // video_offset_s é calibrado contra a fonte áudio completa (ver
+    // estudos/trecho_b_expoente/video_offset.py: tempo_no_video =
+    // tempo_na_fonte_audio + video_offset_s) — por isso o offset usado
+    // aqui tem de somar também `inicio` do trecho do acerto (posição
+    // desse trecho dentro da fonte completa). A mesma fórmula serve para
+    // os dois trechos, A e B (14 Out 2026 — antes só se sincronizava o
+    // Trecho B, por se assumir sem razão que não havia relação conhecida
+    // entre video_offset_s e o Trecho A; trecho_a.inicio já existe no
+    // catálogo e a fórmula generaliza-se sem alterações).
+    const trechoInfo = trechoDoAcerto === 'B' ? entradaCatalogo.trecho_b : entradaCatalogo.trecho_a;
+    const trechoInicio = (trechoInfo && trechoInfo.inicio) || 0;
+    const offsetBase = videoOffsetS + trechoInicio;
     const arrancarVideo = () => {
-      if (trechoDoAcerto === 'B') {
-        video.currentTime = offsetBase + tHit;
-      } else {
-        video.currentTime = offsetBase;
-        log(`Encore (${entradaCatalogo.id}): vídeo sem sincronização — acerto foi no Trecho A`);
-        console.log('[Encore ext] acerto no Trecho A — vídeo arranca em video_offset_s (' + offsetBase + 's) sem correcção contínua.');
+      const tempoVideo = offsetBase + tHit;
+      // Espera o seek do vídeo terminar (+ dados suficientes para tocar,
+      // "canplay") antes de dar play — evita arrancar num frame antigo
+      // enquanto o seek ainda está em curso (mesma técnica validada em
+      // estudos/trecho_b_expoente/pagina.html).
+      let seekConcluido = false;
+      const arrancarVideoPronto = () => {
+        video.removeEventListener('seeked', aoSeeked);
+        video.removeEventListener('canplay', aoCanplay);
+        video.play().then(() => {
+          iniciarSincronizacaoEncoreExt(video, offsetBase);
+        }).catch((err) => {
+          console.log('[Encore ext] video_local play() rejeitado: ' + err.message);
+        });
+      };
+      const aoCanplay = () => { if (seekConcluido) arrancarVideoPronto(); };
+      const aoSeeked = () => {
+        seekConcluido = true;
+        if (video.readyState >= 3) arrancarVideoPronto();
+        else video.addEventListener('canplay', aoCanplay);
+      };
+      video.addEventListener('seeked', aoSeeked);
+      const jaLa = Math.abs(video.currentTime - tempoVideo) < 0.01;
+      video.currentTime = tempoVideo;
+      if (jaLa) {
+        // alguns browsers não disparam "seeked" se o valor pedido for
+        // igual ao currentTime actual — força um pequeno deslocamento
+        // antes para garantir o evento.
+        video.currentTime = Math.max(tempoVideo - 0.3, 0);
+        requestAnimationFrame(() => { video.currentTime = tempoVideo; });
       }
-      video.play().then(() => {
-        if (trechoDoAcerto === 'B') iniciarSincronizacaoEncoreExt(video, offsetBase);
-      }).catch((err) => {
-        console.log('[Encore ext] video_local play() rejeitado: ' + err.message);
-      });
     };
     if (video.readyState >= 1) arrancarVideo();
     else video.addEventListener('loadedmetadata', arrancarVideo, { once: true });
@@ -3383,9 +3416,10 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
 
 // Loop de sincronização vídeo↔áudio (mesma técnica testada e validada em
 // estudos/trecho_b_expoente/pagina.html, iniciarLoopSincronizacao()) —
-// só corre num acerto no Trecho B (ver iniciarEncoreExt()). offsetBase
-// (video_offset_s) é constante durante toda a reprodução; o tempo
-// esperado do vídeo é sempre audio.currentTime + offsetBase.
+// corre em qualquer acerto, Trecho A ou B (ver iniciarEncoreExt()).
+// offsetBase (video_offset_s + inicio do trecho do acerto) é constante
+// durante toda a reprodução; o tempo esperado do vídeo é sempre
+// audio.currentTime + offsetBase.
 function iniciarSincronizacaoEncoreExt(video, offsetBase) {
   clearInterval(encoreExtIntervaloSync);
   encoreExtIntervaloSync = setInterval(() => {
