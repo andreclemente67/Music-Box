@@ -20,7 +20,7 @@
     "artista": "John Williams",
     "consulta": "John Williams Star Wars",
     "ok": false,
-    "erro": "pesquisa excedeu 90s"
+    "erro": "falhou nas 2 tentativas — última: pesquisa excedeu 90s"
   },
   {
     "pack": "STD.INT.ALL.CIN.001",

@@ -9,7 +9,7 @@ Motor: `scripts/propor_fontes_proximos3.py` (mesma lógica de `propor_fontes_4pa
 | Faixa | Título | Canal | Duração | Topic/Official? | ⚠ |
 |---|---|---|---|---|---|
 | cinema_01 | Blade Runner (Love Theme) | IONI | 296s | fallback | |
-| cinema_02 | Star Wars | — | — | **falhou: pesquisa excedeu 90s** | ⚠ repetir |
+| cinema_02 | Star Wars | — | — | **falhou nas 2 tentativas (16 Out: timeout de novo, +1 retry único)** | ⚠ sem proposta — tentar mais tarde ou aumentar timeout |
 | cinema_03 | The Pink Panther | Henry Mancini | 3610s (1h) | topic | ⚠ é uma colectânea, não o single |
 | cinema_04 | Goldfinger | John Barry — Topic | 264s | topic | ok |
 | cinema_05 | Inception (Time) | WaterTower Music | 276s | official_audio | ok |
@@ -42,4 +42,4 @@ Motor: `scripts/propor_fontes_proximos3.py` (mesma lógica de `propor_fontes_4pa
 
 ## Nota sobre fiabilidade
 
-A classificação "topic"/"official_audio" confirma só o **canal**, não que o **título devolvido** corresponda à música pedida nem que o **artista** esteja certo — `madredeus_povo_que_lavas_no_rio` é o caso mais claro: título bate perfeitamente, mas a fonte proposta é do canal de Amália Rodrigues, não de Madredeus. 11 das 21 propostas têm algum sinal de alerta (duração muito acima do single, título devolvido diferente do pedido, ou tipo de vídeo errado — aula/concerto/colectânea em vez do single de estúdio) — nenhuma destas deve ser aprovada sem ouvir primeiro. `cinema_02` (Star Wars) falhou por timeout, não por ausência de resultados — vale repetir isoladamente.
+A classificação "topic"/"official_audio" confirma só o **canal**, não que o **título devolvido** corresponda à música pedida nem que o **artista** esteja certo — `madredeus_povo_que_lavas_no_rio` é o caso mais claro: título bate perfeitamente, mas a fonte proposta é do canal de Amália Rodrigues, não de Madredeus. 11 das 21 propostas têm algum sinal de alerta (duração muito acima do single, título devolvido diferente do pedido, ou tipo de vídeo errado — aula/concerto/colectânea em vez do single de estúdio) — nenhuma destas deve ser aprovada sem ouvir primeiro. `cinema_02` (Star Wars) falhou por timeout nas duas tentativas (1ª + 1 retry, 16 Out) — não por ausência de resultados; continua sem proposta.
