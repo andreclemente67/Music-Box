@@ -27,7 +27,7 @@ else
   echo "✓ _servidor_escrita.py iniciado em background — porta 8002 (ambiente de ~/.zshrc)"
 fi
 
-open "http://localhost:8002/musicbox.html"
+open -a "Firefox" "http://localhost:8002/musicbox.html"
 echo "✓ Browser aberto"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Para parar o _servidor_escrita.py: pkill -f _servidor_escrita.py"

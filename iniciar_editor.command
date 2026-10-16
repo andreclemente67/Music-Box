@@ -75,7 +75,7 @@ if [ -z "$ANTHROPIC_API_KEY" ]; then
   echo "⚠ ANTHROPIC_API_KEY não definida — '✦ Gerar faixas com IA' vai falhar até exportares a chave (ex.: no ~/.zshrc) e reiniciares este script"
 fi
 
-open "http://localhost:8002/musicbox_studio.html"
+open -a "Firefox" "http://localhost:8002/musicbox_studio.html"
 echo "✓ Browser aberto"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Para parar o auto_fusao.sh: pkill -f auto_fusao.sh"
