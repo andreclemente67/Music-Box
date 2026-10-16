@@ -748,19 +748,18 @@
   </div>
 </div>
 
-<!-- Encore com vídeo em ecrã inteiro (decisão 11 Out 2026, ver
-     BIBLIA.md §5.4b) — ver iniciarEncoreComVideo(). clip_b (vídeo+áudio
-     já combinados e verificados) em ecrã inteiro quando a faixa tem um;
-     foto do artista em ecrã inteiro como único fallback (sem clip_b, ou
-     video_sincronizado:false). -->
+<!-- Encore ext em ecrã inteiro (decisão 11 Out 2026, generalizado a
+     todas as faixas 16 Out 2026, ver BIBLIA.md §5.4b) — ver
+     iniciarEncoreExt(). video_local em ecrã inteiro quando a faixa tem
+     um; foto do artista em ecrã inteiro como fallback; nem um nem outro
+     avança de imediato. O antigo Encore com vídeo mudo (clip_b,
+     iniciarEncoreComVideo()) foi removido — nunca chamado desde a
+     generalização. -->
 <div id="encore-video-overlay">
   <!-- #encore-ext-janela (14 Out 2026, ver BIBLIA.md §5.4b/DECISIONS.md):
-       só existe para o Encore ext (classe "encore-ext") — envolve
-       vídeo/foto + contador para o contador se poder ancorar ao canto da
-       janela REAL (tamanho variável, calculado em iniciarEncoreExt()),
-       não a uma posição fixa do ecrã. Para o Encore antigo (sem a
-       classe) fica neutro (width/height:100%, ver CSS), vídeo/img
-       continuam a preencher o ecrã inteiro como sempre. -->
+       envolve vídeo/foto + contador para o contador se poder ancorar ao
+       canto da janela REAL (tamanho variável, calculado em
+       iniciarEncoreExt()), não a uma posição fixa do ecrã. -->
   <div id="encore-ext-janela">
     <video id="encore-video" playsinline></video>
     <img id="encore-foto-fallback" alt="">
@@ -798,47 +797,25 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────
-// DUCKING DA MÚSICA PÓS-ACERTO (2026-10-04, pedido do utilizador;
-// VOL_ENCORE acrescentado 2026-10-05 — "meio-termo" depois de comparar
-// sample_actual.wav vs sample_proposto.wav) — constantes no topo do
-// script para ser fácil afinar. VOL_MUSICA é o volume normal de fundo
-// durante a revelação (continuidade sonora, Bíblia §5.4b); VOL_DUCK é o
-// volume reduzido só enquanto o nome do artista + "In the Box!!" estão a
-// tocar, para se ouvirem bem por cima; VOL_ENCORE é o nível intermédio
-// mantido durante a pausa e toda a janela de decisão do Encore (nem tão
-// alto que pareça já ter voltado ao normal antes da decisão, nem tão
-// baixo como durante a voz). FADE_DOWN_MS/FADE_UP_MS são as durações das
-// transições suaves (não saltos instantâneos) — FADE_DOWN_MS é reusado
-// tanto para o duck inicial (VOL_MUSICA→VOL_DUCK) como para a descida a
-// VOL_ENCORE (VOL_DUCK→VOL_ENCORE), FADE_UP_MS só para a subida final a
-// VOL_MUSICA quando a Faixa seguinte arranca a sério. Ver fadeVolume()/
-// acertouFaixa()/testeTocarSequenciaSom()/iniciarEncoreComVideo().
+// DUCKING DA MÚSICA PÓS-ACERTO (2026-10-04, pedido do utilizador) —
+// constantes no topo do script para ser fácil afinar. VOL_MUSICA é o
+// volume normal de fundo durante a revelação (continuidade sonora,
+// Bíblia §5.4b); VOL_DUCK é o volume reduzido só enquanto o nome do
+// artista + "In the Box!!" estão a tocar, para se ouvirem bem por cima.
+// FADE_DOWN_MS/FADE_UP_MS são as durações das transições suaves (não
+// saltos instantâneos) — FADE_DOWN_MS é reusado tanto para o duck
+// inicial (VOL_MUSICA→VOL_DUCK) como pelo Encore ext, FADE_UP_MS só
+// para a subida final a VOL_MUSICA quando a Faixa seguinte arranca a
+// sério. Ver fadeVolume()/acertouFaixa()/tocarSequenciaSomExt().
 const VOL_MUSICA = 0.75;
 const VOL_DUCK = 0.25;
-const VOL_ENCORE = 0.45;
 const FADE_DOWN_MS = 300;
 const FADE_UP_MS = 600;
-// 2026-10-05, pedido do utilizador: pausa entre o fim do "In the Box!!"
-// (ou do roar, se existir) e o Encore (ver iniciarEncoreComVideo()); a
-// música mantém-se a tocar (em VOL_ENCORE) durante esta pausa, nunca
-// pára. Ver testeTocarSequenciaSom()/testeTimeoutPreEncore.
-const PAUSA_ANTES_ENCORE_MS = 1500;
-// Pausa equivalente, mas só para o Encore ext (ver iniciarEncoreExt(),
-// chamada em abrirOverlay()) — dedicada e mais curta (reduzida de 1,5s
-// para 0,5s em 14 Out 2026, ver DECISIONS.md: com a janela já confinada
-// ao espaço livre, sem tapar nada, já não precisa de uma pausa tão longa
-// para o André ver a confirmação). Separada de PAUSA_ANTES_ENCORE_MS de
-// propósito — esse continua a servir só o Encore antigo, inalterado.
+// Pausa antes de iniciarEncoreExt() aparecer (chamada em abrirOverlay())
+// — 0,5s (reduzida de 1,5s em 14 Out 2026, ver DECISIONS.md: com a
+// janela confinada ao espaço livre, sem tapar nada, já não precisa de
+// uma pausa tão longa para o André ver a confirmação).
 const PAUSA_ANTES_ENCORE_EXT_MS = 500;
-// Decisão de formato 11 Out 2026 (BIBLIA.md §5.4b) — substitui a janela
-// de decisão "▶ Encore" verde/vermelho: no fim da sequência de voz, se a
-// faixa tiver `clip_b` (vídeo+áudio do Trecho B já combinados e
-// verificados, ver estudos/trecho_b_expoente/), mostra-o em ecrã
-// inteiro com fade de FADE_ENCORE_VIDEO_MS na música de fundo; sem
-// clip_b (ou video_sincronizado:false), mostra a foto do artista em
-// ecrã inteiro por ENCORE_FOTO_FALLBACK_MS. Ver iniciarEncoreComVideo().
-const FADE_ENCORE_VIDEO_MS = 500;
-const ENCORE_FOTO_FALLBACK_MS = 4000;
 
 // Encore com áudio estendido (decisão de formato 14 Out 2026, BIBLIA.md
 // §5.4b) — substitui por completo o acima SÓ para faixas com
@@ -1887,14 +1864,6 @@ function fotoConcorrenteHtml(i) {
 // §5.4b revisto, avança pelo fim real do áudio/Encore).
 const MOMENTO_RESPOSTA_MS = 4000;
 let momentoRespostaTimer = null;
-// testeTimeoutCorteTrechoB: reaproveitado para a pausa fixa do fallback
-// foto-sem-vídeo (ENCORE_FOTO_FALLBACK_MS, ver iniciarEncoreComVideo()).
-// testeAudioRevelacaoActual: referência ao Audio() da revelação ("in the
-// box"/voz) actualmente a tocar (ver testeTocarSequenciaSom()). Ambos
-// precisam de ficar acessíveis fora da função onde nascem para
-// esconderMomentoResposta() os poder cortar num reset.
-let testeTimeoutCorteTrechoB = null;
-let testeAudioRevelacaoActual = null;
 
 // Encore com áudio estendido (ver DMIN_ENCORE_S acima) — capturados no
 // topo de acertouFaixa(), no instante exacto do acerto (antes de
@@ -1908,8 +1877,7 @@ let encoreExtIntervaloContador = null;
 let encoreExtTeclaSaltar = null;
 // Pausa de PAUSA_ANTES_ENCORE_EXT_MS antes de iniciarEncoreExt() aparecer
 // (14 Out 2026) — cancelado em esconderMomentoResposta() se o jogador
-// avançar/houver reset antes de disparar, mesmo padrão de
-// testeTimeoutPreEncore (Encore antigo).
+// avançar/houver reset antes de disparar.
 let encoreExtTimeoutPreEncore = null;
 
 // Esconde o overlay de acerto (foto do concorrente + artista/banda) no
@@ -1921,17 +1889,11 @@ let encoreExtTimeoutPreEncore = null;
 // acertou, terminarFaixaSemVencedor()).
 function esconderMomentoResposta() {
   clearTimeout(momentoRespostaTimer);
-  // Cancela a pausa fixa do fallback foto-sem-vídeo, a pausa de 1,5s
-  // antes do Encore antigo (PAUSA_ANTES_ENCORE_MS, testeTimeoutPreEncore)
-  // e a pausa de 0,5s antes do Encore ext (PAUSA_ANTES_ENCORE_EXT_MS,
+  // Cancela a pausa de 0,5s antes do Encore ext (PAUSA_ANTES_ENCORE_EXT_MS,
   // encoreExtTimeoutPreEncore) — evita um segundo avanço se o NEW_SLOT
   // já aconteceu por outra via (ex.: MANUAL_ADVANCE do operador) enquanto
   // o Encore ainda estava em curso.
-  clearTimeout(testeTimeoutCorteTrechoB);
-  clearTimeout(testeTimeoutPreEncore);
   clearTimeout(encoreExtTimeoutPreEncore);
-  testeAudioRevelacaoActual = null;
-  pararEncoreComVideo();
   pararEncoreExt();
   const overlay = document.getElementById('momento-resposta');
   if (overlay) overlay.style.display = 'none';
@@ -1982,28 +1944,26 @@ function mostrarMomentoResposta(i, tipo) {
       blocoArtista.classList.add('momento-resposta-entrada-teste');
       // Dispara a sequência "in the box" → voz do nome → Encore em
       // sincronia com esta mesma animação (mesmo ponto de entrada) — ver
-      // testeTocarSequenciaSom(). Passa a entrada completa do
-      // catalogo.json (não só o id) — iniciarEncoreComVideo() precisa de
-      // clip_b/video_sincronizado/imagem no fim da sequência.
+      // tocarSequenciaSomExt(). Passa a entrada completa do
+      // catalogo.json (não só o id) — iniciarEncoreExt() precisa de
+      // video_local/video_sincronizado/imagem no fim da sequência.
       if (TESTE_SOM_CONTROLA_TRECHO_B && entradaCatalogo && entradaCatalogo.id) {
-        // Encore ext passa a ser o ÚNICO caminho (16 Out 2026, ver
-        // DECISIONS.md "Estende o Encore ext a todas as faixas") — antes
-        // só corria em faixas com ficheiro_ext (temAudioExtendido(),
-        // hoje só dec00_01); testeTocarSequenciaSom()/
-        // iniciarEncoreComVideo() ficam por chamar (não apagados — ver
-        // DECISIONS.md, pendente de confirmação pelo André antes de
-        // remover a sério). iniciarEncoreExt()/tocarSequenciaSomExt() já
-        // tratavam os dois casos (com/sem video_local) — o que faltava
-        // era não travar com o áudio normal (mais curto, sem
-        // ficheiro_ext) a acabar antes do Dmin, ver dentro das duas
-        // funções.
+        // Encore ext é o ÚNICO caminho (16 Out 2026, ver DECISIONS.md
+        // "Estende o Encore ext a todas as faixas") — antes só corria em
+        // faixas com ficheiro_ext (temAudioExtendido(), hoje só
+        // dec00_01); o antigo testeTocarSequenciaSom()/
+        // iniciarEncoreComVideo() foi removido (16 Out 2026, nunca
+        // chamado desde a generalização). iniciarEncoreExt()/
+        // tocarSequenciaSomExt() já tratavam os dois casos (com/sem
+        // video_local) — o que faltava era não travar com o áudio
+        // normal (mais curto, sem ficheiro_ext) a acabar antes do Dmin,
+        // ver dentro das duas funções.
         //
         // Pausa de PAUSA_ANTES_ENCORE_EXT_MS antes da janela do Encore
         // aparecer (14 Out 2026, ver DECISIONS.md "Ajuste visual: janela
         // do Encore ext só no espaço livre"). A música continua normal
         // (VOL_MUSICA, sem duck) durante esta pausa. Cancelável em
-        // esconderMomentoResposta() (mesmo padrão de
-        // testeTimeoutPreEncore, para o Encore antigo).
+        // esconderMomentoResposta().
         const _entradaParaEncoreExt = entradaCatalogo;
         encoreExtTimeoutPreEncore = setTimeout(() => {
           iniciarEncoreExt(_entradaParaEncoreExt, encoreExtHitTrecho, encoreExtHitTempo);
@@ -3309,101 +3269,14 @@ function aguardarFimTrechoBAposAcerto() {
   }
 }
 
-// Timer da pausa de 1,5s antes do Encore aparecer (ver
-// PAUSA_ANTES_ENCORE_MS) — cancelado em esconderMomentoResposta() se o
-// jogador avançar/houver reset antes de disparar.
-let testeTimeoutPreEncore = null;
-// Listener de teclado activo enquanto o Encore está visível (Esc/Espaço
-// salta para a Faixa seguinte) — guardado para o poder remover sempre
-// que o Encore termina, por qualquer via (ended/timeout/tecla/reset).
-let encoreAoTeclaSaltarActual = null;
-
-// Encore com vídeo em ecrã inteiro (decisão de formato 11 Out 2026, ver
-// BIBLIA.md §5.4b) — chamado no fim da sequência de voz (nome→"In the
-// Box!!"→roar), substitui a antiga janela de decisão "▶ Encore"
-// verde/vermelho. `entradaCatalogo` é a entrada do catalogo.json (a
-// mesma usada em mostrarMomentoResposta() para a foto do artista).
-//   - clip_b existe e video_sincronizado!==false → mostra o clip (vídeo+
-//     áudio já combinados e verificados, ver estudos/trecho_b_expoente/)
-//     em ecrã inteiro; avança no 'ended' do próprio vídeo.
-//   - caso contrário → foto do artista em ecrã inteiro (único fallback,
-//     nunca o pequeno overlay lado-a-lado), por ENCORE_FOTO_FALLBACK_MS.
-//   - nem clip_b nem imagem → nada para mostrar, avança de imediato
-//     (mesmo comportamento de antes de existir Encore).
-// Em qualquer dos dois primeiros casos, a régie pode saltar com Esc ou
-// Espaço (aoTeclaSaltarEncore) — um só evento, sem precisar de clicar em
-// nada primeiro.
-function iniciarEncoreComVideo(entradaCatalogo) {
-  const temClip = entradaCatalogo && entradaCatalogo.clip_b && entradaCatalogo.video_sincronizado !== false;
-  const temFoto = entradaCatalogo && entradaCatalogo.imagem;
-
-  if (!temClip && !temFoto) {
-    if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
-    return;
-  }
-
-  const overlay = document.getElementById('encore-video-overlay');
-  const video = document.getElementById('encore-video');
-  const foto = document.getElementById('encore-foto-fallback');
-
-  const avancar = () => {
-    pararEncoreComVideo();
-    if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
-  };
-  encoreAoTeclaSaltarActual = (ev) => {
-    if (ev.key !== 'Escape' && ev.key !== ' ') return;
-    console.log('[Encore] saltado pela régie (' + ev.key + ')');
-    avancar();
-  };
-  document.addEventListener('keydown', encoreAoTeclaSaltarActual);
-
-  overlay.classList.add('visivel');
-  // Música de fundo desce a 0 (fade, não corte seco) — o clip/foto do
-  // Encore tem o seu próprio áudio (clip_b já vem com som embutido);
-  // volta a VOL_MUSICA sozinha na Faixa seguinte (iniciarFaixa()).
-  fadeVolume(audio, 0, FADE_ENCORE_VIDEO_MS, () => audio.pause());
-
-  if (temClip) {
-    foto.style.display = 'none';
-    video.style.display = 'block';
-    video.onended = avancar;
-    video.src = entradaCatalogo.clip_b;
-    video.currentTime = 0;
-    video.play().catch((err) => {
-      console.log('[Encore] clip_b play() rejeitado: ' + err.message);
-      avancar();
-    });
-  } else {
-    video.style.display = 'none';
-    foto.style.display = 'block';
-    foto.src = entradaCatalogo.imagem;
-    testeTimeoutCorteTrechoB = setTimeout(avancar, ENCORE_FOTO_FALLBACK_MS);
-  }
-}
-
-// Esconde/limpa o overlay do Encore e o listener de teclado — chamado
-// tanto pelo avanço normal (iniciarEncoreComVideo()) como pelo reset de
-// segurança (esconderMomentoResposta()). Seguro chamar mesmo sem Encore
-// em curso (ex.: faixa sem clip_b nem imagem, ou NEW_SLOT via outra
-// via) — todas as operações são no-ops nesse caso.
-function pararEncoreComVideo() {
-  if (encoreAoTeclaSaltarActual) {
-    document.removeEventListener('keydown', encoreAoTeclaSaltarActual);
-    encoreAoTeclaSaltarActual = null;
-  }
-  clearTimeout(testeTimeoutCorteTrechoB);
-  const overlay = document.getElementById('encore-video-overlay');
-  const video = document.getElementById('encore-video');
-  overlay.classList.remove('visivel');
-  video.onended = null;
-  video.pause();
-  video.removeAttribute('src');
-  video.load();
-}
-
 // Encore com áudio estendido (14 Out 2026, ver DMIN_ENCORE_S/BIBLIA.md
-// §5.4b) — só faixas com `ficheiro_ext` (hoje só dec00_01). Diferenças
-// chave face a iniciarEncoreComVideo() acima (que continua inalterado
+// §5.4b) — já generalizado a todas as faixas (16 Out 2026, ver
+// DECISIONS.md "Estende o Encore ext a todas as faixas"; o antigo
+// "▶ Encore" verde/vermelho e o Encore com vídeo mudo por detrás de
+// `clip_b`/`iniciarEncoreComVideo()` foram removidos — nunca chamados
+// desde essa generalização, substituídos por completo por
+// iniciarEncoreExt() abaixo, que trata tanto `video_local` como as
+// faixas sem vídeo/foto). Diferenças chave face ao antigo (removido
 // para todas as outras faixas):
 //   - não espera o fim da sequência de voz para entrar (ver chamada em
 //     abrirOverlay() dentro de mostrarMomentoResposta()) — só
@@ -3690,110 +3563,6 @@ function tocarSequenciaSomExt(entradaCatalogo) {
   } else {
     fadeVolumePromise(volAlvo, VOL_DUCK, FADE_DOWN_MS).then(tocarRoarOuSaltar);
   }
-}
-
-// TESTE TEMPORÁRIO (2026-10-04, pedido do utilizador) — NÃO COMMITAR.
-// Nova arquitectura — 3 ficheiros encadeados por 'ended' (substitui a
-// "Versão B" de frase única, ver DECISIONS.md 2026-10-04):
-//   1. voz/nome_<trackId>.wav — só o nome do artista (voz Alex, rate
-//      205, tom natural de apresentador, sem efeito festivo/pitch).
-//   2. (pausa PAUSA_NOME_ITB_MS) efeitos/in_the_box.wav — "In the Box!"
-//      eufórico, ficheiro único partilhado por todas as faixas.
-//   3. efeitos/roar.wav — roar de multidão, se existir; se não existir
-//      (404/play rejeitado), salta directamente para o fim da sequência
-//      sem bloquear o jogo.
-// O nome só começa a tocar depois de testeFadeDuckPromise resolver
-// (fade-down da música para VOL_DUCK, disparado em acertouFaixa()) —
-// nunca arranca a meio da transição de volume. No 'ended' do ÚLTIMO som
-// que realmente tocou (roar, ou in_the_box se não houver roar), a
-// música sobe de volta a VOL_MUSICA com fade suave. Falha em qualquer
-// passo (ficheiro em falta, play() rejeitado) nunca trava o jogo nem
-// deixa o volume preso em VOL_DUCK — cai sempre em frente até
-// iniciarEncoreComVideo(), sempre pelo mesmo caminho de saída
-// (terminarSequencia()).
-function testeTocarSequenciaSom(entradaCatalogo) {
-  const trackId = entradaCatalogo.id;
-  const __t0 = performance.now();
-  const PAUSA_NOME_ITB_MS = 120;
-  let sequenciaTerminada = false;
-
-  const terminarSequencia = (motivo) => {
-    if (sequenciaTerminada) return; // guarda contra 'ended'+catch duplicados
-    sequenciaTerminada = true;
-    console.log('[TESTE SOM] sequência terminou (' + motivo + '), t=' + Math.round(performance.now() - __t0) + 'ms — fade para VOL_ENCORE + pausa de ' + PAUSA_ANTES_ENCORE_MS + 'ms antes do Encore');
-    testeAudioRevelacaoActual = null;
-    // Fica em VOL_ENCORE (intermédio) durante a pausa — o Encore
-    // (iniciarEncoreComVideo()) é que decide se há clip/foto a mostrar;
-    // sem nenhum dos dois, avança de imediato e a próxima Faixa repõe
-    // VOL_MUSICA directamente em iniciarFaixa(), sem fade.
-    fadeVolume(audio, VOL_ENCORE, FADE_DOWN_MS);
-    // O Encore só aparece PAUSA_ANTES_ENCORE_MS depois do fim do último
-    // som — a música (já em VOL_ENCORE) continua a tocar normalmente
-    // durante esta pausa, nunca pára. Cancelado em
-    // esconderMomentoResposta() se o jogador avançar/houver reset antes
-    // de disparar (ver testeTimeoutPreEncore) — o Encore nunca aparece
-    // depois disso.
-    testeTimeoutPreEncore = setTimeout(() => {
-      iniciarEncoreComVideo(entradaCatalogo);
-    }, PAUSA_ANTES_ENCORE_MS);
-  };
-
-  const tocarRoarOuTerminar = () => {
-    if (roarDisponivel === false) {
-      // Já sabemos (verificado no arranque, ver roarDisponivel) que o
-      // ficheiro não existe — nem tenta, nem pede, nem há 404 na consola.
-      terminarSequencia('roar não existe (verificado no arranque)');
-      return;
-    }
-    try {
-      const roar = new Audio('efeitos/roar.wav');
-      testeAudioRevelacaoActual = roar;
-      roar.addEventListener('ended', () => terminarSequencia('roar terminou'));
-      roar.play().then(() => {
-        console.log('[TESTE SOM] roar a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
-      }).catch((err) => {
-        console.log('[TESTE SOM] roar.wav indisponível (' + err.message + ') — a saltar');
-        terminarSequencia('roar indisponível');
-      });
-    } catch (e) { terminarSequencia('roar excepção'); }
-  };
-
-  const tocarItb = () => {
-    try {
-      const itb = new Audio('efeitos/in_the_box.wav');
-      testeAudioRevelacaoActual = itb;
-      itb.addEventListener('ended', tocarRoarOuTerminar);
-      itb.play().then(() => {
-        console.log('[TESTE SOM] in_the_box a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
-      }).catch((err) => {
-        console.log('[TESTE SOM] in_the_box.wav play() rejeitado: ' + err.message);
-        terminarSequencia('in_the_box falhou');
-      });
-    } catch (e) { terminarSequencia('in_the_box excepção'); }
-  };
-
-  const tocarNome = () => {
-    try {
-      const nome = new Audio('voz/nome_' + trackId + '.wav');
-      testeAudioRevelacaoActual = nome;
-      nome.addEventListener('ended', () => {
-        console.log('[TESTE SOM] nome terminou, t=' + Math.round(performance.now() - __t0) + 'ms — pausa ' + PAUSA_NOME_ITB_MS + 'ms antes de in_the_box');
-        setTimeout(tocarItb, PAUSA_NOME_ITB_MS);
-      });
-      nome.play().then(() => {
-        console.log('[TESTE SOM] nome a tocar, t=' + Math.round(performance.now() - __t0) + 'ms');
-      }).catch((err) => {
-        console.log('[TESTE SOM] voz/nome_' + trackId + '.wav play() rejeitado: ' + err.message);
-        terminarSequencia('nome falhou');
-      });
-    } catch (e) { terminarSequencia('nome excepção'); }
-  };
-
-  // Espera o fade-down (VOL_MUSICA → VOL_DUCK, disparado em
-  // acertouFaixa()) terminar antes de tocar o nome — Promise.resolve()
-  // de reserva caso esta função seja chamada sem um fade pendente
-  // (nunca deveria acontecer no fluxo real, mas evita travar o jogo).
-  (testeFadeDuckPromise || Promise.resolve()).then(tocarNome);
 }
 
 // MANUAL_ADVANCE (Bíblia §19.1) — atalho de régie: chama exactamente a
