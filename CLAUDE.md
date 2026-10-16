@@ -14,7 +14,7 @@
 
 # Gasto de utilização (regra do André, 14 Out 2026) — AVISAR SEMPRE
 
-- Uma tarefa por sessão. No fim da tarefa, lembra o André: "Tarefa feita — faz /clear ou abre New session antes da próxima."
+- Uma tarefa por sessão.
 - Modelo por defeito: Sonnet. Se a sessão estiver noutro modelo, avisa no início.
 - AVISA SEMPRE, em destaque, quando a sessão ficar comprida (muitas trocas, contexto grande ou várias tarefas seguidas): "⚠ Sessão longa — gasta muito. Faz /compact agora ou /clear e começa sessão nova."
 - Nunca propor retomar sessões antigas; preferir sessão nova + STATUS.md.

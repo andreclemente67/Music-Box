@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<title>Music Box Studio — Início</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#111113}
+a{color:#E8C55A}a:hover{color:#F5DC8C}
+</style>
+</helmet>
+<div style="min-height: 900px; background: #111113; color: #ECEAE4; font-family: 'Space Grotesk', sans-serif; display: flex; flex-direction: column">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 32px; padding: 18px 32px; border-bottom: 1px solid #2A2A2E">
+<div style="font-family: 'IBM Plex Mono', monospace; font-weight: 500; letter-spacing: 0.12em; color: #E8C55A; font-size: 15px; line-height: 1.1">MUSIC BOX<br><span style="color: #8C8A84">STUDIO</span></div>
+<nav style="display: flex; flex-wrap: wrap; gap: 8px; flex: 1">
+<a href="#" style="padding: 12px 18px; border-radius: 8px; background: #E8C55A; color: #111113; text-decoration: none; font-weight: 700">Início</a>
+<a href="#" style="padding: 12px 18px; border-radius: 8px; color: #ECEAE4; text-decoration: none">Faixas</a>
+<a href="#" style="padding: 12px 18px; border-radius: 8px; color: #ECEAE4; text-decoration: none">Playlists</a>
+<a href="#" style="padding: 12px 18px; border-radius: 8px; color: #ECEAE4; text-decoration: none">Revisão</a>
+<a href="#" style="padding: 12px 18px; border-radius: 8px; color: #ECEAE4; text-decoration: none">Exportar e App</a>
+</nav>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #8C8A84">Pesquisar
+<input type="search" placeholder="Faixa, artista ou playlist" style="width: 260px; max-width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #3A3A3F; background: #1B1B1E; color: #ECEAE4; font: inherit; font-size: 14px">
+</label>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; flex: 1">
+
+<aside style="flex: 1 1 260px; max-width: 300px; border-right: 1px solid #2A2A2E; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.1em; color: #8C8A84">PLAYLISTS · 41</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-weight: 700; font-size: 14px; color: #E8C55A">Décadas</div>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Anos 50 <span style="color: #8C8A84">· 7</span></a>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Anos 60 <span style="color: #8C8A84">· 7</span></a>
+<a href="#" style="text-decoration: none; color: #111113; background: #E8C55A; padding: 6px 8px; border-radius: 6px">Anos 80 <span>· 7 · 1 por aplicar</span></a>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Anos 2000 <span style="color: #8C8A84">· 7</span></a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-weight: 700; font-size: 14px; color: #E8C55A">Estilos</div>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Rock <span style="color: #8C8A84">· 1 por aplicar</span></a>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Clássica <span style="color: #8C8A84">· 1 por aplicar</span></a>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Gaming <span style="color: #8C8A84">· 1 por aplicar</span></a>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-weight: 700; font-size: 14px; color: #E8C55A">Especiais</div>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Tributo Beatles</a>
+<a href="#" style="text-decoration: none; color: #ECEAE4; padding: 6px 8px; border-radius: 6px">Portugal 80</a>
+</div>
+<a href="#" style="margin-top: auto; text-align: center; padding: 12px; border-radius: 8px; border: 1px solid #E8C55A; text-decoration: none; font-weight: 700">+ Nova playlist</a>
+</aside>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 32px 40px; display: flex; flex-direction: column; gap: 28px">
+<div>
+<h1 style="margin: 0; font-size: 36px; font-weight: 700">O que falta fazer</h1>
+<p style="margin: 8px 0 0; color: #A8A6A0; font-size: 16px">Catálogo: 348 faixas · 41 playlists. Começa por cima: está ordenado por urgência.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<div style="background: #1B1B1E; border: 1px solid #3A3A3F; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #E8C55A; letter-spacing: 0.08em">1 · APLICAR</div>
+<div style="font-size: 40px; font-weight: 700">12</div>
+<div style="font-size: 16px">faixas aprovadas por aplicar, em 10 playlists</div>
+<div style="color: #A8A6A0; font-size: 14px">Já ouvidas. Falta só carregar no botão — fica backup.</div>
+<a href="#" style="margin-top: 6px; align-self: flex-start; padding: 12px 18px; border-radius: 8px; background: #E8C55A; color: #111113; text-decoration: none; font-weight: 700">Aplicar todas →</a>
+</div>
+<div style="background: #1B1B1E; border: 1px solid #3A3A3F; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #E8C55A; letter-spacing: 0.08em">2 · OUVIR</div>
+<div style="font-size: 40px; font-weight: 700">0</div>
+<div style="font-size: 16px">faixas por rever</div>
+<div style="color: #A8A6A0; font-size: 14px">Nada à tua espera para ouvir.</div>
+</div>
+<div style="background: #1B1B1E; border: 1px solid #3A3A3F; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #E8C55A; letter-spacing: 0.08em">3 · COMPLETAR</div>
+<div style="font-size: 40px; font-weight: 700">[N]</div>
+<div style="font-size: 16px">faixas sem fonte de áudio</div>
+<div style="color: #A8A6A0; font-size: 14px">Sem fonte, o Trecho B automático não corre.</div>
+<a href="#" style="margin-top: 6px; align-self: flex-start; padding: 12px 18px; border-radius: 8px; border: 1px solid #E8C55A; text-decoration: none; font-weight: 700">Ver lista →</a>
+</div>
+</div>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; font-size: 20px">Outras pendências</h2>
+<div style="display: flex; flex-direction: column; border: 1px solid #2A2A2E; border-radius: 12px; overflow: hidden">
+<a href="#" style="display: flex; justify-content: space-between; gap: 16px; padding: 16px 20px; text-decoration: none; color: #ECEAE4; border-bottom: 1px solid #2A2A2E"><span>Faixas sem imagem</span><span style="color: #E8C55A">12 →</span></a>
+<a href="#" style="display: flex; justify-content: space-between; gap: 16px; padding: 16px 20px; text-decoration: none; color: #ECEAE4; border-bottom: 1px solid #2A2A2E"><span>Trecho B para revisão manual (pouca intensidade ou no fim da música)</span><span style="color: #E8C55A">1 →</span></a>
+<a href="#" style="display: flex; justify-content: space-between; gap: 16px; padding: 16px 20px; text-decoration: none; color: #ECEAE4; border-bottom: 1px solid #2A2A2E"><span>Trechos inconclusivos no verificador</span><span style="color: #E8C55A">22 →</span></a>
+<a href="#" style="display: flex; justify-content: space-between; gap: 16px; padding: 16px 20px; text-decoration: none; color: #ECEAE4"><span>Faixas não usadas em nenhuma playlist</span><span style="color: #E8C55A">[N] →</span></a>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-size: 20px">Filtros rápidos</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" style="padding: 10px 16px; border-radius: 999px; border: 1px solid #3A3A3F; background: #1B1B1E; color: #ECEAE4; font: inherit; font-size: 14px">Década ▾</button>
+<button type="button" style="padding: 10px 16px; border-radius: 999px; border: 1px solid #3A3A3F; background: #1B1B1E; color: #ECEAE4; font: inherit; font-size: 14px">Estilo ▾</button>
+<button type="button" style="padding: 10px 16px; border-radius: 999px; border: 1px solid #3A3A3F; background: #1B1B1E; color: #ECEAE4; font: inherit; font-size: 14px">Estado ▾</button>
+<button type="button" style="padding: 10px 16px; border-radius: 999px; border: 1px solid #3A3A3F; background: #1B1B1E; color: #ECEAE4; font: inherit; font-size: 14px">Sem Trecho B</button>
+<button type="button" style="padding: 10px 16px; border-radius: 999px; border: 1px solid #3A3A3F; background: #1B1B1E; color: #ECEAE4; font: inherit; font-size: 14px">Sem imagem</button>
+<button type="button" style="padding: 10px 16px; border-radius: 999px; border: 1px dashed #3A3A3F; background: transparent; color: #A8A6A0; font: inherit; font-size: 14px">Mais filtros</button>
+</div>
+</section>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
