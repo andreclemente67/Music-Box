@@ -2192,3 +2192,33 @@ Implementado em `musicbox.html`:
 **Por fazer, não incluído nesta entrada**: confirmar com testes reais (dec00_02 Trecho A e B, dec00_01 inalterada) antes de apagar `testeTocarSequenciaSom()`/`iniciarEncoreComVideo()` a sério — ficam como código morto conhecido até lá. Point (b) do diagnóstico ("foto ~1s") não tem causa confirmada no Encore antigo — como esse caminho deixa de correr, fica sem efeito prático, não investigado mais a fundo.
 
 BIBLIA.md §5.4b (intro, (e), "por confirmar") actualizada no mesmo commit. `node --check` ok — por testar no Firefox pelo André (dec00_02 A/B, dec00_01 inalterada).
+
+## 2026-10-16 — Removido o Encore antigo (código morto), confirmado validado pelo André
+
+Pedido do André: o Encore ext já corre para todas as faixas (entrada anterior) e foi validado — remover de facto `testeTocarSequenciaSom()`/`iniciarEncoreComVideo()`, deixados como "código morto conhecido" na entrada anterior à espera desta confirmação.
+
+Confirmado por grep antes de remover: zero chamadas reais a `iniciarEncoreComVideo()`, `testeTocarSequenciaSom()` ou `pararEncoreComVideo()` em todo o `musicbox.html` — só a definição e comentários. Removido: as três funções e as variáveis/constantes exclusivas delas (`testeTimeoutPreEncore`, `testeTimeoutCorteTrechoB`, `testeAudioRevelacaoActual`, `encoreAoTeclaSaltarActual`, `VOL_ENCORE`, `PAUSA_ANTES_ENCORE_MS`, `FADE_ENCORE_VIDEO_MS`, `ENCORE_FOTO_FALLBACK_MS`).
+
+**`clip_b` deixa de ser lido por qualquer código** (só `iniciarEncoreComVideo()` o lia) — `iniciarEncoreExt()` usa `video_local`, não `clip_b`. O campo continua em `catalogo.json` (`dec00_03`) como dado órfão, não tocado (fora de âmbito desta tarefa — só código). Sem referências especiais a Tributo/Pergunta Bónus no Encore antigo (confirmado por grep) — nada a preservar aí.
+
+Os elementos HTML partilhados (`#encore-video-overlay`/`#encore-video`/`#encore-foto-fallback`/`#encore-ext-janela`) continuam — são os mesmos que `iniciarEncoreExt()` usa, só o JS do caminho antigo saiu. Comportamento/janela/CSS do Encore ext inalterados.
+
+BIBLIA.md §5.4b (parágrafo "Encore redesenhado") actualizada no mesmo commit — já não diz "função fica por chamar, não apagada". `node --check` OK. Commit `ed616ee`.
+
+## 2026-10-16 — dec00_03 (Mr. Brightside) calibrada para o Encore ext — documentação retroactiva
+
+Diagnóstico pedido pelo André confirma que a calibração de vídeo da `dec00_03` **já estava feita e em produção** desde a sessão de 11 Out 2026 (quando `video_local`/`clip_b` foram gerados para o piloto do Encore) — nunca tinha ficado registada como entrada própria no DECISIONS.md, só implícita no catálogo. Esta entrada é só para repor o registo, não uma decisão nova.
+
+`video_offset_s = 3,597` (confiança 0,981, método igual ao da `dec00_01`: fingerprint + correlação de forma de onda sample-accurate, ver `estudos/trecho_b_expoente/video_offset.py`). Verificação nos 4 candidatos do estudo (B1–B4): desvio 0,003–0,02s, todos sincronizados. Fonte confirmada idêntica (`tmp_dl/dec00_03_full.mp3` == `estudos/trecho_b_expoente/cache/dec00_03.mp3`, mesmo md5). `catalogo.json` já tem `video_offset_s`, `video_local`, `video_sincronizado:true` — nada alterado agora. Ver `relatorios/dec00_03_calibracao.md`.
+
+## 2026-10-16 — Fix: manifesto (_revisao_regeneracao.json) podia ficar desalinhado da produção
+
+Causa raiz encontrada para o bug "faixa a cinzento, 0:00/ficheiro em falta" (Metal `metal_02`/`metal_03`, corrigido pontualmente em 11 Out 2026 só nos dados): `_aplicar_regeneracao_playlist.py` só gravava `_revisao_regeneracao.json` **uma vez, no fim** do laço de uma playlist inteira — uma interrupção a meio (crash, Ctrl-C) deixava faixas já trocadas em disco com o manifesto preso no estado antigo. Separadamente, `scripts/aprovar_lote.py` trocava o Trecho A antes de confirmar que a proposta do Trecho B existia — uma proposta em falta podia deixar uma troca parcial sem reflectir no manifesto.
+
+Corrigido nos dois scripts (sem tocar em dados): o primeiro passa a gravar o manifesto depois de cada faixa regenerada, não só no fim; o segundo passa a confirmar as duas propostas em disco antes de mover qualquer ficheiro. Testado em dry-run, pasta temporária — nunca no manifesto/produção reais (`teste_fix_manifesto.py`, scratchpad da sessão, não commitado).
+
+Scan de leitura (sem corrigir) mostra 5 faixas hoje com o mesmo desalinhamento: `dec00_03`, `dec00_05`, `hip_01`, `lat_04`, `lat_05` (estado `"aprovado"`, produção já trocada) — Metal já não está afectada (corrigida em 11 Out). `logo_01` tem um problema diferente (ficheiro de produção em falta), não corrigido. Ver `relatorios/bugs_studio_pendentes.md`. Commit `c61933d`.
+
+## 2026-10-16 — Lançadores abrem sempre no Firefox (não no browser por omissão, Chrome)
+
+Pedido do André: `iniciar_musicbox.command`/`iniciar_editor.command` passam a abrir sempre no Firefox (`open -a "Firefox" "<url>"`, em vez de `open "<url>"`, que usava o browser por omissão do sistema, Chrome). Motivo não registado em detalhe pelo André nesta sessão — fica como preferência de teste fixada: **Firefox passa a ser o browser de referência para testar o jogo/Studio manualmente** (Playwright continua indisponível nesta máquina, ver STATUS.md, macOS demasiado antigo para os browsers que instala hoje). URLs e arranque dos servidores (porta 8002) inalterados. Commit `dd8be9e`.
