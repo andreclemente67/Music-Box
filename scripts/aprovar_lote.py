@@ -164,10 +164,19 @@ def aplicar_aprovacao(tid, e):
     _aplicar_regeneracao_playlist.py), devolve o novo fonte_audio."""
     os.makedirs(BACKUP_DIR, exist_ok=True)
     url = e.get('url_manual') or e.get('url')
-    for original, proposta in ((e.get('ficheiro_a'), e['ficheiro_proposta_a']),
-                                (e.get('ficheiro_b'), e.get('ficheiro_proposta_b'))):
-        if not original or not proposta:
-            continue
+    pares = [(original, proposta) for original, proposta in
+             ((e.get('ficheiro_a'), e['ficheiro_proposta_a']),
+              (e.get('ficheiro_b'), e.get('ficheiro_proposta_b')))
+             if original and proposta]
+    # Confirma AMBAS as propostas em disco antes de mover a 1ª — evita
+    # troca parcial (Trecho A trocado, Trecho B falha a meio) que deixava
+    # o ficheiro de produção já alterado mas o manifesto preso em
+    # "pendente" (mesma classe do bug Metal metal_02/metal_03, ver
+    # relatorios/bugs_studio_pendentes.md).
+    for _, proposta in pares:
+        if not os.path.exists(os.path.join(APP_DIR, proposta)):
+            raise FileNotFoundError(f'proposta em falta, nada trocado: {proposta}')
+    for original, proposta in pares:
         origem = os.path.join(APP_DIR, original)
         destino_backup = os.path.join(BACKUP_DIR, original)
         if os.path.exists(origem) and not os.path.exists(destino_backup):

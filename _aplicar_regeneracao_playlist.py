@@ -31,6 +31,11 @@ MANIFESTO = os.path.join(APP_DIR, '_revisao_regeneracao.json')
 BACKUP_DIR = os.path.join(APP_DIR, '_backup_pre_regeneracao')
 
 
+def _gravar_manifesto(dados: dict) -> None:
+    with open(MANIFESTO, 'w', encoding='utf-8') as f:
+        json.dump(dados, f, indent=2, ensure_ascii=False)
+
+
 def aplicar(playlist_codigo: str) -> dict:
     if not os.path.exists(MANIFESTO):
         return {'ok': False, 'erro': 'não existe _revisao_regeneracao.json'}
@@ -73,11 +78,15 @@ def aplicar(playlist_codigo: str) -> dict:
             e['ficheiro_proposta_a'] = None
             e['ficheiro_proposta_b'] = None
             regeneradas.append(tid)
+            # Grava já — se o processo for interrompido a meio da playlist
+            # (crash, Ctrl-C), as faixas já trocadas em disco não podem
+            # ficar com o manifesto preso em "pendente" (bug real: Metal
+            # metal_02/metal_03 em Out 2026, ver relatorios/bugs_studio_pendentes.md).
+            _gravar_manifesto(dados)
         except Exception as ex:
             erros.append({'id': tid, 'erro': str(ex)})
 
-    with open(MANIFESTO, 'w', encoding='utf-8') as f:
-        json.dump(dados, f, indent=2, ensure_ascii=False)
+    _gravar_manifesto(dados)
 
     return {
         'ok': True,

@@ -14,3 +14,25 @@
 
 ## Nota
 Não foram encontrados mais casos deste tipo documentados no STATUS.md fora dos dois listados — se houver outras faixas a cinzento no ecrã actual do Studio além destas, precisam de diagnóstico à parte (este relatório não correu o Studio, só leu o histórico já registado).
+
+---
+
+## Actualização (16 Out 2026) — corrigido o código, sem tocar em dados
+
+**Fix aplicado** (testado em dry-run, pasta temporária, nunca no manifesto/produção reais):
+- `_aplicar_regeneracao_playlist.py`: gravava `_revisao_regeneracao.json` só **uma vez, no fim** do laço de uma playlist inteira — se o processo fosse interrompido a meio (crash, Ctrl-C), as faixas já trocadas em disco ficavam com o manifesto preso em estado antigo. Passa a gravar **depois de cada faixa** regenerada.
+- `scripts/aprovar_lote.py`: `aplicar_aprovacao()` trocava o Trecho A e só depois o Trecho B — se a proposta do Trecho B estivesse em falta, o Trecho A já tinha sido trocado mas a excepção impedia o `estado` de passar a `"regenerado"` (troca parcial, mesma assinatura do bug). Passa a confirmar que **ambas** as propostas existem em disco antes de mover qualquer ficheiro.
+- Teste (`teste_fix_manifesto.py`, pasta temporária): confirma que o manifesto grava a cada faixa (não só no fim) e que uma proposta em falta já não troca nada parcialmente. Os dois testes passaram; nada no repositório real foi tocado.
+
+**Scan actual (só leitura) — faixas com estado desactualizado face à produção, hoje**:
+
+Critério: `estado` não é `"regenerado"`/`"rejeitado"`, mas o ficheiro de produção já difere do backup (já foi trocado) ou a proposta já foi consumida.
+
+- `STD.INT.00.MIX.001` (Anos 2000): `dec00_03`, `dec00_05` — estado `"aprovado"`, mas Trecho A e B de produção já diferem do backup (já trocados).
+- `STD.INT.ALL.HIP.001` (Hip Hop): `hip_01` — mesmo padrão.
+- `STD.INT.ALL.LAT.001` (Latina): `lat_04`, `lat_05` — mesmo padrão.
+- `LOGO-001`: `logo_01` — **problema diferente**, não é o mesmo bug: `ficheiro_a` no manifesto (`LOGO_01.mp3`) não existe em lado nenhum do repositório (só há `LOGO_01.png`); `ficheiro_b` é `None`. Parece um caso à parte (ficheiro nunca chegou a existir, ou nome errado no manifesto) — fica por investigar separadamente, não é a mesma causa.
+
+**Metal (`metal_02`/`metal_03`) já NÃO está afectada** — confirmado no manifesto actual: ambas já têm `estado: "regenerado"`, correctamente. O pedido original assumia que Metal ainda estaria por corrigir; não está — foi mesmo resolvida na correcção pontual de 11 Out 2026.
+
+Nada destas 5 faixas foi corrigido agora (só leitura, como pedido). Resolver — se o André quiser — passa por confirmar manualmente cada caso e só então marcar `"regenerado"` (ou investigar `logo_01` à parte).
