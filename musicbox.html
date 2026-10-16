@@ -1986,28 +1986,29 @@ function mostrarMomentoResposta(i, tipo) {
       // catalogo.json (não só o id) — iniciarEncoreComVideo() precisa de
       // clip_b/video_sincronizado/imagem no fim da sequência.
       if (TESTE_SOM_CONTROLA_TRECHO_B && entradaCatalogo && entradaCatalogo.id) {
-        // Encore com áudio estendido (14 Out 2026, ver temAudioExtendido())
-        // — pipeline novo e independente, só para faixas com
-        // ficheiro_ext (hoje só dec00_01); todas as outras seguem
-        // exactamente como antes.
-        if (temAudioExtendido(entradaCatalogo)) {
-          // Pausa de PAUSA_ANTES_ENCORE_EXT_MS antes da janela do Encore
-          // aparecer (14 Out 2026 — revisto de novo no mesmo dia, ver
-          // DECISIONS.md "Ajuste visual: janela do Encore ext só no
-          // espaço livre": a janela passou a ficar confinada ao espaço
-          // livre, sem tapar o cabeçalho do Trecho, as fotos nem a
-          // grelha de concorrentes — já não precisa de 1,5s, só 0,5s). A
-          // música continua normal (VOL_MUSICA, sem duck) durante esta
-          // pausa. Cancelável em esconderMomentoResposta() (mesmo padrão
-          // de testeTimeoutPreEncore, para o Encore antigo).
-          const _entradaParaEncoreExt = entradaCatalogo;
-          encoreExtTimeoutPreEncore = setTimeout(() => {
-            iniciarEncoreExt(_entradaParaEncoreExt, encoreExtHitTrecho, encoreExtHitTempo);
-            tocarSequenciaSomExt(_entradaParaEncoreExt);
-          }, PAUSA_ANTES_ENCORE_EXT_MS);
-        } else {
-          testeTocarSequenciaSom(entradaCatalogo);
-        }
+        // Encore ext passa a ser o ÚNICO caminho (16 Out 2026, ver
+        // DECISIONS.md "Estende o Encore ext a todas as faixas") — antes
+        // só corria em faixas com ficheiro_ext (temAudioExtendido(),
+        // hoje só dec00_01); testeTocarSequenciaSom()/
+        // iniciarEncoreComVideo() ficam por chamar (não apagados — ver
+        // DECISIONS.md, pendente de confirmação pelo André antes de
+        // remover a sério). iniciarEncoreExt()/tocarSequenciaSomExt() já
+        // tratavam os dois casos (com/sem video_local) — o que faltava
+        // era não travar com o áudio normal (mais curto, sem
+        // ficheiro_ext) a acabar antes do Dmin, ver dentro das duas
+        // funções.
+        //
+        // Pausa de PAUSA_ANTES_ENCORE_EXT_MS antes da janela do Encore
+        // aparecer (14 Out 2026, ver DECISIONS.md "Ajuste visual: janela
+        // do Encore ext só no espaço livre"). A música continua normal
+        // (VOL_MUSICA, sem duck) durante esta pausa. Cancelável em
+        // esconderMomentoResposta() (mesmo padrão de
+        // testeTimeoutPreEncore, para o Encore antigo).
+        const _entradaParaEncoreExt = entradaCatalogo;
+        encoreExtTimeoutPreEncore = setTimeout(() => {
+          iniciarEncoreExt(_entradaParaEncoreExt, encoreExtHitTrecho, encoreExtHitTempo);
+          tocarSequenciaSomExt(_entradaParaEncoreExt);
+        }, PAUSA_ANTES_ENCORE_EXT_MS);
       }
     }
     clearTimeout(momentoRespostaTimer);
@@ -3431,6 +3432,17 @@ function pararEncoreComVideo() {
 //     direito (14 Out 2026 — já não mostra o nome da faixa, ver
 //     DECISIONS.md "Contador do Encore em falta").
 function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
+  // Sem vídeo nem foto (16 Out 2026 — 12 faixas no catálogo, nenhuma com
+  // ficheiro_ext hoje, ver DECISIONS.md "Estende o Encore ext a todas as
+  // faixas"): nada para mostrar — avança de imediato, mesmo
+  // comportamento do Encore antigo (iniciarEncoreComVideo(), !temClip &&
+  // !temFoto). A sequência de voz (tocarSequenciaSomExt(), chamada em
+  // paralelo) continua a tocar — sempre tocou mesmo sem Encore visual.
+  if (!entradaCatalogo.video_local && !entradaCatalogo.imagem) {
+    console.log('[Encore ext] sem vídeo nem foto (' + entradaCatalogo.id + ') — avança de imediato');
+    if (faseGeral === 'faixa') avancarParaProximaFaixaOuMosaico();
+    return;
+  }
   const overlay = document.getElementById('encore-video-overlay');
   const video = document.getElementById('encore-video');
   const foto = document.getElementById('encore-foto-fallback');
@@ -3542,13 +3554,48 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
     foto.src = entradaCatalogo.imagem || '';
   }
 
+  // Faixas sem ficheiro_ext (16 Out 2026, ver DECISIONS.md "Estende o
+  // Encore ext a todas as faixas"): o ficheiro normal (mais curto, sem
+  // margem para o Dmin) pode acabar antes do stopTime — ex. dec00_02,
+  // acerto cedo no Trecho, fica sem áudio a meio do Encore. Agenda já
+  // aqui um fade-out suave a terminar exactamente no fim do ficheiro
+  // (nunca um corte seco) — dec00_01 (ficheiro_ext, 25s, sempre ≥
+  // stopTime) nunca cai aqui, fica exactamente como estava.
+  const FADE_FIM_AUDIO_CURTO_MS = 400;
+  if (isFinite(audio.duration) && audio.duration < stopTime) {
+    const msAteFimAudio = Math.max(0, (audio.duration - audio.currentTime) * 1000 - FADE_FIM_AUDIO_CURTO_MS);
+    setTimeout(() => {
+      if (!encoreExtIntervaloContador) return; // Encore já terminou/foi saltado entretanto
+      fadeVolume(audio, 0, FADE_FIM_AUDIO_CURTO_MS);
+    }, msAteFimAudio);
+  }
+
   // Contador = segundos restantes até ao NEW_SLOT (tempo restante do
   // áudio/vídeo, ver BIBLIA §5.4b) — e é também quem decide QUANDO
-  // avançar (audio.currentTime é o relógio mestre, nunca 'ended').
+  // avançar (audio.currentTime é o relógio mestre enquanto o áudio toca).
+  // Se o áudio acabar antes do stopTime (ficheiro normal, sem
+  // ficheiro_ext — ver fade acima), audio.currentTime CONGELA (deixa de
+  // avançar) — sem isto o contador ficava preso para sempre no mesmo
+  // número, nunca a chegar a 0 (nunca avançava — "nunca cortar a
+  // imagem", sim, mas também nunca mostrar a faixa seguinte). A partir
+  // desse instante passa a contar pelo relógio real (performance.now()),
+  // foto/vídeo e contador continuam visíveis, só em silêncio, até
+  // cumprir o Dmin a sério.
+  let audioTerminouCedo = false;
+  let instanteCongelado = 0;
+  let restanteNoCongelamento = 0;
   encoreExtIntervaloContador = setInterval(() => {
-    const restante = stopTime - audio.currentTime;
+    let restante;
+    if (!audioTerminouCedo && (audio.paused || audio.ended)) {
+      audioTerminouCedo = true;
+      instanteCongelado = performance.now();
+      restanteNoCongelamento = stopTime - audio.currentTime;
+    }
+    restante = audioTerminouCedo
+      ? restanteNoCongelamento - (performance.now() - instanteCongelado) / 1000
+      : stopTime - audio.currentTime;
     contadorEl.textContent = Math.max(0, Math.ceil(restante));
-    if (restante <= 0 || audio.paused || audio.ended) {
+    if (restante <= 0) {
       avancar();
     }
   }, 200);
