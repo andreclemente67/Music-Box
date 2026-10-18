@@ -1,0 +1,11 @@
+{
+  "aprovadas": {},
+  "saltadas": {
+    "dec00_02": "Trecho A: correlação 0.25 < limiar 0.6 em 0s (±1.5s) — fonte provavelmente diferente; Trecho B: correlação 0.46 < limiar 0.6 em 100s (±1.5s) — fonte provavelmente diferente",
+    "dec00_03": "Trecho A: correlação 0.55 < limiar 0.6 em 0s (±1.5s) — fonte provavelmente diferente; Trecho B: correlação 0.06 < limiar 0.6 em 18s (±1.5s) — fonte provavelmente diferente",
+    "dec00_04": "Trecho A: correlação 0.48 < limiar 0.6 em 0s (±1.5s) — fonte provavelmente diferente; Trecho B: correlação 0.08 < limiar 0.6 em 106s (±1.5s) — fonte provavelmente diferente",
+    "dec00_05": "Trecho A: correlação 0.48 < limiar 0.6 em 0s (±1.5s) — fonte provavelmente diferente; Trecho B: correlação 0.25 < limiar 0.6 em 77s (±1.5s) — fonte provavelmente diferente",
+    "dec00_06": "Trecho A: correlação 0.18 < limiar 0.6 em 0s (±1.5s) — fonte provavelmente diferente",
+    "dec00_07": "Trecho A: correlação 0.16 < limiar 0.6 em 0s (±1.5s) — fonte provavelmente diferente; Trecho B: correlação 0.25 < limiar 0.6 em 71s (±1.5s) — fonte provavelmente diferente"
+  }
+}
