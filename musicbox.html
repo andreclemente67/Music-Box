@@ -3486,7 +3486,20 @@ function iniciarEncoreExt(entradaCatalogo, trechoDoAcerto, tHit) {
     restante = audioTerminouCedo
       ? restanteNoCongelamento - (performance.now() - instanteCongelado) / 1000
       : stopTime - audio.currentTime;
-    contadorEl.textContent = Math.max(0, Math.ceil(restante));
+    // Mostrado nunca passa do som que realmente falta (16 Out 2026,
+    // pedido do André) — sem isto, faixas sem ficheiro_ext mostravam o
+    // tempo até ao Dmin mesmo depois do som já ter acabado (ex. dec00_02,
+    // ~4s de silêncio "contados" como se a música ainda tocasse). Com
+    // vídeo ou ficheiro_ext, audio.duration >= stopTime sempre (por
+    // construção, 25s = Trecho + Dmin) — este min() nunca reduz nada
+    // nesses casos, continua a contar até ao Dmin como sempre; só actua
+    // quando o ficheiro real é mesmo mais curto. `restante` (não
+    // `restanteMostrado`) continua a decidir quando avancar() dispara —
+    // a janela só fecha no Dmin a sério, só o número mostrado muda.
+    const restanteSom = audioTerminouCedo ? 0
+      : (isFinite(audio.duration) ? audio.duration - audio.currentTime : Infinity);
+    const restanteMostrado = Math.min(restante, restanteSom);
+    contadorEl.textContent = Math.max(0, Math.ceil(restanteMostrado));
     if (restante <= 0) {
       avancar();
     }
