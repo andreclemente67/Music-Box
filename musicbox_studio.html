@@ -1564,6 +1564,38 @@
   .revisao-banner-erro { background:rgba(224,85,85,0.1); border:1px solid var(--red); }
   .revisao-banner-titulo { font-weight:700; margin-bottom:8px; }
   .revisao-banner ul { margin:6px 0 0; padding-left:18px; font-size:11px; color:var(--text2); }
+
+  /* Sub-tabs "Regeneração YouTube" / "Fontes propostas" dentro da vista
+     Revisão — classe própria (não .np-tab) para não colidir com
+     switchNPTab() (que selecciona .np-tab por dataset.tab, globalmente;
+     removeria o .active destes botões sempre que o modal "Nova
+     Playlist" trocasse de tab interna). Visual igual a .np-tab. */
+  .revisao-sub-tab {
+    padding: 5px 12px; background: none; border: 1px solid transparent;
+    color: var(--text2); font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer;
+    border-radius: 4px; transition: all 0.15s;
+  }
+  .revisao-sub-tab:hover { color: var(--text); border-color: var(--border2); }
+  .revisao-sub-tab.active { color: var(--accent); border-color: var(--accent2); background: rgba(232,197,71,0.06); }
+
+  /* "Fontes propostas" (16 Out 2026) — vista nova dentro de Revisão
+     YouTube, ver switchRevisaoSub()/renderFontesPropostas(). Reusa as
+     classes .revisao-card/.revisao-acoes acima; só a cor da borda muda
+     por alerta (fontePropostaAlerta()), não o resto do layout. */
+  .fonte-proposta-card { border-left-width:4px; }
+  .fonte-proposta-card.alerta-vermelho { border-left-color:var(--red); }
+  .fonte-proposta-card.alerta-amarelo { border-left-color:var(--accent); }
+  .fonte-proposta-card.alerta-verde { border-left-color:var(--green); }
+  .fonte-proposta-card.decidido { opacity:0.55; }
+  .fonte-proposta-motivo { font-size:11px; margin-top:6px; }
+  .fonte-proposta-motivo.alerta-vermelho { color:var(--red); }
+  .fonte-proposta-motivo.alerta-amarelo { color:var(--accent); }
+  .fonte-proposta-motivo.alerta-verde { color:var(--green); }
+  .fonte-proposta-decisao-tag { font-size:10px; font-family:var(--mono); padding:2px 8px; border-radius:10px; text-transform:uppercase; }
+  .fonte-proposta-decisao-tag.aprovado { background:rgba(78,201,142,0.15); color:var(--green); }
+  .fonte-proposta-decisao-tag.rejeitado { background:rgba(224,85,85,0.15); color:var(--red); }
+  .fonte-proposta-decisao-tag.outra_fonte { background:rgba(232,197,71,0.15); color:var(--accent); }
   .fototeca-card {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -2089,7 +2121,18 @@
     </div>
 
     <div class="view" id="view-revisao">
-      <div style="display:flex;flex:1;overflow:hidden;">
+      <!-- Sub-navegação (16 Out 2026): "Regeneração" é o ecrã já existente
+           (abaixo, inalterado); "Fontes propostas" é a vista nova que lê
+           scripts/propostas_fonte_*.json (ver fontePropostaDescobrirPacks()
+           abaixo) — decisões gravadas em scripts/decisoes_fontes.json,
+           NUNCA em catalogo.json/playlists.json (gravação no catálogo
+           continua a ser um passo à parte, com backup+aprovação). -->
+      <div style="display:flex;gap:6px;padding:8px 12px 0;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;">
+        <button type="button" class="revisao-sub-tab active" id="revisao-sub-tab-regeneracao" onclick="switchRevisaoSub('regeneracao')">Regeneração YouTube</button>
+        <button type="button" class="revisao-sub-tab" id="revisao-sub-tab-fontes" onclick="switchRevisaoSub('fontes')">Fontes propostas</button>
+      </div>
+
+      <div id="revisao-sub-regeneracao" style="display:flex;flex:1;overflow:hidden;">
         <div style="width:260px;flex-shrink:0;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:12px;">
           <div style="font-size:12px;font-weight:700;padding:4px 6px 10px;">Playlists a rever</div>
           <div id="revisao-playlists"></div>
@@ -2108,6 +2151,20 @@
           </div>
           <div id="revisao-banner-regeneracao"></div>
           <div id="revisao-lista" style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;"></div>
+        </div>
+      </div>
+
+      <div id="revisao-sub-fontes" style="display:none;flex:1;overflow:hidden;">
+        <div style="width:260px;flex-shrink:0;border-right:1px solid var(--border);background:var(--bg2);overflow-y:auto;padding:12px;">
+          <div style="font-size:12px;font-weight:700;padding:4px 6px 10px;">Packs com propostas</div>
+          <div id="fontes-propostas-packs"></div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+          <div style="padding:12px 20px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-shrink:0;flex-wrap:wrap;">
+            <span style="font-size:13px;font-weight:700;" id="fontes-propostas-titulo">Selecciona um pack à esquerda</span>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text3);" id="fontes-propostas-resumo"></span>
+          </div>
+          <div id="fontes-propostas-lista" style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:14px;"></div>
         </div>
       </div>
     </div>
@@ -9412,7 +9469,17 @@ async function escreverViaFileSystemAPI(nome, conteudo) {
     if (permissao !== 'granted') permissao = await FS_DIR_HANDLE.requestPermission({ mode: 'readwrite' });
     if (permissao !== 'granted') return false;
 
-    const ficheiroHandle = await FS_DIR_HANDLE.getFileHandle(nome, { create: true });
+    // Suporte a sub-pastas (ex. "scripts/decisoes_fontes.json", 16 Out
+    // 2026 — antes só nomes de ficheiro na raiz de app/ passavam por
+    // aqui) — getFileHandle() não aceita "/" no nome, por isso percorre/
+    // cria cada directório do caminho antes do ficheiro final.
+    const partes = nome.split('/');
+    const ficheiro = partes.pop();
+    let dir = FS_DIR_HANDLE;
+    for (const parte of partes) {
+      dir = await dir.getDirectoryHandle(parte, { create: true });
+    }
+    const ficheiroHandle = await dir.getFileHandle(ficheiro, { create: true });
     const writable = await ficheiroHandle.createWritable();
     await writable.write(conteudo);
     await writable.close();
@@ -10249,6 +10316,184 @@ async function revisaoDefinirEstado(id, estado) {
   REVISAO_DADOS[id].estado = estado;
   await revisaoGuardar();
   revisaoAtualizarLeve(id);
+}
+
+// ─── "Fontes propostas" (16 Out 2026) ────────────────────────────────
+// Vista de leitura dos scripts/propostas_fonte_<pack>.json gerados pelo
+// motor em modo PROPOSTA (propor_fontes_4packs.py/propor_fontes_
+// proximos3.py/propor_fontes_pacote3.py — nunca escrevem no catálogo).
+// As decisões do André aqui (Aprovar/Rejeitar/Outra fonte) ficam em
+// scripts/decisoes_fontes.json, um ficheiro à parte — NUNCA em
+// catalogo.json/playlists.json. Gravar a fonte aprovada no catálogo a
+// sério continua a ser um passo manual separado (backup + aprovação,
+// mesmo padrão de aplicar-regeneração-playlist), não feito por aqui.
+
+let FONTES_PROPOSTAS_DADOS = null;   // { faixa: {...linha do JSON, pack} }
+let DECISOES_FONTES = null;          // { faixa: {decisao, url, data, pack} }
+let FONTES_PROPOSTAS_PACK_ACTUAL = null;
+
+function switchRevisaoSub(nome) {
+  document.querySelectorAll('.revisao-sub-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('revisao-sub-tab-' + nome).classList.add('active');
+  document.getElementById('revisao-sub-regeneracao').style.display = nome === 'regeneracao' ? 'flex' : 'none';
+  document.getElementById('revisao-sub-fontes').style.display = nome === 'fontes' ? 'flex' : 'none';
+  if (nome === 'fontes') renderFontesPropostas();
+}
+
+// Descobre os packs com propostas tentando o nome de ficheiro derivado
+// de cada código de playlist já carregado (mesmo slug do lado Python:
+// minúsculas, "." -> "_") — não há listagem de directório no browser
+// sem a File System Access API autorizada, por isso tenta um GET por
+// pack conhecido em vez de inventar uma lista fixa a manter à mão.
+async function fontePropostaCarregarTudo() {
+  if (FONTES_PROPOSTAS_DADOS) return FONTES_PROPOSTAS_DADOS;
+  FONTES_PROPOSTAS_DADOS = {};
+  const codigos = Object.keys(PLAYLISTS || {});
+  await Promise.all(codigos.map(async (codigo) => {
+    const slug = codigo.toLowerCase().replaceAll('.', '_');
+    try {
+      const r = await fetch(`scripts/propostas_fonte_${slug}.json?v=` + Date.now());
+      if (!r.ok) return;
+      const linhas = await r.json();
+      linhas.forEach(l => { FONTES_PROPOSTAS_DADOS[l.faixa] = l; });
+    } catch (e) { /* ficheiro não existe para este pack — normal, ignora */ }
+  }));
+  return FONTES_PROPOSTAS_DADOS;
+}
+
+async function fontePropostaCarregarDecisoes() {
+  if (DECISOES_FONTES) return DECISOES_FONTES;
+  try {
+    const r = await fetch('scripts/decisoes_fontes.json?v=' + Date.now());
+    DECISOES_FONTES = r.ok ? await r.json() : {};
+  } catch (e) { DECISOES_FONTES = {}; }
+  return DECISOES_FONTES;
+}
+
+async function fontePropostaGuardarDecisoes() {
+  const conteudo = JSON.stringify(DECISOES_FONTES, null, 2);
+  // scripts/decisoes_fontes.json está fora da whitelist de /escrever de
+  // propósito (decisões de fonte nunca tocam no catálogo nem em nenhum
+  // ficheiro já confiável do servidor) — escreverFicheiro() cai sempre
+  // para a File System Access API aqui; sem essa autorização, último
+  // recurso igual ao resto do Studio: descarrega o ficheiro.
+  const escritoDirectamente = await escreverFicheiro('scripts/decisoes_fontes.json', conteudo);
+  if (!escritoDirectamente) downloadBlob('decisoes_fontes.json', conteudo);
+  notify(escritoDirectamente
+    ? 'scripts/decisoes_fontes.json escrito directamente em app/'
+    : 'decisoes_fontes.json descarregado — move-o para scripts/ na pasta app/', 'ok');
+}
+
+// Heurística de alerta — nunca prova nada, só sinaliza o que merece
+// ouvir com atenção antes de aprovar. Vermelho = falhou ou tem um sinal
+// forte de erro (canal errado, ou é claramente um vídeo que não é o
+// single — duração muito acima do limiar); amarelo = fallback/
+// sem_filtro (sem confirmação de canal oficial, mas sem sinal de erro
+// concreto); verde = topic/official_audio, canal bate e duração normal.
+function fontePropostaAlerta(linha) {
+  if (!linha.ok) return { cor: 'vermelho', motivo: 'Pesquisa falhou: ' + (linha.erro || 'sem detalhe') };
+  const motivos = [];
+  if (linha.canal_bate_artista === false) motivos.push('canal não parece ser do artista (confirmar — heurística de texto, pode ser falso positivo com apelidos)');
+  if (linha.duracao_acima_limiar) motivos.push(`duração (${Math.round(linha.duracao_s)}s) muito acima do single — pode ser colectânea/concerto/análise`);
+  if (motivos.length) return { cor: 'vermelho', motivo: motivos.join('; ') };
+  if (linha.classificacao === 'fallback' || linha.classificacao === 'sem_filtro') {
+    return { cor: 'amarelo', motivo: 'Canal não confirmado como Topic/Official Audio — ouvir antes de aprovar.' };
+  }
+  return { cor: 'verde', motivo: 'Topic/Official Audio, canal bate com o artista, duração normal.' };
+}
+
+async function renderFontesPropostas() {
+  await fontePropostaCarregarTudo();
+  await fontePropostaCarregarDecisoes();
+
+  const porPack = new Map();
+  Object.values(FONTES_PROPOSTAS_DADOS).forEach(l => {
+    if (!porPack.has(l.pack)) porPack.set(l.pack, []);
+    porPack.get(l.pack).push(l);
+  });
+
+  const packsEl = document.getElementById('fontes-propostas-packs');
+  if (!porPack.size) {
+    packsEl.innerHTML = '<div style="color:var(--text3);font-size:11px;padding:8px;">Sem propostas encontradas — corre um dos scripts/propor_fontes_*.py primeiro.</div>';
+    document.getElementById('fontes-propostas-lista').innerHTML = '';
+    return;
+  }
+  if (!FONTES_PROPOSTAS_PACK_ACTUAL || !porPack.has(FONTES_PROPOSTAS_PACK_ACTUAL)) {
+    FONTES_PROPOSTAS_PACK_ACTUAL = [...porPack.keys()][0];
+  }
+
+  packsEl.innerHTML = [...porPack.entries()].map(([codigo, linhas]) => {
+    const porDecidir = linhas.filter(l => !DECISOES_FONTES[l.faixa]).length;
+    const nome = (PLAYLISTS[codigo] && PLAYLISTS[codigo].nome) || codigo;
+    const activa = codigo === FONTES_PROPOSTAS_PACK_ACTUAL;
+    return `<div class="revisao-playlist-item${activa ? ' activa' : ''}${porDecidir === 0 ? ' completa' : ''}" onclick="fontePropostaSelecionarPack('${codigo}')">
+      <span class="revisao-playlist-nome">${nome}</span>
+      <span class="revisao-playlist-progresso">${linhas.length} faixas · ${porDecidir} por decidir</span>
+    </div>`;
+  }).join('');
+
+  renderFontePropostaCards();
+}
+
+function fontePropostaSelecionarPack(codigo) {
+  FONTES_PROPOSTAS_PACK_ACTUAL = codigo;
+  renderFontesPropostas();
+}
+
+function fontePropostaCardHtml(linha) {
+  const alerta = fontePropostaAlerta(linha);
+  const decisao = DECISOES_FONTES[linha.faixa];
+  const tagDecisao = decisao ? `<span class="fonte-proposta-decisao-tag ${decisao.decisao}">${decisao.decisao.replace('_', ' ')}</span>` : '';
+  const linkUrl = linha.ok
+    ? `<a href="${linha.url}" target="_blank" rel="noopener" style="color:var(--accent);">${linha.url}</a> <span style="color:var(--text3);">(${linha.canal || 'canal desconhecido'})</span>`
+    : '<span style="color:var(--text3);">sem proposta</span>';
+  return `<div class="revisao-card fonte-proposta-card alerta-${alerta.cor}${decisao ? ' decidido' : ''}" id="fonte-proposta-card-${linha.faixa}">
+    <div class="revisao-card-header">
+      <span class="revisao-card-titulo">${linha.titulo}</span>
+      <span class="revisao-card-artista">${linha.artista}</span>
+      ${tagDecisao}
+      <span class="revisao-card-meta">${linha.faixa}</span>
+    </div>
+    <div class="revisao-video-info">${linkUrl}</div>
+    <div class="fonte-proposta-motivo alerta-${alerta.cor}">${alerta.cor === 'vermelho' ? '🔴' : alerta.cor === 'amarelo' ? '🟡' : '🟢'} ${alerta.motivo}</div>
+    ${linha.ok ? `<div class="revisao-acoes">
+      <button class="btn btn-primary" style="font-size:11px;" onclick="fontePropostaDecidir('${linha.faixa}','aprovado')">✓ Aprovar</button>
+      <button class="btn" style="font-size:11px;" onclick="fontePropostaDecidir('${linha.faixa}','rejeitado')">✗ Rejeitar</button>
+      <button class="btn" style="font-size:11px;" onclick="fontePropostaOutraFonte('${linha.faixa}')">↻ Outra fonte</button>
+      ${decisao ? `<span style="font-size:10px;color:var(--text3);margin-left:auto;">decidido em ${decisao.data}</span>` : ''}
+    </div>` : ''}
+  </div>`;
+}
+
+function renderFontePropostaCards() {
+  const lista = document.getElementById('fontes-propostas-lista');
+  const linhas = Object.values(FONTES_PROPOSTAS_DADOS).filter(l => l.pack === FONTES_PROPOSTAS_PACK_ACTUAL);
+  const nome = (PLAYLISTS[FONTES_PROPOSTAS_PACK_ACTUAL] && PLAYLISTS[FONTES_PROPOSTAS_PACK_ACTUAL].nome) || FONTES_PROPOSTAS_PACK_ACTUAL;
+  document.getElementById('fontes-propostas-titulo').textContent = nome;
+  const decididas = linhas.filter(l => DECISOES_FONTES[l.faixa]).length;
+  document.getElementById('fontes-propostas-resumo').textContent = `${linhas.length} faixas · ${decididas} decididas · ${linhas.length - decididas} por decidir`;
+  lista.innerHTML = linhas.map(fontePropostaCardHtml).join('');
+}
+
+async function fontePropostaDecidir(faixa, decisao, urlManual) {
+  const linha = FONTES_PROPOSTAS_DADOS[faixa];
+  DECISOES_FONTES[faixa] = {
+    decisao,
+    url: decisao === 'outra_fonte' ? urlManual : (linha && linha.url) || null,
+    pack: linha && linha.pack,
+    data: new Date().toISOString().slice(0, 10),
+  };
+  await fontePropostaGuardarDecisoes();
+  const cardEl = document.getElementById('fonte-proposta-card-' + faixa);
+  if (cardEl) cardEl.outerHTML = fontePropostaCardHtml(linha);
+  const resumoEl = document.getElementById('fontes-propostas-resumo');
+  if (resumoEl) renderFontePropostaCards();
+}
+
+function fontePropostaOutraFonte(faixa) {
+  const url = prompt('URL da fonte alternativa (YouTube) para ' + faixa + ':');
+  if (!url) return; // cancelado — nada decidido
+  fontePropostaDecidir(faixa, 'outra_fonte', url.trim());
 }
 
 // ─── INÍCIO — "O que falta fazer" (dashboard, 14 Out 2026) ──────────
