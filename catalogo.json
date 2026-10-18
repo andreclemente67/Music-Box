@@ -10185,7 +10185,8 @@
     "trecho_b": {
       "ficheiro": "dec60_02_b.mp3",
       "inicio": 53,
-      "fim": 68
+      "fim": 68,
+      "ficheiro_ext": "assets/audio_ext/dec60_02_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
@@ -10330,7 +10331,8 @@
     "trecho_b": {
       "ficheiro": "dec60_05_b.mp3",
       "inicio": 86,
-      "fim": 101
+      "fim": 101,
+      "ficheiro_ext": "assets/audio_ext/dec60_05_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
@@ -10570,7 +10572,8 @@
     "trecho_b": {
       "ficheiro": "dec00_02_b.mp3",
       "inicio": 100,
-      "fim": 115
+      "fim": 115,
+      "ficheiro_ext": "assets/audio_ext/dec00_02_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
@@ -10720,7 +10723,8 @@
     "trecho_b": {
       "ficheiro": "dec00_05_b.mp3",
       "inicio": 77,
-      "fim": 92
+      "fim": 92,
+      "ficheiro_ext": "assets/audio_ext/dec00_05_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
