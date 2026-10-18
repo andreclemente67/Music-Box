@@ -2222,3 +2222,11 @@ Scan de leitura (sem corrigir) mostra 5 faixas hoje com o mesmo desalinhamento: 
 ## 2026-10-16 — Lançadores abrem sempre no Firefox (não no browser por omissão, Chrome)
 
 Pedido do André: `iniciar_musicbox.command`/`iniciar_editor.command` passam a abrir sempre no Firefox (`open -a "Firefox" "<url>"`, em vez de `open "<url>"`, que usava o browser por omissão do sistema, Chrome). Motivo não registado em detalhe pelo André nesta sessão — fica como preferência de teste fixada: **Firefox passa a ser o browser de referência para testar o jogo/Studio manualmente** (Playwright continua indisponível nesta máquina, ver STATUS.md, macOS demasiado antigo para os browsers que instala hoje). URLs e arranque dos servidores (porta 8002) inalterados. Commit `dd8be9e`.
+
+## 2026-10-18 — B2 formalizado como PROPOSTA a rever, nunca substituição automática
+
+André avaliou 13 pares B actual vs. B2 (Anos 50, Anos 60, `80_01`) e registou o resultado em `relatorios/b2_avaliacao_andre.csv`: **2 "B2 melhor"** (`dec60_02`, `dec60_05`), **8 "igual/ambos muito bons"** (`dec50_01`-`dec50_04`, `dec60_01`, `dec60_04`, `dec60_06`, `80_01`), **3 "B actual melhor"** (`dec50_06`, `dec50_07`, `dec60_03`).
+
+Decisão confirmada por esta amostra (já praticada desde os Anos 2000, agora registada formalmente): a regra "refrão mais intenso" (`analise_refrao.py`, ver §13.2) **nunca substitui automaticamente** um Trecho B já definido — fica sempre como proposta, ouvida e aprovada faixa a faixa antes de qualquer escrita no catálogo (backup + tag git obrigatórios, mesmo padrão de `antes-b2-00`/`antes-b2-60`). Achado adicional: **o desvio temporal (B2 − B actual) não serve de indicador de qualidade** — não separa os "B2 melhor" dos "B actual melhor" nesta amostra (ver `relatorios/b2_calibracao.md` para a tentativa de encontrar uma métrica que separe melhor os dois grupos, com proposta de filtro, amostra pequena, sem inferência estatística forte).
+
+Aplicado nesta sessão: `dec60_02` (53–68s) e `dec60_05` (86–101s), tag `antes-b2-60`, só `trecho_b.inicio/fim`, nenhum outro campo. BIBLIA.md §13.2 actualizada no mesmo commit.
