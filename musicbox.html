@@ -3990,6 +3990,13 @@ function revelarMosaicoCascata() {
 function iniciarMosaico() {
   faseGeral = 'mosaico_revelando';
   reporPausa();
+  // Fix 16 Out 2026 (diagnóstico do André): iniciarMosaico() nunca
+  // repunha o volume — só iniciarFaixa() o fazia, e essa nunca corre na
+  // transição Faixa 7 → Mosaico (ver avancarParaProximaFaixaOuMosaico()).
+  // Se a Faixa 7 passou pelo Encore (duck para VOL_DUCK/VOL_ENCORE), o
+  // Mosaico tocava preso nesse volume — mesmo padrão de iniciarFaixa().
+  cancelarFadeVolume();
+  audio.volume = VOL_MUSICA;
   vencedorMosaico = null;
   mutados = [false,false,false,false].map((v,i) => eliminado[i] ? false : false);
   mostrarSoPainel('mosaico-painel');
