@@ -1,0 +1,107 @@
+{
+  "dec00_02": {
+    "titulo": "Crazy in Love",
+    "no_manifesto": false,
+    "decisao_script": "sem entrada no manifesto — _aplicar_regeneracao_playlist.py não teria nada a fazer"
+  },
+  "dec00_03": {
+    "titulo": "Mr. Brightside",
+    "no_manifesto": true,
+    "estado_manifesto": "aprovado",
+    "decisao_script": "aprovado + pré-audição em disco — O SCRIPT TROCARIA dec00_03_a.mp3/dec00_03_b.mp3 pela pré-audição agora, SEM criar novo backup (backup A e B já existem — ficariam o estado ANTERIOR a esta troca, não o actual)",
+    "ficheiros_que_seriam_escritos": [
+      "dec00_03_a.mp3",
+      "dec00_03_b.mp3"
+    ],
+    "backup_a_ja_existe": true,
+    "backup_b_ja_existe": true,
+    "trecho_a": {
+      "actual_catalogo_inicio_fim": "0-12s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 4,
+      "proposto_ficheiro_duracao_s": 15.0,
+      "ext10s_gerado": true
+    },
+    "trecho_b": {
+      "actual_catalogo_inicio_fim": "18-30s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 186,
+      "proposto_ficheiro_duracao_s": 15.0,
+      "ext10s_gerado": true
+    }
+  },
+  "dec00_04": {
+    "titulo": "Seven Nation Army",
+    "no_manifesto": true,
+    "estado_manifesto": "regenerado",
+    "decisao_script": "já regenerado (idempotente) — ficaria intocada",
+    "trecho_a": {
+      "actual_catalogo_inicio_fim": "0-12s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 4
+    },
+    "trecho_b": {
+      "actual_catalogo_inicio_fim": "18-30s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 152
+    }
+  },
+  "dec00_05": {
+    "titulo": "Toxic",
+    "no_manifesto": true,
+    "estado_manifesto": "aprovado",
+    "decisao_script": "aprovado + pré-audição em disco — O SCRIPT TROCARIA dec00_05_a.mp3/dec00_05_b.mp3 pela pré-audição agora, SEM criar novo backup (backup A e B já existem — ficariam o estado ANTERIOR a esta troca, não o actual)",
+    "ficheiros_que_seriam_escritos": [
+      "dec00_05_a.mp3",
+      "dec00_05_b.mp3"
+    ],
+    "backup_a_ja_existe": true,
+    "backup_b_ja_existe": true,
+    "trecho_a": {
+      "actual_catalogo_inicio_fim": "0-12s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 4,
+      "proposto_ficheiro_duracao_s": 15.0,
+      "ext10s_gerado": true
+    },
+    "trecho_b": {
+      "actual_catalogo_inicio_fim": "77-92s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 170,
+      "proposto_ficheiro_duracao_s": 15.0,
+      "ext10s_gerado": true
+    }
+  },
+  "dec00_06": {
+    "titulo": "In the End",
+    "no_manifesto": true,
+    "estado_manifesto": "rejeitado",
+    "decisao_script": "rejeitado — ficaria intocada",
+    "trecho_a": {
+      "actual_catalogo_inicio_fim": "0-12s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 4
+    },
+    "trecho_b": {
+      "actual_catalogo_inicio_fim": "18-30s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 68
+    }
+  },
+  "dec00_07": {
+    "titulo": "Umbrella",
+    "no_manifesto": true,
+    "estado_manifesto": "regenerado",
+    "decisao_script": "já regenerado (idempotente) — ficaria intocada",
+    "trecho_a": {
+      "actual_catalogo_inicio_fim": "0-12s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 4
+    },
+    "trecho_b": {
+      "actual_catalogo_inicio_fim": "18-30s",
+      "actual_ficheiro_duracao_s": 15.0,
+      "proposto_tempo_manifesto_s": 128
+    }
+  }
+}

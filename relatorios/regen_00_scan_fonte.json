@@ -1,0 +1,128 @@
+{
+  "dec00_01": {
+    "titulo": "Hey Ya!",
+    "dur_full_s": 235.5,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.991,
+      "posicao_pico_s": 0.01,
+      "desvio_vs_catalogo_s": 0.01
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 142,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.997,
+      "posicao_pico_s": 142.02,
+      "desvio_vs_catalogo_s": 0.02
+    }
+  },
+  "dec00_02": {
+    "titulo": "Crazy in Love",
+    "dur_full_s": 236.7,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 11.96,
+      "pico_corr_full_inteiro": 0.931,
+      "posicao_pico_s": 47.47,
+      "desvio_vs_catalogo_s": 47.47
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 100,
+      "dur_ficheiro_s": 12.0,
+      "pico_corr_full_inteiro": 0.938,
+      "posicao_pico_s": 65.43,
+      "desvio_vs_catalogo_s": -34.57
+    }
+  },
+  "dec00_03": {
+    "titulo": "Mr. Brightside",
+    "dur_full_s": 222.2,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.548,
+      "posicao_pico_s": 0.48,
+      "desvio_vs_catalogo_s": 0.48
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 18,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.558,
+      "posicao_pico_s": 186.44,
+      "desvio_vs_catalogo_s": 168.44
+    }
+  },
+  "dec00_04": {
+    "titulo": "Seven Nation Army",
+    "dur_full_s": 238.3,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.997,
+      "posicao_pico_s": 4.02,
+      "desvio_vs_catalogo_s": 4.02
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 18,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.968,
+      "posicao_pico_s": 152.03,
+      "desvio_vs_catalogo_s": 134.03
+    }
+  },
+  "dec00_05": {
+    "titulo": "Toxic",
+    "dur_full_s": 199.1,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.607,
+      "posicao_pico_s": 4.1,
+      "desvio_vs_catalogo_s": 4.1
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 77,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.436,
+      "posicao_pico_s": 69.4,
+      "desvio_vs_catalogo_s": -7.6
+    }
+  },
+  "dec00_06": {
+    "titulo": "In the End",
+    "dur_full_s": 216.3,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.999,
+      "posicao_pico_s": 4.02,
+      "desvio_vs_catalogo_s": 4.02
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 18,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.981,
+      "posicao_pico_s": 68.03,
+      "desvio_vs_catalogo_s": 50.03
+    }
+  },
+  "dec00_07": {
+    "titulo": "Umbrella",
+    "dur_full_s": 254.1,
+    "trecho_a": {
+      "inicio_catalogo_s": 0,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.996,
+      "posicao_pico_s": 4.02,
+      "desvio_vs_catalogo_s": 4.02
+    },
+    "trecho_b": {
+      "inicio_catalogo_s": 18,
+      "dur_ficheiro_s": 15.0,
+      "pico_corr_full_inteiro": 0.982,
+      "posicao_pico_s": 128.03,
+      "desvio_vs_catalogo_s": 110.03
+    }
+  }
+}
