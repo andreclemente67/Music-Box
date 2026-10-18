@@ -1995,7 +1995,8 @@ function mostrarMomentoResposta(i, tipo) {
     const nomeArtista = (entradaCatalogo.artista && entradaCatalogo.artista.length)
       ? entradaCatalogo.artista.join(' & ')
       : (entradaCatalogo.titulo || '');
-    document.getElementById('momento-resposta-artista-nome').textContent = nomeArtista;
+    const nomeArtistaEl = document.getElementById('momento-resposta-artista-nome');
+    nomeArtistaEl.textContent = nomeArtista;
     const bandaEl = document.getElementById('momento-resposta-artista-banda');
     if (entradaCatalogo.banda) {
       bandaEl.textContent = entradaCatalogo.banda;
@@ -2003,7 +2004,24 @@ function mostrarMomentoResposta(i, tipo) {
     } else {
       bandaEl.style.display = 'none';
     }
-    blocoArtista.querySelector('img').src = entradaCatalogo.imagem;
+    const imgArtista = blocoArtista.querySelector('img');
+    imgArtista.src = entradaCatalogo.imagem;
+    // Layout do Encore SEM vídeo (16 Out 2026, pedido do André): sem
+    // video_local, o Encore mostra a MESMA imagem em ecrã inteiro (ver
+    // iniciarEncoreExt()) — a foto pequena aqui ao lado ficava
+    // redundante. Esconde-a (e o seu contorno) e a legenda do nome passa
+    // a ocupar o espaço, maior e centrada. Caminho COM vídeo (dec00_01)
+    // inalterado — continua a mostrar a foto pequena normalmente.
+    const temVideo = !!entradaCatalogo.video_local;
+    imgArtista.style.display = temVideo ? '' : 'none';
+    nomeArtistaEl.style.fontSize = temVideo ? '20px' : '32px';
+    nomeArtistaEl.style.marginTop = temVideo ? '12px' : '0';
+    nomeArtistaEl.style.maxWidth = temVideo ? '' : '220px';
+    // Sem a foto (220px), o bloco do artista fica só texto — alinha os
+    // dois blocos ao centro verticalmente em vez de flex-start (que
+    // deixava o texto "colado" ao topo, desalinhado da foto do
+    // concorrente). Com vídeo, inalterado.
+    overlay.style.alignItems = temVideo ? '' : 'center';
 
     // Pré-carrega antes de abrir o overlay, para os dois blocos aparecerem
     // sempre em simultâneo — sem isto, a foto do concorrente aparecia logo
@@ -2019,6 +2037,7 @@ function mostrarMomentoResposta(i, tipo) {
     setTimeout(abrirUmaVez, 300);
   } else {
     blocoArtista.style.display = 'none';
+    overlay.style.alignItems = ''; // repõe o normal (ver ramo acima, layout sem vídeo)
     abrirOverlay();
   }
 }
