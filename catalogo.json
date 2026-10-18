@@ -10665,12 +10665,14 @@
     "trecho_a": {
       "ficheiro": "dec00_04_a.mp3",
       "inicio": 0,
-      "fim": 12
+      "fim": 12,
+      "ficheiro_ext": "assets/audio_ext/dec00_04_a_ext.mp3"
     },
     "trecho_b": {
       "ficheiro": "dec00_04_b.mp3",
       "inicio": 18,
-      "fim": 30
+      "fim": 30,
+      "ficheiro_ext": "assets/audio_ext/dec00_04_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
@@ -10761,12 +10763,14 @@
     "trecho_a": {
       "ficheiro": "dec00_06_a.mp3",
       "inicio": 0,
-      "fim": 12
+      "fim": 12,
+      "ficheiro_ext": "assets/audio_ext/dec00_06_a_ext.mp3"
     },
     "trecho_b": {
       "ficheiro": "dec00_06_b.mp3",
       "inicio": 18,
-      "fim": 30
+      "fim": 30,
+      "ficheiro_ext": "assets/audio_ext/dec00_06_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,
@@ -10809,12 +10813,14 @@
     "trecho_a": {
       "ficheiro": "dec00_07_a.mp3",
       "inicio": 0,
-      "fim": 12
+      "fim": 12,
+      "ficheiro_ext": "assets/audio_ext/dec00_07_a_ext.mp3"
     },
     "trecho_b": {
       "ficheiro": "dec00_07_b.mp3",
       "inicio": 18,
-      "fim": 30
+      "fim": 30,
+      "ficheiro_ext": "assets/audio_ext/dec00_07_b_ext.mp3"
     },
     "full": null,
     "elegivel_mosaico": true,

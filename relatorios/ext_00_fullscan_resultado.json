@@ -1,0 +1,58 @@
+{
+  "aprovadas": {
+    "dec00_04": {
+      "trecho_a": {
+        "ext": "assets/audio_ext/dec00_04_a_ext.mp3",
+        "posicao_s": 4.02,
+        "pico_posicao": 0.997,
+        "duracao_ext_s": 25.0,
+        "pico_verificacao": 1.0
+      },
+      "trecho_b": {
+        "ext": "assets/audio_ext/dec00_04_b_ext.mp3",
+        "posicao_s": 152.03,
+        "pico_posicao": 0.968,
+        "duracao_ext_s": 25.0,
+        "pico_verificacao": 1.0
+      }
+    },
+    "dec00_06": {
+      "trecho_a": {
+        "ext": "assets/audio_ext/dec00_06_a_ext.mp3",
+        "posicao_s": 4.02,
+        "pico_posicao": 0.999,
+        "duracao_ext_s": 25.0,
+        "pico_verificacao": 1.0
+      },
+      "trecho_b": {
+        "ext": "assets/audio_ext/dec00_06_b_ext.mp3",
+        "posicao_s": 68.03,
+        "pico_posicao": 0.981,
+        "duracao_ext_s": 25.0,
+        "pico_verificacao": 1.0
+      }
+    },
+    "dec00_07": {
+      "trecho_a": {
+        "ext": "assets/audio_ext/dec00_07_a_ext.mp3",
+        "posicao_s": 4.02,
+        "pico_posicao": 0.996,
+        "duracao_ext_s": 25.0,
+        "pico_verificacao": 1.0
+      },
+      "trecho_b": {
+        "ext": "assets/audio_ext/dec00_07_b_ext.mp3",
+        "posicao_s": 128.03,
+        "pico_posicao": 0.982,
+        "duracao_ext_s": 25.0,
+        "pico_verificacao": 1.0
+      }
+    }
+  },
+  "motivos_exclusao": {
+    "dec00_02": {
+      "trecho_a": "verificação falhou: correlação ext-vs-actual 0.931 < limiar 0.95 — ext apagado, catálogo não tocado",
+      "trecho_b": "verificação falhou: correlação ext-vs-actual 0.238 < limiar 0.95 — ext apagado, catálogo não tocado"
+    }
+  }
+}
