@@ -98,6 +98,13 @@
   .collection-btn:hover { border-color:var(--accent); }
   .collection-btn:disabled { opacity:0.25; cursor:not-allowed; }
   .collection-resultado { font-size:14px; color:var(--green); text-align:center; min-height:20px; }
+  /* Linha do título + "Apresentação" (20 Out 2026, ver nota no HTML) —
+     centrada, passa para 2ª linha com largura pequena (flex-wrap); botão
+     com o mesmo estilo dos botões do rodapé (.rodape button), só que este
+     vive fora de #rodape-controlo. */
+  .collection-resultado-linha { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; }
+  .collection-resultado-linha button { background:var(--bg3); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:8px 14px; font-size:11px; cursor:pointer; }
+  .collection-resultado-linha button:disabled { background:var(--accent); color:#1a1508; border-color:var(--accent); cursor:default; }
   .collection-descritivo-apresentador { font-size:12px; font-weight:700; color:var(--text2); text-align:center; max-width:560px; line-height:1.5; margin-top:-4px; padding:0 12px; }
 
   /* "ℹ Saber mais" (2026-10-04, pedido do utilizador): prévia do
@@ -530,7 +537,19 @@
   <div class="collection-titulo" id="collection-titulo">ESCOLHA DE PLAYLIST</div>
   <div class="collection-sub" id="collection-sub">—</div>
   <div class="collection-lista" id="collection-lista"></div>
-  <div class="collection-resultado" id="collection-resultado"></div>
+  <!-- Linha do título "✓ Escolhida"/"⚄ Sorteada" (pedido do André, 20 Out
+       2026): "🔊 Apresentação" passou a ficar nesta linha, à direita do
+       título, em vez do rodapé de baixo — só posição, mesmo
+       botão/handler/id/atalhos; a janela de visibilidade já coincidia
+       (ambos só aparecem em faseGeral==='aguardando_inicio_playlist', o
+       mesmo momento em que #collection-painel está no ecrã — ver
+       confirmarCollection()/manualAdvanceSync()). "Apresentador" NÃO veio
+       para aqui de propósito — fica no rodapé de baixo (ver nota lá) por
+       estar sempre visível, sessão toda, não só neste ecrã. -->
+  <div class="collection-resultado-linha" id="collection-resultado-linha">
+    <div class="collection-resultado" id="collection-resultado"></div>
+    <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;align-items:center;gap:4px;" disabled></button>
+  </div>
   <!-- Descritivo do Apresentador (2026-09-02i, pedido do utilizador):
        substitui a Nota de Curadoria aqui (2026-09-02h) — este texto É para
        ler ao público, ao contrário da nota_curadoria (essa fica só na Mesa
@@ -666,7 +685,14 @@
        Apresentação → Apresentador → Pontuação → Efeito Bónus.
        Retroceder/Avançar Faixa (escondidos por omissão, atalhos raros de
        régie) mantidos junto a Pausar, sua posição relativa de sempre —
-       não fizeram parte da lista pedida. -->
+       não fizeram parte da lista pedida.
+       "Apresentação" saiu daqui em 20 Out 2026 (ver nota junto de
+       #collection-resultado-linha) — só posição, mesmo botão/handler/id.
+       "Apresentador" fica, de propósito: ao contrário de "Apresentação",
+       está sempre visível desde o arranque da sessão (renderApresentador()
+       no load, não fica fechado a nenhuma fase/painel) — mudá-lo para
+       dentro de #collection-painel escondia-o fora do ecrã de escolha de
+       playlist, o que mudava comportamento, não só posição. -->
   <!-- Pausa de entrada de Playlist (2026-09-02) — ao entrar numa Playlist
        nova (Blind Draw/Motor/Escolha, Rondas 1-3 ou Ronda 4), o motor
        revela título+universo e espera este clique antes de carregar a
@@ -691,20 +717,10 @@
        por manualAdvanceSync() (setInterval) — ver nota aí sobre porquê de
        não ser um toggle explícito como o do Apresentador. -->
   <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg> Avançar Faixa</button>
-  <!-- "🔊 Apresentação" (2026-10-05, pedido do utilizador) — toca
-       voz/descritivo_<codigo>.wav manualmente, a pedido do operador
-       (substituiu a narração automática + toggle ON/OFF, removidos). Não
-       bloqueia nada — "▶ Iniciar Playlist" funciona sempre, mesmo a meio
-       da apresentação (pára-a e arranca, ver iniciarPlaylistManual()).
-       Visibilidade sincronizada com faseGeral no mesmo poll de
-       "▶ Iniciar Playlist" (ver setInterval abaixo). Desactivado + title
-       "Apresentação por gerar" se a playlist não tiver o ficheiro — ver
-       prepararApresentacaoDescritivo()/apresentacaoDisponivel(). -->
-  <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;align-items:center;gap:4px;" disabled></button>
   <!-- Apresentador: um único toggle manual pelo operador — ver
        alternarApresentador()/renderApresentador(). Escondido quando não há
        foto configurada (apresentador.json, Studio → tab "Concorrentes"). -->
-  <button onclick="alternarApresentador()" id="btn-apresentador" style="display:none;">Apresentador</button>
+  <button onclick="alternarApresentador()" id="btn-apresentador" style="display:none;"><span>■</span> Apresentador</button>
   <!-- 2026-09-17, pedido do utilizador: painel "Histórico de Pontos" deixa
        de estar sempre visível — passa a escondido por defeito, só
        aparece a pedido deste botão. alternarHistoricoPontos() já
@@ -965,18 +981,19 @@ function tocarAnuncioMosaico(codigo, aoTerminar) {
   });
 }
 
-// Ícone/texto (2026-10-05, pedido do utilizador): mesmo glyph ▶/cor azul
+// Ícone/texto (2026-10-05, pedido do utilizador): mesmo glyph ▶/cor
 // de "Iniciar Playlist" — <span>▶</span> Texto, exactamente o mesmo
-// padrão de markup, só a cor (var(--blue), não var(--green)) e o
-// caracter (■ enquanto toca) diferentes — garante tamanho/forma/
-// alinhamento idênticos (mesma fonte, mesmo baseline), sem precisar de
-// medir nada à parte.
+// padrão de markup, só o caracter (■ enquanto toca) diferente — garante
+// tamanho/forma/alinhamento idênticos (mesma fonte, mesmo baseline), sem
+// precisar de medir nada à parte. Cor passou de var(--blue) a
+// var(--green) em 20 Out 2026 (pedido do André — mesmo verde de
+// "Escolhida"/#collection-resultado, agora na mesma linha do botão).
 function atualizarBotaoApresentacao() {
   const btn = document.getElementById('btn-apresentacao');
   if (!btn) return;
   btn.innerHTML = apresentacaoTocando
-    ? '<span style="color:var(--blue);">■</span> Parar apresentação'
-    : '<span style="color:var(--blue);">▶</span> Apresentação';
+    ? '<span style="color:var(--green);">■</span> Parar apresentação'
+    : '<span style="color:var(--green);">▶</span> Apresentação';
 }
 
 // Chamado em confirmarCollection() — não bloqueia nada, só prepara o
