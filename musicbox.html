@@ -548,8 +548,8 @@
        estar sempre visível, sessão toda, não só neste ecrã. -->
   <div class="collection-resultado-linha" id="collection-resultado-linha">
     <div class="collection-resultado" id="collection-resultado"></div>
-    <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" class="btn btn-secondary btn-sm me-2" style="display:none;" disabled></button>
-    <button id="btn-apresentador-visual" onclick="alternarApresentador()" class="btn btn-secondary btn-sm me-2" style="display:none;" disabled>■ Apresentador</button>
+    <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" class="btn btn-secondary btn-sm me-2" style="display:none;font-weight:normal;" disabled></button>
+    <button id="btn-apresentador-visual" onclick="alternarApresentador()" class="btn btn-secondary btn-sm me-2" style="display:none;font-weight:normal;" disabled><span>■</span> Apresentador</button>
   </div>
   <!-- Descritivo do Apresentador (2026-09-02i, pedido do utilizador):
        substitui a Nota de Curadoria aqui (2026-09-02h) — este texto É para
@@ -985,8 +985,8 @@ function atualizarBotaoApresentacao() {
   const btn = document.getElementById('btn-apresentacao');
   if (!btn) return;
   btn.innerHTML = apresentacaoTocando
-    ? '■ Parar apresentação'
-    : '▶ Apresentação';
+    ? '<span style="color: #22c55e;">■</span> Parar apresentação'
+    : '<span style="color: #22c55e;">▶</span> Apresentação';
 }
 
 // Chamado em confirmarCollection() — não bloqueia nada, só prepara o
