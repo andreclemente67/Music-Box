@@ -548,7 +548,8 @@
        estar sempre visível, sessão toda, não só neste ecrã. -->
   <div class="collection-resultado-linha" id="collection-resultado-linha">
     <div class="collection-resultado" id="collection-resultado"></div>
-    <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" style="display:none;align-items:center;gap:4px;" disabled></button>
+    <button onclick="alternarApresentacaoDescritivo()" id="btn-apresentacao" class="btn btn-secondary btn-sm me-2" style="display:none;" disabled></button>
+    <button id="btn-apresentador-visual" onclick="alternarApresentador()" class="btn btn-secondary btn-sm me-2" style="display:none;" disabled>■ Apresentador</button>
   </div>
   <!-- Descritivo do Apresentador (2026-09-02i, pedido do utilizador):
        substitui a Nota de Curadoria aqui (2026-09-02h) — este texto É para
@@ -992,8 +993,8 @@ function atualizarBotaoApresentacao() {
   const btn = document.getElementById('btn-apresentacao');
   if (!btn) return;
   btn.innerHTML = apresentacaoTocando
-    ? '<span style="color:var(--green);">■</span> Parar apresentação'
-    : '<span style="color:var(--green);">▶</span> Apresentação';
+    ? '■ Parar apresentação'
+    : '▶ Apresentação';
 }
 
 // Chamado em confirmarCollection() — não bloqueia nada, só prepara o
@@ -4433,12 +4434,19 @@ function alternarApresentador() {
 
 function renderApresentador() {
   const btn = document.getElementById('btn-apresentador');
+  const btnVisual = document.getElementById('btn-apresentador-visual');
   const foto = document.getElementById('apresentador-foto');
   if (!btn || !foto) return;
 
   const temFoto = !!FOTO_APRESENTADOR;
   btn.style.display = temFoto ? 'inline-block' : 'none';
   btn.classList.toggle('activo', apresentadorVisivel);
+
+  if (btnVisual) {
+    btnVisual.style.display = temFoto ? '' : 'none';
+    btnVisual.classList.toggle('active', apresentadorVisivel);
+    btnVisual.disabled = !temFoto;
+  }
 
   if (!temFoto) { foto.style.display = 'none'; return; }
   foto.querySelector('img').src = FOTO_APRESENTADOR;
