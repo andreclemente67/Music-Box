@@ -718,6 +718,10 @@
        por manualAdvanceSync() (setInterval) — ver nota aí sobre porquê de
        não ser um toggle explícito como o do Apresentador. -->
   <button onclick="manualAdvance()" id="btn-avancar" title="MANUAL_ADVANCE — força o mesmo NEW_SLOT do timeout natural, sem alterar pontuação nem MUTE" style="display:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:2px;"><path d="M13 5v14l9-7-9-7z"/><path d="M3 5v14l9-7-9-7z"/></svg> Avançar Faixa</button>
+  <!-- Apresentador: um único toggle manual pelo operador — ver
+       alternarApresentador()/renderApresentador(). Escondido quando não há
+       foto configurada (apresentador.json, Studio → tab "Concorrentes"). -->
+  <button onclick="alternarApresentador()" id="btn-apresentador" style="display:none;"><span>■</span> Apresentador</button>
   <!-- 2026-09-17, pedido do utilizador: painel "Histórico de Pontos" deixa
        de estar sempre visível — passa a escondido por defeito, só
        aparece a pedido deste botão. alternarHistoricoPontos() já
