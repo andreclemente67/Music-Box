@@ -2248,3 +2248,15 @@ As aplicações anteriores de B2 (`antes-b2-00`, `antes-b2-60`) só tinham escri
 - Verificação automática obrigatória antes de gravar: duração ~15s, correlação do corte com o full na posição ≥0,99, ext (corte + 10s) idêntico ao B novo ≥0,95, loudness final ≤1 LU do B antigo. Falhar qualquer uma = faixa não é tocada, motivo registado (nenhuma das 4 falhou).
 
 Backup do catálogo + tag `antes-b2-audivel` antes de qualquer escrita; ficheiros antigos movidos para `_arquivo/b2_substituidos/` (não apagados). Diff no catálogo só acrescenta `trecho_b.ficheiro_ext` (inicio/fim já estavam certos). Detalhe por faixa (ganho aplicado, todas as métricas) em `relatorios/b2_audivel_resultado.md`.
+
+## 2026-10-20 — Pergunta Bónus: clip próprio pré-gravado, roubo sem punição, botão armado
+
+Decisão do André sobre o novo desenho da Pergunta Bónus — substitui o mecanismo verbal actual por um clip de 12s próprio, com regras de roubo sem penalização e máquina de estados do botão. **3 decisões:**
+
+1. **Clip toca primeiro** (aviso visual/sonoro no início da Bónus): ficheiro de 12s (audio ou vídeo, `assets/bonus/`) toca automaticamente no fim do Encore se a régie o armar; o clip sinaliza que a Pergunta Bónus chegou; depois a pergunta é colocada verbalmente pelo apresentador (a mesma dinâmica que hoje, mas precedida pelo clip pré-gravado).
+
+2. **Roubo sem punição**: se quem acertou a Faixa errar a resposta do Bónus, qualquer outro concorrente não-mutado pode responder a seguir (a régie escolhe a ordem livremente, exactamente como escolhe quem responde em Trecho A/B); ninguém perde pontos por errar o Bónus — só perde a oportunidade. A Independência de Fluxos mantém-se: mealheiro ≠ ranking, Bónus é só mealheiro, nada em MUTE/ranking.
+
+3. **Botão armado no rodapé** (aviso no início da faixa): novo botão "Bónus" pisca/pisca enquanto a Faixa o tem definido mas a régie ainda não o armou (sinal visual "esta Faixa tem Bónus, ainda não confirmado"); régie clica para armar (o clip sai automaticamente depois); se nunca for armado antes do fim do Encore, o Bónus dessa Faixa é saltado (controlo editorial — permite à régie escolher em que Faixas usar o Bónus, mesmo com o campo preenchido no catálogo). Máquina de estados: piscar (Faixa com `bonus` definido) → armado (clique da régie) → disparar (fim do Encore) → piscar novamente (Faixa seguinte com `bonus`, se houver).
+
+Schema novo no catálogo: `bonus` (objecto) com `tipo` (audio|video), `ficheiro` (caminho em `assets/bonus/`), `titulo`, `pergunta` (texto para o apresentador), `resposta` (referência da régie), `pontos` (valor creditado no mealheiro, por faixa). Implementação adiada até esta decisão ser confirmada — detalhe completo (e 3 perguntas em aberto para confirmação antes de código) em `relatorios/bonus_novo_desenho.md`.
